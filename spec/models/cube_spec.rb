@@ -40,11 +40,12 @@ RSpec.describe Cube, :type => :model do
   end
 
   it '#apply_position' do
-    expect(Cube.new.apply_position('a1c3c3c5').standard_fl_code()).to eq("a1c3c3c5")
-    expect(Cube.new.apply_position('a1c3c3c5').corruption).to eq([])
+    expect(cube.apply_position('a1c3c3c5').standard_fl_code()).to eq("a1c3c3c5")
+    expect(cube.corruption).to eq([])
 
-    expect(Cube.new.apply_position('a3c8e2p1').standard_fl_code()).to eq("a3c8e2p1")
-    expect(Cube.new.apply_position('a3c8e2p1').corruption).to eq([])
+    cube2 = Cube.new.apply_position('a3c8e2p1')
+    expect(cube2.standard_fl_code()).to eq("a3c8e2p1")
+    expect(cube2.corruption).to eq([])
   end
 
 end

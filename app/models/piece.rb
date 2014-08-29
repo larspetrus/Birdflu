@@ -8,6 +8,7 @@ class Piece
     @name = name
     @stickers = name.chars.map { |char| char.to_sym}
     @on_sides = name.chars.map { |char| char.to_sym}
+    @sides = @stickers.count
   end
 
   def shift(move_map, turns = 1)
@@ -20,31 +21,27 @@ class Piece
     @on_sides.rotate!(steps)
   end
 
+  def u_spin()
+    (@sides - @on_sides.index(:U)) % @sides
+  end
+
   def sticker_on(side)
     @stickers[@on_sides.index(side)]
   end
 
   def as_tweak()
-    colors = position = ""
-    @stickers.length.times do |i|
-      colors += @stickers[i].to_s
-      position += @on_sides[i].to_s
-    end
-    "#{colors}:#{position}"
+    "#{@stickers.join}:#{@on_sides.join}"
   end
 
   def is_solved
     solved = true
-    @stickers.length.times { |i| solved &= (@stickers[i] == @on_sides[i]) }
+    @sides.times { |i| solved &= (@stickers[i] == @on_sides[i]) }
     solved
   end
 
   def to_s
-    x = ""
-    @stickers.length.times do |i|
-      x += "#{@stickers[i]}@#{@on_sides[i]}, "
-    end
-
-    "name: #{@name},  #{x}"
+    stickers = ""
+    @sides.times { |i| stickers += "#{@stickers[i]}@#{@on_sides[i]}, " }
+    "name: #{@name},  #{stickers}"
   end
 end

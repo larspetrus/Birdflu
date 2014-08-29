@@ -29,6 +29,29 @@ RSpec.describe Piece, :type => :model do
     expect(ulb.sticker_on(:U)).to eql(:B)
   end
 
+  it 'u_spin' do
+    ulb = Piece.new('ULB')
+    uf = Piece.new('UF')
+
+    expect(ulb.u_spin).to eq(0)
+    expect(uf.u_spin).to eq(0)
+
+    ulb.rotate(1)
+    uf.rotate(1)
+    expect(ulb.u_spin).to eq(1)
+    expect(uf.u_spin).to eq(1)
+
+    ulb.rotate(1)
+    uf.rotate(1)
+    expect(ulb.u_spin).to eq(2)
+    expect(uf.u_spin).to eq(0)
+
+    ulb.rotate(1)
+    expect(ulb.u_spin).to eq(0)
+
+    expect{ Piece.new('DB').u_spin}.to raise_error
+  end
+
   it 'tracks stickers during moves' do
     piece = Piece.new('URF')
 

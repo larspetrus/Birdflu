@@ -1,11 +1,13 @@
 class Cube
+  Move = Struct.new(:cycles, :shift)
+
   MOVES = {
-    R: {cycles: [%i[URF DFR DRB UBR], %i[UR FR DR BR]], shift: {B: :D, D: :F, F: :U, U: :B, L: :L, R: :R}},
-    L: {cycles: [%i[ULB DBL DLF UFL], %i[BL DL FL UL]], shift: {B: :U, U: :F, F: :D, D: :B, L: :L, R: :R}},
-    F: {cycles: [%i[DLF DFR URF UFL], %i[FL DF FR UF]], shift: {U: :R, R: :D, D: :L, L: :U, F: :F, B: :B}},
-    B: {cycles: [%i[ULB UBR DRB DBL], %i[UB BR DB BL]], shift: {U: :L, L: :D, D: :R, R: :U, F: :F, B: :B}},
-    U: {cycles: [%i[UBR ULB UFL URF], %i[UR UB UL UF]], shift: {F: :L, L: :B, B: :R, R: :F, U: :U, D: :D}},
-    D: {cycles: [%i[DFR DLF DBL DRB], %i[DF DL DB DR]], shift: {F: :R, R: :B, B: :L, L: :F, U: :U, D: :D}},
+    R: Move.new([%i[URF DFR DRB UBR], %i[UR FR DR BR]], {B: :D, D: :F, F: :U, U: :B, L: :L, R: :R}),
+    L: Move.new([%i[ULB DBL DLF UFL], %i[BL DL FL UL]], {B: :U, U: :F, F: :D, D: :B, L: :L, R: :R}),
+    F: Move.new([%i[DLF DFR URF UFL], %i[FL DF FR UF]], {U: :R, R: :D, D: :L, L: :U, F: :F, B: :B}),
+    B: Move.new([%i[ULB UBR DRB DBL], %i[UB BR DB BL]], {U: :L, L: :D, D: :R, R: :U, F: :F, B: :B}),
+    U: Move.new([%i[UBR ULB UFL URF], %i[UR UB UL UF]], {F: :L, L: :B, B: :R, R: :F, U: :U, D: :D}),
+    D: Move.new([%i[DFR DLF DBL DRB], %i[DF DL DB DR]], {F: :R, R: :B, B: :L, L: :F, U: :U, D: :D}),
   }
 
   def initialize()
@@ -27,8 +29,8 @@ class Cube
   def move(side, turns)
     move = MOVES[side]
     turns.times do
-      move[:cycles].each do |cyc|
-        cyc.each { |position| @pcs[position].shift(move[:shift]) }
+      move.cycles.each do |cyc|
+        cyc.each { |position| @pcs[position].shift(move.shift) }
         @pcs[cyc[0]], @pcs[cyc[1]], @pcs[cyc[2]], @pcs[cyc[3]] = @pcs[cyc[1]], @pcs[cyc[2]], @pcs[cyc[3]], @pcs[cyc[0]]
       end
     end
@@ -46,7 +48,6 @@ class Cube
 
   C_CODES = %w[abc efg ijk opq]
   E_CODES = %w[12 34 56 78]
-  C_SPIN_ORDER = {'ULB' => %i[U B L], 'UBR' => %i[U R B], 'URF' => %i[U F R], 'UFL' => %i[U L F]}
 
   def standard_fl_code
     fl_codes.sort.first
@@ -67,13 +68,11 @@ class Cube
     4.times do |i|
       c_piece = piece_at(c_positions[i])
       c_distance = (corners.index(c_piece.name) - i + 4) % 4
-      c_spin = C_SPIN_ORDER[c_piece.name].index(c_piece.sticker_on(:U))
 
       e_piece = piece_at(e_positions[i])
       e_distance = (edges.index(e_piece.name) - i + 4) % 4
-      e_spin = e_piece.sticker_on(:U) == :U ? 0 : 1
 
-      result += C_CODES[c_distance][c_spin] + E_CODES[e_distance][e_spin]
+      result += C_CODES[c_distance][c_piece.u_spin] + E_CODES[e_distance][e_piece.u_spin]
     end
     result
   end
@@ -85,18 +84,17 @@ class Cube
     c_cyc = []
     e_cyc = []
 
-    d_shift = MOVES[:D][:shift]
     4.times do |i|
-      c_code = fl_code[2*i]
-      c_distance = C_PLACE[c_code.to_sym]
+      c_code = fl_code[2*i].to_sym
+      c_distance = C_PLACE[c_code]
       c_cyc << c_move_here = C_POSITIONS[(c_distance + i) % 4].to_sym
-      @pcs[c_move_here].shift(d_shift, c_distance)
-      @pcs[c_move_here].rotate(3 - C_SPIN[c_code.to_sym])
+      @pcs[c_move_here].shift(MOVES[:D].shift, c_distance)
+      @pcs[c_move_here].rotate(3 - C_SPIN[c_code])
 
       e_code = fl_code[2*i + 1].to_i
       e_distance = (e_code-1)/2
       e_cyc << e_move_here = E_POSITIONS[(e_distance + i) % 4].to_sym
-      @pcs[e_move_here].shift(d_shift, e_distance)
+      @pcs[e_move_here].shift(MOVES[:D].shift, e_distance)
       @pcs[e_move_here].rotate(e_code.even? ? 1 : 0)
     end
 

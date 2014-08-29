@@ -12,7 +12,7 @@ CC = {
     j: Corn.new(2, 2, :p),
     k: Corn.new(2, 1, :q),
     o: Corn.new(3, 0, :a),
-    pcs: Corn.new(3, 2, :b),
+    p: Corn.new(3, 2, :b),
     q: Corn.new(3, 1, :c),
 }
 
