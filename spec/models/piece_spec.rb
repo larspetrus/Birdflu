@@ -74,11 +74,11 @@ RSpec.describe Piece, :type => :model do
   end
 
   it '#is_solved' do
-    piece = Piece.new('DRB')
-    expect(piece.is_solved).to eq(true)
+    drb = Piece.new('DRB')
+    expect(drb.is_solved).to eq(true)
 
-    piece.shift(r_shift)
-    expect(piece.is_solved).to eq(false)
+    drb.shift(r_shift)
+    expect(drb.is_solved).to eq(false)
   end
 
 end

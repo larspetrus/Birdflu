@@ -11,19 +11,6 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140820224318) do
-
-  create_table "algs", force: true do |t|
-    t.string   "moves"
-    t.string   "solves_code"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "positions", force: true do |t|
-    t.string   "code"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
+ActiveRecord::Schema.define(version: 0) do
 
 end

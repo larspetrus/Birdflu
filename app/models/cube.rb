@@ -41,6 +41,7 @@ class Cube
       turns = {"2" => 2, "'" => 1}[move[1]] || 3
       move(move[0].to_sym, turns)
     end
+    self
   end
 
   def standard_ll_code
@@ -48,9 +49,12 @@ class Cube
   end
 
   def ll_codes()
-    (0..3).map do |i|
-      ll_code(LL.corners.rotate(i), LL.edges.rotate(i))
+
+    unless f2l_solved
+      raise "Can't make LL code with F2L unsolved"
     end
+
+    (0..3).map { |i| ll_code(LL.corners.rotate(i), LL.edges.rotate(i)) }
   end
 
   def ll_code(c_positions, e_positions)
@@ -106,6 +110,13 @@ class Cube
       end
     end
     badness
+  end
+
+  def f2l_solved()
+    @pcs.values.each do |piece|
+      return false if !piece.name.include?('U') && !piece.is_solved
+    end
+    return true
   end
 
   def print
