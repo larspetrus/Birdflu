@@ -1,52 +1,35 @@
 class DemoController < ApplicationController
   def index
-    @pos1 = Position.new(code: 'a1b1c1a1')
-    @pos2 = Position.new(code: 'a1c3c3c5')
-    @pos3 = Position.new(code: 'a3e6f1k4')
+    all_variations_algs = []
 
-    # @pos1 = Position.new(code: 'a3e6f1k4')
-    # @pos2 = Position.new(code: 'a4b7g2o1')
-    # @pos3 = Position.new(code: 'b7g2o1a4')
-    # @pos4 = Position.new(code: 'c8i7o2p5')
+    all_variations_algs.concat BigThought.alg_variants("Sune",  "F U F' U F U2 F'")
+    all_variations_algs.concat BigThought.alg_variants("Allan", "F2 U R' L F2 R L' U F2")
+    all_variations_algs.concat BigThought.alg_variants("Bruno", "L U2 L2 U' L2 U' L2 U2 L")
 
+    primary_algs = all_variations_algs.select { |alg| alg.primary }
 
-    #L' B' R B L B' R' B
-    # @cube1.move(:L, 3)
-    # @cube1.move(:B, 3)
-    # @cube1.move(:R, 1)
-    # @cube1.move(:B, 1)
-    # @cube1.move(:L, 1)
-    # @cube1.move(:B, 3)
-    # @cube1.move(:R, 3)
-    # @cube1.move(:B, 1)
+    @positions = {}
 
-    @cube1 = Cube.new()
-    @cube1.move(:F, 1)
-    @cube1.move(:U, 1)
-    @cube1.move(:F, 3)
-    @cube1.move(:U, 1)
-    @cube1.move(:F, 1)
-    @cube1.move(:U, 2)
-    @cube1.move(:F, 3)
-    @cube1.move(:U, 2)
+    primary_algs.each do |alg1|
+      add(alg1.solves_ll_code, alg1)
 
-    @cube2 = Cube.new()
-    @cube2.move(:R, 3)
-    @cube2.move(:F, 1)
-    @cube2.move(:R, 1)
-    @cube2.move(:F, 3)
-    @cube2.move(:U, 3)
-    @cube2.move(:F, 3)
-    @cube2.move(:U, 1)
-    @cube2.move(:F, 1)
+      all_variations_algs.each do |alg2|
+        combo = LlComboAlg.new(alg1, alg2)
+        add(combo.ll_code_by_moves, combo)
+      end
+    end
 
-    @cube3 = Cube.new()
-    @cube3.move(:D, 1)
-    @cube3.move(:R, 1)
+    puts "-"*88
+    puts @positions.size
+    @positions.each do |key, value|
+      puts "#{key} - #{value.map(&:name)}"
+    end
 
-    @cube4 = Cube.new()
-    @cube4.move(:D, 1)
-    @cube4.move(:L, 1)
+    @cube1 = Cube.new().setup_alg("F U F' U F U2 F' U2")
+  end
 
+  def add(ll_code, alg)
+    @positions[ll_code] ||= []
+    @positions[ll_code] << alg
   end
 end
