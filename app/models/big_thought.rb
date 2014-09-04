@@ -14,7 +14,6 @@ class BigThought
     result
   end
 
-
   def self.alg_label(moves)
     result = ""
     moves.split(' ').each do |move|

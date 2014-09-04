@@ -30,7 +30,13 @@ class Piece
   end
 
   def as_tweak()
-    "#{@stickers.join}:#{@on_sides.join}"
+    colors = @stickers.join
+    sides = @on_sides.join
+    if colors == sides
+      ''
+    else
+      "#{colors}:#{sides}"
+    end
   end
 
   def is_solved

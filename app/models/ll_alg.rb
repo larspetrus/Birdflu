@@ -11,4 +11,12 @@ class LlAlg
   def to_s
     "#{@name}: #{@moves}"
   end
+
+  def length
+    @moves.split(' ').length
+  end
+
+  def nl
+    "#{length} #{name}"
+  end
 end

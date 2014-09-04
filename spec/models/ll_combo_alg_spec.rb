@@ -8,5 +8,6 @@ describe LlComboAlg do
 
     expect(combo.ll_code_by_moves).to eq("a3a7c3b7")
     expect(combo.name).to eq("Sune-F+SuneM-F'")
+    expect(combo.length).to eq(14)
   end
 end

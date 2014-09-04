@@ -22,7 +22,7 @@ class DemoController < ApplicationController
     puts "-"*88
     puts @positions.size
     @positions.each do |key, value|
-      puts "#{key} - #{value.map(&:name)}"
+      puts "#{key} - #{value.map(&:nl)}"
     end
 
     @cube1 = Cube.new().setup_alg("F U F' U F U2 F' U2")
@@ -31,5 +31,6 @@ class DemoController < ApplicationController
   def add(ll_code, alg)
     @positions[ll_code] ||= []
     @positions[ll_code] << alg
+    @positions[ll_code].sort! { |x,y| x.length <=> y.length }
   end
 end

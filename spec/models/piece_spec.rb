@@ -29,6 +29,14 @@ RSpec.describe Piece, :type => :model do
     expect(ulb.sticker_on(:U)).to eql(:B)
   end
 
+  it 'as_tweak() empty for solved case' do
+    ulb = Piece.new('ULB')
+    expect(ulb.as_tweak).to eq('')
+
+    ulb.rotate(1)
+    expect(ulb.as_tweak).to eq('ULB:LBU')
+  end
+
   it 'u_spin' do
     ulb = Piece.new('ULB')
     uf = Piece.new('UF')
@@ -70,7 +78,7 @@ RSpec.describe Piece, :type => :model do
     expect(piece.sticker_on(:R)).to eql(:R)
     expect(piece.sticker_on(:F)).to eql(:F)
 
-    expect(piece.as_tweak).to eq('URF:URF')
+    expect(piece.as_tweak).to eq('')
   end
 
   it '#is_solved' do

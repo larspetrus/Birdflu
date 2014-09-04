@@ -9,4 +9,8 @@ RSpec.describe LlAlg, :type => :model do
     sune = LlAlg.new("Sune", "F U F' U F U2 F'")
     expect(sune.solves_ll_code).to eq('a1c3c3c5')
   end
+
+  it 'length' do
+    expect(LlAlg.new("", "F U F' U F U2 F'").length).to eq(7)
+  end
 end
