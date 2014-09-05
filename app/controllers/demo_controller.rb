@@ -11,12 +11,8 @@ class DemoController < ApplicationController
     @positions = {}
 
     primary_algs.each do |alg1|
-      add(alg1.solves_ll_code, alg1)
-
-      all_variations_algs.each do |alg2|
-        combo = LlComboAlg.new(alg1, alg2)
-        add(combo.ll_code_by_moves, combo)
-      end
+      add(alg1)
+      all_variations_algs.each { |alg2| add(LlAlg.combo(alg1, alg2)) }
     end
 
     puts "-"*88
@@ -28,7 +24,8 @@ class DemoController < ApplicationController
     @cube1 = Cube.new().setup_alg("F U F' U F U2 F' U2")
   end
 
-  def add(ll_code, alg)
+  def add(alg)
+    ll_code = alg.solves_ll_code
     @positions[ll_code] ||= []
     @positions[ll_code] << alg
     @positions[ll_code].sort! { |x,y| x.length <=> y.length }
