@@ -1,15 +1,4 @@
 class Cube
-  Move = Struct.new(:cycles, :shift)
-
-  MOVES = {
-    R: Move.new([%i[URF DFR DRB UBR], %i[UR FR DR BR]], {B: :D, D: :F, F: :U, U: :B, L: :L, R: :R}),
-    L: Move.new([%i[ULB DBL DLF UFL], %i[BL DL FL UL]], {B: :U, U: :F, F: :D, D: :B, L: :L, R: :R}),
-    F: Move.new([%i[DLF DFR URF UFL], %i[FL DF FR UF]], {U: :R, R: :D, D: :L, L: :U, F: :F, B: :B}),
-    B: Move.new([%i[ULB UBR DRB DBL], %i[UB BR DB BL]], {U: :L, L: :D, D: :R, R: :U, F: :F, B: :B}),
-    U: Move.new([%i[UBR ULB UFL URF], %i[UR UB UL UF]], {F: :L, L: :B, B: :R, R: :F, U: :U, D: :D}),
-    D: Move.new([%i[DFR DLF DBL DRB], %i[DF DL DB DR]], {F: :R, R: :B, B: :L, L: :F, U: :U, D: :D}),
-  }
-
   def initialize()
     @pcs = { }
 
@@ -27,19 +16,17 @@ class Cube
   end
 
   def move(side, turns)
-    move = MOVES[side]
-    turns.times do
+    move = Move.on(side)
       move.cycles.each do |cyc|
-        cyc.each { |position| @pcs[position].shift(move.shift) }
-        @pcs[cyc[0]], @pcs[cyc[1]], @pcs[cyc[2]], @pcs[cyc[3]] = @pcs[cyc[1]], @pcs[cyc[2]], @pcs[cyc[3]], @pcs[cyc[0]]
-      end
+        cyc.each { |position| @pcs[position].shift(move.shift, turns) }
+        turns.times { @pcs[cyc[0]], @pcs[cyc[1]], @pcs[cyc[2]], @pcs[cyc[3]] = @pcs[cyc[1]], @pcs[cyc[2]], @pcs[cyc[3]], @pcs[cyc[0]] }
     end
   end
 
   def setup_alg(moves)
     moves.split(' ').reverse.each do |move|
-      turns = {"2" => 2, "'" => 1}[move[1]] || 3
-      move(move[0].to_sym, turns)
+      m = Move.parse move
+      move(m.side, 4 - m.turns)
     end
     self
   end
@@ -82,12 +69,12 @@ class Cube
     4.times do |i|
       c_data = LL.corner_data(ll_code[i*2])
       c_cyc << c_to_here = c_data.position(i).to_sym
-      @pcs[c_to_here].shift(MOVES[:D].shift, c_data.distance)
+      @pcs[c_to_here].shift(Move::D.shift, c_data.distance)
       @pcs[c_to_here].rotate(c_data.spin)
 
       e_data = LL.edge_data(ll_code[2*i + 1])
       e_cyc << e_to_here = e_data.position(i).to_sym
-      @pcs[e_to_here].shift(MOVES[:D].shift, e_data.distance)
+      @pcs[e_to_here].shift(Move::D.shift, e_data.distance)
       @pcs[e_to_here].rotate(e_data.spin)
     end
 

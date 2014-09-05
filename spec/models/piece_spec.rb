@@ -1,8 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe Piece, :type => :model do
-  let(:r_shift) { {B: :D, D: :F, F: :U, U: :B, L: :L, R: :R} }
-
   it 'initializes' do
     piece = Piece.new('URF')
     expect(piece.sticker_on(:U)).to eql(:U)
@@ -63,8 +61,7 @@ RSpec.describe Piece, :type => :model do
   it 'tracks stickers during moves' do
     piece = Piece.new('URF')
 
-    r_shift = {B: :D, D: :F, F: :U, U: :B, L: :L, R: :R}
-    piece.shift(r_shift)
+    piece.shift(Move::R.shift)
 
     expect(piece.sticker_on(:B)).to eql(:U)
     expect(piece.sticker_on(:R)).to eql(:R)
@@ -72,7 +69,7 @@ RSpec.describe Piece, :type => :model do
 
     expect(piece.as_tweak).to eq('URF:BRU')
 
-    piece.shift(r_shift, 3)
+    piece.shift(Move::R.shift, 3)
 
     expect(piece.sticker_on(:U)).to eql(:U)
     expect(piece.sticker_on(:R)).to eql(:R)
@@ -85,7 +82,7 @@ RSpec.describe Piece, :type => :model do
     drb = Piece.new('DRB')
     expect(drb.is_solved).to eq(true)
 
-    drb.shift(r_shift)
+    drb.shift(Move::R.shift)
     expect(drb.is_solved).to eq(false)
   end
 
