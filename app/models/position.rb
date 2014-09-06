@@ -1,4 +1,6 @@
 class Position < ActiveRecord::Base
+  has_many :ll_algs
+
   validates :ll_code, uniqueness: true
 
   def tweaks()

@@ -13,4 +13,16 @@ RSpec.describe Position, :type => :model do
     expect(Position.create(ll_code: 'a3e6f1k4').tweaks()).to eq('ULB:ULB UR:UB URF:UBR LU:UR LUF:URF UF:UF BRU:UFL BU:UL')
   end
 
+  it "has algs" do
+    p1 = Position.create(ll_code: 'a1b1c1a1')
+    p2 = Position.create(ll_code: 'a1c3c3c5')
+
+    a1 = LlAlg.create(moves: "F U F' U F U2 F'", position: p1)
+    a2 = LlAlg.create(moves: "F U F' U F U2 F'", position: p2)
+    a3 = LlAlg.create(moves: "F U F' U F U2 F'", position: p1)
+
+    expect(p1.ll_algs).to eq([a1, a3])
+    expect(p2.ll_algs).to eq([a2])
+  end
+
 end

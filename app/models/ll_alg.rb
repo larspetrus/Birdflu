@@ -1,42 +1,42 @@
-class LlAlg
-  attr_reader :name, :moves, :primary, :solves_ll_code
+class LlAlg < ActiveRecord::Base
+  self.table_name = "algs"
 
-  def self.combo(alg1, alg2)
-    LlAlg.new("#{alg1.name}+#{alg2.name}", LlAlg.merge_moves(alg1.moves, alg2.moves))
+  belongs_to :position
+
+  after_create do
+    self.primary = !!self.primary
+    self.length = moves.split.length
+  end
+
+  def self.create_combo(position, alg1, alg2)
+    LlAlg.create(name: "#{alg1.name}+#{alg2.name}", moves: merge_moves(alg1.moves, alg2.moves), position: position)
   end
 
   def self.merge_moves(moves1, moves2)
-    split1 = moves1.split(' ')
-    split2 = moves2.split(' ')
+    start  = moves1.split(' ')
+    finish = moves2.split(' ')
 
     begin
-      m1 = Move.parse(split1.last)
-      m2 = Move.parse(split2.first)
+      m1 = Move.parse(start.last)
+      m2 = Move.parse(finish.first)
       double_cancel = (m1.side == m2.side) && (m1.turns + m2.turns == 4)
       if m1.side == m2.side
-        split1.delete_at(split1.length-1)
-        split2.delete_at(0)
+        start.delete_at(start.length-1)
+        finish.delete_at(0)
 
-        split1 << Move.from(m1.side, (m1.turns + m2.turns) % 4) unless double_cancel
+        start << Move.from(m1.side, (m1.turns + m2.turns) % 4) unless double_cancel
       end
-    end while double_cancel && split1.length > 0 && split2.length > 0
+    end while double_cancel && start.length > 0 && finish.length > 0
 
-    (split1 + split2).join(' ')
+    (start + finish).join(' ')
   end
 
-  def initialize(name, moves, primary = false)
-    @name = name
-    @moves = moves
-    @solves_ll_code = Cube.new.setup_alg(moves).standard_ll_code
-    @primary = primary
+  def solves_ll_code
+    Cube.new.setup_alg(moves).standard_ll_code
   end
 
   def to_s
     "#{@name}: #{@moves}"
-  end
-
-  def length
-    @moves.split(' ').length
   end
 
   def nl
