@@ -1,33 +1,26 @@
 class BigThought
 
   def self.populate_db()
-    all_variations_algs = []
-
-    all_variations_algs.concat alg_variants("Sune",  "F U F' U F U2 F'")
-    all_variations_algs.concat alg_variants("Allan", "F2 U R' L F2 R L' U F2")
-    all_variations_algs.concat alg_variants("Bruno", "L U2 L2 U' L2 U' L2 U2 L")
-
-    primary_algs = all_variations_algs.select { |alg| alg.primary }
-
-    @positions = {}
-
-    primary_algs.each do |alg1|
-      add(alg1)
-      all_variations_algs.each { |alg2| add(LlAlg.combo(alg1, alg2)) }
+    if Position.count > 0
+      puts "DB already populated. Skipping generation. #{Position.count} positions, #{LlAlg.count} algs"
+      return
     end
+    puts "Starting BigThought.populate_db(): #{Position.count} positions, #{LlAlg.count} algs"
 
-    puts "-"*88
-    puts @positions.size
-    @positions.each do |key, value|
-      puts "#{key} - #{value.map(&:nl)}"
+    alg_data = [
+        ["Sune",    "F U F' U F U2 F'"],
+        ["AntiSune","F U2 F' U' F U' F'"],
+        ["Allan",   "F2 U R' L F2 R L' U F2"],
+        ["Bruno",   "L U2 L2 U' L2 U' L2 U2 L"],
+    ]
+    alg_data.each { |ad| alg_variants(ad.first, ad.last) }
+
+    all_algs = LlAlg.all
+
+    LlAlg.where(primary: true).each do |alg1|
+      all_algs.each { |alg2| LlAlg.create_combo(alg1, alg2) }
     end
-  end
-
-  def self.add(alg)
-    ll_code = alg.solves_ll_code
-    @positions[ll_code] ||= []
-    @positions[ll_code] << alg
-    @positions[ll_code].sort! { |x,y| x.length <=> y.length }
+    puts "After BigThought.populate_db(): #{Position.count} positions, #{LlAlg.count} algs"
   end
 
   def self.alg_variants(name, moves)

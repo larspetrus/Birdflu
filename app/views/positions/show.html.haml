@@ -1,0 +1,26 @@
+%h1 Alg DB
+
+%h3 Position #{@position.ll_code}
+
+.roofpig.rp160{:'data-config' => "base=AD | alg=#{@position.ll_algs[0].moves} | flags=showalg" }
+  =@position.ll_algs[0].name
+
+%hr{style: 'clear:both;'}
+
+%table
+  %th Moves
+  %th Name
+  %th Alg
+
+  - @position.ll_algs.each do |alg|
+    %tr
+      %td
+        =alg.length
+      %td
+        =alg.name
+      %td
+        =alg.moves
+
+
+%script{src: "http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"}
+%script ROOFPIG_CONF_AD = "solved=U-| hover=3"

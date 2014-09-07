@@ -3,13 +3,15 @@ class LlAlg < ActiveRecord::Base
 
   belongs_to :position
 
-  after_create do
+  before_create do
     self.primary = !!self.primary
     self.length = moves.split.length
+
+    self.position = Position.find_or_create_by(ll_code: solves_ll_code)
   end
 
-  def self.create_combo(position, alg1, alg2)
-    LlAlg.create(name: "#{alg1.name}+#{alg2.name}", moves: merge_moves(alg1.moves, alg2.moves), position: position)
+  def self.create_combo(alg1, alg2)
+    LlAlg.create(name: "#{alg1.name}+#{alg2.name}", moves: merge_moves(alg1.moves, alg2.moves))
   end
 
   def self.merge_moves(moves1, moves2)

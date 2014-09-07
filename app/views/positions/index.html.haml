@@ -1,0 +1,20 @@
+%h1 Alg DB
+
+%h3 Position index page
+
+%table
+  %th LL_CODE
+  %th Moves
+  %th Name
+  %th Alg
+
+  - @positions.each do |pos|
+    %tr
+      %td
+        =link_to pos.ll_code, position_path(pos)
+      %td
+        =pos.ll_algs[0].length
+      %td
+        =pos.ll_algs[0].name
+      %td
+        = pos.ll_algs[0].moves
