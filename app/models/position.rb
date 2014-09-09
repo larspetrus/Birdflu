@@ -16,4 +16,8 @@ class Position < ActiveRecord::Base
     end
     result.join(' ')
   end
+
+  def as_cube
+    @cube ||= Cube.new.apply_position(ll_code)
+  end
 end

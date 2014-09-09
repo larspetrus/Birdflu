@@ -6,8 +6,15 @@ body {
   font-family:'Lucida Grande';
 }
 
-table {
+table, th, td {
   font-size: 9px;
+}
+
+.index {
+  border-collapse: collapse;
+  border: 1px solid #ddd;
+  tr:nth-child(5n) {background: #eee}
+//  tr:nth-child(odd) {background: #FFF}
 }
 
 .rp160 {
@@ -15,5 +22,39 @@ table {
   width:160px;
   float:left;
   font-size: 9px;
+  margin: 6px;
 }
 
+
+.upos {
+  border-collapse: collapse;
+  margin: 5px;
+}
+$big: 16px;
+$small: 8px;
+$border: 2px solid black;
+.u {
+  height: $big;
+  width: $big;
+  border: $border;
+}
+.f {
+  height: $small;
+  border: $border;
+  box-shadow: 0 5px 3px 0px red;
+}
+.b {
+  height: $small;
+  border: $border;
+  box-shadow: 0 -5px 3px 0px orange;
+}
+.r {
+  width: $small;
+  border: $border;
+  box-shadow: 5px 0 3px 0px #0d0;
+}
+.l {
+  width: $small;
+  border: $border;
+  box-shadow: -5px 0 3px 0px #07f;
+}

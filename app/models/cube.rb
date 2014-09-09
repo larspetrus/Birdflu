@@ -11,6 +11,10 @@ class Cube
     piece_at(position).sticker_on(side.to_sym)
   end
 
+  def color_at(position, side)
+    {R: '#0d0', L: '#07f', F: 'red', B: 'orange', U: 'yellow', D: '#eee'}[piece_at(position).sticker_on(side.to_sym).to_sym]
+  end
+
   def piece_at(position)
     @pcs[position.to_sym]
   end

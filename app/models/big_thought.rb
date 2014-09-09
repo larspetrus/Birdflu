@@ -8,10 +8,15 @@ class BigThought
     puts "Starting BigThought.populate_db(): #{Position.count} positions, #{LlAlg.count} algs"
 
     alg_data = [
-        ["Sune",    "F U F' U F U2 F'"],
-        ["AntiSune","F U2 F' U' F U' F'"],
-        ["Allan",   "F2 U R' L F2 R L' U F2"],
-        ["Bruno",   "L U2 L2 U' L2 U' L2 U2 L"],
+        ["Sune",     "F U F' U F U2 F'"],
+        ["AntiSune", "F U2 F' U' F U' F'"],
+        ["Allan",    "F2 U R' L F2 R L' U F2"],
+        ["Bruno",    "L U2 L2 U' L2 U' L2 U2 L"],
+        ["Benny",    "B' U2 B2 U2 B2 U' B2 U' B2 U B"],
+        ["AntiBenny","B U B2 U' B2 U' B2 U2 B2 U2 B'"],
+        ["Arne",     "R2 F2 B2 L2 D L2 B2 F2 R2"],
+        ["Rune",     "L' U' L U' L U L2 U L2 U2 L'"],
+        ["Bert",     "F2 B2 D R2 F2 B2 L2 F2 B2 D' F2 B2"],
     ]
     alg_data.each { |ad| alg_variants(ad.first, ad.last) }
 
