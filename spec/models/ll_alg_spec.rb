@@ -4,11 +4,11 @@ RSpec.describe LlAlg, :type => :model do
 
   describe 'CRUD' do
     it 'create' do
-      al = LlAlg.create(name: 'Bob', moves: "B U B' U B U2 B'")
+      al = LlAlg.create(name: 'Bob', moves: "B U B' U B U2 B'", kind: 'solve')
 
       expect(al.name).to eq('Bob')
       expect(al.moves).to eq("B U B' U B U2 B'")
-      expect(al.primary).to eq(false)
+      expect(al.kind).to eq('solve')
       expect(al.length).to eq(7)
       expect(al.position.ll_code).to eq("a1c3c3c5")
     end
@@ -36,6 +36,7 @@ RSpec.describe LlAlg, :type => :model do
     expect(combo.name).to eq("Sune-F+SuneM-F'")
     expect(combo.length).to eq(13)
     expect(combo.moves).to eq("F U F' U F U2 F2 U' F U' F' U2 F")
+    expect(combo.kind).to eq('combo')
   end
 
   it '#merge_moves' do

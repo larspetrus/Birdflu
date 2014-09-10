@@ -1,6 +1,11 @@
 class BigThought
 
-  def self.populate_db()
+  def self.populate_db(force_db)
+    if force_db
+      Position.delete_all
+      LlAlg.delete_all
+    end
+
     if Position.count > 0
       puts "DB already populated. Skipping generation. #{Position.count} positions, #{LlAlg.count} algs"
       return
@@ -22,7 +27,7 @@ class BigThought
 
     all_algs = LlAlg.all
 
-    LlAlg.where(primary: true).each do |alg1|
+    LlAlg.where(kind: 'solve').each do |alg1|
       all_algs.each { |alg2| LlAlg.create_combo(alg1, alg2) }
     end
     puts "After BigThought.populate_db(): #{Position.count} positions, #{LlAlg.count} algs"
@@ -34,8 +39,9 @@ class BigThought
     mirrored_moves = mirror(moves)
     result = []
     4.times do |i|
-      result << LlAlg.create(name: name + "-#{alg_label(moves)}", moves: moves, primary: i == 0)
-      result << LlAlg.create(name: name + "M-#{alg_label(mirrored_moves)}", moves: mirrored_moves, primary: i == 0)
+      kind = (i == 0) ? 'solve' : 'generator'
+      result << LlAlg.create(name: name + "-#{alg_label(moves)}", moves: moves, kind: kind)
+      result << LlAlg.create(name: name + "M-#{alg_label(mirrored_moves)}", moves: mirrored_moves, kind: kind)
       moves = moves.chars.map { |char| circle[char] || char}.join
       mirrored_moves = mirrored_moves.chars.map { |char| circle[char] || char}.join
     end

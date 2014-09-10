@@ -7,7 +7,7 @@ describe BigThought do
 
     expect(stigs.map(&:moves)).to eq(["L U' R' U L' U' R", "R' U L U' R U L'", "B U' F' U B' U' F", "F' U B U' F U B'", "R U' L' U R' U' L", "L' U R U' L U R'", "F U' B' U F' U' B", "B' U F U' B U F'"])
     expect(stigs.map(&:name)).to eq(["Nik-L", "NikM-R'", "Nik-B", "NikM-F'", "Nik-R", "NikM-L'", "Nik-F", "NikM-B'"])
-    expect(stigs.map(&:primary)).to eq([true, true, false, false, false, false, false, false])
+    expect(stigs.map(&:kind)).to eq(['solve', 'solve', 'generator', 'generator', 'generator', 'generator', 'generator', 'generator'])
   end
 
   it 'alg_label' do

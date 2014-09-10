@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140905214222) do
+ActiveRecord::Schema.define(version: 20140909200650) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,15 +19,21 @@ ActiveRecord::Schema.define(version: 20140905214222) do
   create_table "algs", force: true do |t|
     t.string  "name"
     t.string  "moves"
-    t.boolean "primary"
     t.integer "length"
     t.integer "position_id"
+    t.string  "kind"
+    t.integer "alg1_id"
+    t.integer "alg2_id"
   end
 
   create_table "positions", force: true do |t|
     t.string   "ll_code"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "oriented_edges"
+    t.integer  "oriented_corners"
   end
+
+  add_index "positions", ["ll_code"], name: "index_positions_on_ll_code", using: :btree
 
 end
