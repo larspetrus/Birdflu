@@ -2,14 +2,16 @@ class LlAlg < ActiveRecord::Base
   self.table_name = "algs"
 
   belongs_to :position
+  belongs_to :alg1, class_name: 'LlAlg'
+  belongs_to :alg2, class_name: 'LlAlg'
 
   before_create do
     self.length = moves.split.length
     self.position = Position.find_or_create_by(ll_code: solves_ll_code) unless self.kind == 'generator'
   end
 
-  def self.create_combo(alg1, alg2)
-    LlAlg.create(name: "#{alg1.name}+#{alg2.name}", moves: merge_moves(alg1.moves, alg2.moves), kind: 'combo')
+  def self.create_combo(a1, a2)
+    LlAlg.create(name: "#{a1.name}+#{a2.name}", moves: merge_moves(a1.moves, a2.moves), alg1: a1, alg2: a2, kind: 'combo')
   end
 
   def self.merge_moves(moves1, moves2)

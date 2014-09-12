@@ -21,4 +21,14 @@ RSpec.describe Position, :type => :model do
     expect(Position.find_by!(ll_code: "a1c3c3c5").ll_algs.to_ary).to eq([a1, a3])
     expect(Position.find_by!(ll_code: "a1b5b7b7").ll_algs).to eq([a2])
   end
+
+  it 'sets orientations' do
+    solved = Position.create(ll_code: 'a1a1a1a1')
+    expect(solved.oriented_edges).to eq(4)
+    expect(solved.oriented_corners).to eq(4)
+
+    messy = Position.create(ll_code: 'a4c5c1c4')
+    expect(messy.oriented_edges).to eq(2)
+    expect(messy.oriented_corners).to eq(1)
+  end
 end

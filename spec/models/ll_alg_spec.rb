@@ -37,6 +37,9 @@ RSpec.describe LlAlg, :type => :model do
     expect(combo.length).to eq(13)
     expect(combo.moves).to eq("F U F' U F U2 F2 U' F U' F' U2 F")
     expect(combo.kind).to eq('combo')
+    
+    expect(combo.alg1).to eq(sunes[0])
+    expect(combo.alg2).to eq(sunes[1])
   end
 
   it '#merge_moves' do

@@ -8,13 +8,13 @@ body {
 
 table, th, td {
   font-size: 9px;
+  border-left: 1px solid #ddd;
 }
 
 .index {
   border-collapse: collapse;
   border: 1px solid #ddd;
-  tr:nth-child(5n) {background: #eee}
-//  tr:nth-child(odd) {background: #FFF}
+  tr:nth-child(4n) {background: #eee}
 }
 
 .rp160 {

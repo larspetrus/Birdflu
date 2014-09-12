@@ -3,6 +3,12 @@ class Position < ActiveRecord::Base
 
   validates :ll_code, uniqueness: true
 
+  before_create do
+    self.oriented_edges = ll_code.count '1357'
+    self.oriented_corners = ll_code.count 'aeio'
+  end
+
+
   def tweaks()
     result = []
     4.times do |i|
