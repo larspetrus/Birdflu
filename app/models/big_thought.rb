@@ -22,6 +22,7 @@ class BigThought
         ["Arne",     "R2 F2 B2 L2 D L2 B2 F2 R2"],
         ["Rune",     "L' U' L U' L U L2 U L2 U2 L'"],
         ["Bert",     "F2 B2 D R2 F2 B2 L2 F2 B2 D' F2 B2"],
+        ["Shorty",   "F R U R' U' F'"],
     ]
     alg_data.each { |ad| alg_variants(ad.first, ad.last) }
 

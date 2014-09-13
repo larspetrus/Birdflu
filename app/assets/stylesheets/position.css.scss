@@ -6,15 +6,14 @@ body {
   font-family:'Lucida Grande';
 }
 
-table, th, td {
-  font-size: 9px;
-  border-left: 1px solid #ddd;
-}
-
 .index {
   border-collapse: collapse;
   border: 1px solid #ddd;
   tr:nth-child(4n) {background: #eee}
+  th, td {
+    font-size: 9px;
+    border-left: 1px solid #ddd;
+  }
 }
 
 .rp160 {
@@ -25,36 +24,39 @@ table, th, td {
   margin: 6px;
 }
 
+form {
+  width: 300px;
+  background-color: #fed;
+  border: thin dotted #fdb;
+}
+
+// U position Drawing
+$big: 16px;
+$small: 8px;
 
 .upos {
   border-collapse: collapse;
   margin: 5px;
+  td { border: 2px solid black; }
 }
-$big: 16px;
-$small: 8px;
-$border: 2px solid black;
+
 .u {
   height: $big;
   width: $big;
-  border: $border;
 }
 .f {
   height: $small;
-  border: $border;
   box-shadow: 0 5px 3px 0px red;
 }
 .b {
   height: $small;
-  border: $border;
   box-shadow: 0 -5px 3px 0px orange;
 }
 .r {
   width: $small;
-  border: $border;
   box-shadow: 5px 0 3px 0px #0d0;
 }
 .l {
   width: $small;
-  border: $border;
   box-shadow: -5px 0 3px 0px #07f;
 }
