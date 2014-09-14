@@ -22,12 +22,19 @@ class BigThought
         ["Arne",     "R2 F2 B2 L2 D L2 B2 F2 R2"],
         ["Rune",     "L' U' L U' L U L2 U L2 U2 L'"],
         ["Bert",     "F2 B2 D R2 F2 B2 L2 F2 B2 D' F2 B2"],
-        ["Shorty",   "F R U R' U' F'"],
+
+        ["Niklas",   "L U' R' U L' U' R"],
+        ["Clix",     "F' L' B L F L' B' L"],
+        ["Evelyn",   "R B' R' F R B R' F'"],
+
+        ["Shorty",    "F R U R' U' F'"],
+        ["AntiShorty","F U R U' R' F'"],
+        ["Middly",    "R U R' U' R' F R F'"],
+        ["AntiMiddly","F R' F' R U R U' R'"],
     ]
     alg_data.each { |ad| alg_variants(ad.first, ad.last) }
 
     all_algs = LlAlg.all
-
     LlAlg.where(kind: 'solve').each do |alg1|
       all_algs.each { |alg2| LlAlg.create_combo(alg1, alg2) }
     end
@@ -41,9 +48,11 @@ class BigThought
     result = []
     4.times do |i|
       kind = (i == 0) ? 'solve' : 'generator'
-      result << LlAlg.create(name: name + "-#{alg_label(moves)}", moves: moves, kind: kind)
-      result << LlAlg.create(name: name + "M-#{alg_label(mirrored_moves)}", moves: mirrored_moves, kind: kind)
+
+      result << LlAlg.create(name: name + ".#{alg_label(moves)}", moves: moves, kind: kind)
       moves = moves.chars.map { |char| circle[char] || char}.join
+
+      result << LlAlg.create(name: name + "M.#{alg_label(mirrored_moves)}", moves: mirrored_moves, kind: kind)
       mirrored_moves = mirrored_moves.chars.map { |char| circle[char] || char}.join
     end
     result

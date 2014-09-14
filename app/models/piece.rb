@@ -1,10 +1,11 @@
 class Piece
   attr_reader :name
 
+  ALL = %w[BL BR DB DBL DRB DF DLF DFR DL DR FL FR UB ULB UBR UF UFL URF UL UR]
+
   def initialize(name)
-    unless %w[BL BR DB DBL DRB DF DLF DFR DL DR FL FR UB ULB UBR UF UFL URF UL UR].include? name
-      raise "'#{name}' is not a valid piece name"
-    end
+    raise "'#{name}' is not a valid piece name" unless ALL.include? name
+
     @name = name
     @stickers = name.chars.map { |char| char.to_sym}
     @on_sides = name.chars.map { |char| char.to_sym}

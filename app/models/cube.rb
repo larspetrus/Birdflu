@@ -1,29 +1,26 @@
 class Cube
   def initialize()
-    @pcs = { }
-
-    %W[BL BR DB DBL DRB DF DLF DFR DL DR FL FR UB ULB UBR UF UFL URF UL UR].each do |piece|
-      @pcs[piece.to_sym] = Piece.new(piece)
-    end
+    @pieces = { }
+    Piece::ALL.each { |piece| @pieces[piece.to_sym] = Piece.new(piece) }
   end
 
   def sticker_at(position, side)
     piece_at(position).sticker_on(side.to_sym)
   end
 
-  def color_at(position, side)
+  def color_at(position, side) # Same as RoofPig
     {R: '#0d0', L: '#07f', F: 'red', B: 'orange', U: 'yellow', D: '#eee'}[piece_at(position).sticker_on(side.to_sym).to_sym]
   end
 
   def piece_at(position)
-    @pcs[position.to_sym]
+    @pieces[position.to_sym]
   end
 
   def move(side, turns)
     move = Move.on(side)
       move.cycles.each do |cyc|
-        cyc.each { |position| @pcs[position].shift(move.shift, turns) }
-        turns.times { @pcs[cyc[0]], @pcs[cyc[1]], @pcs[cyc[2]], @pcs[cyc[3]] = @pcs[cyc[1]], @pcs[cyc[2]], @pcs[cyc[3]], @pcs[cyc[0]] }
+        cyc.each { |position| @pieces[position].shift(move.shift, turns) }
+        turns.times { @pieces[cyc[0]],@pieces[cyc[1]],@pieces[cyc[2]],@pieces[cyc[3]] = @pieces[cyc[1]],@pieces[cyc[2]],@pieces[cyc[3]],@pieces[cyc[0]] }
     end
   end
 
@@ -39,11 +36,12 @@ class Cube
     ll_codes.sort.first
   end
 
-  def ll_codes()
+  def standard_ll_code_offset
+    ll_codes.index(standard_ll_code)
+  end
 
-    unless f2l_solved
-      raise "Can't make LL code with F2L unsolved"
-    end
+  def ll_codes()
+    raise "Can't make LL code with F2L unsolved" unless f2l_solved()
 
     (0..3).map { |i| ll_code(LL.corners.rotate(i), LL.edges.rotate(i)) }
   end
@@ -73,30 +71,30 @@ class Cube
     4.times do |i|
       c_data = LL.corner_data(ll_code[i*2])
       c_cyc << c_to_here = c_data.position(i).to_sym
-      @pcs[c_to_here].shift(Move::D.shift, c_data.distance)
-      @pcs[c_to_here].rotate(c_data.spin)
+      @pieces[c_to_here].shift(Move::D.shift, c_data.distance)
+      @pieces[c_to_here].rotate(c_data.spin)
 
       e_data = LL.edge_data(ll_code[2*i + 1])
       e_cyc << e_to_here = e_data.position(i).to_sym
-      @pcs[e_to_here].shift(Move::D.shift, e_data.distance)
-      @pcs[e_to_here].rotate(e_data.spin)
+      @pieces[e_to_here].shift(Move::D.shift, e_data.distance)
+      @pieces[e_to_here].rotate(e_data.spin)
     end
 
-    @pcs[:ULB], @pcs[:UBR], @pcs[:URF], @pcs[:UFL] = @pcs[c_cyc[0]], @pcs[c_cyc[1]], @pcs[c_cyc[2]], @pcs[c_cyc[3]]
-    @pcs[:UB],  @pcs[:UR],  @pcs[:UF],  @pcs[:UL]  = @pcs[e_cyc[0]], @pcs[e_cyc[1]], @pcs[e_cyc[2]], @pcs[e_cyc[3]]
+    @pieces[:ULB],@pieces[:UBR],@pieces[:URF],@pieces[:UFL] = @pieces[c_cyc[0]],@pieces[c_cyc[1]],@pieces[c_cyc[2]],@pieces[c_cyc[3]]
+    @pieces[:UB], @pieces[:UR], @pieces[:UF], @pieces[:UL]  = @pieces[e_cyc[0]],@pieces[e_cyc[1]],@pieces[e_cyc[2]],@pieces[e_cyc[3]]
 
     self
   end
 
   def as_tweaks()
-    @pcs.values.map(&:as_tweak).join(' ')
+    @pieces.values.map(&:as_tweak).join(' ')
   end
 
   def corruption()
     badness = []
-    @pcs.each do |position, piece|
+    @pieces.each do |position, piece|
       piece_sides = (piece.instance_variable_get :@on_sides).map(&:to_s).sort.join
-      if (position.to_s.split('').sort.join != piece_sides)
+      if position.to_s.split('').sort.join != piece_sides
         badness << "Piece on #{position} thinks it's on #{piece_sides}"
       end
     end
@@ -104,13 +102,13 @@ class Cube
   end
 
   def f2l_solved()
-    @pcs.values.each do |piece|
+    @pieces.values.each do |piece|
       return false if !piece.name.include?('U') && !piece.is_solved
     end
-    return true
+    true
   end
 
   def print
-    @pcs.each { |pos, piece| puts "At #{pos}: #{piece.to_s}" }
+    @pieces.each { |pos, piece| puts "At #{pos}: #{piece.to_s}" }
   end
 end

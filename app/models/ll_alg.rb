@@ -17,20 +17,27 @@ class LlAlg < ActiveRecord::Base
   def self.merge_moves(moves1, moves2)
     start  = moves1.split(' ')
     finish = moves2.split(' ')
+    cancels1 = []
+    remains = []
+    cancels2 = []
 
     begin
       m1 = Move.parse(start.last)
       m2 = Move.parse(finish.first)
-      double_cancel = (m1.side == m2.side) && (m1.turns + m2.turns == 4)
       if m1.side == m2.side
+        cancels1.insert(0, start.last)
+        cancels2 << finish.first
+
         start.delete_at(start.length-1)
         finish.delete_at(0)
 
-        start << Move.from(m1.side, (m1.turns + m2.turns) % 4) unless double_cancel
+        remains << Move.from(m1.side, (m1.turns + m2.turns) % 4) unless m1.turns + m2.turns == 4
       end
-    end while double_cancel && start.length > 0 && finish.length > 0
+    end while m1.side == m2.side && remains.empty? && start.present? && finish.present?
 
-    (start + finish).join(' ')
+    puts "#{start.join(' ')} [#{cancels1.join(' ')} |#{remains.join(' ')}| #{cancels2.join(' ')}] #{finish.join(' ')}"
+
+    (start + remains + finish).join(' ')
   end
 
   def solves_ll_code

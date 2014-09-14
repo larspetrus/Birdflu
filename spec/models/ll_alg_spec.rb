@@ -33,7 +33,7 @@ RSpec.describe LlAlg, :type => :model do
 
     expect(combo.solves_ll_code).to eq("a3a7c3b7")
     expect(combo.position.ll_code).to eq("a3a7c3b7")
-    expect(combo.name).to eq("Sune-F+SuneM-F'")
+    expect(combo.name).to eq("Sune.F+SuneM.F'")
     expect(combo.length).to eq(13)
     expect(combo.moves).to eq("F U F' U F U2 F2 U' F U' F' U2 F")
     expect(combo.kind).to eq('combo')

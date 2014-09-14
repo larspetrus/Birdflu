@@ -32,10 +32,12 @@ RSpec.describe Cube, :type => :model do
     cube.setup_alg("F U F' U F U2 F'")
     expect(cube.ll_codes()).to eq(["a1c3c3c5", "c3c3c5a1", "c3c5a1c3", "c5a1c3c3"])
     expect(cube.standard_ll_code()).to eq("a1c3c3c5")
+    expect(cube.standard_ll_code_offset()).to eq(0)
 
     cube2 = Cube.new.setup_alg("L' B L B' U' B' U B")
     expect(cube2.ll_codes()).to eq(["a8j7o1q6", "b3e5g2i4", "a3c8e2p1", "c8e2p1a3"])
     expect(cube2.standard_ll_code()).to eq("a3c8e2p1")
+    expect(cube2.standard_ll_code_offset()).to eq(2)
 
     expect{ Cube.new.setup_alg("F").ll_codes()}.to raise_error(RuntimeError, "Can't make LL code with F2L unsolved")
   end
