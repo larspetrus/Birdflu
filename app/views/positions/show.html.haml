@@ -33,7 +33,7 @@
     %td{style:"border: none;"}
 
 - @position.ll_algs.first(3).each do |f3|
-  .roofpig.rp160{:'data-config' => "base=AD | alg=#{f3.moves} | flags=showalg" }
+  .roofpig.rp160{:'data-config' => "base=AD | alg=#{f3.moves} | flags=showalg #{f3.setup_moves}" }
     =f3.name
 
 %hr{style: 'clear:both;'}
@@ -42,6 +42,7 @@
   %th Moves
   %th Name
   %th Alg
+  %th +U
 
   - @position.ll_algs.each do |alg|
     %tr
@@ -51,6 +52,8 @@
         =alg.name
       %td
         =alg.moves
+      %td
+        =alg.u_setup
 
 
 %script{src: "http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"}

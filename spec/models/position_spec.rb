@@ -14,9 +14,9 @@ RSpec.describe Position, :type => :model do
   end
 
   it "has algs" do
-    a1 = LlAlg.create(name: 'a1', moves: "F U F' U F U2 F'")
-    a2 = LlAlg.create(name: 'a2', moves: "F U2 F' U' F U' F'")
-    a3 = LlAlg.create(name: 'a3', moves: "B U B' U B U2 B'")
+    a1 = LlAlg.create_combo( LlAlg.create(name: 'a1', moves: "F U F' U F U2 F'"))
+    a2 = LlAlg.create_combo( LlAlg.create(name: 'a2', moves: "F U2 F' U' F U' F'"))
+    a3 = LlAlg.create_combo( LlAlg.create(name: 'a3', moves: "B U B' U B U2 B'"))
 
     expect(Position.find_by!(ll_code: "a1c3c3c5").ll_algs.to_ary).to eq([a1, a3])
     expect(Position.find_by!(ll_code: "a1b5b7b7").ll_algs).to eq([a2])

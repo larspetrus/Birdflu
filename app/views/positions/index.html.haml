@@ -23,7 +23,8 @@
   %th Moves
   %th Name
   %th Alg
-  %th CO EO
+  %th CO
+  %th EO
 
   - @positions.each do |pos|
     %tr
@@ -39,4 +40,5 @@
         =pos.ll_algs[0].moves
       %td
         =pos.oriented_corners
+      %td
         =pos.oriented_edges

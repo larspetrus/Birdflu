@@ -22,6 +22,7 @@ ActiveRecord::Schema.define(version: 20140909200650) do
     t.integer "length"
     t.integer "position_id"
     t.string  "kind"
+    t.integer "u_setup"
     t.integer "alg1_id"
     t.integer "alg2_id"
   end

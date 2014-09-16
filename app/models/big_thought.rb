@@ -34,26 +34,25 @@ class BigThought
     ]
     alg_data.each { |ad| alg_variants(ad.first, ad.last) }
 
-    all_algs = LlAlg.all
+    all_base_algs = LlAlg.where(kind: ['solve', 'generator'])
     LlAlg.where(kind: 'solve').each do |alg1|
-      all_algs.each { |alg2| LlAlg.create_combo(alg1, alg2) }
+      LlAlg.create_combo(alg1)
+      all_base_algs.each { |alg2| LlAlg.create_combo(alg1, alg2) }
     end
     puts "After BigThought.populate_db(): #{Position.count} positions, #{LlAlg.count} algs"
   end
 
   def self.alg_variants(name, moves)
-    circle = {'R'=>'F', 'F'=>'L', 'L'=>'B', 'B'=>'R'}
-
     mirrored_moves = mirror(moves)
     result = []
     4.times do |i|
       kind = (i == 0) ? 'solve' : 'generator'
 
-      result << LlAlg.create(name: name + ".#{alg_label(moves)}", moves: moves, kind: kind)
-      moves = moves.chars.map { |char| circle[char] || char}.join
+      result << LlAlg.create(name: name, moves: moves, kind: kind)
+      moves = LlAlg.rotate_by_U(moves)
 
-      result << LlAlg.create(name: name + "M.#{alg_label(mirrored_moves)}", moves: mirrored_moves, kind: kind)
-      mirrored_moves = mirrored_moves.chars.map { |char| circle[char] || char}.join
+      result << LlAlg.create(name: name + "M", moves: mirrored_moves, kind: kind)
+      mirrored_moves = LlAlg.rotate_by_U(mirrored_moves)
     end
     result
   end
