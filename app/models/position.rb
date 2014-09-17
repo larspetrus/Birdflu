@@ -1,5 +1,6 @@
 class Position < ActiveRecord::Base
   has_many :ll_algs, -> { order "length" }
+  belongs_to :best_alg, class_name: 'LlAlg'
 
   validates :ll_code, uniqueness: true
 

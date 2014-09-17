@@ -5,7 +5,7 @@ class PositionsController < ApplicationController
     @query = {}
     @query['oriented_corners'] = params[:co].to_i if params[:co].present?
     @query['oriented_edges'] = params[:eo].to_i if params[:eo].present?
-    @positions = Position.where(@query).order(:ll_code)
+    @positions = Position.includes(:best_alg).where(@query).order(:ll_code)
   end
 
   def show

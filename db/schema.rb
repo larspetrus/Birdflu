@@ -39,6 +39,7 @@ ActiveRecord::Schema.define(version: 20140917163648) do
     t.integer  "oriented_edges"
     t.integer  "oriented_corners"
     t.integer  "best_alg_id"
+    t.integer  "alg_count"
   end
 
   add_index "positions", ["ll_code"], name: "index_positions_on_ll_code", using: :btree

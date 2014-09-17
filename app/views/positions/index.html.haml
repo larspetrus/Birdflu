@@ -28,14 +28,14 @@
   - @positions.each do |pos|
     %tr
       %td= link_to pos.ll_code, position_path(pos)
-      %td= pos.ll_algs.count
-      %td= pos.ll_algs[0].length
-      %td= pos.ll_algs[0].name
+      %td= pos.alg_count
+      %td= pos.best_alg.length
+      %td= pos.best_alg.name
       %td
-        =pos.ll_algs[0].mv_start
-        %span.cancel1= pos.ll_algs[0].mv_cancel1
-        %span.merged=  pos.ll_algs[0].mv_merged
-        %span.cancel2= pos.ll_algs[0].mv_cancel2
-        %span.alg2=    pos.ll_algs[0].mv_end
+        =pos.best_alg.mv_start
+        %span.cancel1= pos.best_alg.mv_cancel1
+        %span.merged=  pos.best_alg.mv_merged
+        %span.cancel2= pos.best_alg.mv_cancel2
+        %span.alg2=    pos.best_alg.mv_end
       %td= pos.oriented_corners
       %td= pos.oriented_edges

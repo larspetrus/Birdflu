@@ -7,5 +7,6 @@ class AddAlgSectionsEtc < ActiveRecord::Migration
     add_column :algs, :mv_end, :string
 
     add_column :positions, :best_alg_id, :integer
+    add_column :positions, :alg_count, :integer
   end
 end

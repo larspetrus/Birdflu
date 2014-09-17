@@ -39,6 +39,9 @@ class BigThought
       LlAlg.create_combo(alg1)
       all_base_algs.each { |alg2| LlAlg.create_combo(alg1, alg2) }
     end
+
+    Position.all.each { |p| p.update(alg_count: p.ll_algs.count, best_alg_id: p.ll_algs[0].id) }
+
     puts "After BigThought.populate_db(): #{Position.count} positions, #{LlAlg.count} algs"
   end
 
