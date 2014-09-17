@@ -51,7 +51,19 @@
       %td
         =alg.name
       %td
-        =alg.moves
+        =alg.m5[0].join(' ')
+
+        %span.cancel1
+          =alg.m5[1].join(' ')
+
+        %span.merged
+          =alg.m5[2].join(' ')
+
+        %span.cancel2
+          =alg.m5[3].join(' ')
+
+        %span.alg2
+          =alg.m5[4].join(' ')
       %td
         =alg.u_setup
 

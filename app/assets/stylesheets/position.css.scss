@@ -30,7 +30,7 @@ form {
   border: thin dotted #fdb;
 }
 
-// U position Drawing
+// ------------ U position Drawing
 $big: 16px;
 $small: 8px;
 
@@ -59,4 +59,20 @@ $small: 8px;
 .l {
   width: $small;
   box-shadow: -5px 0 3px 0px #07f;
+}
+
+// ------------ Alg sections
+.cancel1 {
+  color: #aaa;
+  text-decoration: line-through;
+}
+.merged {
+  color: blue;
+}
+.cancel2 {
+  color: #daa;
+  text-decoration: line-through;
+}
+.alg2 {
+  color: #a33;
 }

@@ -37,7 +37,19 @@
       %td
         =pos.ll_algs[0].name
       %td
-        =pos.ll_algs[0].moves
+        =pos.ll_algs[0].m5[0].join(' ')
+
+        %span.cancel1
+          =pos.ll_algs[0].m5[1].join(' ')
+
+        %span.merged
+          =pos.ll_algs[0].m5[2].join(' ')
+
+        %span.cancel2
+          =pos.ll_algs[0].m5[3].join(' ')
+
+        %span.alg2
+          =pos.ll_algs[0].m5[4].join(' ')
       %td
         =pos.oriented_corners
       %td

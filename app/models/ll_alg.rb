@@ -11,8 +11,14 @@ class LlAlg < ActiveRecord::Base
     self.position = Position.find_or_create_by(ll_code: ll_code) if self.kind == 'combo'
   end
 
+  def m5
+    LlAlg.merge_moves(alg1.moves, alg2 ? alg2.moves : '')
+  end
+
+
   def self.create_combo(a1, a2 = OpenStruct.new(name: '...', moves: '', id: nil))
-    merged_moves = merge_moves(a1.moves, a2.moves)
+    mm = merge_moves(a1.moves, a2.moves)
+    merged_moves = (mm[0] + mm[2] + mm[4]).join(' ')
     alg_adjustment = 4 - Cube.new.setup_alg(merged_moves).standard_ll_code_offset
     adjusted_moves = rotate_by_U(merged_moves, alg_adjustment)
 
@@ -22,9 +28,10 @@ class LlAlg < ActiveRecord::Base
   end
 
   def self.merge_moves(moves1, moves2)
-    return moves1 if moves2.empty?
-
     start  = moves1.split(' ')
+
+    return [start, [], [], [], []] if moves2.empty?
+
     finish = moves2.split(' ')
     cancels1 = []
     remains = []
@@ -44,8 +51,7 @@ class LlAlg < ActiveRecord::Base
       end
     end while m1.side == m2.side && remains.empty? && start.present? && finish.present?
 
-    # puts "#{start.join(' ')} [#{cancels1.join(' ')} |#{remains.join(' ')}| #{cancels2.join(' ')}] #{finish.join(' ')}"
-    (start + remains + finish).join(' ')
+    [start, cancels1, remains, cancels2, finish]
   end
 
   def self.rotate_by_U(moves, turns = 1)
