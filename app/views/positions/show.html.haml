@@ -43,29 +43,17 @@
   %th Name
   %th Alg
   %th +U
-
   - @position.ll_algs.each do |alg|
     %tr
+      %td= alg.length
+      %td= alg.name
       %td
-        =alg.length
-      %td
-        =alg.name
-      %td
-        =alg.m5[0].join(' ')
-
-        %span.cancel1
-          =alg.m5[1].join(' ')
-
-        %span.merged
-          =alg.m5[2].join(' ')
-
-        %span.cancel2
-          =alg.m5[3].join(' ')
-
-        %span.alg2
-          =alg.m5[4].join(' ')
-      %td
-        =alg.u_setup
+        = alg.mv_start
+        %span.cancel1= alg.mv_cancel1
+        %span.merged=  alg.mv_merged
+        %span.cancel2= alg.mv_cancel2
+        %span.alg2=    alg.mv_end
+      %td= alg.u_setup
 
 
 %script{src: "http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"}

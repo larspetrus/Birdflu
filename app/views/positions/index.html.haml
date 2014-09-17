@@ -2,7 +2,6 @@
 
 %h3 All Positions
 
-
 =form_tag url_for(controller: "positions", action: "index"), method: 'get' do
   %h4 Filter
   %div
@@ -28,29 +27,15 @@
 
   - @positions.each do |pos|
     %tr
+      %td= link_to pos.ll_code, position_path(pos)
+      %td= pos.ll_algs.count
+      %td= pos.ll_algs[0].length
+      %td= pos.ll_algs[0].name
       %td
-        =link_to pos.ll_code, position_path(pos)
-      %td
-        =pos.ll_algs.count
-      %td
-        =pos.ll_algs[0].length
-      %td
-        =pos.ll_algs[0].name
-      %td
-        =pos.ll_algs[0].m5[0].join(' ')
-
-        %span.cancel1
-          =pos.ll_algs[0].m5[1].join(' ')
-
-        %span.merged
-          =pos.ll_algs[0].m5[2].join(' ')
-
-        %span.cancel2
-          =pos.ll_algs[0].m5[3].join(' ')
-
-        %span.alg2
-          =pos.ll_algs[0].m5[4].join(' ')
-      %td
-        =pos.oriented_corners
-      %td
-        =pos.oriented_edges
+        =pos.ll_algs[0].mv_start
+        %span.cancel1= pos.ll_algs[0].mv_cancel1
+        %span.merged=  pos.ll_algs[0].mv_merged
+        %span.cancel2= pos.ll_algs[0].mv_cancel2
+        %span.alg2=    pos.ll_algs[0].mv_end
+      %td= pos.oriented_corners
+      %td= pos.oriented_edges

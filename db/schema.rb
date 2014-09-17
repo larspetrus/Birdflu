@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140909200650) do
+ActiveRecord::Schema.define(version: 20140917163648) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,6 +25,11 @@ ActiveRecord::Schema.define(version: 20140909200650) do
     t.integer "u_setup"
     t.integer "alg1_id"
     t.integer "alg2_id"
+    t.string  "mv_start"
+    t.string  "mv_cancel1"
+    t.string  "mv_merged"
+    t.string  "mv_cancel2"
+    t.string  "mv_end"
   end
 
   create_table "positions", force: true do |t|
@@ -33,6 +38,7 @@ ActiveRecord::Schema.define(version: 20140909200650) do
     t.datetime "updated_at"
     t.integer  "oriented_edges"
     t.integer  "oriented_corners"
+    t.integer  "best_alg_id"
   end
 
   add_index "positions", ["ll_code"], name: "index_positions_on_ll_code", using: :btree

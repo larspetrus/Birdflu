@@ -60,12 +60,12 @@ RSpec.describe LlAlg, :type => :model do
   end
 
   it '#merge_moves' do
-    expect(LlAlg.merge_moves("F U2 R'", "B F")).to eq("F U2 R' B F")
-    expect(LlAlg.merge_moves("F U2 R'", "R F")).to eq("F U2 F")
-    expect(LlAlg.merge_moves("F U2 R'", "R2 F")).to eq("F U2 R F")
-    expect(LlAlg.merge_moves("F U2 R2", "R2 U F")).to eq("F U' F")
-    # expect(LlAlg.merge_moves("D L R", "L R F")).to eq("D L2 R2 F") # TODO !
-    expect(LlAlg.merge_moves("F U2 R2", "R2 U2 F'")).to eq("")
+    expect(LlAlg.merge_moves("F U2 R'", "B F")).to eq(mv_start: "F U2 R'", mv_cancel1: "", mv_merged: "", mv_cancel2: "", mv_end: "B F", moves: "F U2 R' B F")
+    expect(LlAlg.merge_moves("F U2 R'", "R F")).to eq(mv_start: "F U2", mv_cancel1: "R'", mv_merged: "", mv_cancel2: "R", mv_end: "F", :moves=> 'F U2 F')
+    expect(LlAlg.merge_moves("F U2 R'", "R2 F")).to eq(mv_start: "F U2", mv_cancel1: "R'", mv_merged: "R", mv_cancel2: "R2", mv_end: "F", moves: "F U2 R F")
+    expect(LlAlg.merge_moves("F U2 R2", "R2 U F")).to eq(mv_start: "F", mv_cancel1: "U2 R2", mv_merged: "U'", mv_cancel2: "R2 U", mv_end: "F", moves: "F U' F")
+    # expect(LlAlg.merge_moves("D L R", "L R F")).to eq(mv_start: "D", mv_cancel1: "L R", mv_merged: "L2 R2", mv_cancel2: "L R", mv_end: "F", :moves=>"D L2 R2 F") # TODO !
+    expect(LlAlg.merge_moves("F U2 R2", "R2 U2 F'")).to eq(:mv_start=>"", :mv_cancel1=>"F U2 R2", :mv_merged=>"", :mv_cancel2=>"R2 U2 F'", :mv_end=>"", :moves=>"")
   end
 
   it '#rotate_by_U' do
