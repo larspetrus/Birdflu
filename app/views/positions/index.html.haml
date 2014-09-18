@@ -18,24 +18,24 @@
 
 %table.index
   %th LL_CODE
-  %th Solutions
-  %th Moves
-  %th Name
-  %th Alg
   %th CO
   %th EO
+  %th Solutions
+  %th Best Solution
+  %th Moves
+  %th Name
 
   - @positions.each do |pos|
     %tr
       %td= link_to pos.ll_code, position_path(pos)
+      %td= pos.oriented_corners
+      %td= pos.oriented_edges
       %td= pos.alg_count
-      %td= pos.best_alg.length
-      %td= pos.best_alg.name
       %td
         =pos.best_alg.mv_start
         %span.cancel1= pos.best_alg.mv_cancel1
         %span.merged=  pos.best_alg.mv_merged
         %span.cancel2= pos.best_alg.mv_cancel2
         %span.alg2=    pos.best_alg.mv_end
-      %td= pos.oriented_corners
-      %td= pos.oriented_edges
+      %td= pos.best_alg.length
+      %td= pos.best_alg.name

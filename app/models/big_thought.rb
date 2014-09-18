@@ -1,7 +1,7 @@
 class BigThought
 
-  def self.populate_db(force_db)
-    if force_db
+  def self.populate_db(regenerate)
+    if regenerate
       Position.delete_all
       LlAlg.delete_all
     end
@@ -11,38 +11,58 @@ class BigThought
       return
     end
     puts "Starting BigThought.populate_db(): #{Position.count} positions, #{LlAlg.count} algs"
+    start_time = Time.new
 
-    alg_data = [
+    root_algs.each { |ad| alg_variants(ad.first, ad.last) }
+
+    all_bases = LlAlg.where(kind: ['solve', 'generator'])
+    LlAlg.where(kind: 'solve').each do |alg1|
+      LlAlg.create_combo(alg1)
+      all_bases.each { |alg2| LlAlg.create_combo(alg1, alg2) }
+    end
+
+    Position.all.each { |p| p.update(alg_count: p.ll_algs.count, best_alg_id: p.ll_algs[0].id) }
+
+    puts "After BigThought.populate_db(): #{Position.count} positions, #{LlAlg.count} algs. Took #{Time.new - start_time}"
+  end
+
+  def self.root_algs
+    reversibles = [
         ["Sune",     "F U F' U F U2 F'"],
-        ["AntiSune", "F U2 F' U' F U' F'"],
+        ["Benny",    "B' U2 B2 U2 B2 U' B2 U' B2 U B"],
+        ["BH54",     "R' U2 R' D' L F2 L' D R2"],
+        ["BH58",     "R' U2 R' D' R U2 R' D R2"],
+
+        ["Clix",     "F' L' B L F L' B' L"], #BH518 #BLB'RBL'B'R' !?!
+        ["Buffy",    "B' U2 B U2 F U' B' U B F'"],
+
+        ["Shorty",    "F R U R' U' F'"],
+
+        ["BH181",     "L' B' R B' R' B2 L"],
+        ["BH304",     "B' R' U R B L U' L'"],
+        ["BH347",     "B' U' B' R B R' U B"],
+        ["BH918",     "R B2 L' B2 R' B L B'"],
+        ["BH1161",    "R' U' R U R B' R' B"],
+    ]
+    others = [
         ["Allan",    "F2 U R' L F2 R L' U F2"],
         ["Bruno",    "L U2 L2 U' L2 U' L2 U2 L"],
-        ["Benny",    "B' U2 B2 U2 B2 U' B2 U' B2 U B"],
-        ["AntiBenny","B U B2 U' B2 U' B2 U2 B2 U2 B'"],
         ["Arne",     "R2 F2 B2 L2 D L2 B2 F2 R2"],
         ["Rune",     "L' U' L U' L U L2 U L2 U2 L'"],
         ["Bert",     "F2 B2 D R2 F2 B2 L2 F2 B2 D' F2 B2"],
 
         ["Niklas",   "L U' R' U L' U' R"],
-        ["Clix",     "F' L' B L F L' B' L"],
-        ["Evelyn",   "R B' R' F R B R' F'"],
 
-        ["Shorty",    "F R U R' U' F'"],
-        ["AntiShorty","F U R U' R' F'"],
-        ["Middly",    "R U R' U' R' F R F'"],
-        ["AntiMiddly","F R' F' R U R U' R'"],
+        ["BH17",      "B U B2 R B R2 U R"],
     ]
-    alg_data.each { |ad| alg_variants(ad.first, ad.last) }
 
-    all_base_algs = LlAlg.where(kind: ['solve', 'generator'])
-    LlAlg.where(kind: 'solve').each do |alg1|
-      LlAlg.create_combo(alg1)
-      all_base_algs.each { |alg2| LlAlg.create_combo(alg1, alg2) }
+    reversed = []
+    reversibles.each do |rev|
+      reversed << rev
+      reversed << ["Anti#{rev[0]}", reverse(rev[1])]
     end
 
-    Position.all.each { |p| p.update(alg_count: p.ll_algs.count, best_alg_id: p.ll_algs[0].id) }
-
-    puts "After BigThought.populate_db(): #{Position.count} positions, #{LlAlg.count} algs"
+    reversed + others
   end
 
   def self.alg_variants(name, moves)
@@ -78,4 +98,12 @@ class BigThought
     mirrored.join(' ')
   end
 
+  def self.reverse(moves)
+    reversed = []
+    moves.split(' ').reverse.each do |move|
+      turns = {"2" => "2", "'" => ""}[move[1]] || "'"
+      reversed << move[0]+turns
+    end
+    reversed.join(' ')
+  end
 end

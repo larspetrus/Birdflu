@@ -1,6 +1,6 @@
 class PositionsController < ApplicationController
   def index
-    BigThought.populate_db params[:force_db]
+    BigThought.populate_db params[:regenerate]
 
     @query = {}
     @query['oriented_corners'] = params[:co].to_i if params[:co].present?
