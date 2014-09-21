@@ -29,12 +29,11 @@ describe BigThought do
   end
 
   it 'root_algs' do
-    puts BigThought.root_algs.pretty_inspect
+    # puts BigThought.root_algs.pretty_inspect
 
     #TODO
     # 1. Determine which base algs should be reversed
     # 2. Should all be mirrored?
     # 3. Find dupes
-
   end
 end

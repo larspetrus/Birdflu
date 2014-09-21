@@ -2,37 +2,40 @@
 
 %h3 Position #{@position.ll_code}
 
-%table.upos
-  %tr
-    %td{style:"border: none;"}
-    %td.b{style:"background-color:#{@cube.color_at('ULB', 'B')}"}
-    %td.b{style:"background-color:#{@cube.color_at('UB', 'B')}"}
-    %td.b{style:"background-color:#{@cube.color_at('UBR', 'B')}"}
-    %td{style:"border: none;"}
-  %tr
-    %td.l{style:"background-color:#{@cube.color_at('ULB', 'L')}"}
-    %td.u{style:"background-color:#{@cube.color_at('ULB', 'U')}"}
-    %td.u{style:"background-color:#{@cube.color_at('UB', 'U')} "}
-    %td.u{style:"background-color:#{@cube.color_at('UBR', 'U')}"}
-    %td.r{style:"background-color:#{@cube.color_at('UBR', 'R')}"}
-  %tr
-    %td.l{style:"background-color:#{@cube.color_at('UL', 'L')}"}
-    %td.u{style:"background-color:#{@cube.color_at('UL', 'U')}"}
-    %td.u{style:"background-color:yellow"}
-    %td.u{style:"background-color:#{@cube.color_at('UR', 'U')}"}
-    %td.r{style:"background-color:#{@cube.color_at('UR', 'R')}"}
-  %tr
-    %td.l{style:"background-color:#{@cube.color_at('UFL', 'L')}"}
-    %td.u{style:"background-color:#{@cube.color_at('UFL', 'U')}"}
-    %td.u{style:"background-color:#{@cube.color_at('UF', 'U')} "}
-    %td.u{style:"background-color:#{@cube.color_at('URF', 'U')}"}
-    %td.r{style:"background-color:#{@cube.color_at('URF', 'R')}"}
-  %tr
-    %td{style:"border: none;"}
-    %td.f{style:"background-color:#{@cube.color_at('UFL', 'F')}"}
-    %td.f{style:"background-color:#{@cube.color_at('UF', 'F')} "}
-    %td.f{style:"background-color:#{@cube.color_at('URF', 'F')}"}
-    %td{style:"border: none;"}
+%div{style: "position:relative"}
+  %div{class: "arr_#{@position.corner_swap}"}
+
+  %table.upos
+    %tr
+      %td{style:"border: none;"}
+      %td.b{style:"background-color:#{@cube.color_at('ULB', 'B')}"}
+      %td.b{style:"background-color:#{@cube.color_at('UB', 'B')}"}
+      %td.b{style:"background-color:#{@cube.color_at('UBR', 'B')}"}
+      %td{style:"border: none;"}
+    %tr
+      %td.l{style:"background-color:#{@cube.color_at('ULB', 'L')}"}
+      %td.u{style:"background-color:#{@cube.color_at('ULB', 'U')}"}
+      %td.u{style:"background-color:#{@cube.color_at('UB', 'U')} "}
+      %td.u{style:"background-color:#{@cube.color_at('UBR', 'U')}"}
+      %td.r{style:"background-color:#{@cube.color_at('UBR', 'R')}"}
+    %tr
+      %td.l{style:"background-color:#{@cube.color_at('UL', 'L')}"}
+      %td.u{style:"background-color:#{@cube.color_at('UL', 'U')}"}
+      %td.u{style:"background-color:yellow"}
+      %td.u{style:"background-color:#{@cube.color_at('UR', 'U')}"}
+      %td.r{style:"background-color:#{@cube.color_at('UR', 'R')}"}
+    %tr
+      %td.l{style:"background-color:#{@cube.color_at('UFL', 'L')}"}
+      %td.u{style:"background-color:#{@cube.color_at('UFL', 'U')}"}
+      %td.u{style:"background-color:#{@cube.color_at('UF', 'U')} "}
+      %td.u{style:"background-color:#{@cube.color_at('URF', 'U')}"}
+      %td.r{style:"background-color:#{@cube.color_at('URF', 'R')}"}
+    %tr
+      %td{style:"border: none;"}
+      %td.f{style:"background-color:#{@cube.color_at('UFL', 'F')}"}
+      %td.f{style:"background-color:#{@cube.color_at('UF', 'F')} "}
+      %td.f{style:"background-color:#{@cube.color_at('URF', 'F')}"}
+      %td{style:"border: none;"}
 
 - @position.ll_algs.first(3).each do |f3|
   .roofpig.rp160{:'data-config' => "base=AD | alg=#{f3.moves} | flags=showalg #{f3.setup_moves}" }
@@ -44,7 +47,6 @@
   %th Moves
   %th Name
   %th Alg
-  %th +U
   - @position.ll_algs.each do |alg|
     %tr
       %td= alg.length
@@ -55,7 +57,6 @@
         %span.merged=  alg.mv_merged
         %span.cancel2= alg.mv_cancel2
         %span.alg2=    alg.mv_end
-      %td= alg.u_setup
 
 
 %script{src: "http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"}

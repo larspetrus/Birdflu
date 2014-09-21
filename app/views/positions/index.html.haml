@@ -18,6 +18,7 @@
 
 %table.index
   %th LL_CODE
+  %th CP
   %th CO
   %th EO
   %th Solutions
@@ -28,6 +29,7 @@
   - @positions.each do |pos|
     %tr
       %td= link_to pos.ll_code, position_path(pos)
+      %td= pos.corner_swap
       %td= pos.oriented_corners
       %td= pos.oriented_edges
       %td= pos.alg_count

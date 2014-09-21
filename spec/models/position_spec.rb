@@ -26,9 +26,23 @@ RSpec.describe Position, :type => :model do
     solved = Position.create(ll_code: 'a1a1a1a1')
     expect(solved.oriented_edges).to eq(4)
     expect(solved.oriented_corners).to eq(4)
+    expect(solved.corner_swap).to eq('no')
 
     messy = Position.create(ll_code: 'a4c5c1c4')
     expect(messy.oriented_edges).to eq(2)
     expect(messy.oriented_corners).to eq(1)
+    expect(messy.corner_swap).to eq('no')
+  end
+
+  it '#corner_swap_for' do
+    expect(Position.corner_swap_for('a1a1a1a1')).to eq(:no)
+    expect(Position.corner_swap_for('a1a1o1a1')).to eq(nil)
+    expect(Position.corner_swap_for('a4e6o5a7')).to eq(:right)
+    expect(Position.corner_swap_for('a6k5p5o6')).to eq(:back)
+    expect(Position.corner_swap_for('a4i8c1j1')).to eq(:diagonal)
+    expect(Position.corner_swap_for('b4k8p3q7')).to eq(:back)
+    expect(Position.corner_swap_for('b2c2b2c2')).to eq(:no)
+    expect(Position.corner_swap_for('b3f6g1k4')).to eq(:left)
+    expect(Position.corner_swap_for('b5f1q5c1')).to eq(:right)
   end
 end

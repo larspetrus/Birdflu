@@ -61,6 +61,50 @@ $small: 8px;
   box-shadow: -5px 0 3px 0px #07f;
 }
 
+// ------------ Arrows
+
+.arr_h {
+  left:20px;
+  height:7px;
+  width:54px;
+  position:absolute;
+  background-image: url('/assets/arrow_h.png');
+}
+
+.arr_v {
+  top:16px;
+  height:54px;
+  width:7px;
+  position:absolute;
+  background-image: url('/assets/arrow_v.png');
+}
+
+.arr_back {
+  @extend .arr_h;
+  top:18px;
+}
+.arr_front {
+  @extend .arr_h;
+  top:60px;
+}
+.arr_left {
+  @extend .arr_v;
+  left:23px;
+}
+.arr_right {
+  @extend .arr_v;
+  left:63px;
+}
+.arr_diagonal {
+  height:54px;
+  width:54px;
+  position:absolute;
+  top:15px;
+  left:21px;
+  background-image: url('/assets/arrow_d.png');
+}
+.arr_no {}
+
 // ------------ Alg sections
 .cancel1 {
   color: #aaa;
@@ -76,3 +120,4 @@ $small: 8px;
 .alg2 {
   color: #a33;
 }
+
