@@ -5,6 +5,9 @@
 =form_tag url_for(controller: "positions", action: "index"), method: 'get' do
   %h4 Filter
   %div
+    =label_tag(:cp, "Swapped corners")
+    =select_tag(:cp, options_for_select([["None", "None"], ["Adjacent", "Adjacent"], ["Diagonal", "Diagonal"]], @pcp), include_blank: true)
+  %div
     =label_tag(:co, "Oriented corners")
     =select_tag(:co, options_for_select([["0", "0"], ["1", "1"], ["2", "2"], ["4", "4"]], @query['oriented_corners']), include_blank: true)
   %div
