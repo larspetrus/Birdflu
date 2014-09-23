@@ -70,7 +70,6 @@ $small: 8px;
   position:absolute;
   background-image: url('/assets/arrow_h.png');
 }
-
 .arr_v {
   top:16px;
   height:54px;
@@ -78,7 +77,6 @@ $small: 8px;
   position:absolute;
   background-image: url('/assets/arrow_v.png');
 }
-
 .arr_back {
   @extend .arr_h;
   top:18px;

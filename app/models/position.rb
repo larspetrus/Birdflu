@@ -26,6 +26,11 @@ class Position < ActiveRecord::Base
     end
   end
 
+  CP_SYMS = {'diagonal'=>'⤢', 'no'=>'', 'front'=>'F', 'left'=>'L', 'back'=>'B', 'right'=>'R'} #↕↔
+  def corner_swap_symbol
+    CP_SYMS[corner_swap]
+  end
+
   def tweaks()
     result = []
     4.times do |i|

@@ -11,11 +11,6 @@ class LlAlg < ActiveRecord::Base
     self.position = Position.find_or_create_by(ll_code: ll_code) if self.kind == 'combo'
   end
 
-  def m5
-    LlAlg.merge_moves(alg1.moves, alg2 ? alg2.moves : '')
-  end
-
-
   def self.create_combo(a1, a2 = OpenStruct.new(name: '...', moves: '', id: nil))
     move_data = merge_moves(a1.moves, a2.moves)
     alg_adjustment = 4 - Cube.new.setup_alg(move_data[:moves]).standard_ll_code_offset

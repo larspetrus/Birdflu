@@ -32,7 +32,7 @@
   - @positions.each do |pos|
     %tr
       %td= link_to pos.ll_code, position_path(pos)
-      %td= pos.corner_swap
+      %td= pos.corner_swap_symbol
       %td= pos.oriented_corners
       %td= pos.oriented_edges
       %td= pos.alg_count

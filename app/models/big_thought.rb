@@ -13,15 +13,17 @@ class BigThought
     puts "Starting BigThought.populate_db(): #{Position.count} positions, #{LlAlg.count} algs"
     start_time = Time.new
 
-    root_algs.each { |ad| alg_variants(ad.first, ad.last) }
+    ActiveRecord::Base.transaction do
+      root_algs.each { |ad| alg_variants(ad.first, ad.last) }
 
-    all_bases = LlAlg.where(kind: ['solve', 'generator'])
-    LlAlg.where(kind: 'solve').each do |alg1|
-      LlAlg.create_combo(alg1)
-      all_bases.each { |alg2| LlAlg.create_combo(alg1, alg2) }
+      all_bases = LlAlg.where(kind: ['solve', 'generator'])
+      LlAlg.where(kind: 'solve').each do |alg1|
+        LlAlg.create_combo(alg1)
+        all_bases.each { |alg2| LlAlg.create_combo(alg1, alg2) }
+      end
+
+      Position.all.each { |p| p.update(alg_count: p.ll_algs.count, best_alg_id: p.ll_algs[0].id) }
     end
-
-    Position.all.each { |p| p.update(alg_count: p.ll_algs.count, best_alg_id: p.ll_algs[0].id) }
 
     puts "After BigThought.populate_db(): #{Position.count} positions, #{LlAlg.count} algs. Took #{Time.new - start_time}"
   end
