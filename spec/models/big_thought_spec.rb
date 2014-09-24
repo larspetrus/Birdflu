@@ -28,12 +28,27 @@ describe BigThought do
     expect(BigThought.reverse("B L' B R2 B' L B R2 B2")).to eq("B2 R2 B' L' B R2 B' L B'")
   end
 
-  it 'root_algs' do
-    # puts BigThought.root_algs.pretty_inspect
+  describe 'root_algs' do
+    #TODO Find dupes
 
-    #TODO
-    # 1. Determine which base algs should be reversed
-    # 2. Should all be mirrored?
-    # 3. Find dupes
+    it "#reversibility is correct" do
+      BigThought.all_root_algs.each do |alg|
+        ll_code   = Cube.new.setup_alg(alg[1]).standard_ll_code
+        ll_code_M = Cube.new.setup_alg(BigThought.mirror(alg[1])).standard_ll_code
+
+        revalg = BigThought.reverse(alg[1])
+        rev_ll_code   = Cube.new.setup_alg(revalg).standard_ll_code
+        rev_ll_code_M = Cube.new.setup_alg(BigThought.mirror(revalg)).standard_ll_code
+
+        if ll_code == ll_code_M
+          expect(alg[2]).to eq(:singleton), alg[0]
+        elsif ll_code_M == rev_ll_code
+          expect(alg[2]).to eq(:mirror_only), alg[0]
+        else
+          expect(alg[2]).to eq(:reverse), alg[0]
+        end
+
+      end
+    end
   end
 end
