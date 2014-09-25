@@ -33,14 +33,12 @@ ActiveRecord::Schema.define(version: 20140921001300) do
   end
 
   create_table "positions", force: true do |t|
-    t.string   "ll_code"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "oriented_edges"
-    t.integer  "oriented_corners"
-    t.integer  "best_alg_id"
-    t.integer  "alg_count"
-    t.integer  "corner_swap"
+    t.string  "ll_code"
+    t.integer "oriented_edges"
+    t.integer "oriented_corners"
+    t.integer "best_alg_id"
+    t.integer "alg_count"
+    t.integer "corner_swap"
   end
 
   add_index "positions", ["ll_code"], name: "index_positions_on_ll_code", using: :btree

@@ -1,6 +1,4 @@
 class Position < ActiveRecord::Base
-  # self.primary_key = 'll_code'
-
   has_many :ll_algs, -> { order "length" }
   belongs_to :best_alg, class_name: 'LlAlg'
 
