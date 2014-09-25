@@ -1,4 +1,6 @@
 class Position < ActiveRecord::Base
+  # self.primary_key = 'll_code'
+
   has_many :ll_algs, -> { order "length" }
   belongs_to :best_alg, class_name: 'LlAlg'
 
@@ -31,7 +33,7 @@ class Position < ActiveRecord::Base
     CP_SYMS[corner_swap]
   end
 
-  def tweaks()
+  def as_roofpig_tweaks()
     result = []
     4.times do |i|
       c_data = LL.corner_data(ll_code[i*2])

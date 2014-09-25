@@ -74,8 +74,6 @@ class BigThought
         # 11 moves
         ["Benny",    "B' U2 B2 U2 B2 U' B2 U' B2 U B", :reverse],
         ["Rune",     "L' U' L U' L U L2 U L2 U2 L'", :mirror_only],
-        # 12 moves
-        ["Bert",     "F2 B2 D R2 F2 B2 L2 F2 B2 D' F2 B2", :singleton],
     ]
   end
 

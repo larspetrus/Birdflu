@@ -3,11 +3,14 @@ require 'rails_helper'
 describe BigThought do
 
   it 'makes all alg variants' do
-    stigs = BigThought.alg_variants('Nik', "L U' R' U L' U' R")
+    niks = BigThought.alg_variants('Nik', "L U' R' U L' U' R", true)
 
-    expect(stigs.map(&:moves)).to eq(["L U' R' U L' U' R", "R' U L U' R U L'", "B U' F' U B' U' F", "F' U B U' F U B'", "R U' L' U R' U' L", "L' U R U' L U R'", "F U' B' U F' U' B", "B' U F U' B U F'"])
-    expect(stigs.map(&:name)).to eq(["Nik", "NikM", "Nik", "NikM", "Nik", "NikM", "Nik", "NikM"])
-    expect(stigs.map(&:kind)).to eq(['solve', 'solve', 'generator', 'generator', 'generator', 'generator', 'generator', 'generator'])
+    expect(niks.map(&:moves)).to eq(["L U' R' U L' U' R", "R' U L U' R U L'", "B U' F' U B' U' F", "F' U B U' F U B'", "R U' L' U R' U' L", "L' U R U' L U R'", "F U' B' U F' U' B", "B' U F U' B U F'"])
+    expect(niks.map(&:name)).to eq(["Nik", "NikM", "Nik", "NikM", "Nik", "NikM", "Nik", "NikM"])
+    expect(niks.map(&:kind)).to eq(['solve', 'solve', 'generator', 'generator', 'generator', 'generator', 'generator', 'generator'])
+
+    stigs = BigThought.alg_variants('Stig', "L U' R' U L' U' R", false)
+    expect(stigs.map(&:name)).to eq(["Stig", "Stig", "Stig", "Stig"])
   end
 
   it 'alg_label' do
