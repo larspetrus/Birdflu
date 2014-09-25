@@ -35,13 +35,13 @@ class BigThought
 
   def self.all_root_algs
     [
-        # 6 moves
+        # 6 moves (1 total)
         ["Shorty",    "F R U R' U' F'", :reverse],
-        # 7 moves
+        # 7 moves (3 total)
         ["Sune",      "F U F' U F U2 F'", :reverse],
         ["BH181",     "L' B' R B' R' B2 L", :reverse],
         ["Niklas",    "L U' R' U L' U' R", :mirror_only],
-        # 8 moves
+        # 8 moves (7 total)
         ["BH1161",    "R' U' R U R B' R' B", :reverse],
         ["BH17",      "B U B2 R B R2 U R", :mirror_only],
         ["BH304a",    "B' R' U R B L U' L'", :reverse],
@@ -49,7 +49,7 @@ class BigThought
         ["BH918",     "R B2 L' B2 R' B L B'", :reverse],
         ["Clix",      "F' L' B L F L' B' L", :reverse],
         ["BH518b",    "B L B' R B L' B' R'", :reverse],
-        # 9 moves
+        # 9 moves (19 total)
         ["Allan",    "F2 U R' L F2 R L' U F2", :mirror_only],
         ["Bruno",    "L U2 L2 U' L2 U' L2 U2 L", :mirror_only], #BH183
         ["Arne",     "R2 F2 B2 L2 D L2 B2 F2 R2", :singleton],
@@ -69,9 +69,12 @@ class BigThought
         ["BH806a",   "B' U' R U B U' B' R' B", :reverse],
         ["BH806b",   "R L' U B U' B' R' U' L", :reverse],
         ["BH886",    "L2 B2 R B R' B2 L B' L", :reverse],
-        # 10 moves
+        # 10 moves (53 total)
+        ["BH50",     "R B U B' R B' R' B U' R'", :mirror_only],
+        ["BH116a",   "R B L' B' R' L U L U' L'", :reverse],
+        ["BH116b",   "B L' B' R' L U L U' R L'", :reverse],
         ["Buffy",    "B' U2 B U2 F U' B' U B F'", :reverse],
-        # 11 moves
+        # 11 moves (162 total)
         ["Benny",    "B' U2 B2 U2 B2 U' B2 U' B2 U B", :reverse],
         ["Rune",     "L' U' L U' L U L2 U L2 U2 L'", :mirror_only],
     ]
