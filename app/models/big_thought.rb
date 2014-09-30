@@ -42,19 +42,19 @@ class BigThought
         ["BH181",     "L' B' R B' R' B2 L", :reverse],
         ["Niklas",    "L U' R' U L' U' R", :mirror_only],
         # 8 moves (7 total)
-        ["BH1161",    "R' U' R U R B' R' B", :reverse],
         ["BH17",      "B U B2 R B R2 U R", :mirror_only],
         ["BH304a",    "B' R' U R B L U' L'", :reverse],
         ["BH347a",    "B' U' B' R B R' U B", :reverse],
-        ["BH918",     "R B2 L' B2 R' B L B'", :reverse],
-        ["Clix",      "F' L' B L F L' B' L", :reverse],
+        ["Clix",      "L' B' R B L B' R' B", :reverse], #BH518a
         ["BH518b",    "B L B' R B L' B' R'", :reverse],
+        ["BH918",     "R B2 L' B2 R' B L B'", :reverse],
+        ["BH1161",    "R' U' R U R B' R' B", :reverse],
         # 9 moves (19 total)
-        ["Allan",    "F2 U R' L F2 R L' U F2", :mirror_only],
-        ["Bruno",    "L U2 L2 U' L2 U' L2 U2 L", :mirror_only], #BH183
-        ["Arne",     "R2 F2 B2 L2 D L2 B2 F2 R2", :singleton],
+        ["Arne",     "R2 F2 B2 L2 D L2 B2 F2 R2", :singleton], #BH31a/b
+        ["Allan",    "F2 U R' L F2 R L' U F2", :mirror_only], #BH113
         ["BH117a",   "B' R' B2 D2 F2 L' F2 D2 B'", :mirror_only],
         ["BH117b",   "B' L' D2 F2 U2 R' F2 D2 B'", :mirror_only],
+        ["Bruno",    "L U2 L2 U' L2 U' L2 U2 L", :mirror_only], #BH183
         ["BH187",    "B' R B2 L' B2 R' B2 L B'", :mirror_only],
         ["BH304b",   "B' R' U R U2 R' U' R B", :reverse],
         ["BH304c",   "B U B' R' U2 R B U' B'", :reverse],
@@ -70,9 +70,20 @@ class BigThought
         ["BH806b",   "R L' U B U' B' R' U' L", :reverse],
         ["BH886",    "L2 B2 R B R' B2 L B' L", :reverse],
         # 10 moves (53 total)
+        ["BH32",     "R' U2 R U B L U2 L' U' B'", :singleton],
+        ["BH48",     "R U B U' L U' L' U B' R'", :reverse],
         ["BH50",     "R B U B' R B' R' B U' R'", :mirror_only],
         ["BH116a",   "R B L' B' R' L U L U' L'", :reverse],
         ["BH116b",   "B L' B' R' L U L U' R L'", :reverse],
+        ["BH167",    "L' U R' U' R2 D B2 D' R' L", :reverse],
+        ["BH179",    "R B R' L U L' U' R B' R'", :reverse],
+        ["BH208",    "R B U B' U' B U B' U' R'", :reverse],
+        ["BH275a",   "R B L' B L B' U B' U' R'", :singleton],
+        ["BH275b",   "R B U B' U R' U' R U' R'", :singleton],
+        ["BH341",    "L2 B2 R B' D' B D R' B2 L2", :reverse],
+        ["BH370",    "R L' B L' B' D' B D R' L2", :reverse],
+        ["BH371",    "B' R B' R' B' L' B' L2 U2 L'", :mirror_only],
+        ["BH405",    "B2 R2 B' L U L' U' B R2 B2", :reverse],
         ["Buffy",    "B' U2 B U2 F U' B' U B F'", :reverse],
         # 11 moves (162 total)
         ["Benny",    "B' U2 B2 U2 B2 U' B2 U' B2 U B", :reverse],
