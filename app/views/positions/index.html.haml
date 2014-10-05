@@ -24,23 +24,26 @@
   %th CP
   %th CO
   %th EO
+  %th Wt
   %th Solutions
   %th Best Solution
   %th Moves
   %th Name
 
   - @positions.each do |pos|
+    - best = pos.best_alg || OpenStruct.new
     %tr
       %td= link_to pos.ll_code, "positions/#{pos.ll_code}"
       %td= pos.corner_swap_symbol
       %td= pos.oriented_corners
       %td= pos.oriented_edges
+      %td= "×#{pos.weight}"
       %td= pos.alg_count
       %td
-        =pos.best_alg.mv_start
-        %span.cancel1= pos.best_alg.mv_cancel1
-        %span.merged=  pos.best_alg.mv_merged
-        %span.cancel2= pos.best_alg.mv_cancel2
-        %span.alg2=    pos.best_alg.mv_end
-      %td= pos.best_alg.length
-      %td= pos.best_alg.name
+        =best.mv_start
+        %span.cancel1= best.mv_cancel1
+        %span.merged=  best.mv_merged
+        %span.cancel2= best.mv_cancel2
+        %span.alg2=    best.mv_end
+      %td= best.length
+      %td= best.name

@@ -7,7 +7,9 @@ class AddManyColumns < ActiveRecord::Migration
     remove_column :algs, :primary, :boolean
 
     add_index :positions, :ll_code
+    add_column :positions, :weight, :integer
     add_column :positions, :oriented_edges, :integer
     add_column :positions, :oriented_corners, :integer
+    add_column :positions, :corner_swap, :integer
   end
 end

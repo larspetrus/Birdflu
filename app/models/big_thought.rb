@@ -6,7 +6,11 @@ class BigThought
       LlAlg.delete_all
     end
 
-    if Position.count > 0
+    if Position.count == 0
+      ActiveRecord::Base.transaction { Position.generate_all }
+    end
+
+    if LlAlg.count > 0
       puts "DB already populated. Skipping generation. #{Position.count} positions, #{LlAlg.count} algs"
       return
     end
@@ -27,7 +31,7 @@ class BigThought
         all_bases.each { |alg2| LlAlg.create_combo(alg1, alg2) }
       end
 
-      Position.all.each { |p| p.update(alg_count: p.ll_algs.count, best_alg_id: p.ll_algs[0].id) }
+      Position.all.each { |p| p.update(alg_count: p.ll_algs.count, best_alg_id: p.ll_algs[0].try(:id)) }
     end
 
     puts "After BigThought.populate_db(): #{Position.count} positions, #{LlAlg.count} algs. Took #{Time.new - start_time}"

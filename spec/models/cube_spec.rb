@@ -49,6 +49,9 @@ RSpec.describe Cube, :type => :model do
     cube2 = Cube.new.apply_position('a3c8e2p1')
     expect(cube2.standard_ll_code()).to eq("a3c8e2p1")
     expect(cube2.corruption).to eq([])
+
+    cube3 = Cube.new.apply_position('a7i7a7i7')
+    expect(cube3.standard_ll_code()).to eq("a3i3a3i3")
   end
 
 end

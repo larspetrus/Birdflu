@@ -8,7 +8,7 @@ class LlAlg < ActiveRecord::Base
   before_create do
     self.length = moves.split.length
     ll_code = solves_ll_code # ghetto validation
-    self.position = Position.find_or_create_by(ll_code: ll_code) if self.kind == 'combo'
+    self.position = Position.find_by(ll_code: ll_code) if self.kind == 'combo'
   end
 
   def self.create_combo(a1, a2 = OpenStruct.new(name: '...', moves: '', id: nil))
