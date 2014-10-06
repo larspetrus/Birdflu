@@ -1,9 +1,9 @@
-%h1 Alg DB
+%h3 Last Layer Positions With Solutions
 
-%h3 All Positions
+%h5{style: 'position: absolute; top:0; right:0; '}
+  = link_to "H codes", "href: http://www.ai.univ-paris8.fr/~bh/cube/solutions_tout.html"
 
 =form_tag url_for(controller: "positions", action: "index"), method: 'get' do
-  %h4 Filter
   %div
     =label_tag(:cp, "Swapped corners")
     =select_tag(:cp, options_for_select([["None", "None"], ["Adjacent", "Adjacent"], ["Diagonal", "Diagonal"]], @pcp), include_blank: true)
@@ -17,7 +17,7 @@
     =submit_tag("Reload")
 
 
-%h5 Showing #{@positions.count} of #{Position.count} positions. #{LlAlg.count(:position_id)} solutions total
+%h5 Showing #{@positions.count} of all #{Position.count} positions. #{LlAlg.count(:position_id)} solutions total
 
 %table.index
   %th LL_CODE
