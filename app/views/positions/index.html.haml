@@ -37,7 +37,7 @@
       %td= pos.corner_swap_symbol
       %td= pos.oriented_corners
       %td= pos.oriented_edges
-      %td= "×#{pos.weight}"
+      %td= pos.weight > 1 ? "×#{pos.weight}" : ""
       %td= pos.alg_count
       %td
         =best.mv_start

@@ -1,5 +1,5 @@
 class Position < ActiveRecord::Base
-  has_many :ll_algs, -> { order "length" }
+  has_many :ll_algs, -> { order "length, alg2_id DESC" }
   belongs_to :best_alg, class_name: 'LlAlg'
 
   enum corner_swap: [ :no, :left, :right, :back, :front, :diagonal]
