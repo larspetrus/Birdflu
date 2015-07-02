@@ -1,6 +1,9 @@
 require "rails_helper"
 
 RSpec.describe Position, :type => :model do
+  it "generated everything" do
+    expect(Position.count).to eq(3916)
+  end
 
   it "ll_code uniqueness" do
     expect(Position.create(ll_code: 'a1b1c1a1')).to be_valid
@@ -14,15 +17,19 @@ RSpec.describe Position, :type => :model do
   end
 
   it "has algs" do
-    a1 = LlAlg.create_combo( LlAlg.create(name: 'a1', moves: "F U F' U F U2 F'"))
-    a2 = LlAlg.create_combo( LlAlg.create(name: 'a2', moves: "F U2 F' U' F U' F'"))
-    a3 = LlAlg.create_combo( LlAlg.create(name: 'a3', moves: "B U B' U B U2 B'"))
+    null_alg = BaseAlg.make('', '');
+    a1 = ComboAlg.create_combo( BaseAlg.make('a1', "F U F' U F U2 F'"), null_alg, 0)
+    a2 = ComboAlg.create_combo( BaseAlg.make('a2', "F U2 F' U' F U' F'"), null_alg, 0)
+    a3 = ComboAlg.create_combo( BaseAlg.make('a3', "B U B' U B U2 B'"), null_alg, 0)
 
-    expect(Position.find_by!(ll_code: "a1c3c3c5").ll_algs.to_ary).to eq([a1, a3])
-    expect(Position.find_by!(ll_code: "a1b5b7b7").ll_algs).to eq([a2])
+    expect(Position.find_by!(ll_code: "a1c3c3c5").combo_algs.to_ary).to contain_exactly(a1, a3)
+    expect(Position.find_by!(ll_code: "a1b5b7b7").combo_algs).to eq([a2])
   end
 
   it 'sets orientations' do
+    Position.delete_all(ll_code: 'a1a1a1a1')
+    Position.delete_all(ll_code: 'a4c5c1c4')
+
     solved = Position.create(ll_code: 'a1a1a1a1')
     expect(solved.oriented_edges).to eq(4)
     expect(solved.oriented_corners).to eq(4)

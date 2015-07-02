@@ -15,7 +15,7 @@
     %tr
       %td.l{style:"background-color:#{@cube.color_at('ULB', 'L')}"}
       %td.u{style:"background-color:#{@cube.color_at('ULB', 'U')}"}
-      %td.u{style:"background-color:#{@cube.color_at('UB', 'U')} "}
+      %td.u{style:"background-color:#{@cube.color_at('UB',  'U')} "}
       %td.u{style:"background-color:#{@cube.color_at('UBR', 'U')}"}
       %td.r{style:"background-color:#{@cube.color_at('UBR', 'R')}"}
     %tr
@@ -27,7 +27,7 @@
     %tr
       %td.l{style:"background-color:#{@cube.color_at('UFL', 'L')}"}
       %td.u{style:"background-color:#{@cube.color_at('UFL', 'U')}"}
-      %td.u{style:"background-color:#{@cube.color_at('UF', 'U')} "}
+      %td.u{style:"background-color:#{@cube.color_at('UF',  'U')} "}
       %td.u{style:"background-color:#{@cube.color_at('URF', 'U')}"}
       %td.r{style:"background-color:#{@cube.color_at('URF', 'R')}"}
     %tr
@@ -37,7 +37,7 @@
       %td.f{style:"background-color:#{@cube.color_at('URF', 'F')}"}
       %td{style:"border: none;"}
 
-- @position.ll_algs.first(3).each do |f3|
+- @position.combo_algs.first(3).each do |f3|
   .roofpig.rp160{:'data-config' => "base=AD | alg=#{f3.moves} | flags=showalg #{f3.setup_moves}" }
     =f3.name
 
@@ -47,7 +47,7 @@
   %th Moves
   %th Name
   %th Alg
-  - @position.ll_algs.each do |alg|
+  - @position.combo_algs.each do |alg|
     %tr
       %td= alg.length
       %td= alg.name

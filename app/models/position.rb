@@ -1,6 +1,8 @@
+# The Positions table contains a static data set of 3916 LL positions. Once initialized, it will never
+# change. It could live in memory instead of (or in addition to) the DB, and maybe that's a future feature.
 class Position < ActiveRecord::Base
-  has_many :ll_algs, -> { order "length, alg2_id DESC" }
-  belongs_to :best_alg, class_name: 'LlAlg'
+  has_many :combo_algs, -> { order "length, base_alg2_id DESC" }
+  belongs_to :best_alg, class_name: 'ComboAlg'
 
   enum corner_swap: [ :no, :left, :right, :back, :front, :diagonal]
 
@@ -49,8 +51,12 @@ class Position < ActiveRecord::Base
     @cube ||= Cube.new.apply_position(ll_code)
   end
 
-  def self.generate_all
-    cp_algs = ["", "R' F R' B2 R F' R' B2 R2", "F R' F' L F R F' L2 B' R B L B' R' B"]
+  def self.generate_all # All LL positions
+    cp_algs = [
+      "",
+      "R' F R' B2 R F' R' B2 R2",
+      "F R' F' L F R F' L2 B' R B L B' R' B"
+    ]
 
     ep_algs = [
       "",
@@ -77,6 +83,7 @@ class Position < ActiveRecord::Base
         (0..2).each do |c1|
           (0..2).each do |c2|
             (0..2).each do |c3|
+
               (0..1).each do |e1|
                 (0..1).each do |e2|
                   (0..1).each do |e3|
@@ -87,6 +94,7 @@ class Position < ActiveRecord::Base
                   end
                 end
               end
+
             end
           end
         end

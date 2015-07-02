@@ -1,42 +1,84 @@
 class BigThought
 
-  def self.populate_db(regenerate)
-    if regenerate
-      Position.delete_all
-      LlAlg.delete_all
-    end
-
+  def self.populate_base_algs()
     if Position.count == 0
       ActiveRecord::Base.transaction { Position.generate_all }
     end
 
-    if LlAlg.count > 0
-      puts "DB already populated. Skipping generation. #{Position.count} positions, #{LlAlg.count} algs"
+    if BaseAlg.count > 0
+      puts "BaseAlgs already populated. Skipping generation. #{BaseAlg.count} base algs"
       return
     end
-    puts "Starting BigThought.populate_db(): #{Position.count} positions, #{LlAlg.count} algs"
+    puts "Starting BigThought.populate_base_algs(): #{BaseAlg.count} base algs"
     start_time = Time.new
 
-    ActiveRecord::Base.transaction do
-      all_root_algs.each do |ad|
-        alg_variants(ad.name, ad.moves, ad.type != :singleton)
-        alg_variants("Anti#{ad.name}", reverse(ad.moves), true) if ad.type == :reverse
-      end
-
-      all_bases = LlAlg.where(kind: ['solve', 'generator'])
-      LlAlg.where(kind: 'solve').each do |alg1|
-        LlAlg.create_combo(alg1)
-        all_bases.each { |alg2| LlAlg.create_combo(alg1, alg2) }
-      end
-
-      Position.all.each { |p| p.update(alg_count: p.ll_algs.count, best_alg_id: p.ll_algs[0].try(:id)) }
+    all_root_algs.each do |ad|
+      create_alg_bases(ad.name, ad.moves, ad.type != :singleton)
+      create_alg_bases("Anti#{ad.name}", reverse(ad.moves), true) if ad.type == :reverse
     end
 
-    puts "After BigThought.populate_db(): #{Position.count} positions, #{LlAlg.count} algs. Took #{Time.new - start_time}"
+    puts "After BigThought.populate_base_algs(): #{BaseAlg.count} base algs. Took #{Time.new - start_time}"
+  end
+
+  def self.create_alg_bases(name, moves, mirror)
+    a1 = BaseAlg.make(name, moves)
+
+    if mirror
+      a2 = self.create_alg_bases(name + "M", mirror(moves), false)
+    end
+    a2 ? [a1] + a2 : [a1] # awkward but testable
+  end
+
+  def self.combine(new_base_alg)
+    already_combined = BaseAlg.all.select { |alg| alg.isCombined }
+
+    already_combined.each do |old|
+      0.upto(3) do |u_shift|
+        ComboAlg.create_combo(old, new_base_alg, u_shift)
+        ComboAlg.create_combo(new_base_alg, old, u_shift)
+      end
+    end
+    0.upto(3) do |u_shift|
+      ComboAlg.create_combo(new_base_alg, new_base_alg, u_shift)
+    end
+  end
+
+  def self.alg_label(moves)
+    result = ""
+    moves.split(' ').each do |move|
+      result += move
+      break unless result.ends_with? '2'
+    end
+    result
+  end
+
+  def self.mirror(moves)
+    mirrored = []
+    moves.split(' ').each do |move|
+      side = {'R' => 'L', 'L' => 'R'}[move[0]] || move[0]
+      turns = {"2" => "2", "'" => ""}[move[1]] || "'"
+      mirrored << side+turns
+    end
+    mirrored.join(' ')
+  end
+
+  def self.reverse(moves)
+    reversed = []
+    moves.split(' ').reverse.each do |move|
+      turns = {"2" => "2", "'" => ""}[move[1]] || "'"
+      reversed << move[0]+turns
+    end
+    reversed.join(' ')
+  end
+
+  def self.root_alg(name, moves, type = :reverse)
+    OpenStruct.new(name: name, moves: moves, type: type)
   end
 
   def self.all_root_algs
     [
+        # do nothing is an alg. kinda
+        root_alg("…",  "", :singleton),
         # 6 moves (1 total)
         root_alg("H435",  "F R U R' U' F'"),
         # 7 moves (3 total)
@@ -91,53 +133,5 @@ class BigThought
         root_alg("Benny", "B' U2 B2 U2 B2 U' B2 U' B2 U B"),
         root_alg("Rune",  "L' U' L U' L U L2 U L2 U2 L'", :mirror_only),
     ]
-  end
-  
-  def self.root_alg(name, moves, type = :reverse)
-    OpenStruct.new(name: name, moves: moves, type: type)
-  end
-
-  def self.alg_variants(name, moves, mirror)
-    mirrored_moves = mirror(moves)
-    result = []
-    4.times do |i|
-      kind = (i == 0) ? 'solve' : 'generator'
-
-      result << LlAlg.create(name: name, moves: moves, kind: kind)
-      moves = LlAlg.rotate_by_U(moves)
-
-      if mirror
-        result << LlAlg.create(name: name + "M", moves: mirrored_moves, kind: kind)
-        mirrored_moves = LlAlg.rotate_by_U(mirrored_moves)
-      end
-    end
-    result
-  end
-
-  def self.alg_label(moves)
-    result = ""
-    moves.split(' ').each do |move|
-      result += move
-      return result unless result.ends_with? '2'
-    end
-  end
-
-  def self.mirror(moves)
-    mirrored = []
-    moves.split(' ').each do |move|
-      side = {'R' => 'L', 'L' => 'R'}[move[0]] || move[0]
-      turns = {"2" => "2", "'" => ""}[move[1]] || "'"
-      mirrored << side+turns
-    end
-    mirrored.join(' ')
-  end
-
-  def self.reverse(moves)
-    reversed = []
-    moves.split(' ').reverse.each do |move|
-      turns = {"2" => "2", "'" => ""}[move[1]] || "'"
-      reversed << move[0]+turns
-    end
-    reversed.join(' ')
   end
 end

@@ -2,7 +2,7 @@ class PositionsController < ApplicationController
   CP_ENUM = Position.corner_swaps
 
   def index
-    BigThought.populate_db params[:regenerate]
+    BigThought.populate_base_algs
 
     @query = {}
 

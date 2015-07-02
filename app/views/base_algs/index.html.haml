@@ -1,0 +1,18 @@
+%h1 Manage Algorithms
+
+= button_to "Update Positions", { action: "update_positions" }, remote: true
+
+%table.manage_algs
+  %thead
+    %th Name
+    %th Moves
+    %th Combos
+  - @root_algs.each do |alg|
+    %tr
+      %td= alg.name
+      %td= alg.moves
+      %td
+        - if alg.isCombined
+          = "Combined #{alg.combo_algs1.count}/#{alg.combo_algs2.count}"
+        - else
+          = button_to "Combine", { action: "combine", id: alg.id }, remote: true

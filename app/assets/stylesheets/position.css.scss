@@ -2,10 +2,6 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-body {
-  font-family:'Lucida Grande';
-}
-
 .index {
   border-collapse: collapse;
   border: 1px solid #ddd;
@@ -13,6 +9,13 @@ body {
   th, td {
     font-size: 9px;
     border-left: 1px solid #ddd;
+  }
+  .num {
+    text-align: right;
+    padding-right: 6px;
+  }
+  .one-alg {
+    background: #bbffbb;
   }
 }
 
@@ -24,7 +27,7 @@ body {
   margin: 6px;
 }
 
-form {
+.search_form {
   width: 300px;
   background-color: #dfd;
   border: 2px dotted #aaa;

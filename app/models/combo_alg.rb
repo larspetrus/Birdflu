@@ -1,26 +1,26 @@
-class LlAlg < ActiveRecord::Base
-  self.table_name = "algs"
-
+class ComboAlg < ActiveRecord::Base
   belongs_to :position
-  belongs_to :alg1, class_name: 'LlAlg'
-  belongs_to :alg2, class_name: 'LlAlg'
+  belongs_to :base_alg1, class_name: 'BaseAlg'
+  belongs_to :base_alg2, class_name: 'BaseAlg'
 
   before_create do
     self.length = moves.split.length
-    ll_code = solves_ll_code # ghetto validation
-    self.position = Position.find_by(ll_code: ll_code) if self.kind == 'combo'
+    ll_code = solves_ll_code # validates
+    self.position = Position.find_by(ll_code: ll_code)
   end
 
-  def self.create_combo(a1, a2 = OpenStruct.new(name: '...', moves: '', id: nil))
-    move_data = merge_moves(a1.moves, a2.moves)
-    alg_adjustment = 4 - Cube.new.setup_alg(move_data[:moves]).standard_ll_code_offset
-    move_data.keys.each { | key | move_data[key] = rotate_by_U(move_data[key], alg_adjustment) }
+  def self.create_combo(a1, a2, u_shift)
+    return if a1.moves.empty?
 
-    ac = Cube.new.setup_alg(move_data[:moves])
+    move_parms = merge_moves(a1.moves, a2.moves(u_shift))
+    alg_adjustment = 4 - Cube.new.setup_alg(move_parms[:moves]).standard_ll_code_offset
+    move_parms.keys.each { | key | move_parms[key] = rotate_by_U(move_parms[key], alg_adjustment) }
+
+    ac = Cube.new.setup_alg(move_parms[:moves])
     u_setup = ('BRFL'.index(ac.piece_at('UB').name[1]) - LL.edge_data(ac.standard_ll_code[1]).distance) % 4
 
-    create_parms = {name: "#{a1.name}+#{a2.name}", alg1_id: a1.id, alg2_id: a2.id, kind: 'combo', u_setup: u_setup}
-    LlAlg.create(create_parms.merge(move_data))
+    create_parms = {name: "#{a1.name}+#{a2.name}", base_alg1_id: a1.id, base_alg2_id: a2.id, alg2_u_shift: u_shift, u_setup: u_setup}
+    ComboAlg.create(create_parms.merge(move_parms))
   end
 
   def self.merge_moves(moves1, moves2)
@@ -42,8 +42,14 @@ class LlAlg < ActiveRecord::Base
         end
       end while m1.side == m2.side && remains.empty? && start.present? && finish.present?
 
-      { mv_start: start.join(' '), mv_cancel1: cancels1.join(' '), mv_merged: remains.join(' '),
-        mv_cancel2: cancels2.join(' '), mv_end: finish.join(' '), moves: (start + remains + finish).join(' ') }
+      {
+        mv_start: start.join(' '),
+        mv_cancel1: cancels1.join(' '),
+        mv_merged: remains.join(' '),
+        mv_cancel2: cancels2.join(' '),
+        mv_end: finish.join(' '),
+        moves: (start + remains + finish).join(' ')
+      }
     end
   end
 
@@ -60,11 +66,11 @@ class LlAlg < ActiveRecord::Base
     "| setupmoves=#{Move.from('U', u_setup)}"
   end
 
-  def to_s
-    "#{@name}: #{@moves}"
+  def oneAlg?
+    name.end_with? '+…' # TODO fragile…
   end
 
-  def nl
-    "#{length} #{name}"
+  def to_s
+    "#{@name}: #{@moves}"
   end
 end

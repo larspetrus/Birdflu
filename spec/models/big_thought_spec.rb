@@ -3,14 +3,13 @@ require 'rails_helper'
 describe BigThought do
 
   it 'makes all alg variants' do
-    niks = BigThought.alg_variants('Nik', "L U' R' U L' U' R", true)
+    niks = BigThought.create_alg_bases('Nik', "L U' R' U L' U' R", true)
 
-    expect(niks.map(&:moves)).to eq(["L U' R' U L' U' R", "R' U L U' R U L'", "B U' F' U B' U' F", "F' U B U' F U B'", "R U' L' U R' U' L", "L' U R U' L U R'", "F U' B' U F' U' B", "B' U F U' B U F'"])
-    expect(niks.map(&:name)).to eq(["Nik", "NikM", "Nik", "NikM", "Nik", "NikM", "Nik", "NikM"])
-    expect(niks.map(&:kind)).to eq(['solve', 'solve', 'generator', 'generator', 'generator', 'generator', 'generator', 'generator'])
+    expect(niks.map(&:moves_u0)).to eq(["L U' R' U L' U' R", "R' U L U' R U L'"])
+    expect(niks.map(&:name)).to eq(["Nik", "NikM"])
 
-    stigs = BigThought.alg_variants('Stig', "L U' R' U L' U' R", false)
-    expect(stigs.map(&:name)).to eq(["Stig", "Stig", "Stig", "Stig"])
+    stigs = BigThought.create_alg_bases('Stig', "L U' R' U L' U' R", false)
+    expect(stigs.map(&:name)).to eq(["Stig"])
   end
 
   it 'alg_label' do
@@ -36,22 +35,48 @@ describe BigThought do
 
     it "#reversibility is correct" do
       BigThought.all_root_algs.each do |alg|
-        ll_code   = Cube.new.setup_alg(alg[1]).standard_ll_code
-        ll_code_M = Cube.new.setup_alg(BigThought.mirror(alg[1])).standard_ll_code
 
-        revalg = BigThought.reverse(alg[1])
+        ll_code   = Cube.new.setup_alg(alg.moves).standard_ll_code
+        ll_code_M = Cube.new.setup_alg(BigThought.mirror(alg.moves)).standard_ll_code
+
+        revalg = BigThought.reverse(alg.moves)
         rev_ll_code   = Cube.new.setup_alg(revalg).standard_ll_code
         rev_ll_code_M = Cube.new.setup_alg(BigThought.mirror(revalg)).standard_ll_code
 
         if ll_code == ll_code_M
-          expect(alg[2]).to eq(:singleton), alg[0]
+          expect(alg.type).to eq(:singleton), alg.name
         elsif ll_code_M == rev_ll_code
-          expect(alg[2]).to eq(:mirror_only), alg[0]
+          expect(alg.type).to eq(:mirror_only), alg.name
         else
-          expect(alg[2]).to eq(:reverse), alg[0]
+          expect(alg.type).to eq(:reverse), alg.name
         end
 
       end
+    end
+  end
+
+  describe 'combine' do
+    let (:root1) { BigThought.root_alg("H435",  "F R U R' U' F'") }
+    let (:root2) { BigThought.root_alg("Arne",  "R2 F2 B2 L2 D L2 B2 F2 R2", :singleton) }
+    let (:root3) { BigThought.root_alg("Niklas","L U' R' U L' U' R", :mirror_only) }
+
+    it "populates incrementally" do
+
+      BigThought.combine(alg = BaseAlg.make(root1.name, root1.moves))
+      expect(counts(alg.id)).to eq(base_alg1: 4, base_alg2: 4, total: 4)
+
+      BigThought.combine(alg = BaseAlg.make(root2.name, root2.moves))
+      expect(counts(alg.id)).to eq(base_alg1: 8, base_alg2: 8, total: 16)
+
+      BigThought.combine(alg = BaseAlg.make(root3.name, root3.moves))
+      expect(counts(alg.id)).to eq(base_alg1: 12, base_alg2: 12, total: 36)
+    end
+
+    def counts(base_id)
+      counts = {}
+      [:base_alg1, :base_alg2].each { |column| counts[column] = ComboAlg.where(column => base_id).count }
+      counts[:total] = ComboAlg.count
+      counts
     end
   end
 end
