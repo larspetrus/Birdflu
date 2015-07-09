@@ -7,20 +7,31 @@ class ComboAlg < ActiveRecord::Base
     self.length = moves.split.length
     ll_code = solves_ll_code # validates
     self.position = Position.find_by(ll_code: ll_code)
+
+    ac = Cube.new.setup_alg(moves)
+    self.u_setup = ('BRFL'.index(ac.piece_at('UB').name[1]) - LL.edge_data(ac.standard_ll_code[1]).distance) % 4
   end
 
-  def self.create_combo(a1, a2, u_shift)
+  def self.make(a1, a2, u_shift)
     return if a1.moves.empty?
 
     move_parms = merge_moves(a1.moves, a2.moves(u_shift))
+    return if move_parms[:moves].empty?
+
     alg_adjustment = 4 - Cube.new.setup_alg(move_parms[:moves]).standard_ll_code_offset
     move_parms.keys.each { | key | move_parms[key] = rotate_by_U(move_parms[key], alg_adjustment) }
 
-    ac = Cube.new.setup_alg(move_parms[:moves])
-    u_setup = ('BRFL'.index(ac.piece_at('UB').name[1]) - LL.edge_data(ac.standard_ll_code[1]).distance) % 4
-
-    create_parms = {name: "#{a1.name}+#{a2.name}", base_alg1_id: a1.id, base_alg2_id: a2.id, alg2_u_shift: u_shift, u_setup: u_setup}
+    create_parms = {name: "#{a1.name}+#{a2.name}", base_alg1_id: a1.id, base_alg2_id: a2.id, alg2_u_shift: u_shift}
     ComboAlg.create(create_parms.merge(move_parms))
+  end
+
+  def self.make_4(a1, a2)
+    0.upto(3) { |u_shift| make(a1, a2, u_shift) }
+  end
+
+  def self.make_single(alg)
+    parms = {name: "- #{alg.name} -", base_alg1_id: alg.id, alg2_u_shift: 0 }
+    ComboAlg.create(parms.merge(merge_moves(alg.moves, '')))
   end
 
   def self.merge_moves(moves1, moves2)
@@ -67,7 +78,7 @@ class ComboAlg < ActiveRecord::Base
   end
 
   def oneAlg?
-    name.end_with? '+…' # TODO fragile…
+    not base_alg2
   end
 
   def to_s

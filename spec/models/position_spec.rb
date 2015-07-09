@@ -18,9 +18,9 @@ RSpec.describe Position, :type => :model do
 
   it "has algs" do
     null_alg = BaseAlg.make('', '');
-    a1 = ComboAlg.create_combo( BaseAlg.make('a1', "F U F' U F U2 F'"), null_alg, 0)
-    a2 = ComboAlg.create_combo( BaseAlg.make('a2', "F U2 F' U' F U' F'"), null_alg, 0)
-    a3 = ComboAlg.create_combo( BaseAlg.make('a3', "B U B' U B U2 B'"), null_alg, 0)
+    a1 = ComboAlg.make( BaseAlg.make('a1', "F U F' U F U2 F'"), null_alg, 0)
+    a2 = ComboAlg.make( BaseAlg.make('a2', "F U2 F' U' F U' F'"), null_alg, 0)
+    a3 = ComboAlg.make( BaseAlg.make('a3', "B U B' U B U2 B'"), null_alg, 0)
 
     expect(Position.find_by!(ll_code: "a1c3c3c5").combo_algs.to_ary).to contain_exactly(a1, a3)
     expect(Position.find_by!(ll_code: "a1b5b7b7").combo_algs).to eq([a2])

@@ -1,15 +1,19 @@
 class BigThought
 
-  def self.populate_base_algs()
+  def self.populate_db()
     if Position.count == 0
       ActiveRecord::Base.transaction { Position.generate_all }
+    end
+
+    unless ComboAlg.exists?(base_alg1: nil, base_alg2: nil)
+      ComboAlg.make_single(OpenStruct.new(name: "Nothing", moves: '', id: nil))
     end
 
     if BaseAlg.count > 0
       puts "BaseAlgs already populated. Skipping generation. #{BaseAlg.count} base algs"
       return
     end
-    puts "Starting BigThought.populate_base_algs(): #{BaseAlg.count} base algs"
+    puts "Starting BigThought.populate_db(): #{BaseAlg.count} base algs"
     start_time = Time.new
 
     all_root_algs.each do |ad|
@@ -17,7 +21,7 @@ class BigThought
       create_alg_bases("Anti#{ad.name}", reverse(ad.moves), true) if ad.type == :reverse
     end
 
-    puts "After BigThought.populate_base_algs(): #{BaseAlg.count} base algs. Took #{Time.new - start_time}"
+    puts "After BigThought.populate_db(): #{BaseAlg.count} base algs. Took #{Time.new - start_time}"
   end
 
   def self.create_alg_bases(name, moves, mirror)
@@ -30,17 +34,12 @@ class BigThought
   end
 
   def self.combine(new_base_alg)
-    already_combined = BaseAlg.all.select { |alg| alg.isCombined }
-
-    already_combined.each do |old|
-      0.upto(3) do |u_shift|
-        ComboAlg.create_combo(old, new_base_alg, u_shift)
-        ComboAlg.create_combo(new_base_alg, old, u_shift)
-      end
+    BaseAlg.all.select { |alg| alg.isCombined }.each do |old|
+      ComboAlg.make_4(old, new_base_alg)
+      ComboAlg.make_4(new_base_alg, old)
     end
-    0.upto(3) do |u_shift|
-      ComboAlg.create_combo(new_base_alg, new_base_alg, u_shift)
-    end
+    ComboAlg.make_4(new_base_alg, new_base_alg)
+    ComboAlg.make_single(new_base_alg)
   end
 
   def self.alg_label(moves)
@@ -77,8 +76,6 @@ class BigThought
 
   def self.all_root_algs
     [
-        # do nothing is an alg. kinda
-        root_alg("…",  "", :singleton),
         # 6 moves (1 total)
         root_alg("H435",  "F R U R' U' F'"),
         # 7 moves (3 total)
