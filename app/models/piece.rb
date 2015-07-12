@@ -27,7 +27,7 @@ class Piece
   end
 
   def sticker_on(side)
-    @stickers[@on_sides.index(side)]
+    @stickers[@on_sides.index(side.to_sym)]
   end
 
   def as_tweak()

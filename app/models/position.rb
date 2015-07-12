@@ -52,13 +52,13 @@ class Position < ActiveRecord::Base
   end
 
   def self.generate_all # All LL positions
-    cp_algs = [
-      "",
-      "R' F R' B2 R F' R' B2 R2",
-      "F R' F' L F R F' L2 B' R B L B' R' B"
+    corner_positioning_algs = [
+      "",                                    # corners in place
+      "R' F R' B2 R F' R' B2 R2",            # three cycle
+      "F R' F' L F R F' L2 B' R B L B' R' B" # diagonal swap
     ]
 
-    ep_algs = [
+    edge_positioning_algs = [
       "",
       "F2 U R' L F2 R L' U F2",  #Allans
       "F2 U' L R' F2 L' R U' F2",
@@ -69,16 +69,16 @@ class Position < ActiveRecord::Base
       "R2 U B' F R2 B F' U R2",
       "R2 U' F B' R2 F' B U' R2",
       "R2 F2 B2 L2 D L2 B2 F2 R2", # Arne
-      "F2 B2 D R2 F2 B2 L2 F2 B2 D' F2 B2", # Bert
+      "F2 B2 D R2 F2 B2 L2 F2 B2 D' F2 B2", # Berts
       "F2 B2 D' R2 F2 B2 L2 F2 B2 D F2 B2",
     ]
 
-    found = Hash.new(0)
+    found_positions = Hash.new(0)
 
-    cp_algs.each do |cp_alg|
-      ep_algs.each do |ep_alg|
+    corner_positioning_algs.each do |cp_alg|
+      edge_positioning_algs.each do |ep_alg|
         cube = Cube.new.setup_alg(cp_alg).setup_alg(ep_alg)
-        untwisted_code = cube.ll_codes[0].bytes
+        untwisted_ll_code = cube.ll_codes[0].bytes
 
         (0..2).each do |c1|
           (0..2).each do |c2|
@@ -88,9 +88,9 @@ class Position < ActiveRecord::Base
                 (0..1).each do |e2|
                   (0..1).each do |e3|
                     twists = [c1, e1, c2, e2, c3, e3, (-c1-c2-c3) % 3, (e1+e2+e3) % 2]
-                    twisted_code = (0..7).inject('') { |code, i| code.concat(untwisted_code[i]+twists[i]) }
+                    twisted_code = (0..7).inject('') { |code, i| code.concat(untwisted_ll_code[i]+twists[i]) }
 
-                    found[Cube.new.apply_position(twisted_code).standard_ll_code] += 1
+                    found_positions[Cube.new.apply_position(twisted_code).standard_ll_code] += 1
                   end
                 end
               end
@@ -101,6 +101,6 @@ class Position < ActiveRecord::Base
 
       end
     end
-    found.each { |code, weight| Position.create(ll_code: code, weight: weight) }
+    found_positions.each { |code, weight| Position.create(ll_code: code, weight: weight) }
   end
 end

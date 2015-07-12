@@ -9,7 +9,7 @@ class Cube
   end
 
   def color_at(position, side) # Same as RoofPig
-    {R: '#0d0', L: '#07f', F: 'red', B: 'orange', U: 'yellow', D: '#eee'}[piece_at(position).sticker_on(side.to_sym).to_sym]
+    {R: '#0d0', L: '#07f', F: 'red', B: 'orange', U: 'yellow', D: '#eee'}[piece_at(position).sticker_on(side).to_sym]
   end
 
   def piece_at(position)
@@ -36,6 +36,16 @@ class Cube
     ll_codes.sort.first
   end
 
+  def mirrored_standard_ll_code
+    rev_corners = LL.corners.reverse
+    rev_edges = LL.edges.reverse.rotate(1)
+
+    codes = (0..3).map { |i| mirrored_ll_code(rev_corners.rotate(i), rev_edges.rotate(i)) }
+
+    puts codes
+    codes.sort.first
+  end
+
   def standard_ll_code_offset
     ll_codes.index(standard_ll_code)
   end
@@ -60,6 +70,24 @@ class Cube
       e_distance = (edges.index(e_piece.name) - i) % 4
 
       result += LL.corner_code(c_distance, c_piece.u_spin) + LL.edge_code(e_distance, e_piece.u_spin)
+    end
+    result
+  end
+
+  def mirrored_ll_code(c_positions, e_positions)
+    first_corner_placed_correctly_offset  = c_positions.index(piece_at(c_positions[0]).name)
+    corners = c_positions.rotate(first_corner_placed_correctly_offset)
+    edges   = e_positions.rotate(first_corner_placed_correctly_offset)
+
+    result = ""
+    4.times do |i|
+      c_piece = piece_at(c_positions[i])
+      c_distance = (corners.index(c_piece.name) - i) % 4
+
+      e_piece = piece_at(e_positions[i])
+      e_distance = (edges.index(e_piece.name) - i) % 4
+
+      result += LL.corner_code(c_distance, [0, 2, 1][c_piece.u_spin]) + LL.edge_code(e_distance, e_piece.u_spin)
     end
     result
   end
