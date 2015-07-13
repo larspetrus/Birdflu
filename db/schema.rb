@@ -11,28 +11,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150629202903) do
+ActiveRecord::Schema.define(version: 20150713041201) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-
-  create_table "algs", force: true do |t|
-    t.string  "name"
-    t.string  "moves"
-    t.integer "length"
-    t.integer "position_id"
-    t.string  "kind"
-    t.integer "u_setup"
-    t.integer "alg1_id"
-    t.integer "alg2_id"
-    t.string  "mv_start"
-    t.string  "mv_cancel1"
-    t.string  "mv_merged"
-    t.string  "mv_cancel2"
-    t.string  "mv_end"
-  end
-
-  add_index "algs", ["position_id"], name: "index_algs_on_position_id", using: :btree
 
   create_table "base_algs", force: true do |t|
     t.string "name"
