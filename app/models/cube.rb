@@ -32,49 +32,28 @@ class Cube
     self
   end
 
-  def standard_ll_code
-    ll_codes.sort.first
-  end
-
-  def mirrored_standard_ll_code
-    rev_corners = LL.corners.reverse
-    rev_edges = LL.edges.reverse.rotate(1)
-
-    codes = (0..3).map { |i| mirrored_ll_code(rev_corners.rotate(i), rev_edges.rotate(i)) }
-
-    puts codes
-    codes.sort.first
+  def standard_ll_code(mirror = false)
+    ll_codes(mirror).sort.first
   end
 
   def standard_ll_code_offset
     ll_codes.index(standard_ll_code)
   end
 
-  def ll_codes()
+  def ll_codes(mirror = false)
     raise "Can't make LL code with F2L unsolved" unless f2l_solved()
 
-    (0..3).map { |i| ll_code(LL.corners.rotate(i), LL.edges.rotate(i)) }
-  end
-
-  def ll_code(c_positions, e_positions)
-    first_corner_placed_correctly_offset  = c_positions.index(piece_at(c_positions[0]).name)
-    corners = c_positions.rotate(first_corner_placed_correctly_offset)
-    edges   = e_positions.rotate(first_corner_placed_correctly_offset)
-
-    result = ""
-    4.times do |i|
-      c_piece = piece_at(c_positions[i])
-      c_distance = (corners.index(c_piece.name) - i) % 4
-
-      e_piece = piece_at(e_positions[i])
-      e_distance = (edges.index(e_piece.name) - i) % 4
-
-      result += LL.corner_code(c_distance, c_piece.u_spin) + LL.edge_code(e_distance, e_piece.u_spin)
+    corners = LL.corners
+    edges = LL.edges
+    if mirror
+      corners = corners.reverse
+      edges = edges.reverse.rotate(1)
     end
-    result
+
+    (0..3).map { |i| ll_code(corners.rotate(i), edges.rotate(i), mirror) }
   end
 
-  def mirrored_ll_code(c_positions, e_positions)
+  def ll_code(c_positions, e_positions, mirror = false)
     first_corner_placed_correctly_offset  = c_positions.index(piece_at(c_positions[0]).name)
     corners = c_positions.rotate(first_corner_placed_correctly_offset)
     edges   = e_positions.rotate(first_corner_placed_correctly_offset)
@@ -87,7 +66,7 @@ class Cube
       e_piece = piece_at(e_positions[i])
       e_distance = (edges.index(e_piece.name) - i) % 4
 
-      result += LL.corner_code(c_distance, [0, 2, 1][c_piece.u_spin]) + LL.edge_code(e_distance, e_piece.u_spin)
+      result += LL.corner_code(c_distance, c_piece.u_spin(mirror)) + LL.edge_code(e_distance, e_piece.u_spin)
     end
     result
   end

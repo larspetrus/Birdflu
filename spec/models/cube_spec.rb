@@ -42,21 +42,21 @@ RSpec.describe Cube, :type => :model do
     expect{ Cube.new.setup_alg("F").ll_codes()}.to raise_error(RuntimeError, "Can't make LL code with F2L unsolved")
   end
 
-  it '#mirrored_standard_ll_code' do
+  it '#standard_ll_code(:mirror)' do
     cube = Cube.new.apply_position('a1g4q7c2')
-    expect(cube.mirrored_standard_ll_code()).to eq('a2b3f8p1')
+    expect(cube.standard_ll_code(:mirror)).to eq('a2b3f8p1')
 
     cube = Cube.new.apply_position('a2b3f8p1')
-    expect(cube.mirrored_standard_ll_code()).to eq('a1g4q7c2')
+    expect(cube.standard_ll_code(:mirror)).to eq('a1g4q7c2')
 
     cube = Cube.new.apply_position('b1g2g2j1')
-    expect(cube.mirrored_standard_ll_code()).to eq('b3g3q4b4')
+    expect(cube.standard_ll_code(:mirror)).to eq('b3g3q4b4')
 
     cube = Cube.new.apply_position('a1a1a1a1')
-    expect(cube.mirrored_standard_ll_code()).to eq('a1a1a1a1')
+    expect(cube.standard_ll_code(:mirror)).to eq('a1a1a1a1')
 
     cube = Cube.new.apply_position('a2i3c8j1')
-    expect(cube.mirrored_standard_ll_code()).to eq('a1k4b7i2')
+    expect(cube.standard_ll_code(:mirror)).to eq('a1k4b7i2')
   end
 
   it '#apply_position' do

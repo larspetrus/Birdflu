@@ -41,11 +41,15 @@ RSpec.describe Piece, :type => :model do
 
     expect(ulb.u_spin).to eq(0)
     expect(uf.u_spin).to eq(0)
+    expect(ulb.u_spin(:mirror)).to eq(0)
+    expect(uf.u_spin(:mirror)).to eq(0)
 
     ulb.rotate(1)
     uf.rotate(1)
     expect(ulb.u_spin).to eq(1)
     expect(uf.u_spin).to eq(1)
+    expect(ulb.u_spin(:mirror)).to eq(2)
+    expect(uf.u_spin(:mirror)).to eq(1)
 
     ulb.rotate(1)
     uf.rotate(1)

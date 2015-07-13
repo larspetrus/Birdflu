@@ -22,8 +22,9 @@ class Piece
     @on_sides.rotate!(steps)
   end
 
-  def u_spin()
-    (@sides - @on_sides.index(:U)) % @sides
+  def u_spin(mirror = false)
+    raw_spin = @sides - @on_sides.index(:U)
+    (mirror ? -raw_spin : raw_spin) % @sides
   end
 
   def sticker_on(side)
