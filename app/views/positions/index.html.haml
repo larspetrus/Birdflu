@@ -17,6 +17,9 @@
     =label_tag(:eo, "Oriented edges")
     =select_tag(:eo, options_for_select([["0", "0"], ["2", "2"], ["4", "4"]], @query['oriented_edges']), include_blank: true)
   %div
+    =label_tag(:im, "Show Mirrors")
+    =select_tag(:im, options_for_select([["No", "No"], ["Yes", "Yes"]], @show_mirrors))
+  %div
     =submit_tag("Reload")
 
 

@@ -14,6 +14,8 @@ class PositionsController < ApplicationController
     @query['corner_look']      = params[:cl]      if params[:cl].present?
     @query['oriented_corners'] = params[:co].to_i if params[:co].present?
     @query['oriented_edges']   = params[:eo].to_i if params[:eo].present?
+    @query['is_mirror']        = false            if params[:im] == "No"
+    @show_mirrors = (params[:im] == "No" ? "No" : "Yes")
 
     @positions = Position.includes(:best_alg).where(@query).order(:ll_code)
   end

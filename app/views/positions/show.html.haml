@@ -1,4 +1,6 @@
 %div{style: "font-size: 26px;"}= link_to 'All Positions', root_url
+- if @position.has_mirror
+  %div{style: "font-size: 16px;"}= link_to "Mirror position", "#{@position.mirror_ll_code}"
 
 %h3 Position #{@position.ll_code}
 

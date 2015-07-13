@@ -14,6 +14,7 @@ class Position < ActiveRecord::Base
     self.set_corner_swap
     self.set_mirror_ll_code
     self.set_corner_look
+    self.set_is_mirror
   end
 
   def self.corner_swap_for(ll_code)
@@ -53,6 +54,10 @@ class Position < ActiveRecord::Base
     @cube ||= Cube.new.apply_position(ll_code)
   end
 
+  def has_mirror
+    ll_code != mirror_ll_code
+  end
+
   def set_corner_swap
     self.corner_swap = Position.corner_swap_for(ll_code)
   end
@@ -64,6 +69,10 @@ class Position < ActiveRecord::Base
 
   def set_mirror_ll_code
     self.mirror_ll_code = Cube.new.apply_position(ll_code).standard_ll_code(:mirror)
+  end
+
+  def set_is_mirror
+    self.is_mirror = ll_code < mirror_ll_code    #completely arbitrary
   end
 
   def self.update_each
@@ -131,12 +140,14 @@ class Position < ActiveRecord::Base
 
     Position.all.each do |pos|
       pos_id = "Position id: #{pos.id}, ll_code: #{pos.ll_code}"
-
       mirror_pos = Position.find_by!(ll_code: pos.mirror_ll_code)
+
+      # Do mirrors match?
       if pos.ll_code != mirror_pos.mirror_ll_code || pos.mirror_ll_code != mirror_pos.ll_code
-        errors << "Mirror problem: Position id: #{pos.id}, ll_code: #{pos.ll_code}"
+        errors << "Mirror problem: #{pos_id}"
       end
 
+      # Do the corner looks match?
       cl_msg = "Unmatched corner looks '#{pos.corner_look}' <=> '#{mirror_pos.corner_look}': #{pos_id}"
       case pos.corner_look
         when 'B1'
@@ -145,6 +156,14 @@ class Position < ActiveRecord::Base
           errors << cl_msg unless mirror_pos.corner_look == 'B1'
         else
           errors << cl_msg unless mirror_pos.corner_look == pos.corner_look
+      end
+
+      # Is is_mirror consistent?
+      if pos.ll_code == pos.mirror_ll_code
+        errors << "Selfmirrored problem: #{pos_id}" if pos.is_mirror
+      else
+        errors << "Too many mirrors: #{pos_id}" if pos.is_mirror && mirror_pos.is_mirror
+        errors << "Too few mirrors: #{pos_id}" if !pos.is_mirror && !mirror_pos.is_mirror
       end
     end
 
