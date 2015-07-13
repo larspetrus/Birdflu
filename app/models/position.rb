@@ -12,6 +12,7 @@ class Position < ActiveRecord::Base
     self.oriented_edges = ll_code.count '1357'
     self.oriented_corners = ll_code.count 'aeio'
     self.corner_swap = Position.corner_swap_for(ll_code)
+    self.mirror_ll_code = Cube.new.apply_position(ll_code).standard_ll_code(:mirror)
   end
 
   def self.corner_swap_for(ll_code)

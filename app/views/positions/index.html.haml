@@ -21,6 +21,7 @@
 
 %table.index
   %th LL_CODE
+  %th Mirror
   %th CP
   %th CO
   %th EO
@@ -34,6 +35,7 @@
     - best = pos.best_alg || OpenStruct.new
     %tr
       %td= link_to pos.ll_code, "positions/#{pos.ll_code}"
+      %td= link_to pos.mirror_ll_code, "positions/#{pos.mirror_ll_code}" if pos.ll_code != pos.mirror_ll_code
       %td= pos.corner_swap_symbol
       %td= pos.oriented_corners
       %td= pos.oriented_edges
