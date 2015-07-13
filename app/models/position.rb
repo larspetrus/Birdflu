@@ -11,8 +11,9 @@ class Position < ActiveRecord::Base
   before_create do
     self.oriented_edges = ll_code.count '1357'
     self.oriented_corners = ll_code.count 'aeio'
-    self.corner_swap = Position.corner_swap_for(ll_code)
-    self.mirror_ll_code = Cube.new.apply_position(ll_code).standard_ll_code(:mirror)
+    self.set_corner_swap
+    self.set_mirror_ll_code
+    self.set_corner_look
   end
 
   def self.corner_swap_for(ll_code)
@@ -50,6 +51,26 @@ class Position < ActiveRecord::Base
 
   def as_cube
     @cube ||= Cube.new.apply_position(ll_code)
+  end
+
+  def set_corner_swap
+    self.corner_swap = Position.corner_swap_for(ll_code)
+  end
+
+  def set_corner_look
+    corner_look_code = (ll_code[0] + ll_code[2] + ll_code[4] + ll_code[6]).to_sym
+    self.corner_look = CORNER_LOOK_MAP[corner_look_code]
+  end
+
+  def set_mirror_ll_code
+    self.mirror_ll_code = Cube.new.apply_position(ll_code).standard_ll_code(:mirror)
+  end
+
+  def self.update_each
+    Position.all.each do |pos|
+      yield(pos)
+      pos.save
+    end
   end
 
   def self.generate_all # All LL positions
@@ -104,4 +125,106 @@ class Position < ActiveRecord::Base
     end
     found_positions.each { |code, weight| Position.create(ll_code: code, weight: weight) }
   end
+
+  def self.sanity_check
+    errors = []
+
+    Position.all.each do |pos|
+      pos_id = "Position id: #{pos.id}, ll_code: #{pos.ll_code}"
+
+      mirror_pos = Position.find_by!(ll_code: pos.mirror_ll_code)
+      if pos.ll_code != mirror_pos.mirror_ll_code || pos.mirror_ll_code != mirror_pos.ll_code
+        errors << "Mirror problem: Position id: #{pos.id}, ll_code: #{pos.ll_code}"
+      end
+
+      cl_msg = "Unmatched corner looks '#{pos.corner_look}' <=> '#{mirror_pos.corner_look}': #{pos_id}"
+      case pos.corner_look
+        when 'B1'
+          errors << cl_msg unless mirror_pos.corner_look == 'B2'
+        when 'B2'
+          errors << cl_msg unless mirror_pos.corner_look == 'B1'
+        else
+          errors << cl_msg unless mirror_pos.corner_look == pos.corner_look
+      end
+    end
+
+    puts "-"*88, errors
+    puts "Error count: #{errors.size}"
+  end
+
+  CORNER_LOOK_MAP = {
+      aaaa: 'A',
+      aabc: 'C',
+      aacb: 'D',
+      aaeo: 'A',
+      aafq: 'C',
+      aagp: 'D',
+      abac: 'E',
+      abbb: 'B2',
+      abca: 'C',
+      abeq: 'E',
+      abfp: 'B2',
+      abgo: 'C',
+      acab: 'E',
+      acba: 'D',
+      accc: 'B1',
+      acep: 'E',
+      acfo: 'D',
+      acgq: 'B1',
+      aeei: 'A',
+      aeoa: 'A',
+      aefk: 'C',
+      aepc: 'C',
+      aegj: 'D',
+      aeqb: 'D',
+      afek: 'E',
+      affj: 'B2',
+      afgi: 'C',
+      afoc: 'E',
+      afpb: 'B2',
+      afqa: 'C',
+      agej: 'E',
+      agfi: 'D',
+      aggk: 'B1',
+      agob: 'E',
+      agpa: 'D',
+      agqc: 'B1',
+      aiai: 'A',
+      aibk: 'C',
+      aicj: 'D',
+      aioo: 'A',
+      aipq: 'C',
+      aiqp: 'D',
+      ajak: 'E',
+      ajbj: 'B2',
+      ajci: 'C',
+      ajoq: 'E',
+      ajpp: 'B2',
+      ajqo: 'C',
+      akaj: 'E',
+      akbi: 'D',
+      akck: 'B1',
+      akop: 'E',
+      akpo: 'D',
+      akqq: 'B1',
+      bbcc: 'G',
+      bbgq: 'G',
+      bcbc: 'F',
+      bccb: 'G',
+      bcfq: 'F',
+      bcgp: 'G',
+      bfgk: 'G',
+      bfqc: 'G',
+      bgfk: 'F',
+      bggj: 'G',
+      bgpc: 'F',
+      bgqb: 'G',
+      bjck: 'G',
+      bjqq: 'G',
+      bkbk: 'F',
+      bkcj: 'G',
+      bkpq: 'F',
+      bkqp: 'G',
+  }
+
 end

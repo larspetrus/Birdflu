@@ -6,13 +6,14 @@ class PositionsController < ApplicationController
 
     @query = {}
 
-    @pcp = params[:cp]
-    @query['corner_swap'] = CP_ENUM['no'] if @pcp == 'None'
-    @query['corner_swap'] = CP_ENUM['diagonal'] if @pcp == 'Diagonal'
-    @query['corner_swap'] = [CP_ENUM['left'], CP_ENUM['right'], CP_ENUM['front'], CP_ENUM['back']] if @pcp == 'Adjacent'
+    @cp_param = params[:cp]
+    @query['corner_swap'] = CP_ENUM['no'] if @cp_param == 'None'
+    @query['corner_swap'] = CP_ENUM['diagonal'] if @cp_param == 'Diagonal'
+    @query['corner_swap'] = [CP_ENUM['left'], CP_ENUM['right'], CP_ENUM['front'], CP_ENUM['back']] if @cp_param == 'Adjacent'
 
+    @query['corner_look']      = params[:cl]      if params[:cl].present?
     @query['oriented_corners'] = params[:co].to_i if params[:co].present?
-    @query['oriented_edges'] = params[:eo].to_i if params[:eo].present?
+    @query['oriented_edges']   = params[:eo].to_i if params[:eo].present?
 
     @positions = Position.includes(:best_alg).where(@query).order(:ll_code)
   end

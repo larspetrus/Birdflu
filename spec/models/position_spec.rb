@@ -17,7 +17,7 @@ RSpec.describe Position, :type => :model do
   end
 
   it "has algs" do
-    null_alg = BaseAlg.make('', '');
+    null_alg = BaseAlg.make('', '')
     a1 = ComboAlg.make( BaseAlg.make('a1', "F U F' U F U2 F'"), null_alg, 0)
     a2 = ComboAlg.make( BaseAlg.make('a2', "F U2 F' U' F U' F'"), null_alg, 0)
     a3 = ComboAlg.make( BaseAlg.make('a3', "B U B' U B U2 B'"), null_alg, 0)
@@ -52,4 +52,11 @@ RSpec.describe Position, :type => :model do
     expect(Position.corner_swap_for('b3f6g1k4')).to eq(:left)
     expect(Position.corner_swap_for('b5f1q5c1')).to eq(:right)
   end
+
+  it '#set_corner_look' do
+    messy = Position.create(ll_code: 'a4c5c1c4', corner_look: 'none')
+    messy.set_corner_look
+    expect(messy.corner_look).to eq('B1')
+  end
+
 end
