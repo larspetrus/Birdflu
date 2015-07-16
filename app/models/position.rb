@@ -15,6 +15,7 @@ class Position < ActiveRecord::Base
     self.set_mirror_ll_code
     self.set_corner_look
     self.set_is_mirror
+    self.set_oll
   end
 
   def self.corner_swap_for(ll_code)
@@ -58,6 +59,32 @@ class Position < ActiveRecord::Base
     ll_code != mirror_ll_code
   end
 
+  def oll_code
+    oll_codes = Cube.new.apply_position(ll_code).ll_codes.map do |code|
+      oll_code_for(code)
+    end
+    oll_codes.sort.first
+  end
+
+  def oll_code_for(code)
+    result = ''
+    code.split('').each do |c|
+      case c
+        when 'a', 'e', 'i', 'o'
+          result += 'a'
+        when 'b', 'f', 'j', 'p'
+          result += 'b'
+        when 'c', 'g', 'k', 'q'
+          result += 'c'
+        when '1', '3', '5', '7'
+          result += '1'
+        when '2', '4', '6', '8'
+          result += '2'
+      end
+    end
+    result
+  end
+
   def set_corner_swap
     self.corner_swap = Position.corner_swap_for(ll_code)
   end
@@ -73,6 +100,10 @@ class Position < ActiveRecord::Base
 
   def set_is_mirror
     self.is_mirror = ll_code < mirror_ll_code    #completely arbitrary
+  end
+
+  def set_oll
+    self.oll = OLL_MAP[oll_code.to_sym]
   end
 
   def self.update_each
@@ -244,6 +275,67 @@ class Position < ActiveRecord::Base
       bkcj: 'G',
       bkpq: 'F',
       bkqp: 'G',
+  }
+
+  OLL_MAP = {
+      a1a1a1a1: :m0,
+      a1a1a2a2: :m28,
+      a1a1b1c1: :m24,
+      a1a1b2c2: :m32,
+      a1a1c1b1: :m23,
+      a1a1c2b2: :m44,
+      a1a2a1a2: :m57,
+      a1a2b1c2: :m33,
+      a1a2b2c1: :m31,
+      a1a2c1b2: :m45,
+      a1a2c2b1: :m43,
+      a1b1a1c1: :m25,
+      a1b1a2c2: :m36,
+      a1b1b1b1: :m26,
+      a1b1b2b2: :m12,
+      a1b1c2a2: :m30,
+      a1b2a1c2: :m39,
+      a1b2a2c1: :m35,
+      a1b2b1b2: :m16,
+      a1b2b2b1: :m6,
+      a1b2c1a2: :m34,
+      a1c1a2b2: :m38,
+      a1c1b2a2: :m41,
+      a1c1c1c1: :m27,
+      a1c1c2c2: :m7,
+      a1c2a2b1: :m37,
+      a1c2b1a2: :m46,
+      a1c2c1c2: :m13,
+      a1c2c2c1: :m5,
+      a2a2a2a2: :m20,
+      a2a2b1c1: :m29,
+      a2a2b2c2: :m19,
+      a2a2c1b1: :m42,
+      a2a2c2b2: :m18,
+      a2b1a2c1: :m40,
+      a2b1b1b2: :m9,
+      a2b1b2b1: :m14,
+      a2b2a2c2: :m17,
+      a2b2b1b1: :m8,
+      a2b2b2b2: :m4,
+      a2c1c1c2: :m10,
+      a2c1c2c1: :m15,
+      a2c2c1c1: :m11,
+      a2c2c2c2: :m3,
+      b1b1c1c1: :m22,
+      b1b1c2c2: :m49,
+      b1b2c1c2: :m52,
+      b1b2c2c1: :m48,
+      b1c1b1c1: :m21,
+      b1c1b2c2: :m54,
+      b1c1c2b2: :m50,
+      b1c2b1c2: :m55,
+      b1c2b2c1: :m53,
+      b1c2c1b2: :m51,
+      b2b2c1c1: :m47,
+      b2b2c2c2: :m2,
+      b2c1b2c1: :m56,
+      b2c2b2c2: :m1,
   }
 
 end

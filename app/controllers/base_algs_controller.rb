@@ -1,6 +1,8 @@
 class BaseAlgsController < ApplicationController
   def index
+    BigThought.populate_db
     @root_algs = BaseAlg.order(:id)
+    @counts = ComboAlg.group(:base_alg1_id).count
   end
 
   def combine
@@ -13,7 +15,12 @@ class BaseAlgsController < ApplicationController
 
   def update_positions
     start = Time.now
-    Position.find_each { |p| p.update(alg_count: p.combo_algs.count, best_alg_id: p.combo_algs[0].try(:id)) }
+    ActiveRecord::Base.transaction do
+      alg_counts = ComboAlg.group(:position_id).count
+      Position.find_each do |p|
+        p.update(alg_count: alg_counts[p.id], best_alg_id: p.combo_algs[0].try(:id))
+      end
+    end
     @time = Time.now - start
 
     respond_to { |format| format.js }

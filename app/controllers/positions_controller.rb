@@ -2,22 +2,25 @@ class PositionsController < ApplicationController
   CP_ENUM = Position.corner_swaps
 
   def index
-    BigThought.populate_db
-
     @query = {}
+    @oll_options = (0..57).map { |n| ["m#{n}", "m#{n}"] }
 
     @cp_param = params[:cp]
     @query['corner_swap'] = CP_ENUM['no'] if @cp_param == 'None'
     @query['corner_swap'] = CP_ENUM['diagonal'] if @cp_param == 'Diagonal'
     @query['corner_swap'] = [CP_ENUM['left'], CP_ENUM['right'], CP_ENUM['front'], CP_ENUM['back']] if @cp_param == 'Adjacent'
 
+    @query['oll']              = params[:ol]      if params[:ol].present?
     @query['corner_look']      = params[:cl]      if params[:cl].present?
     @query['oriented_corners'] = params[:co].to_i if params[:co].present?
     @query['oriented_edges']   = params[:eo].to_i if params[:eo].present?
     @query['is_mirror']        = false            if params[:im] == "No"
     @show_mirrors = (params[:im] == "No" ? "No" : "Yes")
 
-    @positions = Position.includes(:best_alg).where(@query).order(:ll_code)
+    @positions = Position.includes(:best_alg).where(@query).to_a
+    @positions.sort_by! {|pos| pos.best_alg ? pos.best_alg.length : 99}
+
+    @count = @positions.select { |pos| pos.best_alg }.count
   end
 
   def show

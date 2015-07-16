@@ -20,10 +20,6 @@ class BaseAlg < ActiveRecord::Base
     moves.chars.map { |char| (place = 'RFLB'.index(char)) ? 'RFLB'[(place + turns) % 4] : char }.join
   end
 
-  def isCombined
-    combo_algs2.count > 0
-  end
-
   def moves(u_shift=0)
     [moves_u0, moves_u1, moves_u2, moves_u3][u_shift]
   end

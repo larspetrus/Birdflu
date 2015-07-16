@@ -9,16 +9,15 @@ class BigThought
       ComboAlg.make_single(OpenStruct.new(name: "Nothing", moves: '', id: nil))
     end
 
-    if BaseAlg.count > 0
-      puts "BaseAlgs already populated. Skipping generation. #{BaseAlg.count} base algs"
-      return
-    end
     puts "Starting BigThought.populate_db(): #{BaseAlg.count} base algs"
     start_time = Time.new
 
     all_root_algs.each do |ad|
-      create_alg_bases(ad.name, ad.moves, ad.type != :singleton)
-      create_alg_bases("Anti#{ad.name}", reverse(ad.moves), true) if ad.type == :reverse
+      unless BaseAlg.exists?(name: ad.name)
+        puts "Adding #{ad.name} Base"
+        create_alg_bases(ad.name, ad.moves, ad.type != :singleton)
+        create_alg_bases("Anti#{ad.name}", reverse(ad.moves), true) if ad.type == :reverse
+      end
     end
 
     puts "After BigThought.populate_db(): #{BaseAlg.count} base algs. Took #{Time.new - start_time}"
@@ -34,12 +33,16 @@ class BigThought
   end
 
   def self.combine(new_base_alg)
-    BaseAlg.all.select { |alg| alg.isCombined }.each do |old|
-      ComboAlg.make_4(old, new_base_alg)
-      ComboAlg.make_4(new_base_alg, old)
+    already_combined = ComboAlg.group(:base_alg1_id).count
+
+    ActiveRecord::Base.transaction do
+      BaseAlg.all.select { |alg| already_combined[alg.id] }.each do |old|
+        ComboAlg.make_4(old, new_base_alg)
+        ComboAlg.make_4(new_base_alg, old)
+      end
+      ComboAlg.make_4(new_base_alg, new_base_alg)
+      ComboAlg.make_single(new_base_alg)
     end
-    ComboAlg.make_4(new_base_alg, new_base_alg)
-    ComboAlg.make_single(new_base_alg)
   end
 
   def self.alg_label(moves)
@@ -125,10 +128,57 @@ class BigThought
         root_alg("H370",  "R L' B L' B' D' B D R' L2"),
         root_alg("H371",  "B' R B' R' B' L' B' L2 U2 L'", :mirror_only),
         root_alg("H405",  "B2 R2 B' L U L' U' B R2 B2"),
-        root_alg("Buffy", "B' U2 B U2 F U' B' U B F'"),
+        root_alg("H434",  "R U2 R' B' U R U R' U' B"),
+        root_alg("H442b", "L' U2 R L U' L' U R' U2 L"),
+        root_alg("H442c", "L' U2 R U' R' U2 R L U' R'"),
+        root_alg("H442d", "B' R' U' R B2 L' B' L2 U' L'"),
+        root_alg("H464",  "R B2 R2 L U L' U' R2 B2 R'", :singleton),
+        root_alg("H519",  "B U2 B2 U' R' U R B2 U' B'"),
+        root_alg("H569",  "R B' U' B2 U' B2 U2 B U' R'"),
+        root_alg("H604",  "B' R U2 R' B R B' U2 B R'", :mirror_only),
+        root_alg("H610a", "R2 D' F2 D R2 B2 D L2 D' B2", :singleton),
+        root_alg("H610b", "B2 D' R2 U R2 B2 D L2 U' L2", :singleton),
+        root_alg("H615",  "B' R B' D2 F L' F' D2 B2 R'", :singleton),
+        root_alg("H644",  "L' B L B' U' B' R' U R B"),
+        root_alg("H655",  "L2 D' B D' R2 B' D2 L2 U F'", :mirror_only),
+        root_alg("H769",  "R' L' U2 R U R' U2 L U' R"),
+        root_alg("H775",  "L' U R' U' R L U2 R' U' R"),
+        root_alg("H832",  "B U L U' B' R B L' B' R'"),
+        root_alg("H833",  "B' R B U B' U' R2 U R B"),
+        root_alg("H846",  "R' B U L U' B' R B L' B'"),
+        root_alg("H894",  "B' R' B L' B' R2 B' R' B2 L"),
+        root_alg("H904",  "R B2 D B' U B D' B2 U' R'"),
+        root_alg("H931",  "L' U R B2 U B2 U' B2 R' L"),
+        root_alg("H932",  "B U B' U' L' B' R B R' L"),
+        root_alg("H933",  "R D L' B L D' R' B U' B'"),
+        root_alg("H942a", "R U2 L B L' U2 L B' R' L'"),
+        root_alg("H942b", "B R' U2 R B2 L' B2 L U2 B'"),
+        root_alg("H942c", "B R' U2 L U2 L' U2 R U2 B'"),
+        root_alg("H942d", "B L' B2 L B2 R' U2 R U2 B'"),
+        root_alg("H942e", "L U2 L2 B2 R B' L B2 R' B"),
+        root_alg("H942f", "R' U2 R2 B2 L' B' L B2 R' B"),
+        root_alg("H971",  "R U B U2  B' U B U B' R'"),
+        root_alg("H976",  "R L' U' B' U B U R' U' L"),
+        root_alg("H1004", "R U B U' L B' R' B L' B'"),
+        root_alg("H1076", "B' R B U B' R' B R U' R'"),
+        root_alg("H1112", "B L2 B2 R B' R' B2 L' U2 L'"),
+        root_alg("H1113", "R U' L' U R' U2 B' U B L"),
+        root_alg("H1125a","L U2 L' U2 R' U L U' R L'"),
+        root_alg("H1125b","L2 B2 R B R' B L2 F U2 F'"),
+        root_alg("H1134", "R L' B' R' B L U2 B U2 B'"),
+        root_alg("H1153a","B' U' R' U2 R U R' U' R B"),
+        root_alg("H1153b","B' R' U' R2 U R' B R U' R'"),
+        root_alg("H1206", "B L' B L B2 U2 R B' R' B"),
+
+
+
+
+
+
+        root_alg("Buffy", "B' U2 B U2 F U' B' U B F'"), # vad heter jag?
         # 11 moves (162 total)
-        root_alg("Benny", "B' U2 B2 U2 B2 U' B2 U' B2 U B"),
-        root_alg("Rune",  "L' U' L U' L U L2 U L2 U2 L'", :mirror_only),
+        # root_alg("Benny", "B' U2 B2 U2 B2 U' B2 U' B2 U B"),
+        # root_alg("Rune",  "L' U' L U' L U L2 U L2 U2 L'", :mirror_only),
     ]
   end
 end

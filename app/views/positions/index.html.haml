@@ -5,6 +5,9 @@
 
 =form_tag url_for(controller: "positions", action: "index"), method: 'get', class: "search_form" do
   %div
+    =label_tag(:ol, "OLL")
+    =select_tag(:ol, options_for_select(@oll_options, @query['oll']), include_blank: true)
+  %div
     =label_tag(:cl, "Corner look")
     =select_tag(:cl, options_for_select([["A", "A"], ["B1", "B1"], ["B2", "B2"], ["C", "C"], ["D", "D"], ["E", "E"], ["F", "F"], ["G", "G"]], @query['corner_look']), include_blank: true)
   %div
@@ -23,12 +26,13 @@
     =submit_tag("Reload")
 
 
-%h5 Showing #{@positions.count} of all #{Position.count} positions. #{ComboAlg.count(:position_id)}  solutions total
+%h5 Showing #{@positions.count} of all #{Position.count} positions. #{Position.where("best_alg_id is null").count} are unsolved. #{ComboAlg.count(:position_id)} solutions total
 
 %table.index
   %th LL_CODE
   %th Mirror
   %th CL
+  %th OLL
   %th CP
   %th CO
   %th EO
@@ -44,6 +48,7 @@
       %td= link_to pos.ll_code, "positions/#{pos.ll_code}"
       %td= link_to pos.mirror_ll_code, "positions/#{pos.mirror_ll_code}" if pos.ll_code != pos.mirror_ll_code
       %td= pos.corner_look
+      %td= pos.oll
       %td= pos.corner_swap_symbol
       %td= pos.oriented_corners
       %td= pos.oriented_edges
