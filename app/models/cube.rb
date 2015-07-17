@@ -12,6 +12,11 @@ class Cube
     {R: '#0d0', L: '#07f', F: 'red', B: 'orange', U: 'yellow', D: '#eee'}[piece_at(position).sticker_on(side).to_sym]
   end
 
+  def css(position, side) # Same as RoofPig
+    side = piece_at(position).sticker_on(side).to_s.downcase
+    "#{side}-color"
+  end
+
   def piece_at(position)
     @pieces[position.to_sym]
   end

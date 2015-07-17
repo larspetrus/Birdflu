@@ -169,13 +169,11 @@ class BigThought
         root_alg("H1153a","B' U' R' U2 R U R' U' R B"),
         root_alg("H1153b","B' R' U' R2 U R' B R U' R'"),
         root_alg("H1206", "B L' B L B2 U2 R B' R' B"),
+        root_alg("Hwhat?","B' U' R B' R' B2 U' B' U2 B", :singleton),
+
+        root_alg("Buffy", "B' U2 B U2 F U' B' U B F'"), # TODO Jag är H1125aM
 
 
-
-
-
-
-        root_alg("Buffy", "B' U2 B U2 F U' B' U B F'"), # vad heter jag?
         # 11 moves (162 total)
         # root_alg("Benny", "B' U2 B2 U2 B2 U' B2 U' B2 U B"),
         # root_alg("Rune",  "L' U' L U' L U L2 U L2 U2 L'", :mirror_only),

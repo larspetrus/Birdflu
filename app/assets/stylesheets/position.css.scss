@@ -2,6 +2,8 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+@import "common";
+
 .index {
   border-collapse: collapse;
   border: 1px solid #ddd;
@@ -50,19 +52,19 @@ $small: 8px;
 }
 .f {
   height: $small;
-  box-shadow: 0 5px 3px 0px red;
+  box-shadow: 0 5px 3px 0px $f_color;
 }
 .b {
   height: $small;
-  box-shadow: 0 -5px 3px 0px orange;
+  box-shadow: 0 -5px 3px 0px $b_color;
 }
 .r {
   width: $small;
-  box-shadow: 5px 0 3px 0px #0d0;
+  box-shadow: 5px 0 3px 0px $r_color;
 }
 .l {
   width: $small;
-  box-shadow: -5px 0 3px 0px #07f;
+  box-shadow: -5px 0 3px 0px $l_color;
 }
 
 // ------------ Arrows

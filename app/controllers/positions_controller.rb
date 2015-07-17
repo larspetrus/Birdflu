@@ -3,7 +3,7 @@ class PositionsController < ApplicationController
 
   def index
     @query = {}
-    @oll_options = (0..57).map { |n| ["m#{n}", "m#{n}"] }
+    @oll_options = (0..57).map { |n| "m#{n}" }
 
     @cp_param = params[:cp]
     @query['corner_swap'] = CP_ENUM['no'] if @cp_param == 'None'
@@ -17,10 +17,10 @@ class PositionsController < ApplicationController
     @query['is_mirror']        = false            if params[:im] == "No"
     @show_mirrors = (params[:im] == "No" ? "No" : "Yes")
 
-    @positions = Position.includes(:best_alg).where(@query).to_a
-    @positions.sort_by! {|pos| pos.best_alg ? pos.best_alg.length : 99}
+    @positions = Position.includes(:best_alg).where(@query).to_a.sort_by! {|pos| pos.best_alg_length}
 
-    @count = @positions.select { |pos| pos.best_alg }.count
+    sum = @positions.reduce(0.0) { |sum, pos| sum + pos.best_alg_length }
+    @average = '%.2f' % (sum/@positions.count)
   end
 
   def show

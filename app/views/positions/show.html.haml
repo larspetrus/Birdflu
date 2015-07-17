@@ -4,40 +4,40 @@
 
 %h3 Position #{@position.ll_code}
 
-%div{style: "position:relative"}
+%div{style: "position:relative;"}
   %div{class: "arr_#{@position.corner_swap}"}
 
   %table.upos
     %tr
-      %td{style:"border: none;"}
-      %td.b{style:"background-color:#{@cube.color_at('ULB', 'B')}"}
-      %td.b{style:"background-color:#{@cube.color_at('UB', 'B')}"}
-      %td.b{style:"background-color:#{@cube.color_at('UBR', 'B')}"}
-      %td{style:"border: none;"}
+      %td.none
+      %td.b{class: @cube.css(:ULB,:B)}
+      %td.b{class: @cube.css(:UB, :B)}
+      %td.b{class: @cube.css(:UBR,:B)}
+      %td.none
     %tr
-      %td.l{style:"background-color:#{@cube.color_at('ULB', 'L')}"}
-      %td.u{style:"background-color:#{@cube.color_at('ULB', 'U')}"}
-      %td.u{style:"background-color:#{@cube.color_at('UB',  'U')} "}
-      %td.u{style:"background-color:#{@cube.color_at('UBR', 'U')}"}
-      %td.r{style:"background-color:#{@cube.color_at('UBR', 'R')}"}
+      %td.l{class: @cube.css(:ULB,:L)}
+      %td.u{class: @cube.css(:ULB,:U)}
+      %td.u{class: @cube.css(:UB, :U)}
+      %td.u{class: @cube.css(:UBR,:U)}
+      %td.r{class: @cube.css(:UBR,:R)}
     %tr
-      %td.l{style:"background-color:#{@cube.color_at('UL', 'L')}"}
-      %td.u{style:"background-color:#{@cube.color_at('UL', 'U')}"}
-      %td.u{style:"background-color:yellow"}
-      %td.u{style:"background-color:#{@cube.color_at('UR', 'U')}"}
-      %td.r{style:"background-color:#{@cube.color_at('UR', 'R')}"}
+      %td.l{class: @cube.css(:UL, :L)}
+      %td.u{class: @cube.css(:UL, :U)}
+      %td.u.u-color
+      %td.u{class: @cube.css(:UR, :U)}
+      %td.r{class: @cube.css(:UR, :R)}
     %tr
-      %td.l{style:"background-color:#{@cube.color_at('UFL', 'L')}"}
-      %td.u{style:"background-color:#{@cube.color_at('UFL', 'U')}"}
-      %td.u{style:"background-color:#{@cube.color_at('UF',  'U')} "}
-      %td.u{style:"background-color:#{@cube.color_at('URF', 'U')}"}
-      %td.r{style:"background-color:#{@cube.color_at('URF', 'R')}"}
+      %td.l{class: @cube.css(:UFL,:L)}
+      %td.u{class: @cube.css(:UFL,:U)}
+      %td.u{class: @cube.css(:UF, :U)}
+      %td.u{class: @cube.css(:URF,:U)}
+      %td.r{class: @cube.css(:URF,:R)}
     %tr
-      %td{style:"border: none;"}
-      %td.f{style:"background-color:#{@cube.color_at('UFL', 'F')}"}
-      %td.f{style:"background-color:#{@cube.color_at('UF', 'F')} "}
-      %td.f{style:"background-color:#{@cube.color_at('URF', 'F')}"}
-      %td{style:"border: none;"}
+      %td.none
+      %td.f{class: @cube.css(:UFL,:F)}
+      %td.f{class: @cube.css(:UF, :F)}
+      %td.f{class: @cube.css(:URF,:F)}
+      %td.none
 
 - @position.combo_algs.first(3).each do |f3|
   .roofpig.rp160{:'data-config' => "base=AD | alg=#{f3.moves} | flags=showalg #{f3.setup_moves}" }

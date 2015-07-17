@@ -9,24 +9,25 @@
     =select_tag(:ol, options_for_select(@oll_options, @query['oll']), include_blank: true)
   %div
     =label_tag(:cl, "Corner look")
-    =select_tag(:cl, options_for_select([["A", "A"], ["B1", "B1"], ["B2", "B2"], ["C", "C"], ["D", "D"], ["E", "E"], ["F", "F"], ["G", "G"]], @query['corner_look']), include_blank: true)
+    =select_tag(:cl, options_for_select(["A", "B1", "B2", "C", "D", "E", "F", "G"], @query['corner_look']), include_blank: true)
   %div
     =label_tag(:cp, "Swapped corners")
-    =select_tag(:cp, options_for_select([["None", "None"], ["Adjacent", "Adjacent"], ["Diagonal", "Diagonal"]], @cp_param), include_blank: true)
+    =select_tag(:cp, options_for_select(["None", "Adjacent", "Diagonal"], @cp_param), include_blank: true)
   %div
     =label_tag(:co, "Oriented corners")
-    =select_tag(:co, options_for_select([["0", "0"], ["1", "1"], ["2", "2"], ["4", "4"]], @query['oriented_corners']), include_blank: true)
+    =select_tag(:co, options_for_select(["0", "1", "2", "4"], @query['oriented_corners']), include_blank: true)
   %div
     =label_tag(:eo, "Oriented edges")
-    =select_tag(:eo, options_for_select([["0", "0"], ["2", "2"], ["4", "4"]], @query['oriented_edges']), include_blank: true)
+    =select_tag(:eo, options_for_select(["0", "2", "4"], @query['oriented_edges']), include_blank: true)
   %div
     =label_tag(:im, "Show Mirrors")
-    =select_tag(:im, options_for_select([["No", "No"], ["Yes", "Yes"]], @show_mirrors))
+    =select_tag(:im, options_for_select(["No", "Yes"], @show_mirrors))
   %div
     =submit_tag("Reload")
 
 
-%h5 Showing #{@positions.count} of all #{Position.count} positions. #{Position.where("best_alg_id is null").count} are unsolved. #{ComboAlg.count(:position_id)} solutions total
+%h5 Showing #{@positions.count} of all #{Position.count} positions. #{ComboAlg.count(:position_id)} solutions total
+%h5 Average best solve: #{@average}
 
 %table.index
   %th LL_CODE

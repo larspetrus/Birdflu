@@ -85,6 +85,10 @@ class Position < ActiveRecord::Base
     result
   end
 
+  def best_alg_length
+    best_alg ? best_alg.length : 99
+  end
+
   def set_corner_swap
     self.corner_swap = Position.corner_swap_for(ll_code)
   end
