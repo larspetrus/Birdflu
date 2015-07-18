@@ -1,12 +1,15 @@
+- @olls.each do |oll|
+  = render 'oll', oll: oll, active_oll: params[:ol]
+
+%br{clear: 'both'}
+
 %h3 Last Layer Positions With Solutions
 
 %h5{style: 'position: absolute; top:0; right:0; '}
   = link_to "H codes", "http://www.ai.univ-paris8.fr/~bh/cube/solutions_tout.html"
 
 =form_tag url_for(controller: "positions", action: "index"), method: 'get', class: "search_form" do
-  %div
-    =label_tag(:ol, "OLL")
-    =select_tag(:ol, options_for_select(@oll_options, @query['oll']), include_blank: true)
+  =hidden_field_tag(:ol, @query['oll'])
   %div
     =label_tag(:cl, "Corner look")
     =select_tag(:cl, options_for_select(["A", "B1", "B2", "C", "D", "E", "F", "G"], @query['corner_look']), include_blank: true)
@@ -63,3 +66,9 @@
         %span.alg2=    best.mv_end
       %td.num= best.length
       %td{:class => best.oneAlg? ? 'one-alg' : ''}= best.name
+
+:javascript
+  $(".oll-pic").on("click", function() {
+    $("#ol").val(this.id);
+    $('form').submit();
+  });

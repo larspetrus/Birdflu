@@ -40,74 +40,125 @@
 $big: 16px;
 $small: 8px;
 
-.upos {
-  border-collapse: collapse;
-  margin: 5px;
-  td { border: 2px solid black; }
+.u-position-pic {
+  position:relative;
+
+  table {
+    border-collapse: collapse;
+    margin: 5px;
+    td { border: 2px solid black; }
+  }
+
+  .u {
+    height: $big;
+    width: $big;
+  }
+  .f {
+    height: $small;
+    box-shadow: 0 5px 3px 0px $f_color;
+  }
+  .b {
+    height: $small;
+    box-shadow: 0 -5px 3px 0px $b_color;
+  }
+  .r {
+    width: $small;
+    box-shadow: 5px 0 3px 0px $r_color;
+  }
+  .l {
+    width: $small;
+    box-shadow: -5px 0 3px 0px $l_color;
+  }
+
+  // ---- Arrows
+  .arr_h {
+    left:20px;
+    height:7px;
+    width:54px;
+    position:absolute;
+    background-image: url('/assets/arrow_h.png');
+  }
+  .arr_v {
+    top:16px;
+    height:54px;
+    width:7px;
+    position:absolute;
+    background-image: url('/assets/arrow_v.png');
+  }
+  .arr_back {
+    @extend .arr_h;
+    top:18px;
+  }
+  .arr_front {
+    @extend .arr_h;
+    top:60px;
+  }
+  .arr_left {
+    @extend .arr_v;
+    left:23px;
+  }
+  .arr_right {
+    @extend .arr_v;
+    left:63px;
+  }
+  .arr_diagonal {
+    height:54px;
+    width:54px;
+    position:absolute;
+    top:15px;
+    left:21px;
+    background-image: url('/assets/arrow_d.png');
+  }
+  .arr_no {}
 }
 
-.u {
-  height: $big;
-  width: $big;
-}
-.f {
-  height: $small;
-  box-shadow: 0 5px 3px 0px $f_color;
-}
-.b {
-  height: $small;
-  box-shadow: 0 -5px 3px 0px $b_color;
-}
-.r {
-  width: $small;
-  box-shadow: 5px 0 3px 0px $r_color;
-}
-.l {
-  width: $small;
-  box-shadow: -5px 0 3px 0px $l_color;
+$wide: 8px;
+$narrow: 3px;
+
+.oll-pic {
+  position:relative;
+  float: left;
+  &:hover {
+    .u {
+      background-color:yellow;
+    }
+    th {
+      color:yellow;
+      background-color:purple;
+    }
+  }
+
+  table {
+    border-collapse: collapse;
+    margin: 5px;
+    th { font-size: 9px; text-align: center; }
+    td { border: 1px solid #444; }
+  }
+
+  .u {
+    height: $wide;
+    width: $wide;
+  }
+  .f, .b {
+    height: $narrow;
+    border: none;
+    border-right: 1px solid white;
+  }
+  .l, .r {
+    width: $narrow;
+    border: none;
+    border-top: 1px solid white;
+  }
 }
 
-// ------------ Arrows
+.oll-color {
+  background-color: deeppink !important;
+}
 
-.arr_h {
-  left:20px;
-  height:7px;
-  width:54px;
-  position:absolute;
-  background-image: url('/assets/arrow_h.png');
+.selected th {
+  background-color: cyan;
 }
-.arr_v {
-  top:16px;
-  height:54px;
-  width:7px;
-  position:absolute;
-  background-image: url('/assets/arrow_v.png');
-}
-.arr_back {
-  @extend .arr_h;
-  top:18px;
-}
-.arr_front {
-  @extend .arr_h;
-  top:60px;
-}
-.arr_left {
-  @extend .arr_v;
-  left:23px;
-}
-.arr_right {
-  @extend .arr_v;
-  left:63px;
-}
-.arr_diagonal {
-  height:54px;
-  width:54px;
-  position:absolute;
-  top:15px;
-  left:21px;
-  background-image: url('/assets/arrow_d.png');
-}
-.arr_no {}
+
 
 // ------------ Alg sections
 .cancel1 {

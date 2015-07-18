@@ -21,6 +21,8 @@ class PositionsController < ApplicationController
 
     sum = @positions.reduce(0.0) { |sum, pos| sum + pos.best_alg_length }
     @average = '%.2f' % (sum/@positions.count)
+
+    @olls = OllPosition::ALL
   end
 
   def show
