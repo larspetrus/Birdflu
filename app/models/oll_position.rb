@@ -44,7 +44,7 @@ class OllPosition
     self.new(:m26, 'OLL 26', %w(L U B U U F U U)),
     self.new(:m21, 'OLL 21', %w(L U R U U L U R)),
     self.new(:m22, 'OLL 22', %w(L U B U U L U F)),
-    self.new(:m23, 'OLL 23', %w(B U B U U U U U)),
+    self.new(:m23, 'OLL 23', %w(U U U U U F U F)),
     self.new(:m24, 'OLL 24', %w(B U U U U F U U)),
     self.new(:m25, 'OLL 25', %w(U U B U U L U U)),
     self.new(:m17, 'OLL 17', %w(U B B L R L F U)),

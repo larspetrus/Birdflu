@@ -30,6 +30,18 @@ class CornerPosition
     ALL.find { |op| op.code == code.to_sym }
   end
 
+  def self.grid
+    @@grid =
+      [
+        [:'',:A, :B, :b, :C, :D, :E, :F, :G].map{|id| self.by_code(id)},
+        [:-, :AA,:BB,:bb,:CC,:DD,:EE,:FF,:GG].map{|id| self.by_code(id)},
+        [:- ,:Ax,:Bx,:bx,:Cx,:Dx,:Ex,:Fx,:Gx].map{|id| self.by_code(id)},
+        [:- ,:- ,:By,:by,:Cy,:Dy,:Ey,:Fy,:Gy].map{|id| self.by_code(id)},
+        [:- ,:- ,:Bz,:bz,:Cz,:Dz,:ex,:- ,:Gz].map{|id| self.by_code(id)},
+        [:- ,:- ,:Bq,:bq,:- ,:- ,:- ,:- ,:gx].map{|id| self.by_code(id)},
+      ]
+  end
+
   CA = %w(U U U U)
   CB = %w(U R L F)
   Cb = %w(U B F R)
@@ -74,10 +86,10 @@ class CornerPosition
     self.new(:Gz, CG, :R),
     self.new(:b , Cb),
     self.new(:bb, Cb, :D),
-    self.new(:bq, Cb),
-    self.new(:bx, Cb),
-    self.new(:by, Cb),
-    self.new(:bz, Cb),
+    self.new(:bq, Cb, :B),
+    self.new(:bx, Cb, :L),
+    self.new(:by, Cb, :F),
+    self.new(:bz, Cb, :R),
     self.new(:cx, CC, :R),
     self.new(:dx, CD, :R),
     self.new(:ex, CE, :F),

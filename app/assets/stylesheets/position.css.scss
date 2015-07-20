@@ -130,7 +130,7 @@ $narrow: 3px;
 
   table {
     border-collapse: collapse;
-    margin: 5px;
+    margin: 3px;
     th { font-size: 9px; text-align: center; }
     td { border: 1px solid #444; }
   }
@@ -151,14 +151,14 @@ $narrow: 3px;
   }
 
   .arrow_v {
-    top:26px;
+    top:24px;
     height:27px;
     width:2px;
     position:absolute;
     background-color: black;
   }
   .arrow_h {
-    left:14px;
+    left:12px;
     height:2px;
     width:27px;
     position:absolute;
@@ -166,24 +166,24 @@ $narrow: 3px;
   }
   .arrow_L {
     @extend .arrow_v;
-    left:15px;
+    left:13px;
   }
   .arrow_R {
     @extend .arrow_v;
-    left:37px;
+    left:35px;
   }
   .arrow_B {
     @extend .arrow_h;
-    top:28px;
+    top:26px;
   }
   .arrow_F {
     @extend .arrow_h;
-    top:50px;
+    top:48px;
   }
 
   .arrow_D {
-    left:11px;
-    top:39px;
+    left:9px;
+    top:37px;
     height:2px;
     width:32px;
     position:absolute;
@@ -209,6 +209,16 @@ $narrow: 3px;
   background-color: cyan;
 }
 
+table.icon-grid {
+  border-collapse: collapse;
+}
+td.icon-grid {
+  padding: 0;
+  border-right: solid 1px #aaa;
+}
+td:last-child.icon-grid {
+  border-right: none;
+}
 
 // ------------ Alg sections
 .cancel1 {

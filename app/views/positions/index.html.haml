@@ -3,10 +3,12 @@
 
 %br{clear: 'both'}
 
-- @cls.each do |cl|
-  = render 'll_icon', pos: cl, add_class: cl.highlight(params[:cl])
-
-%br{clear: 'both'}
+%table.icon-grid
+  - @cls_rows.each do |cl_row|
+    %tr
+      - cl_row.each do |cl|
+        %td.icon-grid
+          = render 'll_icon', pos: cl, add_class: cl.highlight(params[:cl]) if cl
 
 %h3 Last Layer Positions With Solutions
 
