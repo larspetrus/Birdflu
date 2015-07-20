@@ -2,6 +2,11 @@
 - if @position.has_mirror
   %div{style: "font-size: 16px;"}= link_to "Mirror position", "#{@position.mirror_ll_code}"
 
+%div{style: "float: right;"}
+  = render 'll_icon', pos: OllPosition.by_code(@position.oll), add_class: ''
+%div{style: "float: right;"}
+  = render 'll_icon', pos: CornerPosition.by_code(@position.corner_look), add_class: ''
+
 %h3 Position #{@position.ll_code}
 
 %div.u-position-pic
@@ -52,7 +57,7 @@
   - @position.combo_algs.each do |alg|
     %tr
       %td= alg.length
-      %td= alg.name
+      %td{:class => alg.oneAlg? ? 'one-alg' : ''}= alg.name
       %td
         = alg.mv_start
         %span.cancel1= alg.mv_cancel1

@@ -1,5 +1,10 @@
 - @olls.each do |oll|
-  = render 'oll', oll: oll, active_oll: params[:ol]
+  = render 'll_icon', pos: oll, add_class: oll.highlight(params[:ol])
+
+%br{clear: 'both'}
+
+- @cls.each do |cl|
+  = render 'll_icon', pos: cl, add_class: cl.highlight(params[:cl])
 
 %br{clear: 'both'}
 
@@ -10,9 +15,7 @@
 
 =form_tag url_for(controller: "positions", action: "index"), method: 'get', class: "search_form" do
   =hidden_field_tag(:ol, @query['oll'])
-  %div
-    =label_tag(:cl, "Corner look")
-    =select_tag(:cl, options_for_select(["A", "B1", "B2", "C", "D", "E", "F", "G"], @query['corner_look']), include_blank: true)
+  =hidden_field_tag(:cl, @query['corner_look'])
   %div
     =label_tag(:cp, "Swapped corners")
     =select_tag(:cp, options_for_select(["None", "Adjacent", "Diagonal"], @cp_param), include_blank: true)
@@ -68,7 +71,7 @@
       %td{:class => best.oneAlg? ? 'one-alg' : ''}= best.name
 
 :javascript
-  $(".oll-pic").on("click", function() {
-    $("#ol").val(this.id);
+  $(".ll-icon").on("click", function() {
+    $($(this).data('field')).val($(this).data('code'));
     $('form').submit();
   });

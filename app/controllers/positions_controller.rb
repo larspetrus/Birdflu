@@ -23,6 +23,7 @@ class PositionsController < ApplicationController
     @average = '%.2f' % (sum/@positions.count)
 
     @olls = OllPosition::ALL
+    @cls = CornerPosition::ALL
   end
 
   def show

@@ -115,7 +115,7 @@ $small: 8px;
 $wide: 8px;
 $narrow: 3px;
 
-.oll-pic {
+.ll-icon {
   position:relative;
   float: left;
   &:hover {
@@ -149,10 +149,60 @@ $narrow: 3px;
     border: none;
     border-top: 1px solid white;
   }
+
+  .arrow_v {
+    top:26px;
+    height:27px;
+    width:2px;
+    position:absolute;
+    background-color: black;
+  }
+  .arrow_h {
+    left:14px;
+    height:2px;
+    width:27px;
+    position:absolute;
+    background-color: black;
+  }
+  .arrow_L {
+    @extend .arrow_v;
+    left:15px;
+  }
+  .arrow_R {
+    @extend .arrow_v;
+    left:37px;
+  }
+  .arrow_B {
+    @extend .arrow_h;
+    top:28px;
+  }
+  .arrow_F {
+    @extend .arrow_h;
+    top:50px;
+  }
+
+  .arrow_D {
+    left:11px;
+    top:39px;
+    height:2px;
+    width:32px;
+    position:absolute;
+    transform: rotate(45deg);
+    background-color: black;
+  }
+
 }
 
 .oll-color {
   background-color: deeppink !important;
+}
+
+.corner-color {
+  background-color: #0c0 !important;
+}
+
+.ignored-color {
+  background-color: #ddd;
 }
 
 .selected th {

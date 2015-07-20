@@ -94,8 +94,18 @@ class Position < ActiveRecord::Base
   end
 
   def set_corner_look
-    corner_look_code = (ll_code[0] + ll_code[2] + ll_code[4] + ll_code[6]).to_sym
     self.corner_look = CORNER_LOOK_MAP[corner_look_code]
+  end
+
+  def corner_look_code
+    cl_codes = Cube.new.apply_position(ll_code).ll_codes.map do |code|
+      corner_look_code_for(code)
+    end
+    cl_codes.sort.first.to_sym
+  end
+
+  def corner_look_code_for(code)
+    code[0] + code[2] + code[4] + code[6]
   end
 
   def set_mirror_ll_code
@@ -172,6 +182,7 @@ class Position < ActiveRecord::Base
 
   def self.sanity_check
     errors = []
+    correct_CL_mirror = {"A"=>"A", "AA"=>"AA", "Ax"=>"Ax", "b"=>"B", "B"=>"b", "bb"=>"BB", "BB"=>"bb", "bq"=>"Bq", "Bq"=>"bq", "bx"=>"Bx", "Bx"=>"bx", "by"=>"By", "By"=>"by", "bz"=>"Bz", "Bz"=>"bz", "C"=>"C", "CC"=>"CC", "cx"=>"Cx", "Cx"=>"cx", "Cy"=>"Cy", "Cz"=>"Cz", "D"=>"D", "DD"=>"DD", "dx"=>"Dx", "Dx"=>"dx", "Dy"=>"Dy", "Dz"=>"Dz", "E"=>"E", "EE"=>"EE", "ex"=>"Ex", "Ex"=>"ex", "ey"=>"Ey", "Ey"=>"ey", "F"=>"F", "FF"=>"FF", "Fx"=>"Fx", "Fy"=>"Fy", "G"=>"G", "GG"=>"GG", "gx"=>"Gx", "Gx"=>"gx", "Gy"=>"Gy", "Gz"=>"Gz"}
 
     Position.all.each do |pos|
       pos_id = "Position id: #{pos.id}, ll_code: #{pos.ll_code}"
@@ -179,18 +190,12 @@ class Position < ActiveRecord::Base
 
       # Do mirrors match?
       if pos.ll_code != mirror_pos.mirror_ll_code || pos.mirror_ll_code != mirror_pos.ll_code
-        errors << "Mirror problem: #{pos_id}"
+        errors << "Unmatched mirrors: #{pos_id}"
       end
 
       # Do the corner looks match?
-      cl_msg = "Unmatched corner looks '#{pos.corner_look}' <=> '#{mirror_pos.corner_look}': #{pos_id}"
-      case pos.corner_look
-        when 'B1'
-          errors << cl_msg unless mirror_pos.corner_look == 'B2'
-        when 'B2'
-          errors << cl_msg unless mirror_pos.corner_look == 'B1'
-        else
-          errors << cl_msg unless mirror_pos.corner_look == pos.corner_look
+      if correct_CL_mirror[pos.corner_look] != mirror_pos.corner_look
+        errors << "Unmatched corner looks '#{pos.corner_look}' <=> '#{mirror_pos.corner_look}': #{pos_id}"
       end
 
       # Is is_mirror consistent?
@@ -210,76 +215,48 @@ class Position < ActiveRecord::Base
       aaaa: 'A',
       aabc: 'C',
       aacb: 'D',
-      aaeo: 'A',
-      aafq: 'C',
-      aagp: 'D',
+      aaeo: 'Ax',
+      aafq: 'Cy',
+      aagp: 'Dy',
       abac: 'E',
-      abbb: 'B2',
-      abca: 'C',
-      abeq: 'E',
-      abfp: 'B2',
-      abgo: 'C',
-      acab: 'E',
-      acba: 'D',
-      accc: 'B1',
-      acep: 'E',
-      acfo: 'D',
-      acgq: 'B1',
-      aeei: 'A',
-      aeoa: 'A',
-      aefk: 'C',
-      aepc: 'C',
-      aegj: 'D',
-      aeqb: 'D',
-      afek: 'E',
-      affj: 'B2',
-      afgi: 'C',
-      afoc: 'E',
-      afpb: 'B2',
-      afqa: 'C',
-      agej: 'E',
-      agfi: 'D',
-      aggk: 'B1',
-      agob: 'E',
-      agpa: 'D',
-      agqc: 'B1',
-      aiai: 'A',
-      aibk: 'C',
-      aicj: 'D',
-      aioo: 'A',
-      aipq: 'C',
-      aiqp: 'D',
-      ajak: 'E',
-      ajbj: 'B2',
-      ajci: 'C',
-      ajoq: 'E',
-      ajpp: 'B2',
-      ajqo: 'C',
-      akaj: 'E',
-      akbi: 'D',
-      akck: 'B1',
-      akop: 'E',
-      akpo: 'D',
-      akqq: 'B1',
+      abbb: 'b',
+      abeq: 'ex',
+      abfp: 'by',
+      abgo: 'Cx',
+      accc: 'B',
+      acep: 'ey',
+      acfo: 'Dx',
+      acgq: 'Bz',
+      aepc: 'cx',
+      aeqb: 'dx',
+      afek: 'Ey',
+      affj: 'bx',
+      afgi: 'Cz',
+      afoc: 'Ex',
+      afpb: 'bz',
+      agfi: 'Dz',
+      aggk: 'Bq',
+      agqc: 'By',
+      aiai: 'AA',
+      aibk: 'CC',
+      aicj: 'DD',
+      ajak: 'EE',
+      ajbj: 'bb',
+      ajpp: 'bq',
+      akck: 'BB',
+      akqq: 'Bx',
       bbcc: 'G',
-      bbgq: 'G',
+      bbgq: 'gx',
       bcbc: 'F',
-      bccb: 'G',
-      bcfq: 'F',
-      bcgp: 'G',
-      bfgk: 'G',
-      bfqc: 'G',
-      bgfk: 'F',
-      bggj: 'G',
-      bgpc: 'F',
-      bgqb: 'G',
-      bjck: 'G',
-      bjqq: 'G',
-      bkbk: 'F',
-      bkcj: 'G',
-      bkpq: 'F',
-      bkqp: 'G',
+      bcfq: 'Fx',
+      bcgp: 'Gy',
+      bfqc: 'Gz',
+      bgfk: 'Fy',
+      bggj: 'Gx',
+      bjck: 'GG',
+      bkbk: 'FF',
   }
+
 
   OLL_MAP = {
       a1a1a1a1: :m0,

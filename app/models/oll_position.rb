@@ -4,9 +4,10 @@ class OllPosition
   def initialize(code, name, stickers)
     @code = code
     @name = name
+    is_none = code == :''
 
     pieces = %w(ULB_ UB_ UBR_ UL_ UR_ UFL_ UF_ URF_)
-    @colors = { }
+    @colors = is_none ? {} : { U: 'oll-color' }
     stickers.each_with_index do |sticker, i|
       @colors[(pieces[i] + sticker).to_sym] = 'oll-color'
     end
@@ -17,10 +18,23 @@ class OllPosition
   end
 
   def highlight(active_oll)
-    return 'selected' if active_oll.to_sym == @code
+    'selected' if (active_oll || '').to_sym == @code
+  end
+
+  def corner_swap
+    # n/a
+  end
+
+  def field
+    '#ol'
+  end
+
+  def self.by_code(code)
+    ALL.find { |op| op.code == code.to_sym }
   end
 
   ALL = [
+    self.new(:'',  'NONE',   %w(x x x x x x x x)),
     self.new(:m0,  'PLL',    %w(U U U U U U U U)),
     self.new(:m1,  'OLL 1',  %w(L B R L R L F R)),
     self.new(:m2,  'OLL 2',  %w(L B B L R L F F)),
