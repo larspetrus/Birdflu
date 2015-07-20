@@ -13,9 +13,13 @@ class Position < ActiveRecord::Base
     self.oriented_corners = ll_code.count 'aeio'
     self.set_corner_swap
     self.set_mirror_ll_code
-    self.set_corner_look
+    self.set_cop_name
     self.set_is_mirror
-    self.set_oll
+    self.set_oll_name
+  end
+
+  after_initialize do
+    @ll_code_obj = LlCode.new(ll_code)
   end
 
   def self.corner_swap_for(ll_code)
@@ -60,29 +64,7 @@ class Position < ActiveRecord::Base
   end
 
   def oll_code
-    oll_codes = Cube.new.apply_position(ll_code).ll_codes.map do |code|
-      oll_code_for(code)
-    end
-    oll_codes.sort.first
-  end
-
-  def oll_code_for(code)
-    result = ''
-    code.split('').each do |c|
-      case c
-        when 'a', 'e', 'i', 'o'
-          result += 'a'
-        when 'b', 'f', 'j', 'p'
-          result += 'b'
-        when 'c', 'g', 'k', 'q'
-          result += 'c'
-        when '1', '3', '5', '7'
-          result += '1'
-        when '2', '4', '6', '8'
-          result += '2'
-      end
-    end
-    result
+    @ll_code_obj.oll_code
   end
 
   def best_alg_length
@@ -93,31 +75,24 @@ class Position < ActiveRecord::Base
     self.corner_swap = Position.corner_swap_for(ll_code)
   end
 
-  def set_corner_look
-    self.corner_look = CORNER_LOOK_MAP[corner_look_code]
+  def set_cop_name
+    self.corner_look = CORNER_LOOK_NAMES[cop_code]
   end
 
-  def corner_look_code
-    cl_codes = Cube.new.apply_position(ll_code).ll_codes.map do |code|
-      corner_look_code_for(code)
-    end
-    cl_codes.sort.first.to_sym
-  end
-
-  def corner_look_code_for(code)
-    code[0] + code[2] + code[4] + code[6]
+  def cop_code
+    @ll_code_obj.cop_code
   end
 
   def set_mirror_ll_code
-    self.mirror_ll_code = Cube.new.apply_position(ll_code).standard_ll_code(:mirror)
+    self.mirror_ll_code = @ll_code_obj.mirror
   end
 
   def set_is_mirror
     self.is_mirror = ll_code < mirror_ll_code    #completely arbitrary
   end
 
-  def set_oll
-    self.oll = OLL_MAP[oll_code.to_sym]
+  def set_oll_name
+    self.oll = OLL_NAMES[oll_code]
   end
 
   def self.update_each
@@ -211,7 +186,7 @@ class Position < ActiveRecord::Base
     puts "Error count: #{errors.size}"
   end
 
-  CORNER_LOOK_MAP = {
+  CORNER_LOOK_NAMES = {
       aaaa: 'A',
       aabc: 'C',
       aacb: 'D',
@@ -258,7 +233,7 @@ class Position < ActiveRecord::Base
   }
 
 
-  OLL_MAP = {
+  OLL_NAMES = {
       a1a1a1a1: :m0,
       a1a1a2a2: :m28,
       a1a1b1c1: :m24,
