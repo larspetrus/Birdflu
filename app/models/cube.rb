@@ -4,6 +4,10 @@ class Cube
     Piece::ALL.each { |piece| @pieces[piece.to_sym] = Piece.new(piece) }
   end
 
+  def self.from_alg(moves)
+    Cube.new.setup_alg(moves)
+  end
+
   def sticker_at(position, side)
     piece_at(position).sticker_on(side.to_sym)
   end
@@ -39,6 +43,10 @@ class Cube
 
   def standard_ll_code(mirror = false)
     ll_codes(mirror).sort.first
+  end
+
+  def natural_ll_code
+    ll_codes.first
   end
 
   def standard_ll_code_offset

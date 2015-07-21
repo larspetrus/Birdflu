@@ -18,8 +18,7 @@ class ComboAlg < ActiveRecord::Base
     move_parms = merge_moves(a1.moves, a2.moves(u_shift))
     return if move_parms[:moves].empty?
 
-    alg_adjustment = 4 - Cube.new.setup_alg(move_parms[:moves]).standard_ll_code_offset
-    move_parms.keys.each { | key | move_parms[key] = rotate_by_U(move_parms[key], alg_adjustment) }
+    self.align_moves(move_parms)
 
     create_parms = {name: "#{a1.name}+#{a2.name}", base_alg1_id: a1.id, base_alg2_id: a2.id, alg2_u_shift: u_shift}
     ComboAlg.create(create_parms.merge(move_parms))
@@ -31,7 +30,14 @@ class ComboAlg < ActiveRecord::Base
 
   def self.make_single(alg)
     parms = {name: "- #{alg.name} -", base_alg1_id: alg.id, alg2_u_shift: 0 }
-    ComboAlg.create(parms.merge(merge_moves(alg.moves, '')))
+    move_parms = merge_moves(alg.moves, '')
+    self.align_moves(move_parms)
+    ComboAlg.create(parms.merge(move_parms))
+  end
+
+  def self.align_moves(move_parms) # Make the alg make the STANDARD ll_code, so the Roofpig matches the position page image
+    alg_adjustment = 4 - Cube.new.setup_alg(move_parms[:moves]).standard_ll_code_offset
+    move_parms.keys.each { | key | move_parms[key] = rotate_by_U(move_parms[key], alg_adjustment) }
   end
 
   def self.merge_moves(moves1, moves2)
@@ -81,7 +87,22 @@ class ComboAlg < ActiveRecord::Base
     not base_alg2
   end
 
+  def is_aligned_with_ll_code
+    Cube.from_alg(moves).natural_ll_code == position.ll_code
+  end
+
   def to_s
-    "#{@name}: #{@moves}"
+    "#{name}: #{moves}  (id: #{id})"
+  end
+
+  def self.sanity_check
+    errors = []
+
+    ComboAlg.all.each do |ca|
+      unless ca.is_aligned_with_ll_code
+        errors << ca.to_s
+      end
+    end
+    errors
   end
 end

@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe ComboAlg, :type => :model do
 
   it 'verifies F2L is preserved' do
-      expect{ComboAlg.create(name: "Not a LL alg!", moves: "F U D")}.to raise_error( RuntimeError, "Can't make LL code with F2L unsolved" )
+    expect{ComboAlg.create(name: "Not a LL alg!", moves: "F U D")}.to raise_error( RuntimeError, "Can't make LL code with F2L unsolved" )
   end
 
   it 'computes LL code' do
@@ -38,11 +38,19 @@ RSpec.describe ComboAlg, :type => :model do
       expect(combo1.solves_ll_code).to eq("a1b4a3c6")
       expect(combo1.moves).to eq("F' U' F U F R' F' R B U' F' U B' U' F")
       expect(combo1.u_setup).to eq(3)
+      expect(combo1.is_aligned_with_ll_code).to eq(true)
 
       combo2 = ComboAlg.make(BaseAlg.make('Evl', "R B' R' F R B R' F'"), BaseAlg.make('Sho', "R' F' U' F U R"), 0)
       expect(combo2.solves_ll_code).to eq("b2f1q4c7")
       expect(combo2.moves).to eq("B L' B' R B L B' R' B' R' U' R U B")
       expect(combo2.u_setup).to eq(1)
+      expect(combo2.is_aligned_with_ll_code).to eq(true)
+
+      single = ComboAlg.make_single(BaseAlg.make('A435M', "F' U' L' U L F"))
+      expect(single.solves_ll_code).to eq("a3i8c2j1")
+      expect(single.moves).to eq("R' U' F' U F R")
+      expect(single.u_setup).to eq(3)
+      expect(single.is_aligned_with_ll_code).to eq(true)
     end
   end
 
@@ -57,6 +65,14 @@ RSpec.describe ComboAlg, :type => :model do
 
   it '#rotate_by_U' do
     expect(ComboAlg.rotate_by_U("F U2 R' D B2 L'")).to eq("L U2 F' D R2 B'")
+  end
+
+  it 'natural_ll_code' do
+    unaligned = Cube.from_alg("F' U' L' U L F")
+    aligned = Cube.from_alg("R' U' F' U F R")
+
+    expect(aligned.standard_ll_code).to eq(unaligned.standard_ll_code)
+    expect(aligned.standard_ll_code).to eq(aligned.natural_ll_code)
   end
 
 end
