@@ -6,11 +6,6 @@ RSpec.describe ComboAlg, :type => :model do
     expect{ComboAlg.create(name: "Not a LL alg!", moves: "F U D")}.to raise_error( RuntimeError, "Can't make LL code with F2L unsolved" )
   end
 
-  it 'computes LL code' do
-    sune = ComboAlg.new(name: "Sune", moves: "F U F' U F U2 F'")
-    expect(sune.solves_ll_code).to eq('a1c3c3c5')
-  end
-
   it 'length' do
     expect(ComboAlg.create(moves: "F U F' U F U2 F'", length: 99).length).to eq(7)
   end
@@ -22,7 +17,6 @@ RSpec.describe ComboAlg, :type => :model do
 
       combo = ComboAlg.make(sune1, sune2, 0)
 
-      expect(combo.solves_ll_code).to eq("a3a7c3b7")
       expect(combo.position.ll_code).to eq("a3a7c3b7")
       expect(combo.name).to eq("Sune+SuneM")
       expect(combo.length).to eq(13)
@@ -35,19 +29,19 @@ RSpec.describe ComboAlg, :type => :model do
 
     it "aligns with the LL_CODE" do
       combo1 = ComboAlg.make(BaseAlg.make('Mid', "L' U' L U L F' L' F"), BaseAlg.make('Nik', "R U' L' U R' U' L"), 0)
-      expect(combo1.solves_ll_code).to eq("a1b4a3c6")
+      expect(combo1.position.ll_code).to eq("a1b4a3c6")
       expect(combo1.moves).to eq("F' U' F U F R' F' R B U' F' U B' U' F")
       expect(combo1.u_setup).to eq(3)
       expect(combo1.is_aligned_with_ll_code).to eq(true)
 
       combo2 = ComboAlg.make(BaseAlg.make('Evl', "R B' R' F R B R' F'"), BaseAlg.make('Sho', "R' F' U' F U R"), 0)
-      expect(combo2.solves_ll_code).to eq("b2f1q4c7")
+      expect(combo2.position.ll_code).to eq("b2f1q4c7")
       expect(combo2.moves).to eq("B L' B' R B L B' R' B' R' U' R U B")
       expect(combo2.u_setup).to eq(1)
       expect(combo2.is_aligned_with_ll_code).to eq(true)
 
       single = ComboAlg.make_single(BaseAlg.make('A435M', "F' U' L' U L F"))
-      expect(single.solves_ll_code).to eq("a3i8c2j1")
+      expect(single.position.ll_code).to eq("a3i8c2j1")
       expect(single.moves).to eq("R' U' F' U F R")
       expect(single.u_setup).to eq(3)
       expect(single.is_aligned_with_ll_code).to eq(true)
@@ -68,8 +62,8 @@ RSpec.describe ComboAlg, :type => :model do
   end
 
   it 'natural_ll_code' do
-    unaligned = Cube.from_alg("F' U' L' U L F")
-    aligned = Cube.from_alg("R' U' F' U F R")
+    unaligned = Cube.new("F' U' L' U L F")
+    aligned = Cube.new("R' U' F' U F R")
 
     expect(aligned.standard_ll_code).to eq(unaligned.standard_ll_code)
     expect(aligned.standard_ll_code).to eq(aligned.natural_ll_code)

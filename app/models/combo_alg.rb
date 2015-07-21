@@ -5,11 +5,10 @@ class ComboAlg < ActiveRecord::Base
 
   before_create do
     self.length = moves.split.length
-    ll_code = solves_ll_code # validates
+    cube = Cube.new(moves)
+    ll_code = cube.standard_ll_code # validates
     self.position = Position.find_by(ll_code: ll_code)
-
-    ac = Cube.new.setup_alg(moves)
-    self.u_setup = ('BRFL'.index(ac.piece_at('UB').name[1]) - LL.edge_data(ac.standard_ll_code[1]).distance) % 4
+    self.u_setup = ('BRFL'.index(cube.piece_at('UB').name[1]) - LL.edge_data(cube.standard_ll_code[1]).distance) % 4
   end
 
   def self.make(a1, a2, u_shift)
@@ -36,7 +35,7 @@ class ComboAlg < ActiveRecord::Base
   end
 
   def self.align_moves(move_parms) # Make the alg make the STANDARD ll_code, so the Roofpig matches the position page image
-    alg_adjustment = 4 - Cube.new.setup_alg(move_parms[:moves]).standard_ll_code_offset
+    alg_adjustment = 4 - Cube.new(move_parms[:moves]).standard_ll_code_offset
     move_parms.keys.each { | key | move_parms[key] = rotate_by_U(move_parms[key], alg_adjustment) }
   end
 
@@ -74,10 +73,6 @@ class ComboAlg < ActiveRecord::Base
     moves.chars.map { |char| (place = 'RFLB'.index(char)) ? 'RFLB'[(place + turns) % 4] : char }.join
   end
 
-  def solves_ll_code
-    Cube.new.setup_alg(moves).standard_ll_code
-  end
-
   def setup_moves
     return '' if u_setup == 0 || u_setup.nil?
     "| setupmoves=#{Move.from('U', u_setup)}"
@@ -88,7 +83,7 @@ class ComboAlg < ActiveRecord::Base
   end
 
   def is_aligned_with_ll_code
-    Cube.from_alg(moves).natural_ll_code == position.ll_code
+    Cube.new(moves).natural_ll_code == position.ll_code
   end
 
   def to_s

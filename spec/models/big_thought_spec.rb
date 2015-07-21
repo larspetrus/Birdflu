@@ -36,12 +36,12 @@ describe BigThought do
     it "#reversibility is correct" do
       BigThought.all_root_algs.each do |alg|
 
-        ll_code   = Cube.new.setup_alg(alg.moves).standard_ll_code
-        ll_code_M = Cube.new.setup_alg(BigThought.mirror(alg.moves)).standard_ll_code
+        ll_code   = Cube.new(alg.moves).standard_ll_code
+        ll_code_M = Cube.new(BigThought.mirror(alg.moves)).standard_ll_code
 
         revalg = BigThought.reverse(alg.moves)
-        rev_ll_code   = Cube.new.setup_alg(revalg).standard_ll_code
-        rev_ll_code_M = Cube.new.setup_alg(BigThought.mirror(revalg)).standard_ll_code
+        rev_ll_code   = Cube.new(revalg).standard_ll_code
+        rev_ll_code_M = Cube.new(BigThought.mirror(revalg)).standard_ll_code
 
         if ll_code == ll_code_M
           expect(alg.type).to eq(:singleton), alg.name

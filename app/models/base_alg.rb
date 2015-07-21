@@ -6,7 +6,7 @@ class BaseAlg < ActiveRecord::Base
   has_many :combo_algs2, class_name: 'ComboAlg', foreign_key: "base_alg2_id"
 
   before_create do # crude validation
-    Cube.new.setup_alg(moves_u0).ll_codes
+    Cube.new(moves_u0).ll_codes
   end
 
   def self.make(name, moves)

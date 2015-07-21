@@ -56,7 +56,7 @@ class Position < ActiveRecord::Base
   end
 
   def as_cube
-    @cube ||= Cube.new.apply_position(ll_code)
+    @cube ||= Cube.new(ll_code)
   end
 
   def has_mirror
@@ -128,7 +128,7 @@ class Position < ActiveRecord::Base
 
     corner_positioning_algs.each do |cp_alg|
       edge_positioning_algs.each do |ep_alg|
-        cube = Cube.new.setup_alg(cp_alg).setup_alg(ep_alg)
+        cube = Cube.new(cp_alg).apply_alg(ep_alg)
         untwisted_ll_code = cube.ll_codes[0].bytes
 
         (0..2).each do |c1|
@@ -141,7 +141,7 @@ class Position < ActiveRecord::Base
                     twists = [c1, e1, c2, e2, c3, e3, (-c1-c2-c3) % 3, (e1+e2+e3) % 2]
                     twisted_code = (0..7).inject('') { |code, i| code.concat(untwisted_ll_code[i]+twists[i]) }
 
-                    found_positions[Cube.new.apply_position(twisted_code).standard_ll_code] += 1
+                    found_positions[Cube.new(twisted_code).standard_ll_code] += 1
                   end
                 end
               end

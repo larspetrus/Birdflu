@@ -1,11 +1,47 @@
 class Cube
-  def initialize()
+  def initialize(state = nil)
     @pieces = { }
     Piece::ALL.each { |piece| @pieces[piece.to_sym] = Piece.new(piece) }
+
+    if state
+      is_ll_code = state.length == 8 && (not state.include? ' ')
+
+      if is_ll_code
+        apply_position(state)
+      else
+        apply_alg(state)
+      end
+    end
   end
 
-  def self.from_alg(moves)
-    Cube.new.setup_alg(moves)
+  def apply_position(ll_code)
+    c_cyc = []
+    e_cyc = []
+
+    4.times do |i|
+      c_data = LL.corner_data(ll_code[i*2])
+      c_cyc << c_to_here = c_data.position(i).to_sym
+      @pieces[c_to_here].shift(Move::D.shift, c_data.distance)
+      @pieces[c_to_here].rotate(c_data.spin)
+
+      e_data = LL.edge_data(ll_code[2*i + 1])
+      e_cyc << e_to_here = e_data.position(i).to_sym
+      @pieces[e_to_here].shift(Move::D.shift, e_data.distance)
+      @pieces[e_to_here].rotate(e_data.spin)
+    end
+
+    @pieces[:ULB],@pieces[:UBR],@pieces[:URF],@pieces[:UFL] = @pieces[c_cyc[0]],@pieces[c_cyc[1]],@pieces[c_cyc[2]],@pieces[c_cyc[3]]
+    @pieces[:UB], @pieces[:UR], @pieces[:UF], @pieces[:UL]  = @pieces[e_cyc[0]],@pieces[e_cyc[1]],@pieces[e_cyc[2]],@pieces[e_cyc[3]]
+
+    self
+  end
+
+  def apply_alg(moves)
+    moves.split(' ').reverse.each do |move|
+      m = Move.parse move
+      move(m.side, 4 - m.turns)
+    end
+    self
   end
 
   def sticker_at(position, side)
@@ -31,14 +67,6 @@ class Cube
         cyc.each { |position| @pieces[position].shift(move.shift, turns) }
         turns.times { @pieces[cyc[0]],@pieces[cyc[1]],@pieces[cyc[2]],@pieces[cyc[3]] = @pieces[cyc[1]],@pieces[cyc[2]],@pieces[cyc[3]],@pieces[cyc[0]] }
     end
-  end
-
-  def setup_alg(moves)
-    moves.split(' ').reverse.each do |move|
-      m = Move.parse move
-      move(m.side, 4 - m.turns)
-    end
-    self
   end
 
   def standard_ll_code(mirror = false)
@@ -82,28 +110,6 @@ class Cube
       result += LL.corner_code(c_distance, c_piece.u_spin(mirror)) + LL.edge_code(e_distance, e_piece.u_spin)
     end
     result
-  end
-
-  def apply_position(ll_code)
-    c_cyc = []
-    e_cyc = []
-
-    4.times do |i|
-      c_data = LL.corner_data(ll_code[i*2])
-      c_cyc << c_to_here = c_data.position(i).to_sym
-      @pieces[c_to_here].shift(Move::D.shift, c_data.distance)
-      @pieces[c_to_here].rotate(c_data.spin)
-
-      e_data = LL.edge_data(ll_code[2*i + 1])
-      e_cyc << e_to_here = e_data.position(i).to_sym
-      @pieces[e_to_here].shift(Move::D.shift, e_data.distance)
-      @pieces[e_to_here].rotate(e_data.spin)
-    end
-
-    @pieces[:ULB],@pieces[:UBR],@pieces[:URF],@pieces[:UFL] = @pieces[c_cyc[0]],@pieces[c_cyc[1]],@pieces[c_cyc[2]],@pieces[c_cyc[3]]
-    @pieces[:UB], @pieces[:UR], @pieces[:UF], @pieces[:UL]  = @pieces[e_cyc[0]],@pieces[e_cyc[1]],@pieces[e_cyc[2]],@pieces[e_cyc[3]]
-
-    self
   end
 
   def as_tweaks()

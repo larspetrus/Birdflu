@@ -35,6 +35,6 @@ def variants
   end
 
   def cube
-    @cube ||= Cube.new.apply_position(@code)
+    @cube ||= Cube.new(@code)
   end
 end
