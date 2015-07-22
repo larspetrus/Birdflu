@@ -5,8 +5,11 @@ class LlCode
     @code = code
   end
 
+  def self.standard_sort(ll_code)
+    ll_code[0]+ll_code[2]+ll_code[4]+ll_code[6]+ll_code[1]+ll_code[3]+ll_code[5]+ll_code[7]
+  end
 
-def variants
+  def variants
     cube().ll_codes
   end
 

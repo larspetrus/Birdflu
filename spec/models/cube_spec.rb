@@ -48,12 +48,20 @@ RSpec.describe Cube, :type => :model do
     expect{ Cube.new("F").ll_codes()}.to raise_error(RuntimeError, "Can't make LL code with F2L unsolved")
   end
 
+  it '#standard_ll_code()' do
+    expect(Cube.new('a1g4q7c2').standard_ll_code).to eq('a1g4q7c2')
+    expect(Cube.new('a2b3f8p1').standard_ll_code).to eq('a2b3f8p1')
+    expect(Cube.new('b1g2g2j1').standard_ll_code).to eq('b1g2g2j1')
+    expect(Cube.new('a1a1a1a1').standard_ll_code).to eq('a1a1a1a1')
+    expect(Cube.new('a2i3c8j1').standard_ll_code).to eq('a2i3c8j1')
+  end
+
   it '#standard_ll_code(:mirror)' do
     expect(Cube.new('a1g4q7c2').standard_ll_code(:mirror)).to eq('a2b3f8p1')
     expect(Cube.new('a2b3f8p1').standard_ll_code(:mirror)).to eq('a1g4q7c2')
-    expect(Cube.new('b1g2g2j1').standard_ll_code(:mirror)).to eq('b3g3q4b4')
+    expect(Cube.new('b1g2g2j1').standard_ll_code(:mirror)).to eq('b4b3g3q4')
     expect(Cube.new('a1a1a1a1').standard_ll_code(:mirror)).to eq('a1a1a1a1')
-    expect(Cube.new('a2i3c8j1').standard_ll_code(:mirror)).to eq('a1k4b7i2')
+    expect(Cube.new('a2i3c8j1').standard_ll_code(:mirror)).to eq('a6i5c8j3')
   end
 
   it '#apply_position' do

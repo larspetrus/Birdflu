@@ -155,6 +155,18 @@ class Position < ActiveRecord::Base
     found_positions.each { |code, weight| Position.create(ll_code: code, weight: weight) }
   end
 
+  def compare_codes
+    cube = Cube.new(ll_code)
+    new_code = cube.new_standard_ll_code
+
+    if new_code == ll_code
+      puts "Pos #{id} has the same code"
+    else
+      puts "Pos #{id}: old code: #{ll_code}  new code: #{new_code}.       Codes: #{cube.ll_codes}"
+    end
+    1
+  end
+
   def self.sanity_check
     errors = []
     correct_CL_mirror = {"A"=>"A", "AA"=>"AA", "Ax"=>"Ax", "b"=>"B", "B"=>"b", "bb"=>"BB", "BB"=>"bb", "bq"=>"Bq", "Bq"=>"bq", "bx"=>"Bx", "Bx"=>"bx", "by"=>"By", "By"=>"by", "bz"=>"Bz", "Bz"=>"bz", "C"=>"C", "CC"=>"CC", "cx"=>"Cx", "Cx"=>"cx", "Cy"=>"Cy", "Cz"=>"Cz", "D"=>"D", "DD"=>"DD", "dx"=>"Dx", "Dx"=>"dx", "Dy"=>"Dy", "Dz"=>"Dz", "E"=>"E", "EE"=>"EE", "ex"=>"Ex", "Ex"=>"ex", "ey"=>"Ey", "Ey"=>"ey", "F"=>"F", "FF"=>"FF", "Fx"=>"Fx", "Fy"=>"Fy", "G"=>"G", "GG"=>"GG", "gx"=>"Gx", "Gx"=>"gx", "Gy"=>"Gy", "Gz"=>"Gz"}

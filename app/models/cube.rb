@@ -38,8 +38,7 @@ class Cube
 
   def apply_alg(moves)
     moves.split(' ').reverse.each do |move|
-      m = Move.parse move
-      move(m.side, 4 - m.turns)
+      move(move[0], 4 - Move.turns(move))
     end
     self
   end
@@ -69,8 +68,12 @@ class Cube
     end
   end
 
-  def standard_ll_code(mirror = false)
+  def old_standard_ll_code(mirror = false)
     ll_codes(mirror).sort.first
+  end
+
+  def standard_ll_code(mirror = false)
+    ll_codes(mirror).sort{ |x,y| LlCode.standard_sort(x) <=> LlCode.standard_sort(y)}.first
   end
 
   def natural_ll_code
