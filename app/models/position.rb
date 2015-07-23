@@ -67,6 +67,14 @@ class Position < ActiveRecord::Base
     @ll_code_obj.oll_code
   end
 
+  def eo_code
+    @ll_code_obj.eo_code
+  end
+
+  def ep_code
+    @ll_code_obj.ep_code
+  end
+
   def best_alg_length
     best_alg ? best_alg.length : 99
   end

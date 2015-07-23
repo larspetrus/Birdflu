@@ -2,17 +2,19 @@
 
 = button_to "Update Positions", { action: "update_positions" }, remote: true
 
-%table.manage_algs
-  %thead
-    %th Name
-    %th Moves
-    %th Combos
-  - @root_algs.each do |alg|
-    %tr
-      %td= alg.name
-      %td= alg.moves
-      %td
-        - if @counts[alg.id]
-          = "Combined #{@counts[alg.id]} times"
-        - else
-          = button_to "Combine", { action: "combine", id: alg.id }, remote: true
+=form_tag url_for(action: "combine"), method: 'post', remote: true do
+  =submit_tag("Mergin selected Algs")
+  %table.manage_algs
+    %thead
+      %th
+      %th Name
+      %th Moves
+      %th Combos
+    - @root_algs.each do |alg|
+      %tr
+        %td= check_box_tag 'rootalgs[]', alg.id unless @counts[alg.id]
+        %td= alg.name
+        %td= alg.moves
+        %td
+          - if @counts[alg.id]
+            = "Combined #{@counts[alg.id]} times"

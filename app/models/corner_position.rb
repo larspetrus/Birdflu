@@ -38,7 +38,7 @@ class CornerPosition
         [:- ,:Ax,:Bx,:bx,:Cx,:Dx,:Ex,:Fx,:Gx].map{|id| self.by_code(id)},
         [:- ,:- ,:By,:by,:Cy,:Dy,:Ey,:Fy,:Gy].map{|id| self.by_code(id)},
         [:- ,:- ,:Bz,:bz,:Cz,:Dz,:ex,:- ,:Gz].map{|id| self.by_code(id)},
-        [:- ,:- ,:Bq,:bq,:- ,:- ,:- ,:- ,:gx].map{|id| self.by_code(id)},
+        [:- ,:- ,:Bq,:bq,:cx,:dx,:ey,:- ,:gx].map{|id| self.by_code(id)},
       ]
   end
 

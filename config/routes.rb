@@ -12,10 +12,8 @@ Rails.application.routes.draw do
   resources :algs
 
   resources :base_algs do
-    member do
-      post :combine
-    end
     collection do
+      post :combine
       post :update_positions
     end
   end

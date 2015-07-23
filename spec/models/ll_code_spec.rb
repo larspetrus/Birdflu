@@ -20,10 +20,16 @@ RSpec.describe LlCode do
     expect(LlCode.new('a2e5g8j7').cop_code).to eq(:acfo)
   end
 
-  it 'oll_code' do
-    expect(LlCode.new('a8j1b2j3').oll_code).to eq(:a2b1b2b1)
-    expect(LlCode.new('b7f2g6k7').oll_code).to eq(:b1b2c2c1)
-    expect(LlCode.new('a2e5g8j7').oll_code).to eq(:a1c2b1a2)
+  it 'eo_code' do
+    expect(LlCode.new('a8j1b2j3').eo_code).to eq(:'2121')
+    expect(LlCode.new('b7f2g6k7').eo_code).to eq(:'1221')
+    expect(LlCode.new('a2e5g8j7').eo_code).to eq(:'2121')
+  end
+
+  it 'ep_code' do
+    expect(LlCode.new('a8j1b2j3').ep_code).to eq(:'7113')
+    expect(LlCode.new('b7f2g6k7').ep_code).to eq(:'7157')
+    expect(LlCode.new('a2e5g8j7').ep_code).to eq(:'1577')
   end
 
   it '#standard_sort' do
