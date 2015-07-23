@@ -6,14 +6,15 @@
   =submit_tag("Merge in selected Algs")
   %table.manage_algs
     %thead
-      %th
       %th Name
       %th Moves
       %th Combos
     - @root_algs.each do |alg|
       %tr
-        %td= check_box_tag 'rootalgs[]', alg.id unless @counts[alg.id]
-        %td= alg.name
+        %td
+          %label
+            = check_box_tag 'rootalgs[]', alg.id unless @counts[alg.id]
+            = alg.name
         %td= alg.moves
         %td
           - if @counts[alg.id]

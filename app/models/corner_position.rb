@@ -18,8 +18,8 @@ class CornerPosition
     @colors[sticker_code]
   end
 
-  def highlight(active_oll)
-    'selected' if (active_oll || '').to_sym == @code
+  def highlight(selected_name)
+    'selected' if (selected_name || '').to_sym == @code
   end
 
   def field

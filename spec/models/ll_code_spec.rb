@@ -23,15 +23,15 @@ RSpec.describe LlCode do
   end
 
   it 'eo_code' do
-    expect(LlCode.new('a8j1b2j3').eo_code).to eq(:'2121')
-    expect(LlCode.new('b7f2g6k7').eo_code).to eq(:'1221')
-    expect(LlCode.new('a2e5g8j7').eo_code).to eq(:'2121')
+    expect(LlCode.new('a8j1b2j3').eo_code).to eq('2121')
+    expect(LlCode.new('b7f2g6k7').eo_code).to eq('1221')
+    expect(LlCode.new('a2e5g8j7').eo_code).to eq('2121')
   end
 
   it 'ep_code' do
-    expect(LlCode.new('a8j1b2j3').ep_code).to eq(:'7113')
-    expect(LlCode.new('b7f2g6k7').ep_code).to eq(:'7157')
-    expect(LlCode.new('a2e5g8j7').ep_code).to eq(:'1577')
+    expect(LlCode.new('a8j1b2j3').ep_code).to eq('7113')
+    expect(LlCode.new('b7f2g6k7').ep_code).to eq('7157')
+    expect(LlCode.new('a2e5g8j7').ep_code).to eq('1577')
   end
 
   it '#official_sort' do

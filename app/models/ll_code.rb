@@ -41,11 +41,11 @@ class LlCode
 
   #based on standard ll_code
   def eo_code
-    (eo(code[1])+eo(code[3])+eo(code[5])+eo(code[7])).to_sym
+    eo(code[1])+eo(code[3])+eo(code[5])+eo(code[7])
   end
 
   def ep_code
-    (ep(code[1])+ep(code[3])+ep(code[5])+ep(code[7])).to_sym
+    ep(code[1])+ep(code[3])+ep(code[5])+ep(code[7])
   end
 
   CORNER_ORIENT = {a: :a, e: :a, i: :a, o: :a, b: :b, f: :b, j: :b, p: :b, c: :c, g: :c, k: :c, q: :c}

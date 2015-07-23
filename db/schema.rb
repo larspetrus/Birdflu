@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150714170532) do
+ActiveRecord::Schema.define(version: 20150723162605) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -54,6 +54,8 @@ ActiveRecord::Schema.define(version: 20150714170532) do
     t.string  "corner_look"
     t.boolean "is_mirror"
     t.string  "oll"
+    t.string  "edge_orientations"
+    t.string  "edge_positions"
   end
 
   add_index "positions", ["ll_code"], name: "index_positions_on_ll_code", using: :btree

@@ -187,23 +187,22 @@ $narrow: 3px;
     height:2px;
     width:32px;
     position:absolute;
-    transform: rotate(45deg);
+    transform: rotate(-45deg);
     background-color: black;
   }
 
 }
 
-.oll-color {
-  background-color: deeppink !important;
-}
+.oll-color { background-color: deeppink !important; }
+.corner-color { background-color: #0c0 !important; }
+.eo-color { background-color: #fc0 !important; }
 
-.corner-color {
-  background-color: #0c0 !important;
-}
+.ep-b-color { background-color: orange !important; }
+.ep-r-color { background-color: #0d0 !important; }
+.ep-f-color { background-color: red !important; }
+.ep-l-color { background-color: #07f !important; }
 
-.ignored-color {
-  background-color: #ddd;
-}
+.ignored-color { background-color: #ddd; }
 
 .selected th {
   background-color: cyan;

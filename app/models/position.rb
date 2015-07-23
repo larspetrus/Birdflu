@@ -16,6 +16,8 @@ class Position < ActiveRecord::Base
     self.set_cop_name
     self.set_is_mirror
     self.set_oll_name
+    self.set_edge_orientations
+    self.set_edge_positions
   end
 
   after_initialize do
@@ -105,6 +107,14 @@ class Position < ActiveRecord::Base
 
   def set_oll_name
     self.oll = OLL_NAMES[oll_code]
+  end
+
+  def set_edge_orientations
+    self.edge_orientations = @ll_code_obj.eo_code
+  end
+
+  def set_edge_positions
+    self.edge_positions = @ll_code_obj.ep_code
   end
 
   def self.update_each
@@ -318,4 +328,8 @@ class Position < ActiveRecord::Base
       b2c2b2c2: :m1,
   }
 
+  EDGE_ORIENTATION_CODES = %w(1111 1122 1212 1221 2112 2121 2211 2222)
+
+  EDGE_POSITION_CODES =
+      %w(1111 1335 3351 3513 1577 7157 5133 5771 7715 5555 3737 7373 7777 7113 1137 7355 3557 5151 3711 3333 5735 1371 1515 5573)
 end
