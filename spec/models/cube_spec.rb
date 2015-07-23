@@ -42,8 +42,8 @@ RSpec.describe Cube, :type => :model do
 
     cube2 = Cube.new("L' B L B' U' B' U B")
     expect(cube2.ll_codes()).to eq(["a8j7o1q6", "b3e5g2i4", "a3c8e2p1", "c8e2p1a3"])
-    expect(cube2.standard_ll_code()).to eq("a3c8e2p1")
-    expect(cube2.standard_ll_code_offset()).to eq(2)
+    expect(cube2.standard_ll_code()).to eq("a8j7o1q6")
+    expect(cube2.standard_ll_code_offset()).to eq(0)
 
     expect{ Cube.new("F").ll_codes()}.to raise_error(RuntimeError, "Can't make LL code with F2L unsolved")
   end
@@ -51,7 +51,7 @@ RSpec.describe Cube, :type => :model do
   it '#standard_ll_code()' do
     expect(Cube.new('a1g4q7c2').standard_ll_code).to eq('a1g4q7c2')
     expect(Cube.new('a2b3f8p1').standard_ll_code).to eq('a2b3f8p1')
-    expect(Cube.new('b1g2g2j1').standard_ll_code).to eq('b1g2g2j1')
+    expect(Cube.new('b1g2g2j1').standard_ll_code).to eq('b5j5q6q6')
     expect(Cube.new('a1a1a1a1').standard_ll_code).to eq('a1a1a1a1')
     expect(Cube.new('a2i3c8j1').standard_ll_code).to eq('a2i3c8j1')
   end
@@ -70,7 +70,7 @@ RSpec.describe Cube, :type => :model do
     expect(cube.corruption).to eq([])
 
     cube2 = Cube.new('a3c8e2p1')
-    expect(cube2.standard_ll_code()).to eq("a3c8e2p1")
+    expect(cube2.standard_ll_code()).to eq("a8j7o1q6")
     expect(cube2.corruption).to eq([])
 
     cube3 = Cube.new('a7i7a7i7')

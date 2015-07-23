@@ -68,12 +68,8 @@ class Cube
     end
   end
 
-  def old_standard_ll_code(mirror = false)
-    ll_codes(mirror).sort.first
-  end
-
   def standard_ll_code(mirror = false)
-    ll_codes(mirror).sort{ |x,y| LlCode.standard_sort(x) <=> LlCode.standard_sort(y)}.first
+    LlCode.pick_official_code(ll_codes(mirror))
   end
 
   def natural_ll_code

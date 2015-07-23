@@ -3,7 +3,7 @@
 = button_to "Update Positions", { action: "update_positions" }, remote: true
 
 =form_tag url_for(action: "combine"), method: 'post', remote: true do
-  =submit_tag("Mergin selected Algs")
+  =submit_tag("Merge in selected Algs")
   %table.manage_algs
     %thead
       %th

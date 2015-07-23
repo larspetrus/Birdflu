@@ -5,15 +5,19 @@ class LlCode
     @code = code
   end
 
-  def self.standard_sort(ll_code)
-    puts "----------- #{ll_code} -> #{co_code(ll_code)}"
+  def self.official_sort(ll_code)
+    corner_orientations = [0,2,4,6].map { |i| "#{co2(ll_code[i])}" }.join('')
+    corner_positions = ll_code[0]+ll_code[2]+ll_code[4]+ll_code[6]
+    edges = ll_code[1]+ll_code[3]+ll_code[5]+ll_code[7]
+    corner_orientations + corner_positions + edges
+  end
 
-    co_code(ll_code) + ll_code[0]+ll_code[2]+ll_code[4]+ll_code[6]+ll_code[1]+ll_code[3]+ll_code[5]+ll_code[7]
+  def self.pick_official_code(ll_codes)
+    ll_codes.sort_by{ |lc| LlCode.official_sort(lc) }.first
   end
 
   def self.co_code(x_code)
-    no_p = {a: :a, e: :a, i: :a, o: :a, b: :b, f: :b, j: :b, p: :b, c: :c, g: :c, k: :c, q: :c}
-    [0,2,4,6].map { |i| "#{no_p[x_code[i].to_sym]}" }.join('')
+    [0,2,4,6].map { |i| "#{co(x_code[i])}" }.join('')
   end
 
   def variants
@@ -24,14 +28,9 @@ class LlCode
     cube().standard_ll_code(:mirror)
   end
 
-  def standardize
-    cube().standard_ll_code
-  end
-
   def oll_code
-    no_p = {a: :a, e: :a, i: :a, o: :a, b: :b, f: :b, j: :b, p: :b, c: :c, g: :c, k: :c, q: :c}
     oll_codes = variants.map do |code|
-      [0,2,4,6].map { |i| "#{no_p[code[i].to_sym]}#{eo(code[i+1])}" }.join('')
+      [0,2,4,6].map { |i| "#{co(code[i])}#{eo(code[i+1])}" }.join('')
     end
     oll_codes.sort.first.to_sym
   end
@@ -47,6 +46,15 @@ class LlCode
 
   def ep_code
     (ep(code[1])+ep(code[3])+ep(code[5])+ep(code[7])).to_sym
+  end
+
+  CORNER_ORIENT = {a: :a, e: :a, i: :a, o: :a, b: :b, f: :b, j: :b, p: :b, c: :c, g: :c, k: :c, q: :c}
+  def co(corner_code)
+    CORNER_ORIENT[corner_code.to_sym].to_s
+  end
+
+  def self.co2(corner_code)
+    CORNER_ORIENT[corner_code.to_sym].to_s
   end
 
   def eo(edge_code)

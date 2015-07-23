@@ -91,6 +91,10 @@ class Position < ActiveRecord::Base
     @ll_code_obj.cop_code
   end
 
+  def co_code
+    LlCode.co_code(ll_code)
+  end
+
   def set_mirror_ll_code
     self.mirror_ll_code = @ll_code_obj.mirror
   end
