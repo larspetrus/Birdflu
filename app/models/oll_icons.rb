@@ -1,32 +1,17 @@
-class OllPosition
-  attr_reader :code, :name
+class OllIcons < LlIcons
 
   def initialize(code, name, stickers)
-    @code = code
+    super(:ol, code)
     @name = name
-    is_none = code == :''
 
     pieces = %w(ULB_ UB_ UBR_ UL_ UR_ UFL_ UF_ URF_)
-    @colors = is_none ? {} : { U: 'oll-color' }
     stickers.each_with_index do |sticker, i|
       @colors[(pieces[i] + sticker).to_sym] = 'oll-color'
     end
   end
 
-  def color(sticker_code)
-    @colors[sticker_code]
-  end
-
-  def highlight(selected_name)
-    'selected' if (selected_name || '').to_sym == @code
-  end
-
-  def corner_swap
-    # n/a
-  end
-
-  def field
-    '#ol'
+  def base_colors
+    @colors = { U: 'oll-color' }
   end
 
   def self.by_code(code)

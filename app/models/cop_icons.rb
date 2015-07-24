@@ -1,29 +1,18 @@
-class CornerPosition
-  attr_reader :code, :name, :corner_swap
+class CopIcons < LlIcons
 
   def initialize(code, stickers, corner_swap = nil)
-    is_none = code == :''
-    @code = code
-    @name = (is_none ? 'NONE' : code.to_s)
+    super(:cl, code)
+    @name = (@is_none ? 'NONE' : code.to_s)
     @corner_swap = corner_swap
 
-    @colors = is_none ? {} : { U: 'corner-color', UB_U: 'ignored-color', UL_U: 'ignored-color', UR_U: 'ignored-color', UF_U: 'ignored-color'}
     pieces = %w(ULB_ UBR_ UFL_ URF_)
     stickers.each_with_index do |sticker, i|
-      @colors[(pieces[i] + sticker).to_sym] = 'corner-color'
+      @colors[(pieces[i] + sticker).to_sym] = 'cop-color'
     end
   end
 
-  def color(sticker_code)
-    @colors[sticker_code]
-  end
-
-  def highlight(selected_name)
-    'selected' if (selected_name || '').to_sym == @code
-  end
-
-  def field
-    '#cl'
+  def base_colors
+    @colors = { U: 'cop-color', UB_U: 'ignored-color', UL_U: 'ignored-color', UR_U: 'ignored-color', UF_U: 'ignored-color'}
   end
 
   def self.by_code(code)
@@ -33,7 +22,7 @@ class CornerPosition
   def self.grid
     @@grid =
       [
-        [:'',:A, :B, :b, :C, :D, :E, :F, :G].map{|id| self.by_code(id)},
+        [:'',:A, :B, :b, :C, :D, :E, :F, :G ].map{|id| self.by_code(id)},
         [:-, :AA,:BB,:bb,:CC,:DD,:EE,:FF,:GG].map{|id| self.by_code(id)},
         [:- ,:Ax,:Bx,:bx,:Cx,:Dx,:Ex,:Fx,:Gx].map{|id| self.by_code(id)},
         [:- ,:- ,:By,:by,:Cy,:Dy,:Ey,:Fy,:Gy].map{|id| self.by_code(id)},

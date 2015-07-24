@@ -1,35 +1,35 @@
-.ll-icon{data: { code: "#{pos.code}", field: "#{pos.field}" }}
+.ll-icon{data: { code: "#{pos.code}", hidden_field_selector: "#{pos.hidden_field_selector}" }}
   %div{class: "arrow_#{pos.corner_swap}" }
   %table{class: add_class}
     %tr
       %th{colspan: 5}= "#{pos.name}"
     %tr
       %td.none
-      %td.b{class: pos.color(:ULB_B)}
-      %td.b{class: pos.color(:UB_B)}
-      %td.b{class: pos.color(:UBR_B)}
+      %td.b{class: pos.colors[:ULB_B]}
+      %td.b{class: pos.colors[:UB_B]}
+      %td.b{class: pos.colors[:UBR_B]}
       %td.none
     %tr
-      %td.l{class: pos.color(:ULB_L)}
-      %td.u{class: pos.color(:ULB_U)}
-      %td.u{class: pos.color(:UB_U)}
-      %td.u{class: pos.color(:UBR_U)}
-      %td.r{class: pos.color(:UBR_R)}
+      %td.l{class: pos.colors[:ULB_L]}
+      %td.u{class: pos.colors[:ULB_U]}
+      %td.u{class: pos.colors[:UB_U]}
+      %td.u{class: pos.colors[:UBR_U]}
+      %td.r{class: pos.colors[:UBR_R]}
     %tr
-      %td.l{class: pos.color(:UL_L)}
-      %td.u{class: pos.color(:UL_U)}
-      %td.u{class: pos.color(:U)}
-      %td.u{class: pos.color(:UR_U)}
-      %td.r{class: pos.color(:UR_R)}
+      %td.l{class: pos.colors[:UL_L]}
+      %td.u{class: pos.colors[:UL_U]}
+      %td.u{class: pos.colors[:U]}
+      %td.u{class: pos.colors[:UR_U]}
+      %td.r{class: pos.colors[:UR_R]}
     %tr
-      %td.l{class: pos.color(:UFL_L)}
-      %td.u{class: pos.color(:UFL_U)}
-      %td.u{class: pos.color(:UF_U)}
-      %td.u{class: pos.color(:URF_U)}
-      %td.r{class: pos.color(:URF_R)}
+      %td.l{class: pos.colors[:UFL_L]}
+      %td.u{class: pos.colors[:UFL_U]}
+      %td.u{class: pos.colors[:UF_U]}
+      %td.u{class: pos.colors[:URF_U]}
+      %td.r{class: pos.colors[:URF_R]}
     %tr
       %td.none
-      %td.f{class: pos.color(:UFL_F)}
-      %td.f{class: pos.color(:UF_F)}
-      %td.f{class: pos.color(:URF_F)}
+      %td.f{class: pos.colors[:UFL_F]}
+      %td.f{class: pos.colors[:UF_F]}
+      %td.f{class: pos.colors[:URF_F]}
       %td.none

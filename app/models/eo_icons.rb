@@ -1,32 +1,18 @@
-class EoState
-  attr_reader :code, :name
+class EoIcons < LlIcons
 
   def initialize(code, stickers)
-    is_none = code == :''
-    @code = code
-    @name = (is_none ? 'NONE' : 'O' + code)
+    super(:eo, code.to_sym)
+    @name = (@is_none ? 'NONE' : 'O' + code)
 
-    @colors = is_none ? {} : { U: 'eo-color', ULB_U: 'ignored-color', UBR_U: 'ignored-color', UFL_U: 'ignored-color', URF_U: 'ignored-color'}
     pieces = %w(UB_ UR_ UF_ UL_)
     stickers.each_with_index do |sticker, i|
       @colors[(pieces[i] + sticker).to_sym] = 'eo-color'
     end
   end
 
-  def color(sticker_code)
-    @colors[sticker_code]
-  end
-
-  def highlight(selected_name)
-    'selected' if (selected_name || '') == @code
-  end
-
-  def corner_swap
-    # n/a
-  end
-
-  def field
-    '#eo'
+  def base_colors
+    @colors = { U: 'eo-color'}
+    set_colors('ignored-color', :ULB_U, :UBR_U, :UFL_U, :URF_U)
   end
 
   def self.by_code(code)

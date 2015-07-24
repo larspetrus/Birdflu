@@ -3,9 +3,9 @@
   %div{style: "font-size: 16px;"}= link_to "Mirror position", "#{@position.mirror_ll_code}"
 
 %div{style: "float: right;"}
-  = render 'll_icon', pos: OllPosition.by_code(@position.oll), add_class: ''
+  = render 'll_icon', pos: OllIcons.by_code(@position.oll), add_class: ''
 %div{style: "float: right;"}
-  = render 'll_icon', pos: CornerPosition.by_code(@position.corner_look), add_class: ''
+  = render 'll_icon', pos: CopIcons.by_code(@position.corner_look), add_class: ''
 
 %h3 Position #{@position.ll_code}
 
