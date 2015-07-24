@@ -20,7 +20,7 @@ class CopIcons < LlIcons
   end
 
   def self.grid
-    @@grid =
+    @@grid ||=
       [
         [:'',:A, :B, :b, :C, :D, :E, :F, :G ].map{|id| self.by_code(id)},
         [:-, :AA,:BB,:bb,:CC,:DD,:EE,:FF,:GG].map{|id| self.by_code(id)},

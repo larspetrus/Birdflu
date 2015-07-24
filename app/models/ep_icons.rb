@@ -21,7 +21,16 @@ class EpIcons < LlIcons
   end
 
   def self.by_code(code)
-    ALL.find { |op| op.code == code }
+    ALL.find { |op| op.code == code.to_sym }
+  end
+
+  def self.grid
+    @@grid ||=
+        [
+            [:''].map{|id| self.by_code(id)},
+            %w(1111 5555 7373 3737 1335 3351 3513 1577 7157 5133 5771 7715).map{|id| self.by_code(id)},
+            %w(7113 1137 3711 1371 7777 3333 5151 1515 7355 3557 5735 5573).map{|id| self.by_code(id)},
+        ]
   end
 
   ALL = [

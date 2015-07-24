@@ -36,6 +36,15 @@
   padding: 8px;
 }
 
+.leftmenu {
+  float: left;
+  font-size: 18px;
+  background-color: #dd0;
+  padding: 12px;
+}
+.right {
+  float: right;
+}
 // ------------ U position Drawing
 $big: 16px;
 $small: 8px;
@@ -195,7 +204,7 @@ $narrow: 3px;
 
 .oll-color { background-color: deeppink !important; }
 .cop-color { background-color: #0c0 !important; }
-.eo-color { background-color: #fc0 !important; }
+.eo-color { background-color: #fb0 !important; }
 
 .ep-b-color { background-color: orange !important; }
 .ep-r-color { background-color: #0d0 !important; }
@@ -216,6 +225,17 @@ td.icon-grid {
   border-right: solid 1px #aaa;
 }
 td:last-child.icon-grid {
+  border-right: none;
+}
+
+table.icon-grid-h {
+  border-collapse: collapse;
+}
+td.icon-grid-h {
+  padding: 0;
+  border-bottom: solid 1px #aaa;
+}
+td:last-child.icon-grid-h {
   border-right: none;
 }
 

@@ -1,14 +1,11 @@
 %h1 Grail Moth
 
 %h4 Corner and edge orientation (OLL)
-
 - @olls.each do |oll|
   = render 'll_icon', pos: oll, add_class: oll.highlight(params[:ol])
-
 %br{clear: 'both'}
 
 %h4 Corner orientation and position(COP)
-
 %table.icon-grid
   - @cls_rows.each do |cl_row|
     %tr
@@ -17,17 +14,17 @@
           = render 'll_icon', pos: cl, add_class: cl.highlight(params[:cl]) if cl
 
 %h4 Edge orientation (EO)
-
 - @eos.each do |eo|
   = render 'll_icon', pos: eo, add_class: eo.highlight(params[:eo])
-
 %br{clear: 'both'}
 
 %h4 Edge position (EP)
-
-- @eps.each do |ep|
-  = render 'll_icon', pos: ep, add_class: ep.highlight(params[:ep])
-
+%table.icon-grid-h
+  - @eps_rows.each do |ep_row|
+    %tr
+      - ep_row.each do |ep|
+        %td.icon-grid-h
+          = render 'll_icon', pos: ep, add_class: ep.highlight(params[:ep]) if ep
 %br{clear: 'both'}
 
 %h5{style: 'position: absolute; top:0; right:0; '}

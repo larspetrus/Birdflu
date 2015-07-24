@@ -26,7 +26,7 @@ class PositionsController < ApplicationController
     @olls = OllIcons::ALL
     @cls_rows = CopIcons.grid
     @eos = EoIcons::ALL
-    @eps = EpIcons::ALL
+    @eps_rows = EpIcons.grid
   end
 
   def show

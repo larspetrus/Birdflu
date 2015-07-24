@@ -1,11 +1,13 @@
-%div{style: "font-size: 26px;"}= link_to 'All Positions', root_url
+.leftmenu= link_to 'Search page', root_url
 - if @position.has_mirror
-  %div{style: "font-size: 16px;"}= link_to "Mirror position", "#{@position.mirror_ll_code}"
+  .leftmenu= link_to "Mirror", "#{@position.mirror_ll_code}"
 
-%div{style: "float: right;"}
-  = render 'll_icon', pos: OllIcons.by_code(@position.oll), add_class: ''
-%div{style: "float: right;"}
-  = render 'll_icon', pos: CopIcons.by_code(@position.corner_look), add_class: ''
+.right= render 'll_icon', pos: OllIcons.by_code(@position.oll), add_class: ''
+.right= render 'll_icon', pos: EoIcons.by_code(@position.edge_orientations), add_class: ''
+.right= render 'll_icon', pos: EpIcons.by_code(@position.edge_positions), add_class: ''
+.right= render 'll_icon', pos: CopIcons.by_code(@position.corner_look), add_class: ''
+
+%br{clear: 'both'}
 
 %h3 Position #{@position.ll_code}
 

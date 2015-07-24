@@ -16,7 +16,7 @@ class EoIcons < LlIcons
   end
 
   def self.by_code(code)
-    ALL.find { |op| op.code == code }
+    ALL.find { |op| op.code == code.to_sym }
   end
 
   ALL = [
