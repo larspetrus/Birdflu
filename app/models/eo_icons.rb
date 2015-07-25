@@ -16,7 +16,14 @@ class EoIcons < LlIcons
   end
 
   def self.by_code(code)
+    code ||= ''
     ALL.find { |op| op.code == code.to_sym }
+  end
+  def self.grid
+    @@grid ||=
+        [
+            [:'', '1111', '1122', '1212', '1221', '2112', '2121', '2211', '2222'].map{|id| self.by_code(id)},
+        ]
   end
 
   ALL = [

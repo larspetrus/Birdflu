@@ -173,22 +173,12 @@ $narrow: 3px;
     position:absolute;
     background-color: black;
   }
-  .arrow_L {
-    @extend .arrow_v;
-    left:13px;
-  }
-  .arrow_R {
-    @extend .arrow_v;
-    left:35px;
-  }
-  .arrow_B {
-    @extend .arrow_h;
-    top:26px;
-  }
-  .arrow_F {
-    @extend .arrow_h;
-    top:48px;
-  }
+  .arrow_L { @extend .arrow_v; left:13px; }
+  .arrow_M { @extend .arrow_v; left:24px; }
+  .arrow_R { @extend .arrow_v; left:35px; }
+  .arrow_B { @extend .arrow_h; top:26px; }
+  .arrow_S { @extend .arrow_h; top:37px; }
+  .arrow_F { @extend .arrow_h; top:48px; }
 
   .arrow_D {
     left:9px;
@@ -239,6 +229,22 @@ td:last-child.icon-grid-h {
   border-right: none;
 }
 
+#oll-picker {
+  display: table;
+  border: solid 2px purple;
+}
+#cop-picker {
+  display: table;
+  border: solid 2px green;
+}
+#eo-picker {
+  display: table;
+  border: solid 2px pink;
+}
+#ep-picker {
+  display: table;
+  border: solid 2px black;
+}
 // ------------ Alg sections
 .cancel1 {
   color: #aaa;

@@ -1,6 +1,17 @@
 require 'rails_helper'
 
 RSpec.describe OllIcons, :type => :model do
+
+  it 'grid contains all positions once' do
+    grid_count = Hash.new(0)
+    real_count = Hash.new(0)
+
+    OllIcons.grid.flatten.each { |pos|  grid_count[pos.code] += 1 if pos }
+    OllIcons::ALL.each { |cpos|  real_count[cpos.code] += 1}
+
+    expect(grid_count).to eq(real_count)
+  end
+
   it 'color' do
     o25 = OllIcons.new(:o25, 'OLL 25', %w(U U B U U L U U))
 

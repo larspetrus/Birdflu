@@ -1,5 +1,6 @@
 .ll-icon{data: { code: "#{pos.code}", hidden_field_selector: "#{pos.hidden_field_selector}" }}
-  %div{class: "arrow_#{pos.corner_swap}" }
+  - pos.arrows.each do |place|
+    %div{class: "arrow_#{place}" }
   %table{class: add_class}
     %tr
       %th{colspan: 5}= "#{pos.name}"

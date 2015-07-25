@@ -23,10 +23,15 @@ class PositionsController < ApplicationController
     sum = @positions.reduce(0.0) { |sum, pos| sum + pos.best_alg_length }
     @average = '%.2f' % (sum/@positions.count)
 
-    @olls = OllIcons::ALL
-    @cls_rows = CopIcons.grid
-    @eos = EoIcons::ALL
-    @eps_rows = EpIcons.grid
+    @oll_selected = OllIcons.by_code(params[:ol])
+    @cop_selected = CopIcons.by_code(params[:cl])
+    @eo_selected  = EoIcons.by_code(params[:eo])
+    @ep_selected  = EpIcons.by_code(params[:ep])
+
+    @oll_rows = OllIcons::grid
+    @cop_rows = CopIcons.grid
+    @eo_rows = EoIcons::grid
+    @ep_rows = EpIcons.grid
   end
 
   def show

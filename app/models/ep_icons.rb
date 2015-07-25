@@ -1,8 +1,9 @@
 class EpIcons < LlIcons
 
-  def initialize(code, stickers)
+  def initialize(code, stickers, *arrows)
     super(:ep, code.to_sym)
     @name = (@is_none ? 'NONE' : 'P' + code)
+    @arrows = arrows
 
     code.length.times do |i|
       offset = '1357'.index(code[i])
@@ -21,6 +22,7 @@ class EpIcons < LlIcons
   end
 
   def self.by_code(code)
+    code ||= ''
     ALL.find { |op| op.code == code.to_sym }
   end
 
@@ -44,7 +46,7 @@ class EpIcons < LlIcons
       self.new('5133', %w(U U U U)),
       self.new('5771', %w(U U U U)),
       self.new('7715', %w(U U U U)),
-      self.new('5555', %w(U U U U)),
+      self.new('5555', %w(U U U U), :M, :S),
       self.new('3737', %w(U U U U)),
       self.new('7373', %w(U U U U)),
       self.new('7777', %w(U U U U)),
@@ -52,12 +54,12 @@ class EpIcons < LlIcons
       self.new('1137', %w(U U U U)),
       self.new('7355', %w(U U U U)),
       self.new('3557', %w(U U U U)),
-      self.new('5151', %w(U U U U)),
+      self.new('5151', %w(U U U U), :M),
       self.new('3711', %w(U U U U)),
       self.new('3333', %w(U U U U)),
       self.new('5735', %w(U U U U)),
       self.new('1371', %w(U U U U)),
-      self.new('1515', %w(U U U U)),
+      self.new('1515', %w(U U U U), :S),
       self.new('5573', %w(U U U U)),
   ]
 end

@@ -1,31 +1,59 @@
 %h1 Grail Moth
 
-%h4 Corner and edge orientation (OLL)
-- @olls.each do |oll|
-  = render 'll_icon', pos: oll, add_class: oll.highlight(params[:ol])
+%table
+  %tr
+    %th COP
+    %th EO
+    %th EP
+    %th OLL
+  %tr
+    %td
+      #cop-selected
+        = render 'll_icon', pos: @cop_selected, add_class: 'selected'
+      #cop-picker
+        %h4 Corner orientation and position (COP)
+        %table.icon-grid
+          - @cop_rows.each do |cl_row|
+            %tr
+              - cl_row.each do |cl|
+                %td.icon-grid
+                  = render 'll_icon', pos: cl, add_class: cl.highlight(params[:cl]) if cl
+    %td
+      #eo-selected
+        = render 'll_icon', pos: @eo_selected, add_class: 'selected'
+      #eo-picker
+        %h4 Edge orientation (EO)
+        %table.icon-grid-h
+          - @eo_rows.each do |eo_row|
+            %tr
+              - eo_row.each do |eo|
+                %td.icon-grid-h
+                  = render 'll_icon', pos: eo, add_class: eo.highlight(params[:eo]) if eo
+    %td
+      #ep-selected
+        = render 'll_icon', pos: @ep_selected, add_class: 'selected'
+      #ep-picker
+        %h4 Edge position (EP)
+        %table.icon-grid-h
+          - @ep_rows.each do |ep_row|
+            %tr
+              - ep_row.each do |ep|
+                %td.icon-grid-h
+                  = render 'll_icon', pos: ep, add_class: ep.highlight(params[:ep]) if ep
+    %td
+      #oll-selected
+        = render 'll_icon', pos: @oll_selected, add_class: 'selected'
+      #oll-picker
+        %h4 Corner and edge orientation (OLL)
+        %table.icon-grid-h
+          - @oll_rows.each do |oll_row|
+            %tr
+              - oll_row.each do |oll|
+                %td.icon-grid-h
+                  = render 'll_icon', pos: oll, add_class: oll.highlight(params[:ol]) if oll
+
 %br{clear: 'both'}
 
-%h4 Corner orientation and position(COP)
-%table.icon-grid
-  - @cls_rows.each do |cl_row|
-    %tr
-      - cl_row.each do |cl|
-        %td.icon-grid
-          = render 'll_icon', pos: cl, add_class: cl.highlight(params[:cl]) if cl
-
-%h4 Edge orientation (EO)
-- @eos.each do |eo|
-  = render 'll_icon', pos: eo, add_class: eo.highlight(params[:eo])
-%br{clear: 'both'}
-
-%h4 Edge position (EP)
-%table.icon-grid-h
-  - @eps_rows.each do |ep_row|
-    %tr
-      - ep_row.each do |ep|
-        %td.icon-grid-h
-          = render 'll_icon', pos: ep, add_class: ep.highlight(params[:ep]) if ep
-%br{clear: 'both'}
 
 %h5{style: 'position: absolute; top:0; right:0; '}
   = link_to "H codes", "http://www.ai.univ-paris8.fr/~bh/cube/solutions_tout.html"
@@ -95,4 +123,44 @@
   $(".ll-icon").on("click", function() {
     $($(this).data('hidden-field-selector')).val($(this).data('code'));
     $('form').submit();
+  });
+
+  $("#oll-picker").hide();
+  $("#oll-selected").on("mouseover", function() {
+    $("#oll-picker").show();
+    $("#oll-selected").hide();
+  });
+  $("#oll-picker").on("mouseleave", function() {
+    $("#oll-picker").hide();
+    $("#oll-selected").show();
+  });
+
+  $("#cop-picker").hide();
+  $("#cop-selected").on("mouseover", function() {
+    $("#cop-picker").show();
+    $("#cop-selected").hide();
+  });
+  $("#cop-picker").on("mouseleave", function() {
+    $("#cop-picker").hide();
+    $("#cop-selected").show();
+  });
+
+  $("#eo-picker").hide();
+  $("#eo-selected").on("mouseover", function() {
+    $("#eo-picker").show();
+    $("#eo-selected").hide();
+  });
+  $("#eo-picker").on("mouseleave", function() {
+    $("#eo-picker").hide();
+    $("#eo-selected").show();
+  });
+
+  $("#ep-picker").hide();
+  $("#ep-selected").on("mouseover", function() {
+    $("#ep-picker").show();
+    $("#ep-selected").hide();
+  });
+  $("#ep-picker").on("mouseleave", function() {
+    $("#ep-picker").hide();
+    $("#ep-selected").show();
   });

@@ -1,9 +1,9 @@
 class CopIcons < LlIcons
 
-  def initialize(code, stickers, corner_swap = nil)
+  def initialize(code, stickers, *arrows)
     super(:cl, code)
     @name = (@is_none ? 'NONE' : code.to_s)
-    @corner_swap = corner_swap
+    @arrows = arrows
 
     pieces = %w(ULB_ UBR_ UFL_ URF_)
     stickers.each_with_index do |sticker, i|
@@ -12,10 +12,23 @@ class CopIcons < LlIcons
   end
 
   def base_colors
-    @colors = { U: 'cop-color', UB_U: 'ignored-color', UL_U: 'ignored-color', UR_U: 'ignored-color', UF_U: 'ignored-color'}
+    @colors = { U: 'cop-color'}
+    set_colors('ignored-color', :UB_U, :UL_U, :UR_U, :UF_U)
+  end
+
+  def fill(sticker)
+    case @colors[sticker]
+      when 'cop-color'
+        '#0c0'
+      when 'ignored-color'
+        '#ddd'
+      else
+        'white'
+    end
   end
 
   def self.by_code(code)
+    code ||= ''
     ALL.find { |op| op.code == code.to_sym }
   end
 

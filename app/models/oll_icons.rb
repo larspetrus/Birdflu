@@ -15,11 +15,26 @@ class OllIcons < LlIcons
   end
 
   def self.by_code(code)
+    code ||= ''
     ALL.find { |op| op.code == code.to_sym }
   end
 
+  def self.grid
+    @@grid ||=
+        [
+            [:'', :-, :m0].map{|id| self.by_code(id)},
+            %i(m28 m57 m20 - m23 m24 m25 m27 m26 m22 m21).map{|id| self.by_code(id)},
+            %i(m3 m4 m17 m19 m18 m2 m1).map{|id| self.by_code(id)},
+            %i(m33 m45 - m44 m43 m32 m31 - m38 m36).map{|id| self.by_code(id)},
+            %i(m54 m53 m50 m49 m48 m47 - m5 m6).map{|id| self.by_code(id)},
+            %i(m39 m40 - m34 m46 - m7 m12 m8 m11).map{|id| self.by_code(id)},
+            %i(m37 m35 m10 m9 - m51 m52 m56 m55).map{|id| self.by_code(id)},
+            %i(m13 m16 m14 m15 - m41 m30 m42 m29).map{|id| self.by_code(id)},
+        ]
+  end
+
   ALL = [
-    self.new(:'',  'NONE',   %w(x x x x x x x x)),
+    self.new(:'',  'NONE',   []),
     self.new(:m0,  'PLL',    %w(U U U U U U U U)),
     self.new(:m1,  'OLL 1',  %w(L B R L R L F R)),
     self.new(:m2,  'OLL 2',  %w(L B B L R L F F)),
