@@ -5,19 +5,19 @@ class EpIcons < LlIcons
     @name = (@is_none ? 'NONE' : 'P' + code)
     @arrows = arrows
 
+    edges = [:UB_U, :UR_U, :UF_U, :UL_U]
     code.length.times do |i|
       offset = '1357'.index(code[i])
-      sc = %w(b r f l)[(i + offset) % 4] if offset != 0
-      sticker = [:UB_U, :UR_U, :UF_U, :UL_U][i]
-      @colors[sticker] = "ep-#{sc}-color"
+      sc = ['', 1, 2, 1][offset]
+      @colors[edges[i]] = "ep-#{sc}-color"
     end
   end
 
   def base_colors
-    set_colors('ep-b-color', :ULB_B, :UB_B, :UBR_B)
-    set_colors('ep-l-color', :ULB_L, :UL_L, :UFL_L)
-    set_colors('ep-f-color', :UFL_F, :UF_F, :URF_F)
-    set_colors('ep-r-color', :UBR_R, :UR_R, :URF_R)
+    set_colors('ep-b-color', :ULB_B, :UBR_B)
+    set_colors('ep-l-color', :ULB_L, :UFL_L)
+    set_colors('ep-f-color', :UFL_F, :URF_F)
+    set_colors('ep-r-color', :UBR_R, :URF_R)
     set_colors('ignored-color', :U, :ULB_U, :UBR_U, :UFL_U, :URF_U)
   end
 
@@ -47,18 +47,18 @@ class EpIcons < LlIcons
       self.new('5771', %w(U U U U)),
       self.new('7715', %w(U U U U)),
       self.new('5555', %w(U U U U), :M, :S),
-      self.new('3737', %w(U U U U)),
-      self.new('7373', %w(U U U U)),
+      self.new('3737', %w(U U U U), :FL, :BR),
+      self.new('7373', %w(U U U U), :BL, :FR),
       self.new('7777', %w(U U U U)),
-      self.new('7113', %w(U U U U)),
-      self.new('1137', %w(U U U U)),
+      self.new('7113', %w(U U U U), :BL),
+      self.new('1137', %w(U U U U), :FL),
       self.new('7355', %w(U U U U)),
       self.new('3557', %w(U U U U)),
       self.new('5151', %w(U U U U), :M),
-      self.new('3711', %w(U U U U)),
+      self.new('3711', %w(U U U U), :BR),
       self.new('3333', %w(U U U U)),
       self.new('5735', %w(U U U U)),
-      self.new('1371', %w(U U U U)),
+      self.new('1371', %w(U U U U), :FR),
       self.new('1515', %w(U U U U), :S),
       self.new('5573', %w(U U U U)),
   ]

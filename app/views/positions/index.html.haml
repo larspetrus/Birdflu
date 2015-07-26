@@ -8,8 +8,7 @@
     %th OLL
   %tr
     %td
-      #cop-selected
-        = render 'll_icon', pos: @cop_selected, add_class: 'selected'
+      #cop-selected= render 'll_icon', pos: @cop_selected, add_class: 'selected'
       #cop-picker
         %h4 Corner orientation and position (COP)
         %table.icon-grid
@@ -19,8 +18,7 @@
                 %td.icon-grid
                   = render 'll_icon', pos: cl, add_class: cl.highlight(params[:cl]) if cl
     %td
-      #eo-selected
-        = render 'll_icon', pos: @eo_selected, add_class: 'selected'
+      #eo-selected= render 'll_icon', pos: @eo_selected, add_class: 'selected'
       #eo-picker
         %h4 Edge orientation (EO)
         %table.icon-grid-h
@@ -30,8 +28,7 @@
                 %td.icon-grid-h
                   = render 'll_icon', pos: eo, add_class: eo.highlight(params[:eo]) if eo
     %td
-      #ep-selected
-        = render 'll_icon', pos: @ep_selected, add_class: 'selected'
+      #ep-selected= render 'll_icon', pos: @ep_selected, add_class: 'selected'
       #ep-picker
         %h4 Edge position (EP)
         %table.icon-grid-h
@@ -41,8 +38,7 @@
                 %td.icon-grid-h
                   = render 'll_icon', pos: ep, add_class: ep.highlight(params[:ep]) if ep
     %td
-      #oll-selected
-        = render 'll_icon', pos: @oll_selected, add_class: 'selected'
+      #oll-selected= render 'll_icon', pos: @oll_selected, add_class: 'selected'
       #oll-picker
         %h4 Corner and edge orientation (OLL)
         %table.icon-grid-h

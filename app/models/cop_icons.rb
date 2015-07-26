@@ -16,17 +16,6 @@ class CopIcons < LlIcons
     set_colors('ignored-color', :UB_U, :UL_U, :UR_U, :UF_U)
   end
 
-  def fill(sticker)
-    case @colors[sticker]
-      when 'cop-color'
-        '#0c0'
-      when 'ignored-color'
-        '#ddd'
-      else
-        'white'
-    end
-  end
-
   def self.by_code(code)
     code ||= ''
     ALL.find { |op| op.code == code.to_sym }

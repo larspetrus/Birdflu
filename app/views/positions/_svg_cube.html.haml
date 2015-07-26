@@ -1,0 +1,9 @@
+- hw = size || 100
+- box = 100
+
+%div.svg-icon{style: "height: #{hw}px; width: #{hw}px;"}
+  %svg{viewBox: "0 0 #{box} #{box}"}
+    - Svgod.rects_for(iconf).each do |colored_sticker|
+      %rect{colored_sticker}
+    - iconf.arrows.each do |place|
+      %path{Svgod.arrow_on(place)}
