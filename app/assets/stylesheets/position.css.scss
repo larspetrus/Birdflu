@@ -221,6 +221,22 @@ $ignored: #ddd;
 
 .svg-icon {
   margin: 3px;
+  .name {
+    font-size: 9px;
+    text-align: center;
+  }
+  &:hover {
+    background-color:yellow;
+    .name {
+      color:yellow;
+      background-color:purple;
+    }
+  }
+}
+.selected {
+  .name {
+    background-color: cyan;
+  }
 }
 
 svg {

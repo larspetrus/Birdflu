@@ -28,7 +28,8 @@
                 %td.icon-grid-h
                   = render 'll_icon', pos: eo, add_class: eo.highlight(params[:eo]) if eo
     %td
-      #ep-selected= render 'll_icon', pos: @ep_selected, add_class: 'selected'
+      -##ep-selected= render 'll_icon', pos: @ep_selected, add_class: 'selected'
+      #ep-selected= render 'svg_cube', iconf: @ep_selected, size: 44, add_class: 'selected'
       #ep-picker
         %h4 Edge position (EP)
         %table.icon-grid-h
@@ -36,7 +37,8 @@
             %tr
               - ep_row.each do |ep|
                 %td.icon-grid-h
-                  = render 'll_icon', pos: ep, add_class: ep.highlight(params[:ep]) if ep
+                  -#= render 'll_icon', pos: ep, add_class: ep.highlight(params[:ep]) if ep
+                  = render 'svg_cube', iconf: ep, size: 44, add_class: ep.highlight(params[:ep]) if ep
     %td
       #oll-selected= render 'll_icon', pos: @oll_selected, add_class: 'selected'
       #oll-picker
@@ -120,6 +122,12 @@
     $($(this).data('hidden-field-selector')).val($(this).data('code'));
     $('form').submit();
   });
+
+  $(".svg-icon").on("click", function() {
+    $($(this).data('hidden-field-selector')).val($(this).data('code'));
+    $('form').submit();
+  });
+
 
   $("#oll-picker").hide();
   $("#oll-selected").on("mouseover", function() {

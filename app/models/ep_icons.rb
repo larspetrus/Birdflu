@@ -1,16 +1,27 @@
 class EpIcons < LlIcons
 
-  def initialize(code, stickers, *arrows)
+  def initialize(code, stickers)
     super(:ep, code.to_sym)
     @name = (@is_none ? 'NONE' : 'P' + code)
-    @arrows = arrows
+    @arrows = []
 
     edges = [:UB_U, :UR_U, :UF_U, :UL_U]
+    edge_sides = edges.map{|edge| edge[1]}
+    edge_shifts = {}
     code.length.times do |i|
       offset = '1357'.index(code[i])
       sc = ['', 1, 2, 1][offset]
       @colors[edges[i]] = "ep-#{sc}-color"
+
+      from, to = edge_sides[(i + offset) % 4], edge_sides[i]
+      if edge_shifts[to] == from
+        edge_shifts.delete(to)
+        @arrows << [from, to].sort.join('d').to_sym #double arrow
+      else
+        edge_shifts[from] = to
+      end
     end
+    edge_shifts.each { |from, to| @arrows << "#{from}2#{to}".to_sym if from != to }
   end
 
   def base_colors
@@ -46,20 +57,20 @@ class EpIcons < LlIcons
       self.new('5133', %w(U U U U)),
       self.new('5771', %w(U U U U)),
       self.new('7715', %w(U U U U)),
-      self.new('5555', %w(U U U U), :M, :S),
-      self.new('3737', %w(U U U U), :FL, :BR),
-      self.new('7373', %w(U U U U), :BL, :FR),
+      self.new('5555', %w(U U U U)),
+      self.new('3737', %w(U U U U)),
+      self.new('7373', %w(U U U U)),
       self.new('7777', %w(U U U U)),
-      self.new('7113', %w(U U U U), :BL),
-      self.new('1137', %w(U U U U), :FL),
+      self.new('7113', %w(U U U U)),
+      self.new('1137', %w(U U U U)),
       self.new('7355', %w(U U U U)),
       self.new('3557', %w(U U U U)),
-      self.new('5151', %w(U U U U), :M),
-      self.new('3711', %w(U U U U), :BR),
+      self.new('5151', %w(U U U U)),
+      self.new('3711', %w(U U U U)),
       self.new('3333', %w(U U U U)),
       self.new('5735', %w(U U U U)),
-      self.new('1371', %w(U U U U), :FR),
-      self.new('1515', %w(U U U U), :S),
+      self.new('1371', %w(U U U U)),
+      self.new('1515', %w(U U U U)),
       self.new('5573', %w(U U U U)),
   ]
 end

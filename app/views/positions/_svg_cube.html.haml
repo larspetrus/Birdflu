@@ -1,8 +1,9 @@
-- hw = size || 100
-- box = 100
+- size ||= 100
+- add_class ||= ''
 
-%div.svg-icon{style: "height: #{hw}px; width: #{hw}px;"}
-  %svg{viewBox: "0 0 #{box} #{box}"}
+.svg-icon{data: { code: "#{iconf.code}", hidden_field_selector: "#{iconf.hidden_field_selector}" }, style: "width: #{size}px;", class: add_class}
+  .name= iconf.name
+  %svg{viewBox: "0 0 #{Svgod.box_size} #{Svgod.box_size}"}
     - Svgod.rects_for(iconf).each do |colored_sticker|
       %rect{colored_sticker}
     - iconf.arrows.each do |place|
