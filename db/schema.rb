@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150723162605) do
+ActiveRecord::Schema.define(version: 20150729191955) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -45,8 +45,6 @@ ActiveRecord::Schema.define(version: 20150723162605) do
   create_table "positions", force: true do |t|
     t.string  "ll_code"
     t.integer "weight"
-    t.integer "oriented_edges"
-    t.integer "oriented_corners"
     t.integer "corner_swap"
     t.integer "best_alg_id"
     t.integer "alg_count"

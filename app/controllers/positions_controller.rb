@@ -12,7 +12,6 @@ class PositionsController < ApplicationController
 
     @db_query['oll']              = params[:ol]      if params[:ol].present?
     @db_query['corner_look']      = params[:cl]      if params[:cl].present?
-    @db_query['oriented_corners'] = params[:co].to_i if params[:co].present?
     @db_query['edge_orientations']= params[:eo]      if params[:eo].present?
     @db_query['edge_positions']   = params[:ep]      if params[:ep].present?
     @db_query['is_mirror']        = false            if params[:im] == "No"

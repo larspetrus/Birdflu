@@ -12,7 +12,7 @@ RSpec.describe EpIcons do
   end
   
   it 'makes arrows' do
-    expect(EpIcons.by_code('1335').arrows.sort).to eq([:F2R, :L2F, :R2L])
+    expect(EpIcons.by_code('1335').arrows.sort).to eq([:F2L, :L2R, :R2F])
     expect(EpIcons.by_code('5555').arrows.sort).to eq([:BdF, :LdR])
     expect(EpIcons.by_code('3711').arrows.sort).to eq([:BdR])
     expect(EpIcons.by_code('7373').arrows.sort).to eq([:BdL, :FdR])

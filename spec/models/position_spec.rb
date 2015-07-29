@@ -26,21 +26,6 @@ RSpec.describe Position, :type => :model do
     expect(Position.find_by!(ll_code: "a1b5b7b7").combo_algs).to eq([a2])
   end
 
-  it 'sets orientations' do
-    Position.delete_all(ll_code: 'a1a1a1a1')
-    Position.delete_all(ll_code: 'a4c5c1c4')
-
-    solved = Position.create(ll_code: 'a1a1a1a1')
-    expect(solved.oriented_edges).to eq(4)
-    expect(solved.oriented_corners).to eq(4)
-    expect(solved.corner_swap).to eq('no')
-
-    messy = Position.create(ll_code: 'a4c5c1c4')
-    expect(messy.oriented_edges).to eq(2)
-    expect(messy.oriented_corners).to eq(1)
-    expect(messy.corner_swap).to eq('no')
-  end
-
   it '#corner_swap_for' do
     expect(Position.corner_swap_for('a1a1a1a1')).to eq(:no)
     expect(Position.corner_swap_for('a1a1o1a1')).to eq(nil)
