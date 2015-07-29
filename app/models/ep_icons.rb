@@ -13,10 +13,10 @@ class EpIcons < LlIcons
       sc = ['', 1, 2, 1][offset]
       @colors[edges[i]] = "ep-#{sc}-color"
 
-      from, to = edge_sides[(i + offset) % 4], edge_sides[i]
+      from, to = edge_sides[i], edge_sides[(i + offset) % 4]
       if edge_shifts[to] == from
         edge_shifts.delete(to)
-        @arrows << [from, to].sort.join('d').to_sym #double arrow
+        @arrows << [from, to].sort.join('d').to_sym # double arrow
       else
         edge_shifts[from] = to
       end

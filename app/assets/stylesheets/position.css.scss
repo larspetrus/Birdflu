@@ -9,7 +9,7 @@
   border: 1px solid #ddd;
   tr:nth-child(4n) {background: #eee}
   th, td {
-    font-size: 9px;
+    font-size: 11px;
     border-left: 1px solid #ddd;
   }
   .num {
@@ -200,8 +200,8 @@ $ep-b: orange;
 $ep-r: #0d0;
 $ep-f: red;
 $ep-l: #07f;
-$ep-1: #5ed;
-$ep-2: #5bd;
+$ep-1: #def;
+$ep-2: #adf;
 $ignored: #ddd;
 
 .ll-icon {
@@ -220,7 +220,6 @@ $ignored: #ddd;
 }
 
 .svg-icon {
-  margin: 3px;
   .name {
     font-size: 9px;
     text-align: center;

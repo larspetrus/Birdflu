@@ -19,6 +19,8 @@ class PositionsController < ApplicationController
     @show_mirrors = (params[:im] == "No" ? "No" : "Yes")
 
     @positions = Position.includes(:best_alg).where(@db_query).to_a.sort_by! {|pos| pos.best_alg_length}
+    @position_count = @positions.count
+    @positions = @positions.first(100)
 
     sum = @positions.reduce(0.0) { |sum, pos| sum + pos.best_alg_length }
     @average = '%.2f' % (sum/@positions.count)

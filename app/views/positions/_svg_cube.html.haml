@@ -1,8 +1,10 @@
 - size ||= 100
 - add_class ||= ''
+- no_name ||= false
 
 .svg-icon{data: { code: "#{iconf.code}", hidden_field_selector: "#{iconf.hidden_field_selector}" }, style: "width: #{size}px;", class: add_class}
-  .name= iconf.name
+  - unless no_name
+    .name= iconf.name
   %svg{viewBox: "0 0 #{Svgod.box_size} #{Svgod.box_size}"}
     - Svgod.rects_for(iconf).each do |colored_sticker|
       %rect{colored_sticker}

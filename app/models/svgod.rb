@@ -1,3 +1,5 @@
+#The SVG God can make an SVG cube
+
 class Svgod
   Point = Struct.new(:x, :y)
 
@@ -100,6 +102,8 @@ class Svgod
         path = short_single
         angle = {F2R: 45, L2F: 135, B2L: 225, R2B: 315}[place]
         transforms << "rotate(#{angle}, 50, 50)"
+      else
+        puts "Unknown arrow place '#{place}'"
     end
 
     {d: path, transform: transforms.join(' ')}
@@ -120,15 +124,15 @@ class Svgod
   ]
   end
 
-  def self.single_arrow_pts(lh, lw, ah, aw, cx=50, cy=50)
+  def self.single_arrow_pts(line_h, line_w, head_h, head_w, cx=50, cy=50)
   [
-    Point.new(cx-lw,    cy-lh),
-    Point.new(cx-lw-aw, cy-lh),
-    Point.new(cx,       cy-lh-ah),
-    Point.new(cx+lw+aw, cy-lh),
-    Point.new(cx+lw,    cy-lh),
-    Point.new(cx+lw,    cy+lh+ah),
-    Point.new(cx-lw,    cy+lh+ah),
+    Point.new(cx-line_w,        cy-line_h),
+    Point.new(cx-line_w-head_w, cy-line_h),
+    Point.new(cx,               cy-line_h-head_h),
+    Point.new(cx+line_w+head_w, cy-line_h),
+    Point.new(cx+line_w,        cy-line_h),
+    Point.new(cx+line_w,        cy+line_h+head_h),
+    Point.new(cx-line_w,        cy+line_h+head_h),
   ]
   end
 
@@ -153,32 +157,32 @@ class Svgod
   end
 
   def self.long_double
-    points = double_arrow_pts(22, 1, 7, 2)
+    points = double_arrow_pts(22, 1, 7, 4)
     path(points)
   end
 
   def self.short_double
-    points = double_arrow_pts(12, 1, 7, 2, 70)
+    points = double_arrow_pts(12, 1, 7, 4, 70)
     path(points)
   end
 
   def self.long_single
-    points = single_arrow_pts(19, 1, 7, 2)
+    points = single_arrow_pts(18, 1, 7, 4)
     path(points)
   end
 
   def self.short_single
-    points = single_arrow_pts(10, 1, 7, 2, 70)
+    points = single_arrow_pts(12, 1, 7, 4, 73)
     path(points)
   end
 
   def self.short_single_reverse
-    points = single_arrow_pts(-10, -1, -7, -2, 70)
+    points = single_arrow_pts(-12, -1, -7, -4, 73)
     path(points)
   end
 
   def self.diagonal
-    points = double_arrow_pts(34, 1, 7, 2)
+    points = double_arrow_pts(34, 1, 7, 4)
     path(points)
   end
 end
