@@ -20,4 +20,7 @@ class LlIcons
     stickers.each{|s| @colors[s] = color_class }
   end
 
+  def color_at(sticker_code)
+    @colors[sticker_code]
+  end
 end

@@ -2,7 +2,14 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-@import "common";
+
+// The side colors. Same as Roofpig.
+$f_color: red;
+$b_color: orange;
+$r_color: #0d0;
+$l_color: #07f;
+$u_color: yellow;
+$d_color: #eee;
 
 .index {
   border-collapse: collapse;
@@ -36,81 +43,6 @@
 }
 .right {
   float: right;
-}
-// ------------ U position Drawing
-$big: 16px;
-$small: 8px;
-
-.u-position-pic {
-  position:relative;
-
-  table {
-    border-collapse: collapse;
-    margin: 5px;
-    td { border: 2px solid black; }
-  }
-
-  .u {
-    height: $big;
-    width: $big;
-  }
-  .f {
-    height: $small;
-    box-shadow: 0 5px 3px 0px $f_color;
-  }
-  .b {
-    height: $small;
-    box-shadow: 0 -5px 3px 0px $b_color;
-  }
-  .r {
-    width: $small;
-    box-shadow: 5px 0 3px 0px $r_color;
-  }
-  .l {
-    width: $small;
-    box-shadow: -5px 0 3px 0px $l_color;
-  }
-
-  // ---- Arrows
-  .arr_h {
-    left:20px;
-    height:7px;
-    width:54px;
-    position:absolute;
-    background-image: url('/assets/arrow_h.png');
-  }
-  .arr_v {
-    top:16px;
-    height:54px;
-    width:7px;
-    position:absolute;
-    background-image: url('/assets/arrow_v.png');
-  }
-  .arr_back {
-    @extend .arr_h;
-    top:18px;
-  }
-  .arr_front {
-    @extend .arr_h;
-    top:60px;
-  }
-  .arr_left {
-    @extend .arr_v;
-    left:23px;
-  }
-  .arr_right {
-    @extend .arr_v;
-    left:63px;
-  }
-  .arr_diagonal {
-    height:54px;
-    width:54px;
-    position:absolute;
-    top:15px;
-    left:21px;
-    background-image: url('/assets/arrow_d.png');
-  }
-  .arr_no {}
 }
 
 $wide: 8px;
@@ -181,6 +113,7 @@ $narrow: 3px;
     transform: rotate(-45deg);
     background-color: black;
   }
+  .none { border: none !important; }
 
 }
 
@@ -188,10 +121,6 @@ $narrow: 3px;
 $oll: deeppink;
 $cop: #0c0;
 $eo: #fb0;
-$ep-b: orange;
-$ep-r: #0d0;
-$ep-f: red;
-$ep-l: #07f;
 $ep-1: #def;
 $ep-2: #adf;
 $ignored: #d7d7d7;
@@ -201,10 +130,6 @@ $ignored: #d7d7d7;
   .cop-color { background-color: #0c0 !important; }
   .eo-color { background-color: #fb0 !important; }
 
-  .ep-b-color { background-color: $ep-b !important; }
-  .ep-r-color { background-color: $ep-r !important; }
-  .ep-f-color { background-color: $ep-f !important; }
-  .ep-l-color { background-color: $ep-l !important; }
   .ep-1-color { background-color: $ep-1 !important; }
   .ep-2-color { background-color: $ep-2 !important; }
 
@@ -224,6 +149,15 @@ $ignored: #d7d7d7;
     }
   }
 }
+.show-centers svg {
+  border: dotted 2px;
+  padding: 4px;
+  border-color: $b_color $r_color $f_color $l_color;
+  path {
+    fill-opacity: 0.3;
+  }
+}
+
 .selected {
   .name {
     background-color: cyan;
@@ -233,20 +167,23 @@ $ignored: #d7d7d7;
 svg {
   .u { height: 23.5; width: 23.5 }
 
+  .f-color { fill: $f_color; }
+  .b-color { fill: $b_color; }
+  .r-color { fill: $r_color; }
+  .l-color { fill: $l_color; }
+  .u-color { fill: $u_color; }
+  .d-color { fill: $d_color; }
+
   .oll-color { fill: $oll; }
   .cop-color { fill: $cop; }
   .eo-color  { fill: $eo; }
 
-  .ep-b-color { fill: $ep-b; }
-  .ep-r-color { fill: $ep-r; }
-  .ep-f-color { fill: $ep-f; }
-  .ep-l-color { fill: $ep-l; }
   .ep-1-color { fill: $ep-1; }
   .ep-2-color { fill: $ep-2; }
+  .ep--color  { fill: white; }
 
   .ignored-color { fill: $ignored; }
 
-  .ep--color  { fill: white; }
   .white-hole { fill: white; }
 }
 

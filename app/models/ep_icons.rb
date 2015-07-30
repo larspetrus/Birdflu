@@ -25,10 +25,6 @@ class EpIcons < LlIcons
   end
 
   def base_colors
-    set_colors('ep-b-color', :ULB_B, :UBR_B)
-    set_colors('ep-l-color', :ULB_L, :UFL_L)
-    set_colors('ep-f-color', :UFL_F, :URF_F)
-    set_colors('ep-r-color', :UBR_R, :URF_R)
     set_colors('ignored-color', :U, :ULB_U, :UBR_U, :UFL_U, :URF_U)
   end
 

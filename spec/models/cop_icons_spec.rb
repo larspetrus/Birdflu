@@ -10,4 +10,11 @@ RSpec.describe CopIcons do
 
     expect(grid_count).to eq(real_count)
   end
+
+  it 'has the right arrows' do
+    expect(CopIcons.by_code(:Bz).arrows).to eq([:F])
+    expect(CopIcons.by_code(:Dx).arrows).to eq([:L])
+    expect(CopIcons.by_code(:EE).arrows).to eq([:D])
+    expect(CopIcons.by_code(:B).arrows).to eq([])
+  end
 end

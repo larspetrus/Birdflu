@@ -18,40 +18,7 @@
 
 %h3 Position #{@position.ll_code}
 
-%div.u-position-pic
-  %div{class: "arr_#{@position.corner_swap}"}
-
-  %table
-    %tr
-      %td.none
-      %td.b{class: @cube.css(:ULB,:B)}
-      %td.b{class: @cube.css(:UB, :B)}
-      %td.b{class: @cube.css(:UBR,:B)}
-      %td.none
-    %tr
-      %td.l{class: @cube.css(:ULB,:L)}
-      %td.u{class: @cube.css(:ULB,:U)}
-      %td.u{class: @cube.css(:UB, :U)}
-      %td.u{class: @cube.css(:UBR,:U)}
-      %td.r{class: @cube.css(:UBR,:R)}
-    %tr
-      %td.l{class: @cube.css(:UL, :L)}
-      %td.u{class: @cube.css(:UL, :U)}
-      %td.u.u-color
-      %td.u{class: @cube.css(:UR, :U)}
-      %td.r{class: @cube.css(:UR, :R)}
-    %tr
-      %td.l{class: @cube.css(:UFL,:L)}
-      %td.u{class: @cube.css(:UFL,:U)}
-      %td.u{class: @cube.css(:UF, :U)}
-      %td.u{class: @cube.css(:URF,:U)}
-      %td.r{class: @cube.css(:URF,:R)}
-    %tr
-      %td.none
-      %td.f{class: @cube.css(:UFL,:F)}
-      %td.f{class: @cube.css(:UF, :F)}
-      %td.f{class: @cube.css(:URF,:F)}
-      %td.none
+= render 'svg_cube', iconf: BigIcon.new(@cube, CopIcons.by_code(@position.corner_look).arrows), size: 122, add_class: 'show-centers'
 
 - @top_3.each do |t3|
   .roofpig.rp160{:'data-config' => "base=AD | alg=#{t3.moves} | flags=showalg #{t3.setup_moves}" }

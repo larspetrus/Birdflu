@@ -58,7 +58,7 @@ class Svgod
   def self.rects_for(iconf)
     result = [@@cube_rect]
     @@dimensions.keys.each do |sticker|
-      color = iconf.colors[sticker]
+      color = iconf.color_at(sticker)
       if sticker[-1] == 'U'
         color ||= 'white-hole'
       end
