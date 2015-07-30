@@ -4,7 +4,7 @@
 
 .svg-icon{data: { code: "#{iconf.code}", hidden_field_selector: "#{iconf.hidden_field_selector}" }, style: "width: #{size}px;", class: add_class}
   - unless no_name
-    .name= iconf.name
+    .name{style: "font-size: #{size*0.21}px;"}= iconf.name
   %svg{viewBox: "0 0 #{Svgod.box_size} #{Svgod.box_size}"}
     - Svgod.rects_for(iconf).each do |colored_sticker|
       %rect{colored_sticker}
