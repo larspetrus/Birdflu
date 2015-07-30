@@ -37,6 +37,7 @@ class PositionsController < ApplicationController
 
   def show
     @position = Position.find_by(ll_code: params[:id])
+    @top_3 = @position.top_3
     @cube = @position.as_cube
   end
 end

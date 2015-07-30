@@ -1,7 +1,7 @@
 # The Positions table contains a static data set of 3916 LL positions. Once initialized, it will never
 # change. It could live in memory instead of (or in addition to) the DB, and maybe that's a future feature.
 class Position < ActiveRecord::Base
-  has_many :combo_algs, -> { order "length, base_alg2_id DESC" }
+  has_many :combo_algs, -> { order "length, moves, base_alg2_id DESC" }
   belongs_to :best_alg, class_name: 'ComboAlg'
 
   enum corner_swap: [ :no, :left, :right, :back, :front, :diagonal]
@@ -120,6 +120,12 @@ class Position < ActiveRecord::Base
       yield(pos)
       pos.save
     end
+  end
+
+  def top_3
+    dupes = Set.new
+    uniques = combo_algs.select { |alg| dupes.add? alg.moves }
+    uniques.first(3)
   end
 
   def self.generate_all # All LL positions

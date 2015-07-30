@@ -56,7 +56,7 @@
 %h5{style: 'position: absolute; top:0; right:0; '}
   = link_to "H codes", "http://www.ai.univ-paris8.fr/~bh/cube/solutions_tout.html"
 
-=form_tag url_for(controller: "positions", action: "index"), method: 'get', class: "search_form" do
+=form_tag url_for(controller: "positions", action: "index"), method: 'get' do
   =hidden_field_tag(:ol, @db_query['oll'])
   =hidden_field_tag(:cl, @db_query['corner_look'])
   =hidden_field_tag(:eo, @db_query['edge_orientations'])
@@ -64,11 +64,11 @@
   -#%div
   -#  =label_tag(:cp, "Swapped corners")
   -#  =select_tag(:cp, options_for_select(["None", "Adjacent", "Diagonal"], @cp_param), include_blank: true)
-  %div
-    =label_tag(:im, "Show Mirrors")
-    =select_tag(:im, options_for_select(["No", "Yes"], @show_mirrors))
-  %div
-    =submit_tag("Reload")
+  -#%div
+  -#  =label_tag(:im, "Show Mirrors")
+  -#  =select_tag(:im, options_for_select(["No", "Yes"], @show_mirrors))
+  -#%div
+  -#  =submit_tag("Reload")
 
 
 %h5
@@ -84,7 +84,6 @@
   %th EO
   %th EP
   %th OLL
-  %th Wt
   %th Solutions
   %th Best Solution
   %th Moves
@@ -99,7 +98,6 @@
       %td= render 'svg_cube', iconf: EoIcons.by_code(pos.eo_code), size: 25, no_name: true
       %td= render 'svg_cube', iconf: EpIcons.by_code(pos.ep_code), size: 25, no_name: true
       %td= render 'svg_cube', iconf: OllIcons.by_code(pos.oll), size: 25, no_name: true
-      %td= pos.weight > 1 ? "×#{pos.weight}" : ""
       %td.num= pos.alg_count
       %td
         =best.mv_start

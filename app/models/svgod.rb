@@ -109,22 +109,22 @@ class Svgod
     {d: path, transform: transforms.join(' ')}
   end
 
-  def self.double_arrow_pts(lh, lw, ah, aw, cx=50, cy=50)
+  def self.double_arrow_points(line_h, line_w, head_h, head_w, cx=50, cy=50)
   [
-    Point.new(cx-lw,    cy-lh),
-    Point.new(cx-lw-aw, cy-lh),
-    Point.new(cx,       cy-lh-ah),
-    Point.new(cx+lw+aw, cy-lh),
-    Point.new(cx+lw,    cy-lh),
-    Point.new(cx+lw,    cy+lh),
-    Point.new(cx+lw+aw, cy+lh),
-    Point.new(cx,       cy+lh+ah),
-    Point.new(cx-lw-aw, cy+lh),
-    Point.new(cx-lw,    cy+lh),
+    Point.new(cx-line_w,        cy-line_h),
+    Point.new(cx-line_w-head_w, cy-line_h),
+    Point.new(cx,               cy-line_h-head_h),
+    Point.new(cx+line_w+head_w, cy-line_h),
+    Point.new(cx+line_w,        cy-line_h),
+    Point.new(cx+line_w,        cy+line_h),
+    Point.new(cx+line_w+head_w, cy+line_h),
+    Point.new(cx,               cy+line_h+head_h),
+    Point.new(cx-line_w-head_w, cy+line_h),
+    Point.new(cx-line_w,        cy+line_h),
   ]
   end
 
-  def self.single_arrow_pts(line_h, line_w, head_h, head_w, cx=50, cy=50)
+  def self.single_arrow_points(line_h, line_w, head_h, head_w, cx=50, cy=50)
   [
     Point.new(cx-line_w,        cy-line_h),
     Point.new(cx-line_w-head_w, cy-line_h),
@@ -157,32 +157,26 @@ class Svgod
   end
 
   def self.long_double
-    points = double_arrow_pts(22, 1, 7, 4)
-    path(points)
+    @long_double ||= path(double_arrow_points(22, 1, 7, 4))
   end
 
   def self.short_double
-    points = double_arrow_pts(12, 1, 7, 4, 70)
-    path(points)
+    @short_double ||= path(double_arrow_points(12, 1, 7, 4, 70))
   end
 
   def self.long_single
-    points = single_arrow_pts(18, 1, 7, 4)
-    path(points)
+    @long_single ||= path(single_arrow_points(18, 1, 7, 4))
   end
 
   def self.short_single
-    points = single_arrow_pts(12, 1, 7, 4, 73)
-    path(points)
+    @short_single ||= path(single_arrow_points(12, 1, 7, 4, 73))
   end
 
   def self.short_single_reverse
-    points = single_arrow_pts(-12, -1, -7, -4, 73)
-    path(points)
+    @short_single_reverse ||= path(single_arrow_points(-12, -1, -7, -4, 73))
   end
 
   def self.diagonal
-    points = double_arrow_pts(34, 1, 7, 4)
-    path(points)
+    @diagonal ||= path(double_arrow_points(34, 1, 7, 4))
   end
 end

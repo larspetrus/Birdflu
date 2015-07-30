@@ -16,9 +16,8 @@
     text-align: right;
     padding-right: 6px;
   }
-  .one-alg {
-    background: #bbffbb;
-  }
+  .one-alg { background: #ccffcc; }
+  .top3    { background: #ffeeaa; }
 }
 
 .rp160 {
@@ -27,13 +26,6 @@
   float:left;
   font-size: 9px;
   margin: 6px;
-}
-
-.search_form {
-  width: 300px;
-  background-color: #dfd;
-  border: 2px dotted #aaa;
-  padding: 8px;
 }
 
 .leftmenu {
@@ -202,7 +194,7 @@ $ep-f: red;
 $ep-l: #07f;
 $ep-1: #def;
 $ep-2: #adf;
-$ignored: #ddd;
+$ignored: #d7d7d7;
 
 .ll-icon {
   .oll-color { background-color: $oll !important; }

@@ -1,6 +1,6 @@
 .leftmenu= link_to 'Search page', root_url
 - if @position.has_mirror
-  .leftmenu= link_to "Mirror", "#{@position.mirror_ll_code}"
+  .leftmenu= link_to "Mirror Position", "#{@position.mirror_ll_code}"
 
 .right= render 'll_icon', pos: OllIcons.by_code(@position.oll), add_class: ''
 .right= render 'll_icon', pos: EoIcons.by_code(@position.edge_orientations), add_class: ''
@@ -53,26 +53,30 @@
       %td.f{class: @cube.css(:URF,:F)}
       %td.none
 
-- @position.combo_algs.first(3).each do |f3|
-  .roofpig.rp160{:'data-config' => "base=AD | alg=#{f3.moves} | flags=showalg #{f3.setup_moves}" }
-    =f3.name
+- @top_3.each do |t3|
+  .roofpig.rp160{:'data-config' => "base=AD | alg=#{t3.moves} | flags=showalg #{t3.setup_moves}" }
+    =t3.name
 
 %hr{style: 'clear:both;'}
 
+- dupes = Set.new
 %table.index
   %th Moves
   %th Name
   %th Alg
+  %th Composition
   - @position.combo_algs.each do |alg|
     %tr
-      %td= alg.length
-      %td{:class => alg.oneAlg? ? 'one-alg' : ''}= alg.name
+      %td= alg.length unless dupes.include? alg.moves
+      %td{class: alg.oneAlg? ? 'one-alg' : ''}= alg.name
+      %td{class: @top_3.include?(alg) ? 'top3' : ''}= alg.moves unless dupes.include? alg.moves
       %td
         = alg.mv_start
         %span.cancel1= alg.mv_cancel1
         %span.merged=  alg.mv_merged
         %span.cancel2= alg.mv_cancel2
         %span.alg2=    alg.mv_end
+    - dupes << alg.moves
 
 
 %script{src: "http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"}

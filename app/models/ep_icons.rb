@@ -1,6 +1,6 @@
 class EpIcons < LlIcons
 
-  def initialize(code, stickers)
+  def initialize(code)
     super(:ep, code.to_sym)
     @name = (@is_none ? 'NONE' : 'P' + code)
     @arrows = []
@@ -47,30 +47,30 @@ class EpIcons < LlIcons
   end
 
   ALL = [
-      self.new(:'', []),
-      self.new('1111', %w(U U U U)),
-      self.new('1335', %w(U U U U)),
-      self.new('3351', %w(U U U U)),
-      self.new('3513', %w(U U U U)),
-      self.new('1577', %w(U U U U)),
-      self.new('7157', %w(U U U U)),
-      self.new('5133', %w(U U U U)),
-      self.new('5771', %w(U U U U)),
-      self.new('7715', %w(U U U U)),
-      self.new('5555', %w(U U U U)),
-      self.new('3737', %w(U U U U)),
-      self.new('7373', %w(U U U U)),
-      self.new('7777', %w(U U U U)),
-      self.new('7113', %w(U U U U)),
-      self.new('1137', %w(U U U U)),
-      self.new('7355', %w(U U U U)),
-      self.new('3557', %w(U U U U)),
-      self.new('5151', %w(U U U U)),
-      self.new('3711', %w(U U U U)),
-      self.new('3333', %w(U U U U)),
-      self.new('5735', %w(U U U U)),
-      self.new('1371', %w(U U U U)),
-      self.new('1515', %w(U U U U)),
-      self.new('5573', %w(U U U U)),
+      self.new(:''),
+      self.new('1111'),
+      self.new('1335'),
+      self.new('3351'),
+      self.new('3513'),
+      self.new('1577'),
+      self.new('7157'),
+      self.new('5133'),
+      self.new('5771'),
+      self.new('7715'),
+      self.new('5555'),
+      self.new('3737'),
+      self.new('7373'),
+      self.new('7777'),
+      self.new('7113'),
+      self.new('1137'),
+      self.new('7355'),
+      self.new('3557'),
+      self.new('5151'),
+      self.new('3711'),
+      self.new('3333'),
+      self.new('5735'),
+      self.new('1371'),
+      self.new('1515'),
+      self.new('5573'),
   ]
 end
