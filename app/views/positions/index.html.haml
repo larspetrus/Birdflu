@@ -103,25 +103,27 @@
       %td{:class => best.oneAlg? ? 'one-alg' : ''}= best.name
 
 :javascript
-  $(".ll-icon, .svg-icon").on("click", function() {
+  $('.ll-icon, .svg-icon').on('click', function() {
     var field = $(this).data('hidden-field-selector');
-    if (field === "#cl" || field === "#ol") {
-      $("#eo, #ep").val('');
+    if (field === '#cl' || field === '#ol') {
+      $('#eo, #ep').val('');
     }
     $(field).val($(this).data('code'));
     $('form').submit();
   });
 
-  // $.extend( {SPECIFICS}, {resizable: false, modal: true, position: { my: "left top", at: "left top", of: $$$ } )
-  $("#oll-selected").on("mouseover", function() {
-    $("#oll-picker").dialog({ width: '580px', modal: true, title: "Corner and edge orientation (OLL)", position: { my: "left top", at: "left top", of: "#oll-selected" }});
+  function opts(specifics, field) {
+    return $.extend(specifics, {resizable: false, modal: true, position: {my: 'left top', at: 'left top', of: field + '-selected'}})
+  }
+  $('#oll-selected').on('mouseover', function() {
+    $('#oll-picker').dialog(opts({ width: '580px', title: 'Corner and edge orientation (OLL)'}, '#oll'));
   });
-  $("#cop-selected").on("mouseover", function() {
-    $("#cop-picker").dialog({ width: '500px', modal: true, title: "Corner orientation and position (COP)", position: { my: "left top", at: "left top", of: "#cop-selected" }});
+  $('#cop-selected').on('mouseover', function() {
+    $('#cop-picker').dialog(opts({ width: '500px', title: 'Corner orientation and position (COP)'}, '#cop'));
   });
-  $("#eo-selected").on("mouseover", function() {
-    $("#eo-picker").dialog({ width: '479px', modal: true, title: "Edge orientation (EO)", position: { my: "left top", at: "left top", of: "#eo-selected" }});
+  $('#eo-selected').on('mouseover', function() {
+    $('#eo-picker').dialog(opts({ width: '479px', title: 'Edge orientation (EO)'}, '#eo'));
   });
-  $("#ep-selected").on("mouseover", function() {
-    $("#ep-picker").dialog({ width: '562px', modal: true, title: "Edge position (EP)", position: { my: "left top", at: "left top", of: "#ep-selected" }});
+  $('#ep-selected').on('mouseover', function() {
+    $('#ep-picker').dialog(opts({ width: '562px', title: 'Edge position (EP)'}, '#ep'));
   });
