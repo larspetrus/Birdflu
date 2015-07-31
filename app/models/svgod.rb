@@ -63,7 +63,7 @@ class Svgod
         color ||= 'white-hole'
       end
       if color
-        result << {class: color}.merge!(@@dimensions[sticker])
+        result << {class: color}.merge!(@@dimensions[sticker]) #'shape-rendering'=>"crispEdges"
       end
     end
     result

@@ -1,4 +1,4 @@
-.leftmenu= link_to 'Search page', root_url
+.leftmenu= link_to 'Back to Search', :back
 - if @position.has_mirror
   .leftmenu= link_to "Mirror Position", "#{@position.mirror_ll_code}"
 
@@ -9,16 +9,16 @@
 
 %br{clear: 'both'}
 
-.right= render 'svg_cube', iconf: OllIcons.by_code(@position.oll), size: 88
-.right= render 'svg_cube', iconf: EoIcons.by_code(@position.edge_orientations), size: 88
-.right= render 'svg_cube', iconf: EpIcons.by_code(@position.edge_positions), size: 88
-.right= render 'svg_cube', iconf: CopIcons.by_code(@position.corner_look), size: 88
+.right= render 'svg_cube', iconf: OllIcons.by_code(@position.oll), size: 70
+.right= render 'svg_cube', iconf: EoIcons.by_code(@position.edge_orientations), size: 70
+.right= render 'svg_cube', iconf: EpIcons.by_code(@position.edge_positions), size: 70
+.right= render 'svg_cube', iconf: CopIcons.by_code(@position.corner_look), size: 70
 
 %br{clear: 'both'}
 
 %h3 Position #{@position.ll_code}
 
-= render 'svg_cube', iconf: BigIcon.new(@cube, CopIcons.by_code(@position.corner_look).arrows), size: 122, add_class: 'show-centers'
+= render 'svg_cube', iconf: BigIcon.new(@cube, CopIcons.by_code(@position.corner_look).arrows), size: 140, add_class: 'show-centers'
 
 - @top_3.each do |t3|
   .roofpig.rp160{:'data-config' => "base=AD | alg=#{t3.moves} | flags=showalg #{t3.setup_moves}" }
@@ -46,5 +46,4 @@
     - dupes << alg.moves
 
 
-%script{src: "http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"}
 %script ROOFPIG_CONF_AD = "solved=U-| hover=3"

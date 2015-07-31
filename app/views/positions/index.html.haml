@@ -1,4 +1,4 @@
-%h1 Grail Moth
+%h2{style: "text-align: center;"} #{@joke_header}
 
 %table
   %tr
@@ -10,7 +10,6 @@
     %td
       #cop-selected= render 'll_icon', pos: @cop_selected, add_class: 'selected'
       #cop-picker
-        %h4 Corner orientation and position (COP)
         %table.icon-grid
           - @cop_rows.each do |cl_row|
             %tr
@@ -20,7 +19,6 @@
     %td
       #eo-selected= render 'll_icon', pos: @eo_selected, add_class: 'selected'
       #eo-picker
-        %h4 Edge orientation (EO)
         %table.icon-grid-h
           - @eo_rows.each do |eo_row|
             %tr
@@ -31,7 +29,6 @@
       -##ep-selected= render 'll_icon', pos: @ep_selected, add_class: 'selected'
       #ep-selected= render 'svg_cube', iconf: @ep_selected, size: 44, add_class: 'selected'
       #ep-picker
-        %h4 Edge position (EP)
         %table.icon-grid-h
           - @ep_rows.each do |ep_row|
             %tr
@@ -42,7 +39,6 @@
     %td
       #oll-selected= render 'll_icon', pos: @oll_selected, add_class: 'selected'
       #oll-picker
-        %h4 Corner and edge orientation (OLL)
         %table.icon-grid-h
           - @oll_rows.each do |oll_row|
             %tr
@@ -67,8 +63,6 @@
   -#%div
   -#  =label_tag(:im, "Show Mirrors")
   -#  =select_tag(:im, options_for_select(["No", "Yes"], @show_mirrors))
-  -#%div
-  -#  =submit_tag("Reload")
 
 
 %h5
@@ -109,53 +103,25 @@
       %td{:class => best.oneAlg? ? 'one-alg' : ''}= best.name
 
 :javascript
-  $(".ll-icon").on("click", function() {
-    $($(this).data('hidden-field-selector')).val($(this).data('code'));
+  $(".ll-icon,.svg-icon").on("click", function() {
+    var field = $(this).data('hidden-field-selector');
+    if (field === "#cl" || field === "#oll") {
+      $("#eo,#ep").val('');
+    }
+    $(field).val($(this).data('code'));
     $('form').submit();
   });
 
-  $(".svg-icon").on("click", function() {
-    $($(this).data('hidden-field-selector')).val($(this).data('code'));
-    $('form').submit();
-  });
 
-
-  $("#oll-picker").hide();
   $("#oll-selected").on("mouseover", function() {
-    $("#oll-picker").show();
-    $("#oll-selected").hide();
+    $("#oll-picker").dialog({ width: '580px', modal: true, title: "Corner and edge orientation (OLL)"});
   });
-  $("#oll-picker").on("mouseleave", function() {
-    $("#oll-picker").hide();
-    $("#oll-selected").show();
-  });
-
-  $("#cop-picker").hide();
   $("#cop-selected").on("mouseover", function() {
-    $("#cop-picker").show();
-    $("#cop-selected").hide();
+    $("#cop-picker").dialog({ width: '500px', modal: true, title: "Corner orientation and position (COP)"});
   });
-  $("#cop-picker").on("mouseleave", function() {
-    $("#cop-picker").hide();
-    $("#cop-selected").show();
-  });
-
-  $("#eo-picker").hide();
   $("#eo-selected").on("mouseover", function() {
-    $("#eo-picker").show();
-    $("#eo-selected").hide();
+    $("#eo-picker").dialog({ width: '479px', modal: true, title: "Edge orientation (EO)"});
   });
-  $("#eo-picker").on("mouseleave", function() {
-    $("#eo-picker").hide();
-    $("#eo-selected").show();
-  });
-
-  $("#ep-picker").hide();
   $("#ep-selected").on("mouseover", function() {
-    $("#ep-picker").show();
-    $("#ep-selected").hide();
-  });
-  $("#ep-picker").on("mouseleave", function() {
-    $("#ep-picker").hide();
-    $("#ep-selected").show();
+    $("#ep-picker").dialog({ width: '562px', modal: true, title: "Edge position (EP)"});
   });

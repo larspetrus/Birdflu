@@ -53,7 +53,7 @@ $narrow: 3px;
   float: left;
   &:hover {
     .u {
-      background-color:yellow;
+      background-color: #bbb;
     }
     th {
       color:yellow;
@@ -142,7 +142,7 @@ $ignored: #d7d7d7;
     text-align: center;
   }
   &:hover {
-    background-color:yellow;
+    background-color:#bbb;
     .name {
       color:yellow;
       background-color:purple;
@@ -214,21 +214,8 @@ td:last-child.icon-grid-h {
   border-right: none;
 }
 
-#oll-picker {
-  display: table;
-  border: solid 2px purple;
-}
-#cop-picker {
-  display: table;
-  border: solid 2px green;
-}
-#eo-picker {
-  display: table;
-  border: solid 2px pink;
-}
-#ep-picker {
-  display: table;
-  border: solid 2px black;
+#oll-picker, #cop-picker, #eo-picker, #ep-picker {
+  display: none;
 }
 // ------------ Alg sections
 .cancel1 {

@@ -33,6 +33,8 @@ class PositionsController < ApplicationController
     @cop_rows = CopIcons.grid
     @eo_rows = EoIcons::grid
     @ep_rows = EpIcons.grid
+
+    @joke_header = ['Grail Moth', 'Oral Might', 'A Girl Moth', 'Ham To Girl', 'Roam Light', 'Mortal Sigh', 'A Grim Sloth', 'Glamor Shit', 'Solar Might'].sample
   end
 
   def show
