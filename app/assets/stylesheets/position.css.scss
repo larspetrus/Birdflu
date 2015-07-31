@@ -14,7 +14,7 @@ $d_color: #eee;
 .index {
   border-collapse: collapse;
   border: 1px solid #ddd;
-  tr:nth-child(4n) {background: #eee}
+  tr:nth-child(4n) {background: #eee; border: solid 1px #ddd;}
   th, td {
     font-size: 11px;
     border-left: 1px solid #ddd;
@@ -123,17 +123,17 @@ $cop: #0c0;
 $eo: #fb0;
 $ep-1: #def;
 $ep-2: #adf;
-$ignored: #d7d7d7;
+$ignore: #d7d7d7;
 
 .ll-icon {
-  .oll-color { background-color: $oll !important; }
-  .cop-color { background-color: #0c0 !important; }
-  .eo-color { background-color: #fb0 !important; }
+  .oll { background-color: $oll !important; }
+  .cop { background-color: #0c0 !important; }
+  .eo { background-color: #fb0 !important; }
 
-  .ep-1-color { background-color: $ep-1 !important; }
-  .ep-2-color { background-color: $ep-2 !important; }
+  .ep-1 { background-color: $ep-1 !important; }
+  .ep-2 { background-color: $ep-2 !important; }
 
-  .ignored-color { background-color: $ignored; }
+  .ignore { background-color: $ignore; }
 }
 
 .svg-icon {
@@ -174,15 +174,15 @@ svg {
   .u-color { fill: $u_color; }
   .d-color { fill: $d_color; }
 
-  .oll-color { fill: $oll; }
-  .cop-color { fill: $cop; }
-  .eo-color  { fill: $eo; }
+  .oll { fill: $oll; }
+  .cop { fill: $cop; }
+  .eo  { fill: $eo; }
 
-  .ep-1-color { fill: $ep-1; }
-  .ep-2-color { fill: $ep-2; }
-  .ep--color  { fill: white; }
+  .ep-1 { fill: $ep-1; }
+  .ep-2 { fill: $ep-2; }
+  .ep-  { fill: white; }
 
-  .ignored-color { fill: $ignored; }
+  .ignore { fill: $ignore; }
 
   .white-hole { fill: white; }
 }

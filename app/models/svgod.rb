@@ -142,18 +142,18 @@ class Svgod
     points.each do |pt|
       cmd =
           if not prev
-            "M#{pt.x} #{pt.y} "
+            "M#{pt.x} #{pt.y}"
           elsif pt.x == prev.x
-            "V#{pt.y} "
+            "V#{pt.y}"
           elsif pt.y == prev.y
-            "H#{pt.x} "
+            "H#{pt.x}"
           else
-            "L#{pt.x} #{pt.y} "
+            "L#{pt.x} #{pt.y}"
           end
       result += cmd
       prev = pt
     end
-    result + " Z"
+    result + "Z"
   end
 
   def self.long_double

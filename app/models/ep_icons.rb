@@ -11,7 +11,7 @@ class EpIcons < LlIcons
     code.length.times do |i|
       offset = '1357'.index(code[i])
       sc = ['', 1, 2, 1][offset]
-      @colors[edges[i]] = "ep-#{sc}-color"
+      @colors[edges[i]] = "ep-#{sc}"
 
       from, to = edge_sides[i], edge_sides[(i + offset) % 4]
       if edge_shifts[to] == from
@@ -25,7 +25,7 @@ class EpIcons < LlIcons
   end
 
   def base_colors
-    set_colors('ignored-color', :U, :ULB_U, :UBR_U, :UFL_U, :URF_U)
+    set_colors('ignore', :U, :ULB_U, :UBR_U, :UFL_U, :URF_U)
   end
 
   def self.by_code(code)

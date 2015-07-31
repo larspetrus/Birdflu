@@ -17,7 +17,7 @@ RSpec.describe OllIcons, :type => :model do
 
     expect(o25.name).to eq('OLL 25')
     expect(o25.code).to eq(:o25)
-    expect(o25.colors[:ULB_U]).to eq('oll-color')
+    expect(o25.colors[:ULB_U]).to eq('oll')
     expect(o25.colors[:ULB_L]).to eq(nil)
   end
 

@@ -6,12 +6,12 @@ class OllIcons < LlIcons
 
     pieces = %w(ULB_ UB_ UBR_ UL_ UR_ UFL_ UF_ URF_)
     stickers.each_with_index do |sticker, i|
-      @colors[(pieces[i] + sticker).to_sym] = 'oll-color'
+      @colors[(pieces[i] + sticker).to_sym] = 'oll'
     end
   end
 
   def base_colors
-    @colors = { U: 'oll-color' }
+    @colors = { U: 'oll' }
   end
 
   def self.by_code(code)

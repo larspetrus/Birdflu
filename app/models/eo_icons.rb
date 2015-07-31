@@ -6,13 +6,13 @@ class EoIcons < LlIcons
 
     pieces = %w(UB_ UR_ UF_ UL_)
     stickers.each_with_index do |sticker, i|
-      @colors[(pieces[i] + sticker).to_sym] = 'eo-color'
+      @colors[(pieces[i] + sticker).to_sym] = 'eo'
     end
   end
 
   def base_colors
-    @colors = { U: 'eo-color'}
-    set_colors('ignored-color', :ULB_U, :UBR_U, :UFL_U, :URF_U)
+    @colors = { U: 'eo'}
+    set_colors('ignore', :ULB_U, :UBR_U, :UFL_U, :URF_U)
   end
 
   def self.by_code(code)

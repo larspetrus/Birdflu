@@ -7,13 +7,13 @@ class CopIcons < LlIcons
 
     pieces = %w(ULB_ UBR_ UFL_ URF_)
     stickers.each_with_index do |sticker, i|
-      @colors[(pieces[i] + sticker).to_sym] = 'cop-color'
+      @colors[(pieces[i] + sticker).to_sym] = 'cop'
     end
   end
 
   def base_colors
-    @colors = { U: 'cop-color'}
-    set_colors('ignored-color', :UB_U, :UL_U, :UR_U, :UF_U)
+    @colors = { U: 'cop'}
+    set_colors('ignore', :UB_U, :UL_U, :UR_U, :UF_U)
   end
 
   def self.by_code(code)
