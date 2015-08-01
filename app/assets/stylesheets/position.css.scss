@@ -11,7 +11,12 @@ $l_color: #07f;
 $u_color: yellow;
 $d_color: #eee;
 
+.center {
+  margin: 0 auto;
+}
+
 .index {
+  margin: 0 auto;
   border-collapse: collapse;
   border: 1px solid #ddd;
   tr:nth-child(4n) {background: #eee; border: solid 1px #ddd;}
@@ -149,9 +154,10 @@ $ignore: #d7d7d7;
     }
   }
 }
-.show-centers svg {
-  border: dotted 2px;
-  padding: 4px;
+.big-icon svg {
+  border: dotted 4px;
+  padding: 8px;
+  margin: 10px;
   border-color: $b_color $r_color $f_color $l_color;
   path.edge {
     fill-opacity: 0.7;
