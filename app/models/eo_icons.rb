@@ -19,6 +19,11 @@ class EoIcons < LlIcons
     code ||= ''
     ALL.find { |op| op.code == code.to_sym }
   end
+
+  def self.for(position)
+    by_code(position.edge_orientations)
+  end
+
   def self.grid
     @@grid ||=
         [

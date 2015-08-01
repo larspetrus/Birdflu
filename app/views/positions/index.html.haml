@@ -88,10 +88,10 @@
     %tr
       %td= link_to pos.ll_code, "positions/#{pos.ll_code}"
       %td= link_to pos.mirror_ll_code, "positions/#{pos.mirror_ll_code}" if pos.ll_code != pos.mirror_ll_code
-      %td= render 'svg_cube', iconf: CopIcons.by_code(pos.corner_look), size: 25, no_name: true
-      %td= render 'svg_cube', iconf: EoIcons.by_code(pos.eo_code), size: 25, no_name: true
-      %td= render 'svg_cube', iconf: EpIcons.by_code(pos.ep_code), size: 25, no_name: true
-      %td= render 'svg_cube', iconf: OllIcons.by_code(pos.oll), size: 25, no_name: true
+      %td= render 'svg_cube', iconf: CopIcons.for(pos), size: 25, no_name: true
+      %td= render 'svg_cube', iconf: EoIcons.for(pos),  size: 25, no_name: true
+      %td= render 'svg_cube', iconf: EpIcons.for(pos),  size: 25, no_name: true
+      %td= render 'svg_cube', iconf: OllIcons.for(pos), size: 25, no_name: true
       %td.num= pos.alg_count
       %td
         =best.mv_start
@@ -104,7 +104,7 @@
 
 :javascript
   $('.ll-icon, .svg-icon').on('click', function() {
-    var field = $(this).data('hidden-field-selector');
+    var field = $(this).data('field');
     if (field === '#cl' || field === '#ol') {
       $('#eo, #ep').val('');
     }

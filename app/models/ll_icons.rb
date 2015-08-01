@@ -1,10 +1,10 @@
 class LlIcons
-  attr_reader :code, :name, :arrows, :hidden_field_selector, :colors
+  attr_reader :code, :name, :arrows, :field, :colors
 
-  def initialize(hidden_field, code)
+  def initialize(form_field, code)
     @is_none = code == :''
 
-    @hidden_field_selector = "##{hidden_field}"
+    @field = "##{form_field}"
     @code = code
     @arrows = []
 

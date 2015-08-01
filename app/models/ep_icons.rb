@@ -33,6 +33,10 @@ class EpIcons < LlIcons
     ALL.find { |op| op.code == code.to_sym }
   end
 
+  def self.for(position)
+    by_code(position.edge_positions)
+  end
+
   def self.grid
     @@grid ||=
         [

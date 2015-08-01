@@ -70,43 +70,40 @@ class Svgod
   end
 
   def self.arrow_on(place)
-    transforms = []
 
-    case place
-      when :L, :R, :B, :F, :LdR, :BdF
-        path = long_double
-        if [:B, :LdR, :F].include? place
-          transforms << "rotate(90, 50, 50)"
-        end
+    result =
+      case place
+        when :L, :R, :B, :F, :LdR, :BdF
+          transforms = []
+          if [:B, :LdR, :F].include? place
+            transforms << "rotate(90, 50, 50)"
+          end
 
-        if [:L, :R, :B, :F].include? place
-          offset = ([:R, :F].include?(place) ? @@sticker_distance : -@@sticker_distance)
-          transforms << "translate(#{offset}, 0)"
-        end
-      when :BdL, :BdR, :FdL, :FdR
-        path = short_double
-        angle = {FdR: 45, FdL: 135, BdL: 225, BdR: 315}[place]
-        transforms << "rotate(#{angle}, 50, 50)"
-      when :D
-        path = diagonal
-        transforms << "rotate(45, 50, 50)"
-      when :F2B, :B2F, :R2L, :L2R
-        path = long_single
-        angle = {F2B: 0, L2R: 90, B2F: 180, R2L: 270}[place]
-        transforms << "rotate(#{angle}, 50, 50)"
-      when :B2R, :R2F, :F2L, :L2B
-        path = short_single_reverse
-        angle = {R2F: 45, F2L: 135, L2B: 225, B2R: 315}[place]
-        transforms << "rotate(#{angle}, 50, 50)"
-      when :R2B, :F2R, :L2F, :B2L
-        path = short_single
-        angle = {F2R: 45, L2F: 135, B2L: 225, R2B: 315}[place]
-        transforms << "rotate(#{angle}, 50, 50)"
-      else
-        puts "Unknown arrow place '#{place}'"
-    end
+          if [:L, :R, :B, :F].include? place
+            offset = ([:R, :F].include?(place) ? @@sticker_distance : -@@sticker_distance)
+            transforms << "translate(#{offset}, 0)"
+          end
+          {d: long_double, transform: transforms.join(' ')}
+        when :BdL, :BdR, :FdL, :FdR
+          angle = {FdR: 45, FdL: 135, BdL: 225, BdR: 315}[place]
+          {d: short_double, transform: "rotate(#{angle}, 50, 50)"}
+        when :D
+          {d: diagonal, transform: "rotate(45, 50, 50)"}
+        when :F2B, :B2F, :R2L, :L2R
+          angle = {F2B: 0, L2R: 90, B2F: 180, R2L: 270}[place]
+          {d: long_single, transform: "rotate(#{angle}, 50, 50)"}
+        when :B2R, :R2F, :F2L, :L2B
+          angle = {R2F: 45, F2L: 135, L2B: 225, B2R: 315}[place]
+          {d: short_single_reverse, transform: "rotate(#{angle}, 50, 50)"}
+        when :R2B, :F2R, :L2F, :B2L
+          angle = {F2R: 45, L2F: 135, B2L: 225, R2B: 315}[place]
+          {d: short_single, transform: "rotate(#{angle}, 50, 50)"}
+        else
+          raise ArgumentError.new("Unknown arrow place '#{place}'")
+      end
 
-    {d: path, transform: transforms.join(' ')}
+    type = ([:L, :R, :B, :F, :D].include?(place) ? 'corner' : 'edge')
+    result.merge(class: type)
   end
 
   def self.double_arrow_points(line_h, line_w, head_h, head_w, cx=50, cy=50)

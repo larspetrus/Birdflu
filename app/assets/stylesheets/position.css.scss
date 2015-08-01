@@ -153,8 +153,14 @@ $ignore: #d7d7d7;
   border: dotted 2px;
   padding: 4px;
   border-color: $b_color $r_color $f_color $l_color;
-  path {
-    fill-opacity: 0.3;
+  path.edge {
+    fill-opacity: 0.7;
+  }
+  path.corner {
+    fill: #aaa;
+    stroke: white;
+    stroke-opacity: 0.8;
+    fill-opacity: 0.8;
   }
 }
 

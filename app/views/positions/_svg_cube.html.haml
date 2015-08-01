@@ -2,7 +2,7 @@
 - add_class ||= ''
 - no_name ||= false
 
-.svg-icon{data: { code: "#{iconf.code}", hidden_field_selector: "#{iconf.hidden_field_selector}" }, style: "width: #{size}px;", class: add_class}
+.svg-icon{data: { code: "#{iconf.code}", field: "#{iconf.field}" }, style: "width: #{size}px;", class: add_class}
   - unless no_name
     .name{style: "font-size: #{size*0.21}px;"}= iconf.name
   - cache([iconf.name, size], skip_digest: true) do

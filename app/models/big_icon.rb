@@ -2,7 +2,7 @@ class BigIcon
   attr_reader :name, :arrows
 
   def initialize(cube, arrows)
-    @name = ''
+    @name = cube.standard_ll_code
     @cube = cube
     @arrows = arrows
   end
@@ -16,7 +16,7 @@ class BigIcon
 
   end
 
-  def hidden_field_selector
+  def field
 
   end
 end

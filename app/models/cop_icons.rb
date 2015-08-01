@@ -21,6 +21,10 @@ class CopIcons < LlIcons
     ALL.find { |op| op.code == code.to_sym }
   end
 
+  def self.for(position)
+    by_code(position.corner_look)
+  end
+
   def self.grid
     @@grid ||=
       [

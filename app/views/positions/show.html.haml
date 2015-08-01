@@ -2,23 +2,23 @@
 - if @position.has_mirror
   .leftmenu= link_to "Mirror Position", "#{@position.mirror_ll_code}"
 
-.right= render 'll_icon', pos: OllIcons.by_code(@position.oll), add_class: ''
-.right= render 'll_icon', pos: EoIcons.by_code(@position.edge_orientations), add_class: ''
-.right= render 'll_icon', pos: EpIcons.by_code(@position.edge_positions), add_class: ''
-.right= render 'll_icon', pos: CopIcons.by_code(@position.corner_look), add_class: ''
+.right= render 'll_icon', pos: OllIcons.for(@position), add_class: ''
+.right= render 'll_icon', pos: EoIcons.for(@position), add_class: ''
+.right= render 'll_icon', pos: EpIcons.for(@position), add_class: ''
+.right= render 'll_icon', pos: CopIcons.for(@position), add_class: ''
 
 %br{clear: 'both'}
 
-.right= render 'svg_cube', iconf: OllIcons.by_code(@position.oll), size: 70
-.right= render 'svg_cube', iconf: EoIcons.by_code(@position.edge_orientations), size: 70
-.right= render 'svg_cube', iconf: EpIcons.by_code(@position.edge_positions), size: 70
-.right= render 'svg_cube', iconf: CopIcons.by_code(@position.corner_look), size: 70
+.right= render 'svg_cube', iconf: OllIcons.for(@position), size: 70
+.right= render 'svg_cube', iconf: EoIcons.for(@position), size: 70
+.right= render 'svg_cube', iconf: EpIcons.for(@position), size: 70
+.right= render 'svg_cube', iconf: CopIcons.for(@position), size: 70
 
 %br{clear: 'both'}
 
 %h3 Position #{@position.ll_code}
 
-= render 'svg_cube', iconf: BigIcon.new(@cube, CopIcons.by_code(@position.corner_look).arrows), size: 140, add_class: 'show-centers'
+= render 'svg_cube', iconf: BigIcon.new(@cube, EpIcons.for(@position).arrows + CopIcons.for(@position).arrows), size: 140, no_name: true, add_class: 'show-centers'
 
 - @top_3.each do |t3|
   .roofpig.rp160{:'data-config' => "base=AD | alg=#{t3.moves} | flags=showalg #{t3.setup_moves}" }
