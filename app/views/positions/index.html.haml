@@ -84,23 +84,24 @@
   %th Name
 
   - @positions.each do |pos|
-    - best = pos.best_alg || OpenStruct.new
-    %tr
-      %td= link_to pos.ll_code, "positions/#{pos.ll_code}"
-      %td= link_to pos.mirror_ll_code, "positions/#{pos.mirror_ll_code}" if pos.ll_code != pos.mirror_ll_code
-      %td= render 'svg_cube', iconf: CopIcons.for(pos), size: 25, no_name: true
-      %td= render 'svg_cube', iconf: EoIcons.for(pos),  size: 25, no_name: true
-      %td= render 'svg_cube', iconf: EpIcons.for(pos),  size: 25, no_name: true
-      %td= render 'svg_cube', iconf: OllIcons.for(pos), size: 25, no_name: true
-      %td.num= pos.alg_count
-      %td
-        =best.mv_start
-        %span.cancel1= best.mv_cancel1
-        %span.merged=  best.mv_merged
-        %span.cancel2= best.mv_cancel2
-        %span.alg2=    best.mv_end
-      %td.num= best.length
-      %td{:class => best.oneAlg? ? 'one-alg' : ''}= best.name
+    - cache([pos.ll_code, pos.alg_count], skip_digest: true) do
+      - best = pos.best_alg || OpenStruct.new
+      %tr
+        %td= link_to pos.ll_code, "positions/#{pos.ll_code}"
+        %td= link_to pos.mirror_ll_code, "positions/#{pos.mirror_ll_code}" if pos.ll_code != pos.mirror_ll_code
+        %td= render 'svg_cube', iconf: CopIcons.for(pos), size: 25, no_name: true
+        %td= render 'svg_cube', iconf: EoIcons.for(pos),  size: 25, no_name: true
+        %td= render 'svg_cube', iconf: EpIcons.for(pos),  size: 25, no_name: true
+        %td= render 'svg_cube', iconf: OllIcons.for(pos), size: 25, no_name: true
+        %td.num= pos.alg_count
+        %td
+          =best.mv_start
+          %span.cancel1= best.mv_cancel1
+          %span.merged=  best.mv_merged
+          %span.cancel2= best.mv_cancel2
+          %span.alg2=    best.mv_end
+        %td.num= best.length
+        %td{:class => best.oneAlg? ? 'one-alg' : ''}= best.name
 
 :javascript
   $('.ll-icon, .svg-icon').on('click', function() {
@@ -113,7 +114,9 @@
   });
 
   function opts(specifics, field) {
-    return $.extend(specifics, {resizable: false, modal: true, position: {my: 'left top', at: 'left top', of: field + '-selected'}})
+  var bind_closer = function(){ $('.ui-widget-overlay').bind('click',function(){ $(field+'-picker').dialog('close'); })};
+  var pos = { my: 'left top', at: 'left top', of: field+'-selected' };
+    return $.extend(specifics, {resizable: false, modal: true, position: pos, open: bind_closer});
   }
   $('#oll-selected').on('mouseover', function() {
     $('#oll-picker').dialog(opts({ width: '580px', title: 'Corner and edge orientation (OLL)'}, '#oll'));
