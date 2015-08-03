@@ -2,7 +2,9 @@ class EoIcons < LlIcons
 
   def initialize(code, stickers)
     super(:eo, code.to_sym)
-    @name = (@is_none ? 'NONE' : 'O' + code)
+
+    names = {'1111'=>'e4','1122'=>'eNE','1212'=>'eV','1221'=>'eNW','2112'=>'eSE','2121'=>'eH','2211'=>'eSW','2222'=>'e0'}
+    @name = (@is_none ? 'NONE' : names[code])
 
     pieces = %w(UB_ UR_ UF_ UL_)
     stickers.each_with_index do |sticker, i|

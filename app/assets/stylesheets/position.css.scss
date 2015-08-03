@@ -221,6 +221,9 @@ svg {
 
 table.icon-grid {
   border-collapse: collapse;
+  svg {
+    margin: 3px;
+  }
 }
 td.icon-grid {
   padding: 0;

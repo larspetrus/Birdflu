@@ -19,16 +19,19 @@
     %th OLL
   %tr#pickers
     %td
-      #cop-selected= render 'll_icon', pos: @cop_selected, add_class: 'selected'
+      -##cop-selected= render 'll_icon', pos: @cop_selected, add_class: 'selected'
+      #cop-selected= render 'svg_cube', iconf: @cop_selected, size: 44, add_class: 'selected'
       #cop-picker
         %table.icon-grid
           - @cop_rows.each do |cl_row|
             %tr
               - cl_row.each do |cl|
                 %td.icon-grid
-                  = render 'll_icon', pos: cl, add_class: cl.highlight(params[:cl]) if cl
+                  -#= render 'll_icon', pos: cl, add_class: cl.highlight(params[:cl]) if cl
+                  = render 'svg_cube', iconf: cl, size: 44, add_class: cl.highlight(params[:cl]) if cl
     %td
-      #eo-selected= render 'll_icon', pos: @eo_selected, add_class: 'selected'
+      -##eo-selected= render 'll_icon', pos: @eo_selected, add_class: 'selected'
+      #eo-selected= render 'svg_cube', iconf: @eo_selected, size: 44, add_class: 'selected'
       #eo-picker
         %table.icon-grid-h
           - @eo_rows.each do |eo_row|
@@ -48,7 +51,8 @@
                   -#= render 'll_icon', pos: ep, add_class: ep.highlight(params[:ep]) if ep
                   = render 'svg_cube', iconf: ep, size: 44, add_class: ep.highlight(params[:ep]) if ep
     %td
-      #oll-selected= render 'll_icon', pos: @oll_selected, add_class: 'selected'
+      -##oll-selected= render 'll_icon', pos: @oll_selected, add_class: 'selected'
+      #oll-selected= render 'svg_cube', iconf: @oll_selected, size: 44, add_class: 'selected'
       #oll-picker
         %table.icon-grid-h
           - @oll_rows.each do |oll_row|
@@ -131,7 +135,7 @@
     $('#oll-picker').dialog(opts({ width: '580px', title: 'Corner and edge orientation (OLL)'}, '#oll'));
   });
   $('#cop-selected').on('mouseover', function() {
-    $('#cop-picker').dialog(opts({ width: '500px', title: 'Corner orientation and position (COP)'}, '#cop'));
+    $('#cop-picker').dialog(opts({ width: '460px', title: 'Corner orientation and position (COP)'}, '#cop'));
   });
   $('#eo-selected').on('mouseover', function() {
     $('#eo-picker').dialog(opts({ width: '479px', title: 'Edge orientation (EO)'}, '#eo'));
