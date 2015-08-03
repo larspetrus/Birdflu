@@ -15,6 +15,21 @@ $d_color: #eee;
   margin: 0 auto;
 }
 
+h4, h5 {
+  text-align: center;
+  margin: 8px;
+}
+
+.welcome {
+  position: absolute;
+  top:8px;
+  left:8px;
+  float: left;
+  font-size: 10px;
+  background: #eee;
+  width: 200px;
+}
+
 .index {
   margin: 0 auto;
   border-collapse: collapse;

@@ -1,12 +1,23 @@
-%h2{style: "text-align: center;"} #{@joke_header}
+%h5{style: 'position: absolute; top:0; right:0; '}
+  = link_to "H codes", "http://www.ai.univ-paris8.fr/~bh/cube/solutions_tout.html"
 
-%table
+.welcome
+  %p
+    Welcome to the poorly implemented,
+    way pre-alpha LL AlgNotDB (aka "#{@joke_header}")!
+  %p
+    Narrow the search by selecting corner/edge
+    configurations (COP, EO, EP, OLL) to the right. Clicking the weird
+    code in the Position column brings up
+    a page for that position.
+
+%table.center
   %tr
     %th COP
     %th EO
     %th EP
     %th OLL
-  %tr
+  %tr#pickers
     %td
       #cop-selected= render 'll_icon', pos: @cop_selected, add_class: 'selected'
       #cop-picker
@@ -49,8 +60,6 @@
 %br{clear: 'both'}
 
 
-%h5{style: 'position: absolute; top:0; right:0; '}
-  = link_to "H codes", "http://www.ai.univ-paris8.fr/~bh/cube/solutions_tout.html"
 
 =form_tag url_for(controller: "positions", action: "index"), method: 'get' do
   =hidden_field_tag(:ol, @db_query['oll'])
@@ -65,13 +74,13 @@
   -#  =select_tag(:im, options_for_select(["No", "Yes"], @show_mirrors))
 
 
-%h5
-  Selected #{@position_count} of all #{Position.count} positions.
+%h4
+  Selected #{@position_count} of the #{Position.count} LL positions.
   - if @position_count != @positions.count
     Showing first #{@positions.count}
 %h5 Average best solve: #{@average}
 
-%table.index#blah
+%table.index
   %th Position
   %th Mirror Pos
   %th COP
@@ -115,7 +124,7 @@
 
   function opts(specifics, field) {
   var bind_closer = function(){ $('.ui-widget-overlay').bind('click',function(){ $(field+'-picker').dialog('close'); })};
-  var pos = { my: 'left top', at: 'left top', of: field+'-selected' };
+  var pos = { my: 'center top', at: 'center top', of: '#pickers' };
     return $.extend(specifics, {resizable: false, modal: true, position: pos, open: bind_closer});
   }
   $('#oll-selected').on('mouseover', function() {

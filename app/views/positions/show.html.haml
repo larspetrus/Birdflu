@@ -1,6 +1,8 @@
 .leftmenu= link_to 'Back to Search', :back
 - if @position.has_mirror
   .leftmenu= link_to "Mirror Position", "#{@position.mirror_ll_code}"
+- else
+  .leftmenu Self mirrored
 
 .right= render 'svg_cube', iconf: OllIcons.for(@position), size: 50
 .right= render 'svg_cube', iconf: EoIcons.for(@position), size: 50
@@ -8,11 +10,10 @@
 .right= render 'svg_cube', iconf: CopIcons.for(@position), size: 50
 
 .center{style: "width: 200px; "}
-
   = render 'svg_cube', iconf: BigIcon.new(@cube, EpIcons.for(@position).arrows + CopIcons.for(@position).arrows), size: 160, no_name: false, add_class: 'big-icon'
 
 .center{style: "width: 528px;"}
-  %h4.top3{style: "text-align: center; margin: 8px;"} Top 3 Algs
+  %h4.top3 Top 3 Algs
   - @top_3.each do |t3|
     .roofpig.rp160{:'data-config' => "base=AD | alg=#{t3.moves} | flags=showalg #{t3.setup_moves}" }
       =t3.name
