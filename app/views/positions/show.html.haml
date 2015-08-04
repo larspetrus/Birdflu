@@ -10,7 +10,7 @@
 .right= render 'svg_cube', iconf: CopIcons.for(@position), size: 50
 
 .center{style: "width: 200px; "}
-  = render 'svg_cube', iconf: BigIcon.new(@cube, EpIcons.for(@position).arrows + CopIcons.for(@position).arrows), size: 160, no_name: false, add_class: 'big-icon'
+  = render 'svg_cube', iconf: BigIcon.new(@cube, EpIcons.for(@position).arrows + CopIcons.for(@position).arrows), size: 160, add_class: 'big-icon'
 
 .center{style: "width: 528px;"}
   %h4.top3 Top 3 Algs
@@ -32,11 +32,12 @@
       %td{class: alg.oneAlg? ? 'one-alg' : ''}= alg.name
       %td{class: @top_3.include?(alg) ? 'top3' : ''}= alg.moves unless dupes.include? alg.moves
       %td
-        = alg.mv_start
-        %span.cancel1= alg.mv_cancel1
-        %span.merged=  alg.mv_merged
-        %span.cancel2= alg.mv_cancel2
-        %span.alg2=    alg.mv_end
+        - unless alg.oneAlg?
+          = alg.mv_start
+          %span.cancel1= alg.mv_cancel1
+          %span.merged=  alg.mv_merged
+          %span.cancel2= alg.mv_cancel2
+          %span.alg2=    alg.mv_end
     - dupes << alg.moves
 
 
