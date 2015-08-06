@@ -7,15 +7,13 @@
   %table.manage_algs
     %thead
       %th Name
+      %th Length
       %th Moves
-      %th Combos
     - @root_algs.each do |alg|
       %tr
         %td
           %label
-            = check_box_tag 'rootalgs[]', alg.id unless @counts[alg.id]
+            = check_box_tag 'rootalgs[]', alg.id unless alg.combined
             = alg.name
+        %td= alg.length
         %td= alg.moves
-        %td
-          - if @counts[alg.id]
-            = "Combined #{@counts[alg.id]} times"

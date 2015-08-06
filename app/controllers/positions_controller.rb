@@ -36,6 +36,8 @@ class PositionsController < ApplicationController
     @eo_rows = EoIcons::grid
     @ep_rows = EpIcons.grid
 
+    @combos = [ComboAlg.where('base_alg2_id is not null').count, ComboAlg.count]
+
     @joke_header = ['Grail Moth', 'Oral Might', 'A Girl Moth', 'Ham To Girl', 'Roam Light', 'Mortal Sigh', 'A Grim Sloth', 'Glamor Shit', 'Solar Might'].sample
   end
 

@@ -1,15 +1,14 @@
 class BaseAlgsController < ApplicationController
   def index
     BigThought.populate_db
-    @root_algs = BaseAlg.order(:id)
-    @counts = ComboAlg.group(:base_alg1_id).count
+    @root_algs = BaseAlg.where('id = root_base_id').order(:id)
   end
 
   def combine
     start = Time.now
-    @alg_ids = params[:rootalgs] || []
-    @alg_ids.each do |alg_id|
-      base_alg = BaseAlg.find(alg_id)
+    @root_ids = params[:rootalgs] || []
+    BaseAlg.where(root_base_id: @root_ids).each do |base_alg|
+      ComboAlg.find_by!(base_alg1_id: base_alg.id).update(single: false)
       BigThought.combine(base_alg)
     end
     @time = Time.now - start

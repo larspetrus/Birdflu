@@ -63,4 +63,9 @@ RSpec.describe BaseAlg, :type => :model do
     expect(BaseAlg.rotate_by_U("F U2 R' D B2 L'")).to eq("L U2 F' D R2 B'")
   end
 
+  it 'length' do
+    expect(BaseAlg.make('', "B U B' U B U2 B'").length).to eq(7)
+    expect(BaseAlg.make('', "B U2 B' U' R' U R U B U2 B'").length).to eq(11)
+  end
+
 end

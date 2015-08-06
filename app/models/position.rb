@@ -63,6 +63,10 @@ class Position < ActiveRecord::Base
     ll_code != mirror_ll_code
   end
 
+  def is_optimal(alg)
+    alg.length == optimal_alg_length
+  end
+
   def oll_code
     @ll_code_obj.oll_code
   end

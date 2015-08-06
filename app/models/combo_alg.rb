@@ -28,7 +28,7 @@ class ComboAlg < ActiveRecord::Base
   end
 
   def self.make_single(alg)
-    parms = {name: "- #{alg.name} -", base_alg1_id: alg.id, alg2_u_shift: 0 }
+    parms = {name: "- #{alg.name} -", base_alg1_id: alg.id, alg2_u_shift: 0, single: true }
     move_parms = merge_moves(alg.moves, '')
     self.align_moves(move_parms)
     ComboAlg.create(parms.merge(move_parms))
@@ -94,6 +94,12 @@ class ComboAlg < ActiveRecord::Base
 
   def oneAlg?
     not base_alg2
+  end
+
+  def css_kind
+    return 'single' if single
+    return 'one-alg' if oneAlg?
+    return ''
   end
 
   def is_aligned_with_ll_code

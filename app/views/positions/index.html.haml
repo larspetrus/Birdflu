@@ -1,5 +1,8 @@
-%h5{style: 'position: absolute; top:0; right:0; '}
+%h5{style: 'position: absolute; top:0px; right:0px; '}
   = link_to "H codes", "http://www.ai.univ-paris8.fr/~bh/cube/solutions_tout.html"
+
+%div{style: 'position: absolute; top:32px; right:0px; font-size: 8px;'}
+  #{@combos[0]} / #{@combos[1]}
 
 .welcome
   %p
@@ -114,7 +117,7 @@
           %span.cancel2= best.mv_cancel2
           %span.alg2=    best.mv_end
         %td.num= best.length
-        %td{:class => best.oneAlg? ? 'one-alg' : ''}= best.name
+        %td{:class => best.css_kind}= best.name
 
 :javascript
   $('.ll-icon, .svg-icon').on('click', function() {

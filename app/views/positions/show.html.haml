@@ -28,8 +28,8 @@
   %th Composition
   - @position.combo_algs.each do |alg|
     %tr
-      %td= alg.length unless dupes.include? alg.moves
-      %td{class: alg.oneAlg? ? 'one-alg' : ''}= alg.name
+      %td{class: @position.is_optimal(alg) ? 'optimal' : ''}= alg.length unless dupes.include? alg.moves
+      %td{class: alg.css_kind}= alg.name
       %td{class: @top_3.include?(alg) ? 'top3' : ''}= alg.moves unless dupes.include? alg.moves
       %td
         - unless alg.oneAlg?
@@ -41,4 +41,4 @@
     - dupes << alg.moves
 
 
-%script ROOFPIG_CONF_AD = "solved=U-| hover=3"
+%script ROOFPIG_CONF_AD = "solved=U-| hover=3 | speed=600"
