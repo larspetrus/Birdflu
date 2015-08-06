@@ -11,17 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150729191955) do
+ActiveRecord::Schema.define(version: 20150804160857) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "base_algs", force: true do |t|
-    t.string "name"
-    t.string "moves_u0"
-    t.string "moves_u1"
-    t.string "moves_u2"
-    t.string "moves_u3"
+    t.string  "name"
+    t.string  "moves_u0"
+    t.string  "moves_u1"
+    t.string  "moves_u2"
+    t.string  "moves_u3"
+    t.integer "root_base_id"
+    t.boolean "combined",     default: false
   end
 
   create_table "combo_algs", force: true do |t|
@@ -54,6 +56,7 @@ ActiveRecord::Schema.define(version: 20150729191955) do
     t.string  "oll"
     t.string  "edge_orientations"
     t.string  "edge_positions"
+    t.integer "optimal_alg_length"
   end
 
   add_index "positions", ["ll_code"], name: "index_positions_on_ll_code", using: :btree
