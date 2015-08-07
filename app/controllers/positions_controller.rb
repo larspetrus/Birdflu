@@ -17,11 +17,14 @@ class PositionsController < ApplicationController
     @db_query['is_mirror']        = false            if params[:im] == "No"
     @show_mirrors = (params[:im] == "No" ? "No" : "Yes")
 
-    @positions = Position.includes(:best_alg).where(@db_query).to_a.sort_by! {|pos| pos.best_alg_length}
+    @positions = Position.includes(:best_alg, :best_combo_alg).where(@db_query).to_a.sort_by! {|pos| pos.best_alg_length}
     @position_count = @positions.count
 
-    sum = @positions.reduce(0.0) { |sum, pos| sum + pos.best_alg_length }
-    @average = '%.2f' % (sum/@positions.count)
+    optimal_sum = @positions.reduce(0.0) { |sum, pos| sum + pos.best_alg_length }
+    @optimal_average = '%.2f' % (optimal_sum/@positions.count)
+
+    combo_sum = @positions.reduce(0.0) { |sum, pos| sum + pos.best_combo_alg.length }
+    @combo_average = '%.2f' % (combo_sum/@positions.count)
 
     @positions = @positions.first(100)
 

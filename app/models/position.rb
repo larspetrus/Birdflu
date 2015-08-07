@@ -3,6 +3,7 @@
 class Position < ActiveRecord::Base
   has_many :combo_algs, -> { order "length, moves, base_alg2_id DESC" }
   belongs_to :best_alg, class_name: 'ComboAlg'
+  belongs_to :best_combo_alg, class_name: 'ComboAlg'
 
   enum corner_swap: [ :no, :left, :right, :back, :front, :diagonal]
 
@@ -124,6 +125,14 @@ class Position < ActiveRecord::Base
       yield(pos)
       pos.save
     end
+  end
+
+  def best_optimal
+    combo_algs.where('base_alg2_id is null').first
+  end
+
+  def best_combo
+    combo_algs.where(single: false).first
   end
 
   def top_3

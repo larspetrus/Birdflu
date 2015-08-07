@@ -16,12 +16,12 @@ class BaseAlgsController < ApplicationController
     respond_to { |format| format.js }
   end
 
-  def update_positions
+  def update_positions # TODO: Invalidate cache. Handle exceptions
     start = Time.now
     ActiveRecord::Base.transaction do
       alg_counts = ComboAlg.group(:position_id).count
       Position.includes(:combo_algs).find_each do |p|
-        p.update(alg_count: alg_counts[p.id], best_alg_id: p.combo_algs[0].try(:id))
+        p.update(alg_count: alg_counts[p.id], best_alg_id: p.best_optimal.try(:id), best_combo_alg_id: p.best_combo.try(:id))
       end
     end
     @time = Time.now - start

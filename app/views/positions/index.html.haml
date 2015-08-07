@@ -85,7 +85,7 @@
   Selected #{@position_count} of the #{Position.count} LL positions.
   - if @position_count != @positions.count
     Showing first #{@positions.count}
-%h5 Average best solve: #{@average}
+%h5 Average optimal solve: #{@optimal_average}, Combo solve: #{@combo_average}
 
 %table.index
   %th Position
@@ -95,13 +95,14 @@
   %th EP
   %th OLL
   %th Solutions
-  %th Best Solution
-  %th Moves
+  %th{colspan: 2} Optimal Solution
+  %th{colspan: 2} Best Combo Solution
   %th Name
 
   - @positions.each do |pos|
     - cache([pos.ll_code, pos.alg_count], skip_digest: true) do
       - best = pos.best_alg || OpenStruct.new
+      - best_combo = pos.best_combo_alg || OpenStruct.new
       %tr
         %td= link_to pos.ll_code, "positions/#{pos.ll_code}"
         %td= link_to pos.mirror_ll_code, "positions/#{pos.mirror_ll_code}" if pos.ll_code != pos.mirror_ll_code
@@ -110,14 +111,16 @@
         %td= render 'svg_cube', iconf: EpIcons.for(pos),  size: 25, label: ''
         %td= render 'svg_cube', iconf: OllIcons.for(pos), size: 25, label: ''
         %td.num= pos.alg_count
+        %td.num.optimal= best.length
+        %td=best.moves
+        %td.num{class: pos.is_optimal(best_combo) ? 'optimal' : ''}= best_combo.length
         %td
-          =best.mv_start
-          %span.cancel1= best.mv_cancel1
-          %span.merged=  best.mv_merged
-          %span.cancel2= best.mv_cancel2
-          %span.alg2=    best.mv_end
-        %td.num= best.length
-        %td{:class => best.css_kind}= best.name
+          =best_combo.mv_start
+          %span.cancel1= best_combo.mv_cancel1
+          %span.merged=  best_combo.mv_merged
+          %span.cancel2= best_combo.mv_cancel2
+          %span.alg2=    best_combo.mv_end
+        %td{:class => best_combo.css_kind}= best_combo.name
 
 :javascript
   $('.ll-icon, .svg-icon').on('click', function() {
