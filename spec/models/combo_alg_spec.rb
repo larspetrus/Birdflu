@@ -74,4 +74,9 @@ RSpec.describe ComboAlg, :type => :model do
     expect(aligned.standard_ll_code).to eq(aligned.natural_ll_code)
   end
 
+  it 'normalizes algs' do
+    expect(ComboAlg.make_single(BaseAlg.make('Al', "F2 U L R' F2 R L' U F2")).moves).to eq("F2 U L R' F2 L' R U F2")
+    expect(ComboAlg.make_single(BaseAlg.make('70b', "F R U R' U B' U B U2 F' B' U B")).moves).to eq("F R U R' U B' U B U2 B' F' U B")
+  end
+
 end

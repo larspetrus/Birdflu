@@ -26,8 +26,10 @@ h4, h5 {
   left:8px;
   float: left;
   font-size: 10px;
+  color: grey;
   background: #eee;
   width: 200px;
+  z-index: -1;
 }
 
 .index {
@@ -146,6 +148,7 @@ $eo: #fb0;
 $ep-1: #def;
 $ep-2: #adf;
 $ignore: #d7d7d7;
+$selected: #aff;
 
 .ll-icon {
   .oll { background-color: $oll !important; }
@@ -189,7 +192,7 @@ $ignore: #d7d7d7;
 
 .selected {
   .name {
-    background-color: cyan;
+    background-color: $selected;
   }
 }
 
@@ -218,7 +221,7 @@ svg {
 
 
 .selected th {
-  background-color: cyan;
+  background-color: $selected;
 }
 
 table.icon-grid {

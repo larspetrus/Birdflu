@@ -28,11 +28,11 @@ class BaseAlg < ActiveRecord::Base
         when :a
           created << BaseAlg.make(name, moves, base_alg_id)
         when :Ma
-          created << BaseAlg.make("M.#{name}", mirror(moves), base_alg_id)
+          created << BaseAlg.make('M.'+name, mirror(moves), base_alg_id)
         when :Aa
-          created << BaseAlg.make("A.#{name}", reverse(moves), base_alg_id)
+          created << BaseAlg.make('A.'+name, reverse(moves), base_alg_id)
         when :AMa
-          created << BaseAlg.make("AM.#{name}", mirror(reverse(moves)), base_alg_id)
+          created << BaseAlg.make('AM.'+name, mirror(reverse(moves)), base_alg_id)
         else
           raise "Unknown variant type '#{variant}'"
       end
@@ -40,6 +40,7 @@ class BaseAlg < ActiveRecord::Base
     created
   end
 
+  # BEGIN Alg Utils section
   def self.mirror(moves)
     mirrored = []
     moves.split(' ').each do |move|
@@ -59,9 +60,22 @@ class BaseAlg < ActiveRecord::Base
     reversed.join(' ')
   end
 
+  def self.normalize(moves)
+    # Sort pairs of L & R, D & U, B & F alphabetically
+    m = moves.split(' ')
+    (m.length-1).times do |i|
+      if %w(RL UD FB).include? m[i][0]+m[i+1][0]
+        m[i+1], m[i]= m[i], m[i+1]
+        moves = m.join(' ') # questionable speed optimization
+      end
+    end
+    moves
+  end
+
   def self.rotate_by_U(moves, turns = 1)
     moves.chars.map { |char| (place = 'RFLB'.index(char)) ? 'RFLB'[(place + turns) % 4] : char }.join
   end
+  # END Alg Utils section
 
   def length
     moves_u0.split(' ').length

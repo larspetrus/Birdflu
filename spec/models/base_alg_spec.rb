@@ -55,6 +55,11 @@ RSpec.describe BaseAlg, :type => :model do
     expect(BaseAlg.reverse("B L' B R2 B' L B R2 B2")).to eq("B2 R2 B' L' B R2 B' L B'")
   end
 
+  it 'normalize' do
+    expect(BaseAlg.normalize("F R2 L2 U D' B F2")).to eq("F L2 R2 D' U B F2")
+    expect(BaseAlg.normalize("B L' R F D2 U F B' R")).to eq("B L' R F D2 U B' F R")
+  end
+
   it 'verifies F2L is preserved' do
       expect{BaseAlg.make("Not a LL alg!", "F U D")}.to raise_error( RuntimeError, "Can't make LL code with F2L unsolved" )
   end
