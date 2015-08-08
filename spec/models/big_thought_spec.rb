@@ -14,7 +14,7 @@ describe BigThought do
       pending(%Q(This takes 5 seconds AND fails on "L R'" vs "R' L" diffs))
       dupes = []
       seen_moves = {}
-      RootAlgs.all.each do |alg|
+      RootAlg.all.each do |alg|
         if seen_moves[alg.moves]
           dupes << "#{alg.name} has the same moves as #{seen_moves[alg.moves]}"
         end
@@ -38,9 +38,9 @@ describe BigThought do
   end
 
   describe 'combine' do
-    let (:root1) { RootAlgs.root_alg("H435",  "F R U R' U' F'") }
-    let (:root2) { RootAlgs.root_alg("Arne",  "R2 F2 B2 L2 D L2 B2 F2 R2")} # :singleton
-    let (:root3) { RootAlgs.root_alg("Niklas","L U' R' U L' U' R") } # :mirror_only
+    let (:root1) { RootAlg.new("H435",  "F R U R' U' F'") }
+    let (:root2) { RootAlg.new("Arne",  "R2 F2 B2 L2 D L2 B2 F2 R2")} # :singleton
+    let (:root3) { RootAlg.new("Niklas","L U' R' U L' U' R") } # :mirror_only
 
     it "populates incrementally" do
       alg1 = BaseAlg.make(root1.name, root1.moves)

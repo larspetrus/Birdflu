@@ -1,24 +1,28 @@
 class BigThought
 
   def self.populate_db()
-    if Position.count == 0
-      ActiveRecord::Base.transaction { Position.generate_all }
-    end
+    initial_run = (Position.count == 0)
 
-    unless ComboAlg.exists?(base_alg1: nil, base_alg2: nil)
-      ComboAlg.make_single(OpenStruct.new(name: "Nothing", moves: '', id: nil))
+    if initial_run
+      ActiveRecord::Base.transaction { Position.generate_all }
+
+      nothing = ComboAlg.make_single(OpenStruct.new(name: "Nothing", moves: '', id: nil))
+      nothing.update(single: false)
     end
 
     puts "Starting BigThought.populate_db(): #{BaseAlg.count} base algs"
     start_time = Time.new
 
-    RootAlgs.all.each do |ad|
-      unless BaseAlg.exists?(name: ad.name)
-        BaseAlg.create_group(ad.name, ad.moves, ad.variants)
+    root_algs_in_db = Set.new(BaseAlg.where('id = root_base_id').map(&:name))
+    RootAlg.all.each do |ad|
+      unless root_algs_in_db.include?(ad.name)
+        BaseAlg.create_group(ad.name, ad.moves, ad.alg_variants)
       end
     end
 
-    Position.includes(:combo_algs).find_each {|pos| pos.update(optimal_alg_length: pos.combo_algs[0].length)}
+    if initial_run
+      Position.includes(:combo_algs).find_each {|pos| pos.update(optimal_alg_length: pos.combo_algs[0].length)}
+    end
 
     puts "After BigThought.populate_db(): #{BaseAlg.count} base algs. Took #{Time.new - start_time}"
   end

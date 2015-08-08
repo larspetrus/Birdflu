@@ -23,7 +23,7 @@ class PositionsController < ApplicationController
     optimal_sum = @positions.reduce(0.0) { |sum, pos| sum + pos.best_alg_length }
     @optimal_average = '%.2f' % (optimal_sum/@positions.count)
 
-    combo_sum = @positions.reduce(0.0) { |sum, pos| sum + pos.best_combo_alg.length }
+    combo_sum = @positions.reduce(0.0) { |sum, pos| sum + pos.best_combo_alg_length }
     @combo_average = '%.2f' % (combo_sum/@positions.count)
 
     @positions = @positions.first(100)
