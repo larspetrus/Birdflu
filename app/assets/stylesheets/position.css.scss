@@ -145,8 +145,7 @@ $narrow: 3px;
 $oll: deeppink;
 $cop: #0c0;
 $eo: #fb0;
-$ep-1: #def;
-$ep-2: #adf;
+$ep-across: #adf;
 $ignore: #d7d7d7;
 $selected: #aff;
 
@@ -154,9 +153,7 @@ $selected: #aff;
   .oll { background-color: $oll !important; }
   .cop { background-color: #0c0 !important; }
   .eo { background-color: #fb0 !important; }
-
-  .ep-1 { background-color: $ep-1 !important; }
-  .ep-2 { background-color: $ep-2 !important; }
+  .ep-across { background-color: $ep-across !important; }
 
   .ignore { background-color: $ignore; }
 }
@@ -209,10 +206,7 @@ svg {
   .oll { fill: $oll; }
   .cop { fill: $cop; }
   .eo  { fill: $eo; }
-
-  .ep-1 { fill: $ep-1; }
-  .ep-2 { fill: $ep-2; }
-  .ep-  { fill: white; }
+  .ep-across { fill: $ep-across; }
 
   .ignore { fill: $ignore; }
 

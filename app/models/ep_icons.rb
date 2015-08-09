@@ -7,21 +7,20 @@ class EpIcons < LlIcons
 
     edges = [:UB_U, :UR_U, :UF_U, :UL_U]
     edge_sides = edges.map{|edge| edge[1]}
-    edge_shifts = {}
+    edge_movements = {}
     code.length.times do |i|
       offset = '1357'.index(code[i])
-      sc = ['', 1, 2, 1][offset]
-      @colors[edges[i]] = "ep-#{sc}"
+      @colors[edges[i]] = "ep-across" if offset == 2
 
       from, to = edge_sides[i], edge_sides[(i + offset) % 4]
-      if edge_shifts[to] == from
-        edge_shifts.delete(to)
-        @arrows << [from, to].sort.join('d').to_sym # double arrow
+      if edge_movements[to] == from # we have both directions, make a double arrow
+        edge_movements.delete(to)
+        @arrows << [from, to].sort.join('d').to_sym
       else
-        edge_shifts[from] = to
+        edge_movements[from] = to
       end
     end
-    edge_shifts.each { |from, to| @arrows << "#{from}2#{to}".to_sym if from != to }
+    edge_movements.each { |from, to| @arrows << "#{from}2#{to}".to_sym if from != to }
   end
 
   def base_colors

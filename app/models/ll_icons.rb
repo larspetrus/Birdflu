@@ -2,7 +2,7 @@ class LlIcons
   attr_reader :code, :name, :arrows, :field, :colors
 
   def initialize(form_field, code)
-    @is_none = code == :''
+    @is_none = (code == :'')
 
     @field = "##{form_field}"
     @code = code

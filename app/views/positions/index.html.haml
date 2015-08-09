@@ -2,7 +2,8 @@
   = link_to "H codes", "http://www.ai.univ-paris8.fr/~bh/cube/solutions_tout.html"
 
 %div{style: 'position: absolute; top:32px; right:0px; font-size: 8px;'}
-  #{@combos[0]} / #{@combos[1]}
+  -##{@combos[0]} / #{@combos[1]}
+  #{number_to_human_size Rails.cache.instance_variable_get('@cache_size')}
 
 .welcome
   %p
