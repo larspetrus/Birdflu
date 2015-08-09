@@ -29,15 +29,15 @@ class PositionsController < ApplicationController
     @positions = @positions.first(100)
 
 
-    @oll_selected = OllIcons.by_code(params[:ol])
-    @cop_selected = CopIcons.by_code(params[:cl])
-    @eo_selected  = EoIcons.by_code(params[:eo])
-    @ep_selected  = EpIcons.by_code(params[:ep])
+    @oll_selected = Icons::Oll.by_code(params[:ol])
+    @cop_selected = Icons::Cop.by_code(params[:cl])
+    @eo_selected  = Icons::Eo.by_code(params[:eo])
+    @ep_selected  = Icons::Ep.by_code(params[:ep])
 
-    @oll_rows = OllIcons::grid
-    @cop_rows = CopIcons.grid
-    @eo_rows = EoIcons::grid
-    @ep_rows = EpIcons.grid
+    @oll_rows = Icons::Oll::grid
+    @cop_rows = Icons::Cop.grid
+    @eo_rows = Icons::Eo::grid
+    @ep_rows = Icons::Ep.grid
 
     @combos = [ComboAlg.where('base_alg2_id is not null').count, ComboAlg.count]
 

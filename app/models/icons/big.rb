@@ -1,4 +1,4 @@
-class BigIcon
+class Icons::Big
   attr_reader :name, :arrows
 
   def initialize(cube, arrows)

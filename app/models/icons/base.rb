@@ -1,4 +1,4 @@
-class LlIcons
+class Icons::Base
   attr_reader :code, :name, :arrows, :field, :colors
 
   def initialize(form_field, code)

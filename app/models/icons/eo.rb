@@ -1,4 +1,4 @@
-class EoIcons < LlIcons
+class Icons::Eo < Icons::Base
 
   def initialize(code, stickers)
     super(:eo, code.to_sym)

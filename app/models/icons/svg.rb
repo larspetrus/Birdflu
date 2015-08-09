@@ -1,6 +1,6 @@
-#The SVG God can make an SVG cube
+# Makes SVG icons
 
-class Svgod
+class Icons::Svg
   Point = Struct.new(:x, :y)
 
   def self.init_dimensions

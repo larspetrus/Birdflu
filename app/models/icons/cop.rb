@@ -1,4 +1,4 @@
-class CopIcons < LlIcons
+class Icons::Cop < Icons::Base
 
   def initialize(code, stickers, *arrows)
     super(:cl, code)
@@ -30,10 +30,10 @@ class CopIcons < LlIcons
       [
         [:'',:A, :B, :b, :C, :D, :E, :F, :G ].map{|id| self.by_code(id)},
         [:-, :AA,:BB,:bb,:CC,:DD,:EE,:FF,:GG].map{|id| self.by_code(id)},
-        [:- ,:Ax,:Bx,:bx,:Cx,:Dx,:Ex,:Fx,:Gx].map{|id| self.by_code(id)},
-        [:- ,:- ,:By,:by,:Cy,:Dy,:Ey,:Fy,:Gy].map{|id| self.by_code(id)},
-        [:- ,:- ,:Bz,:bz,:Cz,:Dz,:ex,:- ,:Gz].map{|id| self.by_code(id)},
-        [:- ,:- ,:Bq,:bq,:cx,:dx,:ey,:- ,:gx].map{|id| self.by_code(id)},
+        [:- ,:Ax,:Bz,:by,:Cy,:Dy,:ex,:Fx,:gx].map{|id| self.by_code(id)},
+        [:- ,:- ,:Bx,:bq,:Cz,:Dz,:ey,:- ,:Gx].map{|id| self.by_code(id)},
+        [:- ,:- ,:Bq,:bx,:Cx,:Dx,:Ey,:Fy,:Gy].map{|id| self.by_code(id)},
+        [:- ,:- ,:By,:bz,:cx,:dx,:Ex,:- ,:Gz].map{|id| self.by_code(id)},
       ]
   end
 

@@ -1,4 +1,4 @@
-class EpIcons < LlIcons
+class Icons::Ep < Icons::Base
 
   def initialize(code)
     super(:ep, code.to_sym)

@@ -5,8 +5,8 @@
 .svg-icon{data: { code: "#{iconf.code}", field: "#{iconf.field}" }, style: "width: #{size}px;", class: add_class}
   .name{style: "font-size: #{size*0.21}px;"}= label
   - cache([iconf.name, iconf.field], skip_digest: true) do
-    %svg{viewBox: "0 0 #{Svgod.box_size} #{Svgod.box_size}"}
-      - Svgod.rects_for(iconf).each do |colored_sticker|
+    %svg{viewBox: "0 0 #{Icons::Svg.box_size} #{Icons::Svg.box_size}"}
+      - Icons::Svg.rects_for(iconf).each do |colored_sticker|
         %rect{colored_sticker}
       - iconf.arrows.each do |place|
-        %path{Svgod.arrow_on(place)}
+        %path{Icons::Svg.arrow_on(place)}

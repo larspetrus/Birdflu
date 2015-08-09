@@ -1,4 +1,4 @@
-class OllIcons < LlIcons
+class Icons::Oll < Icons::Base
 
   def initialize(code, name, stickers)
     super(:ol, code)
