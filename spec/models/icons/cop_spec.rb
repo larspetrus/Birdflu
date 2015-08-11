@@ -12,9 +12,9 @@ RSpec.describe Icons::Cop do
   end
 
   it 'has the right arrows' do
-    expect(Icons::Cop.by_code(:Bz).arrows).to eq([:F])
-    expect(Icons::Cop.by_code(:Dx).arrows).to eq([:L])
-    expect(Icons::Cop.by_code(:EE).arrows).to eq([:D])
-    expect(Icons::Cop.by_code(:B).arrows).to eq([])
+    expect(Icons::Cop.by_code(:Bf).arrows).to eq([:F])
+    expect(Icons::Cop.by_code(:Dl).arrows).to eq([:L])
+    expect(Icons::Cop.by_code(:Ed).arrows).to eq([:D])
+    expect(Icons::Cop.by_code(:Bo).arrows).to eq([])
   end
 end
