@@ -93,7 +93,6 @@
 
 %table.index
   %th Position
-  %th Mirror Pos
   %th COP
   %th EO
   %th EP
@@ -108,8 +107,7 @@
       - best = pos.best_alg || OpenStruct.new
       - best_combo = pos.best_combo_alg || OpenStruct.new
       %tr
-        %td= link_to pos.ll_code, "positions/#{pos.ll_code}"
-        %td= link_to pos.mirror_ll_code, "positions/#{pos.mirror_ll_code}" if pos.ll_code != pos.mirror_ll_code
+        %td= link_to pos.cop_eop_name, "positions/#{pos.ll_code}"
         %td= render 'svg_cube', iconf: Icons::Cop.for(pos), size: 25, label: ''
         %td= render 'svg_cube', iconf: Icons::Eo.for(pos),  size: 25, label: ''
         %td= render 'svg_cube', iconf: Icons::Ep.for(pos),  size: 25, label: ''

@@ -3,8 +3,7 @@ class Icons::Eo < Icons::Base
   def initialize(code, stickers)
     super(:eo, code.to_sym)
 
-    names = {'1111'=>'+','1122'=>'L','1212'=>'I','1221'=>'V','2112'=>'F','2121'=>'-','2211'=>'7','2222'=>'0'}
-    @name = (@is_none ? 'NONE' : names[code])
+    @name = (@is_none ? 'NONE' : Icons::Eo.name_for_code(code))
 
     pieces = %w(UB_ UR_ UF_ UL_)
     stickers.each_with_index do |sticker, i|
@@ -15,6 +14,10 @@ class Icons::Eo < Icons::Base
   def base_colors
     @colors = { U: 'eo'}
     set_colors('ignore', :ULB_U, :UBR_U, :UFL_U, :URF_U)
+  end
+
+  def self.name_for_code(code)
+    {'1111'=>'4','1122'=>'6','1212'=>'1','1221'=>'9','2112'=>'7','2121'=>'2','2211'=>'8','2222'=>'0'}[code]
   end
 
   def self.by_code(code)
@@ -29,7 +32,7 @@ class Icons::Eo < Icons::Base
   def self.grid
     @@grid ||=
         [
-            [:'', '1111', '1122', '1212', '1221', '2112', '2121', '2211', '2222'].map{|id| self.by_code(id)},
+            [:'', '2222', '1212', '2121', '1111', '1122', '2112', '2211', '1221'].map{|id| self.by_code(id)},
         ]
   end
 

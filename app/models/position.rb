@@ -64,6 +64,10 @@ class Position < ActiveRecord::Base
     ll_code != mirror_ll_code
   end
 
+  def mirror
+    Position.find_by!(ll_code: mirror_ll_code)
+  end
+
   def is_optimal(alg)
     alg.length == optimal_alg_length
   end
@@ -78,6 +82,10 @@ class Position < ActiveRecord::Base
 
   def ep_code
     @ll_code_obj.ep_code
+  end
+
+  def cop_eop_name
+    corner_look + Icons::Eo.name_for_code(edge_orientations) + Icons::Ep.name_for_code(edge_positions)
   end
 
   def best_alg_length
@@ -212,11 +220,11 @@ class Position < ActiveRecord::Base
 
   def self.sanity_check
     errors = []
-    correct_CL_mirror = {"Ao"=>"Ao", "Ad"=>"Ad", "Af"=>"Af", "bo"=>"Bo", "Bo"=>"bo", "bd"=>"Bd", "Bd"=>"bd", "bb"=>"Bl", "Bl"=>"bb", "bl"=>"Bb", "Bb"=>"bl", "bf"=>"Br", "Br"=>"bf", "br"=>"Bf", "Bf"=>"br", "Co"=>"Co", "Cd"=>"Cd", "Cr"=>"Cl", "Cl"=>"Cr", "Cf"=>"Cf", "Cb"=>"Cb", "Do"=>"Do", "Dd"=>"Dd", "Dr"=>"Dl", "Dl"=>"Dr", "Df"=>"Df", "Db"=>"Db", "Eo"=>"Eo", "Ed"=>"Ed", "Ef"=>"Er", "Er"=>"Ef", "eb"=>"El", "El"=>"eb", "Fo"=>"Fo", "Fd"=>"Fd", "Ff"=>"Ff", "Fl"=>"Fl", "Go"=>"Go", "Gd"=>"Gd", "Gf"=>"Gb", "Gb"=>"Gf", "Gl"=>"Gl", "Gr"=>"Gr"}
+    correct_CL_mirror = {"Ao"=>"Ao", "Ad"=>"Ad", "Af"=>"Af", "bo"=>"Bo", "Bo"=>"bo", "bd"=>"Bd", "Bd"=>"bd", "bb"=>"Bl", "Bl"=>"bb", "bl"=>"Bb", "Bb"=>"bl", "bf"=>"Br", "Br"=>"bf", "br"=>"Bf", "Bf"=>"br", "Co"=>"Co", "Cd"=>"Cd", "Cr"=>"Cl", "Cl"=>"Cr", "Cf"=>"Cf", "Cb"=>"Cb", "Do"=>"Do", "Dd"=>"Dd", "Dr"=>"Dl", "Dl"=>"Dr", "Df"=>"Df", "Db"=>"Db", "Eo"=>"Eo", "Ed"=>"Ed", "Ef"=>"Er", "Er"=>"Ef", "Eb"=>"El", "El"=>"Eb", "Fo"=>"Fo", "Fd"=>"Fd", "Ff"=>"Ff", "Fl"=>"Fl", "Go"=>"Go", "Gd"=>"Gd", "Gf"=>"Gb", "Gb"=>"Gf", "Gl"=>"Gl", "Gr"=>"Gr"}
 
     Position.all.each do |pos|
       pos_id = "Position id: #{pos.id}, ll_code: #{pos.ll_code}"
-      mirror_pos = Position.find_by!(ll_code: pos.mirror_ll_code)
+      mirror_pos = pos.mirror
 
       # Do mirrors match?
       if pos.ll_code != mirror_pos.mirror_ll_code || pos.mirror_ll_code != mirror_pos.ll_code
@@ -254,7 +262,7 @@ class Position < ActiveRecord::Base
       abfp: 'bf',
       abgo: 'Cl',
       accc: 'Bo',
-      acep: 'eb',
+      acep: 'Eb',
       acfo: 'Dl',
       acgq: 'Bf',
       aepc: 'Cr',

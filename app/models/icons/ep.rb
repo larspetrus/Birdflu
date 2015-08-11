@@ -2,7 +2,8 @@ class Icons::Ep < Icons::Base
 
   def initialize(code)
     super(:ep, code.to_sym)
-    @name = (@is_none ? 'NONE' : 'P' + code)
+
+    @name = (@is_none ? 'NONE' : Icons::Ep.name_for_code(code))
     @arrows = []
 
     edges = [:UB_U, :UR_U, :UF_U, :UL_U]
@@ -25,6 +26,13 @@ class Icons::Ep < Icons::Base
 
   def base_colors
     set_colors('ignore', :U, :ULB_U, :UBR_U, :UFL_U, :URF_U)
+  end
+
+  def self.name_for_code(code)
+    {'1111'=>'A', '5555'=>'B', '7373'=>'C', '3737'=>'D', '1335'=>'E', '1577'=>'F',
+     '5133'=>'G', '7157'=>'H', '3513'=>'I', '7715'=>'J', '3351'=>'K', '5771'=>'L',
+     '7777'=>'a', '3333'=>'b', '1515'=>'c', '5151'=>'d', '3711'=>'e', '5735'=>'f',
+     '1371'=>'g', '5573'=>'h', '1137'=>'i', '3557'=>'j', '7113'=>'k', '7355'=>'l'}[code]
   end
 
   def self.by_code(code)
