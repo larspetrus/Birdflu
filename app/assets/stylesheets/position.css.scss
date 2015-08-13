@@ -10,6 +10,7 @@ $r_color: #0d0;
 $l_color: #07f;
 $u_color: yellow;
 $d_color: #eee;
+$top3_color: #fea;
 
 .center {
   margin: 0 auto;
@@ -47,7 +48,7 @@ h4, h5 {
   }
   .one-alg { background: #cfc; }
   .single  { background: #eff; color: grey; }
-  .top3    { background: #fea; }
+  .top3    { background: $top3_color; }
   .optimal { color: #69f; }
 }
 
@@ -55,8 +56,14 @@ h4, h5 {
   height:205px;
   width:160px;
   float:left;
-  font-size: 9px;
   margin: 6px;
+
+  .name {
+    text-align: center;
+    font-size: 9px;
+    font-weight: bold;
+    background-color: $top3_color;
+  }
 }
 
 .leftmenu {

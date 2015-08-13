@@ -22,7 +22,8 @@
   %h4.top3 Top 3 Algs
   - @top_3.each do |t3|
     .roofpig.rp160{:'data-config' => "base=AD | alg=#{t3.moves} | flags=showalg #{t3.setup_moves}" }
-      =t3.name
+      .name
+        =t3.name
 
 %hr{style: 'clear:both;'}
 
