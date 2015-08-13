@@ -62,8 +62,17 @@ h4, h5 {
 .leftmenu {
   float: left;
   font-size: 14px;
-  background-color: #dff;
   padding: 3px 10px;
+
+  a {
+    color: black;
+    text-shadow: 2px 2px 5px orange;    font-weight: bold;
+    text-decoration: none;
+  }
+  a:link {  }
+  a:visited { }
+  a:hover { text-shadow: 2px 2px 5px red; }
+  a:active {color: white; text-shadow: 2px 2px 10px #900; }
 }
 .right {
   float: right;
