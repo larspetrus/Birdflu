@@ -52,7 +52,9 @@ class Cube
     return 'u-color' unless on_side
 
     side = piece_at(position).sticker_on(on_side).to_s.downcase
-    "#{side}-color"
+
+    outline = (on_side != 'U') ? ' outline' : ''
+    "#{side}-color" + outline
   end
 
   def piece_at(position)

@@ -62,7 +62,7 @@ h4, h5 {
 .leftmenu {
   float: left;
   font-size: 14px;
-  padding: 3px 10px;
+  padding: 3px 14px;
 
   a {
     color: black;
@@ -193,6 +193,10 @@ $selected: #aff;
     stroke: white;
     stroke-opacity: 0.8;
     fill-opacity: 0.8;
+  }
+  .outline {
+    stroke: black;
+    stroke-width: 0.2;
   }
 }
 
