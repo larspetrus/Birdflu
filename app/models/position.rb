@@ -42,6 +42,10 @@ class Position < ActiveRecord::Base
     CP_SYMS[corner_swap]
   end
 
+  def self.by_ll_code(ll_code)
+    Position.find_by(ll_code: ll_code)
+  end
+
   def as_roofpig_tweaks()
     result = []
     4.times do |i|
@@ -65,7 +69,15 @@ class Position < ActiveRecord::Base
   end
 
   def mirror
-    Position.find_by!(ll_code: mirror_ll_code)
+    Position.by_ll_code(mirror_ll_code)
+  end
+
+  def has_inverse
+    ll_code != inverse_ll_code
+  end
+
+  def inverse
+    Position.by_ll_code(inverse_ll_code)
   end
 
   def is_optimal(alg)

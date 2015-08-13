@@ -14,14 +14,18 @@ class BigThought
     start_time = Time.new
 
     root_algs_in_db = Set.new(BaseAlg.where('id = root_base_id').map(&:name))
-    RootAlg.all.each do |ad|
-      unless root_algs_in_db.include?(ad.name)
-        BaseAlg.create_group(ad.name, ad.moves, ad.alg_variants)
+    RootAlg.all.each do |ra|
+      unless root_algs_in_db.include?(ra.name)
+        BaseAlg.create_group(ra.name, ra.moves, ra.alg_variants)
       end
     end
 
     if initial_run
-      Position.includes(:combo_algs).find_each {|pos| pos.update(optimal_alg_length: pos.combo_algs[0].length)}
+      Position.includes(:combo_algs).find_each do |pos|
+        optimal_alg = pos.combo_algs[0]
+        inverse_ll_code = Cube.new(BaseAlg.reverse(optimal_alg.moves)).standard_ll_code
+        pos.update(best_alg_id: optimal_alg.id, optimal_alg_length: optimal_alg.length, inverse_ll_code: inverse_ll_code)
+      end
     end
 
     puts "After BigThought.populate_db(): #{BaseAlg.count} base algs. Took #{Time.new - start_time}"

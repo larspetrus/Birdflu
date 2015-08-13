@@ -8,7 +8,7 @@ class ComboAlg < ActiveRecord::Base
     self.length = self.moves.split.length
     cube = Cube.new(self.moves)
     ll_code = cube.standard_ll_code # validates
-    self.position = Position.find_by(ll_code: ll_code)
+    self.position = Position.by_ll_code(ll_code)
     self.u_setup = ('BRFL'.index(cube.piece_at('UB').name[1]) - LL.edge_data(cube.standard_ll_code[1]).distance) % 4
   end
 

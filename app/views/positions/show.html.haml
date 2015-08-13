@@ -3,6 +3,12 @@
   .leftmenu= link_to "Mirror: #{@position.mirror.cop_eop_name}", "#{@position.mirror_ll_code}"
 - else
   .leftmenu Self mirrored
+- if @position.has_inverse
+  .leftmenu= link_to "Inverse: #{@position.inverse.cop_eop_name}", "#{@position.inverse_ll_code}"
+- else
+  .leftmenu Self inversed
+
+%hr{style: 'clear:both;'}
 
 .right= render 'svg_cube', iconf: Icons::Oll.for(@position), size: 50
 .right= render 'svg_cube', iconf: Icons::Ep.for(@position), size: 50

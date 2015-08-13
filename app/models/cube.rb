@@ -15,24 +15,21 @@ class Cube
   end
 
   def apply_position(ll_code)
-    c_cyc = []
-    e_cyc = []
+    movements = {}
 
     4.times do |i|
       c_data = LL.corner_data(ll_code[i*2])
-      c_cyc << c_to_here = c_data.position(i).to_sym
-      @pieces[c_to_here].shift(Move::D.shift, c_data.distance)
-      @pieces[c_to_here].rotate(c_data.spin)
+      movements[LL::U_CORNERS[i]] = c_to_here = @pieces[c_data.position(i).to_sym]
+      c_to_here.shift(Move::D.shift, c_data.distance)
+      c_to_here.rotate(c_data.spin)
 
       e_data = LL.edge_data(ll_code[2*i + 1])
-      e_cyc << e_to_here = e_data.position(i).to_sym
-      @pieces[e_to_here].shift(Move::D.shift, e_data.distance)
-      @pieces[e_to_here].rotate(e_data.spin)
+      movements[LL::U_EDGES[i]] = e_to_here = @pieces[e_data.position(i).to_sym]
+      e_to_here.shift(Move::D.shift, e_data.distance)
+      e_to_here.rotate(e_data.spin)
     end
 
-    @pieces[:ULB],@pieces[:UBR],@pieces[:URF],@pieces[:UFL] = @pieces[c_cyc[0]],@pieces[c_cyc[1]],@pieces[c_cyc[2]],@pieces[c_cyc[3]]
-    @pieces[:UB], @pieces[:UR], @pieces[:UF], @pieces[:UL]  = @pieces[e_cyc[0]],@pieces[e_cyc[1]],@pieces[e_cyc[2]],@pieces[e_cyc[3]]
-
+    movements.each { |position, piece| @pieces[position.to_sym] = piece }
     self
   end
 

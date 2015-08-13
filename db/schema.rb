@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150806175303) do
+ActiveRecord::Schema.define(version: 20150812005703) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -59,6 +59,7 @@ ActiveRecord::Schema.define(version: 20150806175303) do
     t.string  "edge_positions"
     t.integer "optimal_alg_length"
     t.integer "best_combo_alg_id"
+    t.string  "inverse_ll_code"
   end
 
   add_index "positions", ["ll_code"], name: "index_positions_on_ll_code", using: :btree

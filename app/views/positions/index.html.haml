@@ -135,8 +135,8 @@
   });
 
   function opts(specifics, field) {
-  var bind_closer = function(){ $('.ui-widget-overlay').bind('click',function(){ $(field+'-picker').dialog('close'); })};
-  var pos = { my: 'center top', at: 'center top', of: '#pickers' };
+    var bind_closer = function(){ $('.ui-widget-overlay').bind('mouseenter',function(){ $(field+'-picker').dialog('close'); })};
+    var pos = { my: 'center top', at: 'center top', of: '#pickers' };
     return $.extend(specifics, {resizable: false, modal: true, position: pos, open: bind_closer});
   }
   $('#oll-selected').on('mouseover', function() {
