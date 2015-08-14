@@ -1,4 +1,4 @@
-.leftmenu= link_to 'Back to Search', :back
+.leftmenu= link_to 'Back to Search', positions_url
 - if @position.has_mirror
   .leftmenu= link_to "Mirror - #{@position.mirror.cop_eop_name}", "#{@position.mirror_ll_code}"
 - else

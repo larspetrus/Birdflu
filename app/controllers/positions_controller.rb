@@ -1,23 +1,21 @@
 class PositionsController < ApplicationController
-  CP_ENUM = Position.corner_swaps
 
   def index
+    form_submitted = params.has_key?(:ol)
+    if form_submitted
+      form_params = params
+      cookies[:form_params] = JSON.generate(params)
+    else
+      form_params = cookies[:form_params] ? JSON.parse(cookies[:form_params]).with_indifferent_access : {} # TODO handle bad cookie
+    end
+
     @db_query = {}
-    @oll_options = (0..57).map { |n| "m#{n}" }
+    @db_query['oll']              = form_params[:ol]      if form_params[:ol].present?
+    @db_query['corner_look']      = form_params[:cl]      if form_params[:cl].present?
+    @db_query['edge_orientations']= form_params[:eo]      if form_params[:eo].present?
+    @db_query['edge_positions']   = form_params[:ep]      if form_params[:ep].present?
 
-    @cp_param = params[:cp]
-    @db_query['corner_swap'] = CP_ENUM['no'] if @cp_param == 'None'
-    @db_query['corner_swap'] = CP_ENUM['diagonal'] if @cp_param == 'Diagonal'
-    @db_query['corner_swap'] = [CP_ENUM['left'], CP_ENUM['right'], CP_ENUM['front'], CP_ENUM['back']] if @cp_param == 'Adjacent'
-
-    @db_query['oll']              = params[:ol]      if params[:ol].present?
-    @db_query['corner_look']      = params[:cl]      if params[:cl].present?
-    @db_query['edge_orientations']= params[:eo]      if params[:eo].present?
-    @db_query['edge_positions']   = params[:ep]      if params[:ep].present?
-    @db_query['is_mirror']        = false            if params[:im] == "No"
-    @show_mirrors = (params[:im] == "No" ? "No" : "Yes")
-
-    @positions = Position.includes(:best_alg, :best_combo_alg).where(@db_query).to_a.sort_by! {|pos| pos.best_alg_length}
+    @positions = Position.includes(:best_combo_alg).where(@db_query).to_a.sort_by! {|pos| pos.best_alg_length}
     @position_count = @positions.count
 
     optimal_sum = @positions.reduce(0.0) { |sum, pos| sum + pos.best_alg_length }
@@ -29,10 +27,10 @@ class PositionsController < ApplicationController
     @positions = @positions.first(100)
 
 
-    @oll_selected = Icons::Oll.by_code(params[:ol])
-    @cop_selected = Icons::Cop.by_code(params[:cl])
-    @eo_selected  = Icons::Eo.by_code(params[:eo])
-    @ep_selected  = Icons::Ep.by_code(params[:ep])
+    @oll_selected = Icons::Oll.by_code(form_params[:ol])
+    @cop_selected = Icons::Cop.by_code(form_params[:cl])
+    @eo_selected  = Icons::Eo.by_code(form_params[:eo])
+    @ep_selected  = Icons::Ep.by_code(form_params[:ep])
 
     @oll_rows = Icons::Oll::grid
     @cop_rows = Icons::Cop.grid

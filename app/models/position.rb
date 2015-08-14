@@ -101,11 +101,11 @@ class Position < ActiveRecord::Base
   end
 
   def best_alg_length
-    best_alg ? best_alg.length : 99
+    optimal_alg_length || 99
   end
 
   def best_combo_alg_length
-    best_combo ? best_combo.length : 99
+    best_combo_alg ? best_combo_alg.length : 99
   end
 
   def set_corner_swap
@@ -149,14 +149,6 @@ class Position < ActiveRecord::Base
       yield(pos)
       pos.save
     end
-  end
-
-  def best_optimal
-    combo_algs.where('base_alg2_id is null').first
-  end
-
-  def best_combo
-    combo_algs.where(single: false).first
   end
 
   def top_3
