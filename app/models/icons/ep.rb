@@ -41,7 +41,7 @@ class Icons::Ep < Icons::Base
   end
 
   def self.for(position)
-    by_code(position.edge_positions)
+    by_code(position.ep)
   end
 
   def self.grid

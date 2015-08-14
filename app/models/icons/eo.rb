@@ -26,7 +26,7 @@ class Icons::Eo < Icons::Base
   end
 
   def self.for(position)
-    by_code(position.edge_orientations)
+    by_code(position.eo)
   end
 
   def self.grid

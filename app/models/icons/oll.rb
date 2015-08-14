@@ -1,7 +1,7 @@
 class Icons::Oll < Icons::Base
 
   def initialize(code, name, stickers)
-    super(:ol, code)
+    super(:oll, code)
     @name = name
 
     pieces = %w(ULB_ UB_ UBR_ UL_ UR_ UFL_ UF_ URF_)

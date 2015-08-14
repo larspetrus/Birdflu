@@ -1,7 +1,7 @@
 class Icons::Cop < Icons::Base
 
   def initialize(code, stickers, *arrows)
-    super(:cl, code)
+    super(:cop, code)
     @name = (@is_none ? 'NONE' : code.to_s)
     @arrows = arrows
 
@@ -22,7 +22,7 @@ class Icons::Cop < Icons::Base
   end
 
   def self.for(position)
-    by_code(position.corner_look)
+    by_code(position.cop)
   end
 
   def self.grid

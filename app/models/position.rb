@@ -12,11 +12,11 @@ class Position < ActiveRecord::Base
   before_create do
     self.set_corner_swap
     self.set_mirror_ll_code
-    self.set_cop_name
     self.set_is_mirror
+    self.set_cop_name
+    self.set_eo_name
+    self.set_ep_name
     self.set_oll_name
-    self.set_edge_orientations
-    self.set_edge_positions
   end
 
   after_initialize do
@@ -84,8 +84,8 @@ class Position < ActiveRecord::Base
     alg.length == optimal_alg_length
   end
 
-  def oll_code
-    @ll_code_obj.oll_code
+  def cop_code
+    @ll_code_obj.cop_code
   end
 
   def eo_code
@@ -96,8 +96,12 @@ class Position < ActiveRecord::Base
     @ll_code_obj.ep_code
   end
 
-  def cop_eop_name
-    corner_look + Icons::Eo.name_for_code(edge_orientations) + Icons::Ep.name_for_code(edge_positions)
+  def oll_code
+    @ll_code_obj.oll_code
+  end
+
+  def display_name
+    cop + Icons::Eo.name_for_code(eo) + Icons::Ep.name_for_code(ep)
   end
 
   def best_alg_length
@@ -112,14 +116,6 @@ class Position < ActiveRecord::Base
     self.corner_swap = Position.corner_swap_for(ll_code)
   end
 
-  def set_cop_name
-    self.corner_look = CORNER_LOOK_NAMES[cop_code]
-  end
-
-  def cop_code
-    @ll_code_obj.cop_code
-  end
-
   def co_code
     LlCode.co_code(ll_code)
   end
@@ -132,16 +128,20 @@ class Position < ActiveRecord::Base
     self.is_mirror = ll_code < mirror_ll_code    #completely arbitrary
   end
 
+  def set_cop_name
+    self.cop = COP_NAMES[cop_code]
+  end
+
   def set_oll_name
     self.oll = OLL_NAMES[oll_code]
   end
 
-  def set_edge_orientations
-    self.edge_orientations = @ll_code_obj.eo_code
+  def set_eo_name
+    self.eo = @ll_code_obj.eo_code
   end
 
-  def set_edge_positions
-    self.edge_positions = @ll_code_obj.ep_code
+  def set_ep_name
+    self.ep = @ll_code_obj.ep_code
   end
 
   def self.update_each
@@ -236,8 +236,8 @@ class Position < ActiveRecord::Base
       end
 
       # Do the corner looks match?
-      if correct_CL_mirror[pos.corner_look] != mirror_pos.corner_look
-        errors << "Unmatched corner looks '#{pos.corner_look}' <=> '#{mirror_pos.corner_look}': #{pos_id}"
+      if correct_CL_mirror[pos.cop] != mirror_pos.cop
+        errors << "Unmatched corner looks '#{pos.cop}' <=> '#{mirror_pos.cop}': #{pos_id}"
       end
 
       # Is is_mirror consistent?
@@ -253,7 +253,7 @@ class Position < ActiveRecord::Base
     puts "Error count: #{errors.size}"
   end
 
-  CORNER_LOOK_NAMES = {
+  COP_NAMES = {
       aaaa: 'Ao',
       aabc: 'Co',
       aacb: 'Do',

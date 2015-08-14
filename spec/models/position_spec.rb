@@ -39,9 +39,9 @@ RSpec.describe Position, :type => :model do
   end
 
   it '#set_cop_name' do
-    messy = Position.create(ll_code: 'a4c5c1c4', corner_look: 'none')
+    messy = Position.create(ll_code: 'a4c5c1c4', cop: 'none')
     messy.set_cop_name
-    expect(messy.corner_look).to eq('Bo')
+    expect(messy.cop).to eq('Bo')
   end
 
 end

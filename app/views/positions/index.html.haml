@@ -2,8 +2,8 @@
   = link_to "H codes", "http://www.ai.univ-paris8.fr/~bh/cube/solutions_tout.html"
 
 %div{style: 'position: absolute; top:32px; right:0px; font-size: 8px;'}
-  -##{@combos[0]} / #{@combos[1]}
-  #{number_to_human_size Rails.cache.instance_variable_get('@cache_size')}
+  #{@combos[0]} / #{@combos[1] - @combos[0]}
+  Cache #{number_to_human_size Rails.cache.instance_variable_get('@cache_size')}
 
 .welcome
   %p
@@ -26,64 +26,49 @@
     %th OLL
   %tr#pickers
     %td
-      -##cop-selected= render 'll_icon', pos: @cop_selected, add_class: 'selected'
-      #cop-selected= render 'svg_cube', iconf: @cop_selected, size: 44, add_class: 'selected'
+      #cop-selected= render 'svg_cube', iconf: @active_icons[:cop], size: 44, add_class: 'selected'
       #cop-picker
         %table.icon-grid
-          - @cop_rows.each do |cl_row|
+          - @icon_grids[:cop].each do |cop_row|
             %tr
-              - cl_row.each do |cl|
+              - cop_row.each do |cop|
                 %td.icon-grid
-                  -#= render 'll_icon', pos: cl, add_class: cl.highlight(params[:cl]) if cl
-                  = render 'svg_cube', iconf: cl, size: 44, add_class: cl.highlight(params[:cl]) if cl
+                  = render 'svg_cube', iconf: cop, size: 44, add_class: cop.highlight(params[:cop]) if cop
     %td
-      -##eo-selected= render 'll_icon', pos: @eo_selected, add_class: 'selected'
-      #eo-selected= render 'svg_cube', iconf: @eo_selected, size: 44, add_class: 'selected'
+      #eo-selected= render 'svg_cube', iconf: @active_icons[:eo], size: 44, add_class: 'selected'
       #eo-picker
         %table.icon-grid-h
-          - @eo_rows.each do |eo_row|
+          - @icon_grids[:eo].each do |eo_row|
             %tr
               - eo_row.each do |eo|
                 %td.icon-grid-h
                   = render 'll_icon', pos: eo, add_class: eo.highlight(params[:eo]) if eo
     %td
-      -##ep-selected= render 'll_icon', pos: @ep_selected, add_class: 'selected'
-      #ep-selected= render 'svg_cube', iconf: @ep_selected, size: 44, add_class: 'selected'
+      #ep-selected= render 'svg_cube', iconf: @active_icons[:ep], size: 44, add_class: 'selected'
       #ep-picker
         %table.icon-grid-h
-          - @ep_rows.each do |ep_row|
+          - @icon_grids[:ep].each do |ep_row|
             %tr
               - ep_row.each do |ep|
                 %td.icon-grid-h
-                  -#= render 'll_icon', pos: ep, add_class: ep.highlight(params[:ep]) if ep
                   = render 'svg_cube', iconf: ep, size: 44, add_class: ep.highlight(params[:ep]) if ep
     %td
-      -##oll-selected= render 'll_icon', pos: @oll_selected, add_class: 'selected'
-      #oll-selected= render 'svg_cube', iconf: @oll_selected, size: 44, add_class: 'selected'
+      #oll-selected= render 'svg_cube', iconf: @active_icons[:oll], size: 44, add_class: 'selected'
       #oll-picker
         %table.icon-grid-h
-          - @oll_rows.each do |oll_row|
+          - @icon_grids[:oll].each do |oll_row|
             %tr
               - oll_row.each do |oll|
                 %td.icon-grid-h
-                  = render 'll_icon', pos: oll, add_class: oll.highlight(params[:ol]) if oll
+                  = render 'll_icon', pos: oll, add_class: oll.highlight(params[:oll]) if oll
 
 %br{clear: 'both'}
 
-
-
 =form_tag url_for(controller: "positions", action: "index"), method: 'get' do
-  =hidden_field_tag(:ol, @db_query['oll'])
-  =hidden_field_tag(:cl, @db_query['corner_look'])
-  =hidden_field_tag(:eo, @db_query['edge_orientations'])
-  =hidden_field_tag(:ep, @db_query['edge_positions'])
-  -#%div
-  -#  =label_tag(:cp, "Swapped corners")
-  -#  =select_tag(:cp, options_for_select(["None", "Adjacent", "Diagonal"], @cp_param), include_blank: true)
-  -#%div
-  -#  =label_tag(:im, "Show Mirrors")
-  -#  =select_tag(:im, options_for_select(["No", "Yes"], @show_mirrors))
-
+  =hidden_field_tag(:oll, @db_query[:oll])
+  =hidden_field_tag(:cop, @db_query[:cop])
+  =hidden_field_tag(:eo,  @db_query[:eo])
+  =hidden_field_tag(:ep,  @db_query[:ep])
 
 %h4
   Selected #{@position_count} of the #{Position.count} LL positions.
@@ -107,7 +92,7 @@
       - best = pos.best_alg || OpenStruct.new
       - best_combo = pos.best_combo_alg || OpenStruct.new
       %tr
-        %td= link_to pos.cop_eop_name, "positions/#{pos.ll_code}"
+        %td= link_to pos.display_name, "positions/#{pos.ll_code}"
         %td= render 'svg_cube', iconf: Icons::Cop.for(pos), size: 25, label: ''
         %td= render 'svg_cube', iconf: Icons::Eo.for(pos),  size: 25, label: ''
         %td= render 'svg_cube', iconf: Icons::Ep.for(pos),  size: 25, label: ''
@@ -125,26 +110,9 @@
         %td{:class => best_combo.css_kind}= best_combo.name
 
 :javascript
-  // Original JavaScript code by Chirp Internet: www.chirp.com.au
-  // Please acknowledge use of this code by including this header.
-
-  var today = new Date();
-  var expiry = new Date(today.getTime() + 30 * 24 * 3600 * 1000); // plus 30 days
-
-  function setCookie(name, value) {
-    document.cookie=name + "=" + escape(value) + "; path=/; expires=" + expiry.toGMTString();
-  }
-  function getCookie(name) {
-    var re = new RegExp(name + "=([^;]+)");
-    var value = re.exec(document.cookie);
-    return (value != null) ? unescape(value[1]) : null;
-  }
-  //$('#cl').val('Dr')
-
-
   $('.ll-icon, .svg-icon').on('click', function() {
     var field = $(this).data('field');
-    if (field === '#cl' || field === '#ol') {
+    if (field === '#cop' || field === '#oll') {
       $('#eo, #ep').val('');
     }
     $(field).val($(this).data('code'));

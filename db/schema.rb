@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150812005703) do
+ActiveRecord::Schema.define(version: 20150814021750) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -52,11 +52,11 @@ ActiveRecord::Schema.define(version: 20150812005703) do
     t.integer "best_alg_id"
     t.integer "alg_count"
     t.string  "mirror_ll_code"
-    t.string  "corner_look"
+    t.string  "cop"
     t.boolean "is_mirror"
     t.string  "oll"
-    t.string  "edge_orientations"
-    t.string  "edge_positions"
+    t.string  "eo"
+    t.string  "ep"
     t.integer "optimal_alg_length"
     t.integer "best_combo_alg_id"
     t.string  "inverse_ll_code"

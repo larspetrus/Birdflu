@@ -1,7 +1,9 @@
 class PositionsController < ApplicationController
 
+  FILTERS = [:cop, :eo, :ep, :oll]
+
   def index
-    form_submitted = params.has_key?(:ol)
+    form_submitted = params.has_key?(FILTERS.first)
     if form_submitted
       form_params = params
       cookies[:form_params] = JSON.generate(params)
@@ -10,10 +12,7 @@ class PositionsController < ApplicationController
     end
 
     @db_query = {}
-    @db_query['oll']              = form_params[:ol]      if form_params[:ol].present?
-    @db_query['corner_look']      = form_params[:cl]      if form_params[:cl].present?
-    @db_query['edge_orientations']= form_params[:eo]      if form_params[:eo].present?
-    @db_query['edge_positions']   = form_params[:ep]      if form_params[:ep].present?
+    FILTERS.each { |f| @db_query[f] = form_params[f] if form_params[f].present? }
 
     @positions = Position.includes(:best_combo_alg).where(@db_query).to_a.sort_by! {|pos| pos.best_alg_length}
     @position_count = @positions.count
@@ -26,16 +25,10 @@ class PositionsController < ApplicationController
 
     @positions = @positions.first(100)
 
-
-    @oll_selected = Icons::Oll.by_code(form_params[:ol])
-    @cop_selected = Icons::Cop.by_code(form_params[:cl])
-    @eo_selected  = Icons::Eo.by_code(form_params[:eo])
-    @ep_selected  = Icons::Ep.by_code(form_params[:ep])
-
-    @oll_rows = Icons::Oll::grid
-    @cop_rows = Icons::Cop.grid
-    @eo_rows = Icons::Eo::grid
-    @ep_rows = Icons::Ep.grid
+    @active_icons = {}
+    FILTERS.each{ |f| @active_icons[f] = Icons::Base.by_code(f, form_params[f]) }
+    @icon_grids = {}
+    FILTERS.each{ |f| @icon_grids[f] = Icons::Base.class_by(f)::grid }
 
     @combos = [ComboAlg.where('base_alg2_id is not null').count, ComboAlg.count]
 
