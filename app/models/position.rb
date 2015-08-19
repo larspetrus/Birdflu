@@ -42,6 +42,10 @@ class Position < ActiveRecord::Base
     CP_SYMS[corner_swap]
   end
 
+  def algs_in_set
+    self.combo_algs.where(base_alg1_id: AlgSet::THE71, base_alg2_id: AlgSet::THE71)
+  end
+
   def self.by_ll_code(ll_code)
     Position.find_by(ll_code: ll_code)
   end
@@ -112,6 +116,11 @@ class Position < ActiveRecord::Base
     best_combo_alg ? best_combo_alg.length : 99
   end
 
+  def best_alg_set_length
+    best = algs_in_set.limit(1).first
+    best ? best.length : 99
+  end
+
   def set_corner_swap
     self.corner_swap = Position.corner_swap_for(ll_code)
   end
@@ -153,7 +162,7 @@ class Position < ActiveRecord::Base
 
   def top_3
     dupes = Set.new
-    uniques = combo_algs.select { |alg| dupes.add? alg.moves }
+    uniques = algs_in_set.select { |alg| dupes.add? alg.moves }
     uniques.first(3)
   end
 

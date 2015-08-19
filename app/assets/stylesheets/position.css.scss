@@ -79,7 +79,7 @@ h4, h5 {
   a:link {  }
   a:visited { }
   a:hover { text-shadow: 2px 2px 5px red; }
-  a:active {color: white; text-shadow: 2px 2px 10px #900; }
+  a:active {color: white; text-shadow: 0px 0px 5px #000, 0 0 8px #00F; }
 }
 .right {
   float: right;

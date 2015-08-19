@@ -23,6 +23,13 @@ class PositionsController < ApplicationController
     combo_sum = @positions.reduce(0.0) { |sum, pos| sum + pos.best_combo_alg_length }
     @combo_average = '%.2f' % (combo_sum/@positions.count)
 
+    algset_sum = @positions.reduce(0.0) { |sum, pos| sum + pos.best_alg_set_length }
+    @algset_average = '%.2f' % (algset_sum/@positions.count)
+
+    @set_solved = @positions.reduce(0) do |sum, pos|
+        sum += pos.best_alg_set_length < 99 ? 1 : 0
+    end
+
     @positions = @positions.first(100)
 
     @active_icons = {}

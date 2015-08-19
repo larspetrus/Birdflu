@@ -1,4 +1,4 @@
-.leftmenu= link_to 'Back to Search', positions_url
+.leftmenu= link_to 'Main Page', positions_url
 - if @position.has_mirror
   .leftmenu= link_to "Mirror - #{@position.mirror.display_name}", "#{@position.mirror_ll_code}"
 - else
@@ -33,7 +33,7 @@
   %th Name
   %th Alg
   %th Composition
-  - @position.combo_algs.each do |alg|
+  - @position.algs_in_set.each do |alg|
     %tr
       %td{class: @position.is_optimal(alg) ? 'optimal' : ''}= alg.length unless dupes.include? alg.moves
       %td{class: alg.css_kind}= alg.name

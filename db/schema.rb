@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150814021750) do
+ActiveRecord::Schema.define(version: 20150818031932) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,6 +43,8 @@ ActiveRecord::Schema.define(version: 20150814021750) do
     t.boolean "single",       default: false
   end
 
+  add_index "combo_algs", ["base_alg1_id"], name: "index_combo_algs_on_base_alg1_id", using: :btree
+  add_index "combo_algs", ["base_alg2_id"], name: "index_combo_algs_on_base_alg2_id", using: :btree
   add_index "combo_algs", ["position_id"], name: "index_combo_algs_on_position_id", using: :btree
 
   create_table "positions", force: true do |t|
