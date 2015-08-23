@@ -1,3 +1,4 @@
+.leftmenu= AlgSet.active.name
 .leftmenu= link_to 'Main Page', positions_url
 - if @position.has_mirror
   .leftmenu= link_to "Mirror - #{@position.mirror.display_name}", "#{@position.mirror_ll_code}"

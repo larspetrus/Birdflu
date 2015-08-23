@@ -1,5 +1,6 @@
-%h5{style: 'position: absolute; top:0px; right:0px; '}
-  = link_to "H codes", "http://www.ai.univ-paris8.fr/~bh/cube/solutions_tout.html"
+.leftmenu= AlgSet.active.name
+
+%hr{style: 'clear:both;'}
 
 %div{style: 'position: absolute; top:32px; right:0px; font-size: 8px;'}
   #{@combos[0]} / #{@combos[1] - @combos[0]}
