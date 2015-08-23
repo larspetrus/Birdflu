@@ -8,12 +8,13 @@ class BaseAlg < ActiveRecord::Base
     Cube.new(moves_u0).ll_codes
   end
 
-  def self.make(name, moves, base_root_id = nil)
+  # def self.make(name, moves, base_root_id = nil)
+  def self.make(moves, fields = {})
     shifts = [moves]
     3.times { shifts << BaseAlg.rotate_by_U(shifts.last) }
 
-    new_alg = BaseAlg.create(root_base_id: base_root_id, name: name, moves_u0: shifts[0], moves_u1: shifts[1], moves_u2: shifts[2], moves_u3: shifts[3])
-    unless base_root_id
+    new_alg = BaseAlg.create(fields.merge(moves_u0: shifts[0], moves_u1: shifts[1], moves_u2: shifts[2], moves_u3: shifts[3]))
+    unless fields[:root_base_id]
       new_alg.update(root_base_id: new_alg.id)
     end
     ComboAlg.make_single(new_alg)
@@ -26,13 +27,13 @@ class BaseAlg < ActiveRecord::Base
       base_alg_id = created.first.try(:id)
       case variant
         when :a
-          created << BaseAlg.make(name, moves, base_alg_id)
+          created << BaseAlg.make(moves, name: name, root_base_id: base_alg_id)
         when :Ma
-          created << BaseAlg.make('M.'+name, mirror(moves), base_alg_id)
+          created << BaseAlg.make(mirror(moves), name: 'M.'+name, root_base_id: base_alg_id, root_mirror: true)
         when :Aa
-          created << BaseAlg.make('A.'+name, reverse(moves), base_alg_id)
+          created << BaseAlg.make(reverse(moves), name: 'A.'+name, root_base_id: base_alg_id, root_inverse: true)
         when :AMa
-          created << BaseAlg.make('AM.'+name, mirror(reverse(moves)), base_alg_id)
+          created << BaseAlg.make(mirror(reverse(moves)), name: 'AM.'+name, root_base_id: base_alg_id, root_mirror: true, root_inverse: true)
         else
           raise "Unknown variant type '#{variant}'"
       end

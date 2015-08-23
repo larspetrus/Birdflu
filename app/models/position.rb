@@ -42,8 +42,8 @@ class Position < ActiveRecord::Base
     CP_SYMS[corner_swap]
   end
 
-  def algs_in_set
-    self.combo_algs.where(base_alg1_id: AlgSet::THE71, base_alg2_id: AlgSet::THE71)
+  def algs_in_set(alg_set = AlgSet.active)
+    self.combo_algs.where(alg_set.where_clause)
   end
 
   def self.by_ll_code(ll_code)
@@ -117,8 +117,11 @@ class Position < ActiveRecord::Base
   end
 
   def best_alg_set_length
-    best = algs_in_set.limit(1).first
-    best ? best.length : 99
+    AlgSet.active.shortest(self)
+  end
+
+  def best_combo
+    combo_algs.where(single: false).first
   end
 
   def set_corner_swap

@@ -74,7 +74,7 @@
   Selected #{@position_count} of the #{Position.count} LL positions. #{@set_solved} solved.
   - if @position_count != @positions.count
     Showing first #{@positions.count}
-%h5 Average optimal solve: #{@optimal_average}, Combo solve: #{@combo_average}, Alg set: #{@algset_average}
+%h5 Average optimal solve: #{@optimal_average}, Optimal combo solve: #{@combo_average}, Alg set combo solve: #{@algset_average}
 
 %table.index
   %th Position
@@ -84,7 +84,7 @@
   %th OLL
   %th Solutions
   %th{colspan: 2} Optimal Solution
-  %th{colspan: 2} Best Combo Solution
+  %th{colspan: 2} (not Best Combo Solution)
   %th Name
   %th Set
 
@@ -102,7 +102,7 @@
         %td.num.optimal= best.length
         %td=best.moves
         %td.num{class: pos.is_optimal(best_combo) ? 'optimal' : ''}= best_combo.length
-        %td
+        %td{style: "background-color: #bbb"}
           =best_combo.mv_start
           %span.cancel1= best_combo.mv_cancel1
           %span.merged=  best_combo.mv_merged

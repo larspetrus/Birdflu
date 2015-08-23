@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150818031932) do
+ActiveRecord::Schema.define(version: 20150821182050) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,6 +24,8 @@ ActiveRecord::Schema.define(version: 20150818031932) do
     t.string  "moves_u3"
     t.integer "root_base_id"
     t.boolean "combined",     default: false
+    t.boolean "root_mirror",  default: false
+    t.boolean "root_inverse", default: false
   end
 
   create_table "combo_algs", force: true do |t|
@@ -45,6 +47,7 @@ ActiveRecord::Schema.define(version: 20150818031932) do
 
   add_index "combo_algs", ["base_alg1_id"], name: "index_combo_algs_on_base_alg1_id", using: :btree
   add_index "combo_algs", ["base_alg2_id"], name: "index_combo_algs_on_base_alg2_id", using: :btree
+  add_index "combo_algs", ["length"], name: "index_combo_algs_on_length", using: :btree
   add_index "combo_algs", ["position_id"], name: "index_combo_algs_on_position_id", using: :btree
 
   create_table "positions", force: true do |t|

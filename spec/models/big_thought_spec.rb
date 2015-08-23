@@ -43,31 +43,31 @@ describe BigThought do
     let (:root3) { RootAlg.new("Niklas","L U' R' U L' U' R") } # :mirror_only
 
     it "populates incrementally" do
-      alg1 = BaseAlg.make(root1.name, root1.moves)
+      alg1 = BaseAlg.make(root1.moves, name: root1.name)
       expect(counts(alg1.id)).to eq(base_alg1: 1, base_alg2: 0, total: 1)
       BigThought.combine(alg1)
       expect(counts(alg1.id)).to eq(base_alg1: 5, base_alg2: 4, total: 5)
 
-      BigThought.combine(alg2 = BaseAlg.make(root2.name, root2.moves))
+      BigThought.combine(alg2 = BaseAlg.make(root2.moves, name: root2.name))
       expect(counts(alg1.id)).to eq(base_alg1: 9, base_alg2: 8, total: 18)
       expect(counts(alg2.id)).to eq(base_alg1: 9, base_alg2: 8, total: 18)
 
-      BigThought.combine(alg3 = BaseAlg.make(root3.name, root3.moves))
+      BigThought.combine(alg3 = BaseAlg.make(root3.moves, name: root3.name))
       expect(counts(alg1.id)).to eq(base_alg1: 13, base_alg2: 12, total: 39)
       expect(counts(alg2.id)).to eq(base_alg1: 13, base_alg2: 12, total: 39)
       expect(counts(alg3.id)).to eq(base_alg1: 13, base_alg2: 12, total: 39)
     end
 
     it 'keeps track of what algs are combined' do
-      alg = BaseAlg.make(root1.name, root1.moves)
+      alg = BaseAlg.make(root1.moves, name: root1.name)
       expect(alg.combined).to eq(false)
       BigThought.combine(alg)
       expect(alg.combined).to eq(true)
     end
 
     it 'removes cancellations' do
-      BigThought.combine(alg1 = BaseAlg.make(root1.name, root1.moves))
-      BigThought.combine(alg2 = BaseAlg.make("AntiH435",  "F U R U' R' F'"))
+      BigThought.combine(alg1 = BaseAlg.make(root1.moves, name: root1.name))
+      BigThought.combine(alg2 = BaseAlg.make("F U R U' R' F'", name: "AntiH435"))
       expect(counts(alg1.id)).to eq(base_alg1: 8, base_alg2: 7, total: 16)
       expect(counts(alg2.id)).to eq(base_alg1: 8, base_alg2: 7, total: 16)
     end
