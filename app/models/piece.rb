@@ -1,7 +1,7 @@
 class Piece
   attr_reader :name
 
-  ALL = %w[BL BR DB DBL DRB DF DLF DFR DL DR FL FR UB ULB UBR UF UFL URF UL UR]
+  ALL = %w[BL BR DB DBL DRB DF DLF DFR DL DR FL FR UB ULB UBR UF UFL URF UL UR] #TODO %i ? ALL_NAMES ?
 
   def initialize(name)
     raise "'#{name}' is not a valid piece name" unless ALL.include? name
@@ -34,11 +34,24 @@ class Piece
   def as_tweak()
     colors = @stickers.join
     sides = @on_sides.join
-    if colors == sides
-      ''
-    else
-      "#{colors}:#{sides}"
+
+    (colors == sides) ? '' : "#{colors}:#{sides}"
+  end
+
+  def for_state(position)
+    rez = ''
+    position.each_char { |ch| rez += sticker_on(ch).to_s }
+    rez
+  end
+
+  def for_f2l_state(position)
+    if @name.include? 'U'
+      return @sides == 2 ? '--' : '---'
     end
+
+    rez = ''
+    position.each_char { |ch| rez += sticker_on(ch).to_s }
+    rez
   end
 
   def is_solved

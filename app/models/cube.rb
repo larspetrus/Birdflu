@@ -9,9 +9,21 @@ class Cube
       if is_ll_code
         apply_position(state)
       else
-        apply_alg(state)
+        apply_reverse_alg(state)
       end
     end
+  end
+
+  def state_string
+    rr = []
+    Piece::ALL.each { |piece| rr << piece_at(piece.to_sym).for_state(piece) }
+    rr.join(' ')
+  end
+
+  def f2l_state_string
+    rr = []
+    Piece::ALL.each { |pos| rr << piece_at(pos.to_sym).for_f2l_state(pos) }
+    rr.join(' ')
   end
 
   def apply_position(ll_code)
@@ -33,9 +45,9 @@ class Cube
     self
   end
 
-  def apply_alg(moves)
+  def apply_reverse_alg(moves)
     moves.split(' ').reverse.each do |move|
-      move(move[0], 4 - Move.turns(move))
+      unmove(move[0], Move.turns(move))
     end
     self
   end
@@ -67,6 +79,10 @@ class Cube
         cyc.each { |position| @pieces[position].shift(move.shift, turns) }
         turns.times { @pieces[cyc[0]],@pieces[cyc[1]],@pieces[cyc[2]],@pieces[cyc[3]] = @pieces[cyc[1]],@pieces[cyc[2]],@pieces[cyc[3]],@pieces[cyc[0]] }
     end
+  end
+
+  def unmove(side, turns)
+    move(side, 4 - turns)
   end
 
   def standard_ll_code(mirror = false)
@@ -128,10 +144,11 @@ class Cube
   end
 
   def f2l_solved()
-    @pieces.values.each do |piece|
-      return false if !piece.name.include?('U') && !piece.is_solved
-    end
-    true
+    not @pieces.values.detect { |piece| !piece.name.include?('U') && !piece.is_solved }
+  end
+
+  def solved()
+    not @pieces.values.detect { |piece| !piece.is_solved }
   end
 
   def print

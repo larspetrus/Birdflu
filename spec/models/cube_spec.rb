@@ -76,4 +76,39 @@ RSpec.describe Cube, :type => :model do
     cube3 = Cube.new('a7i7a7i7')
     expect(cube3.standard_ll_code()).to eq("a3i3a3i3")
   end
+
+  it 'f2l_solved' do
+    cube = Cube.new
+    expect(cube.f2l_solved).to eq(true)
+    cube.move(:F, 3)
+    cube.move(:U, 3)
+    cube.move(:L, 3)
+    cube.move(:U, 1)
+    cube.move(:L, 1)
+    expect(cube.f2l_solved).to eq(false)
+    cube.move(:F, 1)
+    expect(cube.f2l_solved).to eq(true)
+  end
+
+  it 'state_string' do
+    cube = Cube.new
+    expect(cube.state_string).to eq('BL BR DB DBL DRB DF DLF DFR DL DR FL FR UB ULB UBR UF UFL URF UL UR')
+    cube.move(:F, 1)
+    expect(cube.state_string).to eq('BL BR DB DBL DRB RF RDF RFU DL DR FD FU UB ULB UBR LF LFD LUF UL UR')
+  end
+
+  it 'f2l_state_string' do
+    cube = Cube.new
+    expect(cube.f2l_state_string).to eq('BL BR DB DBL DRB DF DLF DFR DL DR FL FR -- --- --- -- --- --- -- --')
+    cube.move(:F, 1)
+    expect(cube.f2l_state_string).to eq('BL BR DB DBL DRB RF RDF --- DL DR FD -- -- --- --- LF LFD --- -- --')
+  end
+
+  it 'iuh' do
+    cube = Cube.new
+    5.times do |i|
+      puts cube.state_string
+      cube.move(:U, 1)
+    end
+  end
 end

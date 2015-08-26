@@ -195,7 +195,7 @@ class Position < ActiveRecord::Base
 
     corner_positioning_algs.each do |cp_alg|
       edge_positioning_algs.each do |ep_alg|
-        cube = Cube.new(cp_alg).apply_alg(ep_alg)
+        cube = Cube.new(cp_alg).apply_reverse_alg(ep_alg)
         untwisted_ll_code = cube.ll_codes[0].bytes
 
         (0..2).each do |c1|
