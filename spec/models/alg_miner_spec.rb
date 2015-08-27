@@ -19,8 +19,14 @@ describe AlgMiner do
     end
   end
 
+  it 'solvedish' do
+    expect(AlgMiner.solvedish("U")).to be_truthy
+    expect(AlgMiner.solvedish("F")).to be_falsey
+    expect(AlgMiner.solvedish("R2 R2 U2")).to be_truthy
+  end
+
   describe '#end_states' do
-    depth_2 = AlgMiner.find_end_states(2).values
+    depth_2 = EndStateMiner.new(2).run.values
 
     it 'makes all combinations' do
       ["F R","F2 R","F' R","F R2","F2 R2","F' R2","F R'","F2 R'","F' R'"].each do |moves|
