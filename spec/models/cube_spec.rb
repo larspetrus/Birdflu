@@ -92,16 +92,16 @@ RSpec.describe Cube, :type => :model do
 
   it 'state_string' do
     cube = Cube.new
-    expect(cube.state_string).to eq('BL BR DB DBL DRB DF DLF DFR DL DR FL FR UB ULB UBR UF UFL URF UL UR')
+    expect(cube.state_string).to eq('aceADgGJikmoqMPsSVux')
     cube.move(:F, 1)
-    expect(cube.state_string).to eq('BL BR DB DBL DRB RF RDF RFU DL DR FD FU UB ULB UBR LF LFD LUF UL UR')
+    expect(cube.state_string).to eq('aceADpLXikhtqMPnHUux')
   end
 
   it 'f2l_state_string' do
     cube = Cube.new
-    expect(cube.f2l_state_string).to eq('BL BR DB DBL DRB DF DLF DFR DL DR FL FR -- --- --- -- --- --- -- --')
+    expect(cube.f2l_state_string).to eq('aceADgGJikmo--------')
     cube.move(:F, 1)
-    expect(cube.f2l_state_string).to eq('BL BR DB DBL DRB RF RDF --- DL DR FD -- -- --- --- LF LFD --- -- --')
+    expect(cube.f2l_state_string).to eq('aceADpL-ikh----nH---')
   end
 
   it 'iuh' do

@@ -1,6 +1,9 @@
 require 'rails_helper'
 
 describe AlgMiner do
+
+  AlgMiner::LOGGING = false
+
   it 'as_alg' do
     expect(AlgMiner.as_alg([[:R, 1], [:L, 2], [:U, 3]])).to eq("R L2 U'")
   end
@@ -20,17 +23,18 @@ describe AlgMiner do
   end
 
   it 'solvedish' do
-    expect(AlgMiner.solvedish("U")).to be_truthy
-    expect(AlgMiner.solvedish("F")).to be_falsey
-    expect(AlgMiner.solvedish("R2 R2 U2")).to be_truthy
+    digger = AlgDigger.new(2, nil)
+    expect(digger.solvedish("U")).to be_truthy
+    expect(digger.solvedish("F")).to be_falsey
+    expect(digger.solvedish("R2 R2 U2")).to be_truthy
   end
 
   describe '#end_states' do
-    depth_2 = EndStateMiner.new(2).run.values
+    depth_2 = GoalFinder.new(2).run.finishes
 
     it 'makes all combinations' do
       ["F R","F2 R","F' R","F R2","F2 R2","F' R2","F R'","F2 R'","F' R'"].each do |moves|
-        expect(depth_2).to include([moves])
+        expect(depth_2).to include(moves)
       end
 
       expect(depth_2.flatten.count).to eq(198)
@@ -38,18 +42,28 @@ describe AlgMiner do
     end
 
     it 'slicey moves are normalized' do
-      expect(depth_2).not_to include(["L R"])
-      expect(depth_2).to include(["R L"])
+      expect(depth_2).not_to include("L R")
+      expect(depth_2).to include("R L")
     end
 
     it 'only includes"leafs"' do
-      expect(depth_2).not_to include(["L"])
+      expect(depth_2).not_to include("L")
     end
 
     it 'never ends with U* or U* D*' do
-      expect(depth_2).not_to include(["L U"])
-      expect(depth_2).not_to include(["U D"])
+      expect(depth_2).not_to include("L U")
+      expect(depth_2).not_to include("U D")
     end
   end
 
+  it 'compress_alg' do
+    expect(AlgMiner.compress_alg([[:F, 1], [:R, 2], [:U, 3]])).to eq('Frn')
+  end
+
+  it 'decompress_alg' do
+    expect(AlgMiner.decompress_alg('Frn')).to eq("F R2 U'")
+  end
+
 end
+
+4+ 10+ 38+ 142+ 608+ 2218+ 10254+ 47756+ 236114+ 1116008

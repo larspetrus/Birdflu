@@ -17,13 +17,13 @@ class Cube
   def state_string
     rr = []
     Piece::ALL.each { |piece| rr << piece_at(piece.to_sym).for_state(piece) }
-    rr.join(' ')
+    rr.join('')
   end
 
   def f2l_state_string
     rr = []
     Piece::ALL.each { |pos| rr << piece_at(pos.to_sym).for_f2l_state(pos) }
-    rr.join(' ')
+    rr.join('')
   end
 
   def apply_position(ll_code)
