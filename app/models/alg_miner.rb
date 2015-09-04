@@ -159,7 +159,7 @@ class GoalFinder
   def solutions_for(cube)
     return [] unless @solved_states.has_key?(cube.f2l_state_string)
 
-    @solved_states[cube.f2l_state_string].split('|').map{|comprsd| AlgMiner.decompress_alg(comprsd) }
+    @solved_states[cube.f2l_state_string].split('|').map{|cmprsd| AlgMiner.decompress_alg(cmprsd) }
   end
 
   def finishes # for test
@@ -178,7 +178,7 @@ class AlgDigger
     @cube = Cube.new
     @candidate_algs = []
 
-    dig_deeper([[:F, 1], [:F, 2], [:F, 3]], [])
+    dig_deeper([[:B, 1], [:B, 2], [:B, 3]], [])
 
     clean_up
   end
@@ -225,7 +225,7 @@ class AlgDigger
   end
 
   def bad_merge(alg)
-    sides = alg.gsub(/[ '2]/,'')
-    %w(FBF BFB RLR LRL UDU DUD).detect { |bad| sides.include?(bad) }
+    sides_only = alg.gsub(/[ '2]/,'')
+    %w(FBF BFB RLR LRL UDU DUD).detect { |bad| sides_only.include?(bad) }
   end
 end

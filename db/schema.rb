@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150821182050) do
+ActiveRecord::Schema.define(version: 20150903154452) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -69,5 +69,13 @@ ActiveRecord::Schema.define(version: 20150821182050) do
 
   add_index "positions", ["ll_code"], name: "index_positions_on_ll_code", using: :btree
   add_index "positions", ["oll"], name: "index_positions_on_oll", using: :btree
+
+  create_table "raw_algs", force: true do |t|
+    t.string  "alg_id"
+    t.string  "f_alg"
+    t.integer "length"
+  end
+
+  add_index "raw_algs", ["f_alg"], name: "index_raw_algs_on_f_alg", using: :btree
 
 end
