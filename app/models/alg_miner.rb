@@ -31,7 +31,7 @@ class AlgMiner
 
   def write_algs_to_file(algs_by_length, search_depth)
     file_name = Time.now.strftime("algs_%b%d_%H:%M_#{@table_depth}-#{search_depth}.txt")
-    open(file_name, 'w') { |f|
+    open(file_name, 'w') do |f|
       f.puts "Table depth: #{@table_depth}, Search depth: #{search_depth}."
       algs_by_length.keys.sort.each { |k| f.puts "#{k} moves: #{algs_by_length[k].count} algs" }
 
@@ -39,7 +39,63 @@ class AlgMiner
         f.puts "\n# #{k}"
         algs_by_length[k].to_a.sort.each { |a| f.puts a }
       end
-    }
+    end
+  end
+
+
+  def self.flip_d
+    flipped_file = []
+    open("FINAL_algs_Sep04_23:48_6-9_D.txt") do |d_file|
+      d_file.each_line do |line|
+        if line.start_with? 'D'
+          flipped_file << BaseAlg.normalize(BaseAlg.mirror(line))
+        else
+          flipped_file << line
+        end
+      end
+    end
+    puts flipped_file
+
+    open("FINAL_flipped_D.txt", 'w') do |f|
+      flipped_file.each { |fa|  f.puts fa}
+    end
+  end
+
+
+  def self.build_all_ll_algs_file
+    length = nil
+    algs_by_length = {}
+    6.upto(15) { |num| algs_by_length[num] = [] }
+
+    files = ["FINAL_algs_Sep06_23:20_4-3.txt", "FINAL_algs_Sep06_17:45_7-8.txt", "FINAL_algs_Sep04_23:48_6-9_D.txt", "FINAL_flipped_D.txt", "FINAL_algs_Sep05_01:44_6-9_D2.txt"]
+
+    files.each do |file_name|
+      puts "Now reading #{file_name}"
+      open(file_name) do |file|
+        file.each_line do |line|
+
+          if line.start_with? '#'
+            length = line[2..-1].to_i
+            puts "New length: #{length}"
+          end
+
+          if line.start_with?('B') || line.start_with?('D')
+            algs_by_length[length] << line
+          end
+
+        end
+      end
+      file_name = Time.now.strftime("all_ll_algs_15_%b%d_%H-%M.txt")
+      open(file_name, 'w') do |f|
+        f.puts "All LL algs up to 15 moves. Compiled from several runs."
+        algs_by_length.keys.sort.each { |k| f.puts "#{k} moves: #{algs_by_length[k].count} algs" }
+
+        algs_by_length.keys.sort.each do |k|
+          f.puts "\n# #{k}"
+          algs_by_length[k].sort.each { |a| f.puts a }
+        end
+      end
+    end
   end
 
   def self.next_moves(last_move)
@@ -183,7 +239,7 @@ class AlgDigger
     clean_up
   end
 
-  def dig_deeper(moves, earlier_moves)
+  def dig_deeper(moves, earlier_moves, preset_next_moves = nil)
     at_final_depth = (earlier_moves.length == @search_depth - 1)
 
     moves.each do |move|
@@ -191,11 +247,11 @@ class AlgDigger
 
       @end_states.solutions_for(@cube).each do |finish|
         unless finish.start_with? move.first.to_s # Ignore the inverse of the moves we just made
-          AlgMiner.log "#{@candidate_algs.count} found." if @candidate_algs.count % 1000 == 0
+          AlgMiner.log "#{@candidate_algs.count} found. At #{AlgMiner.as_alg(earlier_moves + [move])}." if @candidate_algs.count % 1000 == 0
           @candidate_algs << "#{AlgMiner.as_alg(earlier_moves + [move])} #{finish}"
         end
       end
-      dig_deeper(AlgMiner.next_moves(move), earlier_moves + [move]) unless at_final_depth
+      dig_deeper(preset_next_moves || AlgMiner.next_moves(move), earlier_moves + [move]) unless at_final_depth
 
       @cube.unmove(move.first, move.last)
     end
@@ -205,7 +261,7 @@ class AlgDigger
     algs_by_length = Hash.new { |hash, key| hash[key] = Set.new }
     bad_count = 0
     @candidate_algs.each do |alg|
-      if solvedish(alg) || bad_merge(alg)
+      if solvedish(alg) || bad_merge(alg) || dee_generate(alg)
         bad_count += 1
       else
         algs_by_length[alg.split.size] << BaseAlg.normalize(alg)
@@ -222,6 +278,10 @@ class AlgDigger
     end
 
     @solvedish_states.include?(Cube.new(alg).state_string)
+  end
+
+  def dee_generate(alg)
+    (alg.start_with?("D ") && alg.end_with?(" D'")) || (alg.start_with?("D2 ") && alg.end_with?(" D2"))
   end
 
   def bad_merge(alg)
