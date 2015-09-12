@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150907170927) do
+ActiveRecord::Schema.define(version: 20150912210345) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -77,8 +77,11 @@ ActiveRecord::Schema.define(version: 20150907170927) do
     t.string  "l_alg"
     t.string  "b_alg"
     t.string  "r_alg"
+    t.integer "mirror_id"
+    t.integer "position_id"
   end
 
   add_index "raw_algs", ["b_alg"], name: "index_raw_algs_on_b_alg", using: :btree
+  add_index "raw_algs", ["position_id"], name: "index_raw_algs_on_position_id", using: :btree
 
 end

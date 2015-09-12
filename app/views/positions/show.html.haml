@@ -34,7 +34,7 @@
   %th Name
   %th Alg
   %th Composition
-  - @position.algs_in_set.each do |alg|
+  - @algs.each do |alg|
     %tr
       %td{class: @position.is_optimal(alg) ? 'optimal' : ''}= alg.length unless dupes.include? alg.moves
       %td{class: alg.css_kind}= alg.name

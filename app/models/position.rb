@@ -157,7 +157,7 @@ class Position < ActiveRecord::Base
   end
 
   def self.update_each
-    Position.all.each do |pos|
+    Position.find_each do |pos|
       yield(pos)
       pos.save
     end
