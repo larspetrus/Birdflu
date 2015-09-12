@@ -45,29 +45,8 @@ RSpec.describe BaseAlg, :type => :model do
     end
   end
 
-  it 'mirror' do
-    expect(BaseAlg.mirror("F U' B2 D")).to eq("F' U B2 D'")
-    expect(BaseAlg.mirror("R L' R2")).to eq("L' R L2")
-    expect(BaseAlg.mirror("B L' B R2 B' L B R2 B2")).to eq("B' R B' L2 B R' B' L2 B2")
-  end
-
-  it 'reverse' do
-    expect(BaseAlg.reverse("F U' B2 D")).to eq("D' B2 U F'")
-    expect(BaseAlg.reverse("R L' R2")).to eq("R2 L R'")
-    expect(BaseAlg.reverse("B L' B R2 B' L B R2 B2")).to eq("B2 R2 B' L' B R2 B' L B'")
-  end
-
-  it 'normalize' do
-    expect(BaseAlg.normalize("F R2 L2 U D' B F2")).to eq("F L2 R2 D' U B F2")
-    expect(BaseAlg.normalize("B L' R F D2 U F B' R")).to eq("B L' R F D2 U B' F R")
-  end
-
   it 'verifies F2L is preserved' do
       expect{BaseAlg.make("F U D")}.to raise_error( RuntimeError, "Can't make LL code with F2L unsolved" )
-  end
-
-  it '#rotate_by_U' do
-    expect(BaseAlg.rotate_by_U("F U2 R' D B2 L'")).to eq("L U2 F' D R2 B'")
   end
 
   it 'length' do

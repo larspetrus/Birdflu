@@ -28,9 +28,9 @@ describe BigThought do
 
     def all_variations(moves)
       all = []
-      [moves, BaseAlg.mirror(moves), BaseAlg.reverse(moves), BaseAlg.mirror(BaseAlg.reverse(moves))].each do |base_variant|
+      [moves, Algs.mirror(moves), Algs.reverse(moves), Algs.mirror(Algs.reverse(moves))].each do |base_variant|
         all << base_variant
-        3.times { all << BaseAlg.rotate_by_U(all.last) }
+        3.times { all << Algs.rotate_by_U(all.last) }
       end
       all.uniq
     end

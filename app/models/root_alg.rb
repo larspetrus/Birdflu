@@ -8,12 +8,12 @@ class RootAlg
   end
   
   def alg_variants
-    reverse_alg = BaseAlg.reverse(@moves)
+    reverse_alg = Algs.reverse(@moves)
     variants = {
          a: Cube.new(@moves).standard_ll_code,
-        Ma: Cube.new(BaseAlg.mirror(@moves)).standard_ll_code,
+        Ma: Cube.new(Algs.mirror(@moves)).standard_ll_code,
         Aa: Cube.new(reverse_alg).standard_ll_code,
-        AMa:Cube.new(BaseAlg.mirror(reverse_alg)).standard_ll_code,
+        AMa:Cube.new(Algs.mirror(reverse_alg)).standard_ll_code,
     }
     unique_variants = []
     seen = Set.new

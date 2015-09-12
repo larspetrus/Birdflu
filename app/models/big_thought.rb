@@ -23,7 +23,7 @@ class BigThought
     if initial_run
       Position.includes(:combo_algs).find_each do |pos|
         optimal_alg = pos.combo_algs[0]
-        inverse_ll_code = Cube.new(BaseAlg.reverse(optimal_alg.moves)).standard_ll_code
+        inverse_ll_code = Cube.new(Algs.reverse(optimal_alg.moves)).standard_ll_code
         pos.update(best_alg_id: optimal_alg.id, optimal_alg_length: optimal_alg.length, inverse_ll_code: inverse_ll_code)
       end
     end

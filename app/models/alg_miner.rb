@@ -47,11 +47,7 @@ class AlgMiner
     flipped_file = []
     open("FINAL_algs_Sep04_23:48_6-9_D.txt") do |d_file|
       d_file.each_line do |line|
-        if line.start_with? 'D'
-          flipped_file << BaseAlg.normalize(BaseAlg.mirror(line))
-        else
-          flipped_file << line
-        end
+        flipped_file << (line.start_with?('D') ? Algs.mirror(line) : line)
       end
     end
     puts flipped_file
@@ -264,7 +260,7 @@ class AlgDigger
       if solvedish(alg) || bad_merge(alg) || dee_generate(alg)
         bad_count += 1
       else
-        algs_by_length[alg.split.size] << BaseAlg.normalize(alg)
+        algs_by_length[alg.split.size] << Algs.normalize(alg)
       end
     end
     AlgMiner.log "#{@candidate_algs.count} candidates. #{@candidate_algs.count - bad_count} good. #{bad_count} bad."

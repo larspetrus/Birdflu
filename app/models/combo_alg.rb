@@ -4,7 +4,7 @@ class ComboAlg < ActiveRecord::Base
   belongs_to :base_alg2, class_name: 'BaseAlg'
 
   before_create do
-    self.moves = BaseAlg.normalize(self.moves)
+    self.moves = Algs.normalize(self.moves)
     self.length = self.moves.split.length
     cube = Cube.new(self.moves)
     ll_code = cube.standard_ll_code # validates
