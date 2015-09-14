@@ -37,7 +37,7 @@ class ComboAlg < ActiveRecord::Base
 
   def self.align_moves(move_parms) # Make the alg make the STANDARD ll_code, so the Roofpig matches the position page image
     alg_adjustment = 4 - Cube.new(move_parms[:moves]).standard_ll_code_offset
-    move_parms.keys.each { | key | move_parms[key] = rotate_by_U(move_parms[key], alg_adjustment) }
+    move_parms.keys.each { | key | move_parms[key] = Algs.rotate_by_U(move_parms[key], alg_adjustment) }
   end
 
   def self.merge_moves(moves1, moves2)
@@ -84,10 +84,6 @@ class ComboAlg < ActiveRecord::Base
     end
   end
 
-  def self.rotate_by_U(moves, turns = 1)
-    moves.chars.map { |char| (place = 'RFLB'.index(char)) ? 'RFLB'[(place + turns) % 4] : char }.join
-  end
-
   def setup_moves
     return '' if u_setup == 0 || u_setup.nil?
     "| setupmoves=#{Move.name_from('U', u_setup)}"
@@ -100,7 +96,7 @@ class ComboAlg < ActiveRecord::Base
   def css_kind
     return 'single' if single
     return 'one-alg' if oneAlg?
-    return ''
+    ''
   end
 
   def is_aligned_with_ll_code

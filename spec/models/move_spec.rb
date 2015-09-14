@@ -2,12 +2,6 @@ require 'rails_helper'
 
 describe Move do
 
-  it '#on' do
-    expect(Move.on('F')).to eq(Move::F)
-    expect(Move.on('L')).to eq(Move::L)
-    expect(Move.on(:D)).to eq(Move::D)
-  end
-
   it '#from' do
     expect(Move.name_from("F", 1)).to eq("F")
     expect(Move.name_from("L", 2)).to eq("L2")

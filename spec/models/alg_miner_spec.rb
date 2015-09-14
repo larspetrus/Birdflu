@@ -30,7 +30,7 @@ describe AlgMiner do
   end
 
   describe '#end_states' do
-    depth_2 = GoalFinder.new(2).run.finishes
+    let(:depth_2) { GoalFinder.new(2).run.finishes }
 
     it 'makes all combinations' do
       ["F R","F2 R","F' R","F R2","F2 R2","F' R2","F R'","F2 R'","F' R'"].each do |moves|

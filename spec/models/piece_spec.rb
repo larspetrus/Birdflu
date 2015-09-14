@@ -65,7 +65,7 @@ RSpec.describe Piece, :type => :model do
   it 'tracks stickers during moves' do
     piece = Piece.new('URF')
 
-    piece.shift(Move::R.shift)
+    piece.shift(Piece.movement(:R))
 
     expect(piece.sticker_on(:B)).to eql(:U)
     expect(piece.sticker_on(:R)).to eql(:R)
@@ -73,7 +73,7 @@ RSpec.describe Piece, :type => :model do
 
     expect(piece.as_tweak).to eq('URF:BRU')
 
-    piece.shift(Move::R.shift, 3)
+    piece.shift(Piece.movement(:R), 3)
 
     expect(piece.sticker_on(:U)).to eql(:U)
     expect(piece.sticker_on(:R)).to eql(:R)
@@ -86,8 +86,19 @@ RSpec.describe Piece, :type => :model do
     drb = Piece.new('DRB')
     expect(drb.is_solved).to eq(true)
 
-    drb.shift(Move::R.shift)
+    drb.shift(Piece.movement(:R))
     expect(drb.is_solved).to eq(false)
+
+    uf = Piece.new('UF')
+    expect(uf.is_solved).to eq(true)
+
+    uf.shift(Piece.movement(:U))
+    expect(uf.is_solved).to eq(false)
+  end
+
+  it '#movement' do
+    expect(Piece.movement('F')).to eq(Piece.movement(:F))
+    expect(Piece.movement('L')).to eq(Piece.movement(:L))
   end
 
 end

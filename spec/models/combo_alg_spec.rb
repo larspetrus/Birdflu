@@ -62,10 +62,6 @@ RSpec.describe ComboAlg, :type => :model do
     expect(ComboAlg.merge_moves("L F B2", "F B2 D")).to eq(mv_start: "L", mv_cancel1: "B2 F", mv_merged: "F2", mv_cancel2: "F B2", mv_end: "D", moves: "L F2 D")
   end
 
-  it '#rotate_by_U' do
-    expect(ComboAlg.rotate_by_U("F U2 R' D B2 L'")).to eq("L U2 F' D R2 B'")
-  end
-
   it 'natural_ll_code' do
     unaligned = Cube.new("F' U' L' U L F")
     aligned = Cube.new("R' U' F' U F R")

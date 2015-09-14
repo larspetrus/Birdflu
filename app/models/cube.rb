@@ -16,32 +16,32 @@ class Cube
 
   def state_string
     rr = []
-    Piece::ALL.each { |piece| rr << piece_at(piece.to_sym).for_state(piece) }
+    Piece::ALL.each { |piece| rr << piece_at(piece.to_sym).state_code_at(piece) }
     rr.join('')
   end
 
   def f2l_state_string
     rr = []
-    Piece::ALL.each { |pos| rr << piece_at(pos.to_sym).for_f2l_state(pos) }
+    Piece::ALL.each { |pos| rr << piece_at(pos.to_sym).f2l_state_code_at(pos) }
     rr.join('')
   end
 
   def apply_position(ll_code)
-    movements = {}
+    displacements = {}
 
     4.times do |i|
-      c_data = LL.corner_data(ll_code[i*2])
-      movements[LL::U_CORNERS[i]] = c_to_here = @pieces[c_data.position(i).to_sym]
-      c_to_here.shift(Move::D.shift, c_data.distance)
-      c_to_here.rotate(c_data.spin)
+      corner_data = LL.corner_data(ll_code[i*2])
+      displacements[LL::U_CORNERS[i]] = corner_belonging_here = @pieces[corner_data.position(i).to_sym]
+      corner_belonging_here.shift(Piece.movement(:D), corner_data.distance)
+      corner_belonging_here.rotate(corner_data.spin)
 
-      e_data = LL.edge_data(ll_code[2*i + 1])
-      movements[LL::U_EDGES[i]] = e_to_here = @pieces[e_data.position(i).to_sym]
-      e_to_here.shift(Move::D.shift, e_data.distance)
-      e_to_here.rotate(e_data.spin)
+      edge_data = LL.edge_data(ll_code[2*i + 1])
+      displacements[LL::U_EDGES[i]] = edge_belonging_here = @pieces[edge_data.position(i).to_sym]
+      edge_belonging_here.shift(Piece.movement(:D), edge_data.distance)
+      edge_belonging_here.rotate(edge_data.spin)
     end
 
-    movements.each { |position, piece| @pieces[position.to_sym] = piece }
+    displacements.each { |position, piece| @pieces[position.to_sym] = piece }
     self
   end
 
@@ -53,7 +53,7 @@ class Cube
   end
 
   def sticker_at(position, side)
-    piece_at(position).sticker_on(side.to_sym)
+    piece_at(position).sticker_on(side)
   end
 
   def color_at(position, side) # Same as RoofPig
@@ -74,9 +74,9 @@ class Cube
   end
 
   def move(side, turns)
-    move = Move.on(side)
-      move.cycles.each do |cyc|
-        cyc.each { |position| @pieces[position].shift(move.shift, turns) }
+    movement = Piece.movement(side)
+      movement.cycles.each do |cyc|
+        cyc.each { |position| @pieces[position].shift(movement, turns) }
         turns.times { @pieces[cyc[0]],@pieces[cyc[1]],@pieces[cyc[2]],@pieces[cyc[3]] = @pieces[cyc[1]],@pieces[cyc[2]],@pieces[cyc[3]],@pieces[cyc[0]] }
     end
   end

@@ -3,7 +3,7 @@ class Piece
 
   ALL = %w[BL BR DB DBL DRB DF DLF DFR DL DR FL FR UB ULB UBR UF UFL URF UL UR] #TODO %i ? ALL_NAMES ?
 
-  STATE_CODES = {
+  CUBE_STATE_CODES = {
       'BL'  => 'ab'.split(''),
       'BR'  => 'cd'.split(''),
       'DB'  => 'ef'.split(''),
@@ -25,22 +25,35 @@ class Piece
       'UL'  => 'uv'.split(''),
       'UR'  => 'xy'.split('')
   }
-  
-  
+
+  Movement = Struct.new(:cycles, :shift)
+  MOVEMENTS = {
+      R: Movement.new([%i[URF DFR DRB UBR], %i[UR FR DR BR]], {B: :D, D: :F, F: :U, U: :B, L: :L, R: :R}),
+      L: Movement.new([%i[ULB DBL DLF UFL], %i[BL DL FL UL]], {B: :U, U: :F, F: :D, D: :B, L: :L, R: :R}),
+      F: Movement.new([%i[DLF DFR URF UFL], %i[FL DF FR UF]], {U: :R, R: :D, D: :L, L: :U, F: :F, B: :B}),
+      B: Movement.new([%i[ULB UBR DRB DBL], %i[UB BR DB BL]], {U: :L, L: :D, D: :R, R: :U, F: :F, B: :B}),
+      U: Movement.new([%i[UBR ULB UFL URF], %i[UR UB UL UF]], {F: :L, L: :B, B: :R, R: :F, U: :U, D: :D}),
+      D: Movement.new([%i[DFR DLF DBL DRB], %i[DF DL DB DR]], {F: :R, R: :B, B: :L, L: :F, U: :U, D: :D})
+  }
+
+  def self.movement(side)
+    MOVEMENTS[side.to_sym]
+  end
+
   def initialize(name)
     raise "'#{name}' is not a valid piece name" unless ALL.include? name
 
     @name = name
     @stickers = name.chars.map { |char| char.to_sym}
     @on_sides = name.chars.map { |char| char.to_sym}
-    @sides = @stickers.count
+    @side_count = name.length
 
-    @state_code = STATE_CODES[name]
+    @state_code = CUBE_STATE_CODES[name]
   end
 
-  def shift(move_map, turns = 1)
+  def shift(movement, turns = 1)
     turns.times do
-      @on_sides = @on_sides.map { |on_side| move_map[on_side] }
+      @on_sides = @on_sides.map { |on_side| movement.shift[on_side] }
     end
   end
 
@@ -49,8 +62,8 @@ class Piece
   end
 
   def u_spin(mirror = false)
-    raw_spin = @sides - @on_sides.index(:U)
-    (mirror ? -raw_spin : raw_spin) % @sides
+    raw_spin = @side_count - @on_sides.index(:U)
+    (mirror ? -raw_spin : raw_spin) % @side_count
   end
 
   def sticker_on(side)
@@ -62,29 +75,27 @@ class Piece
   end
 
   def as_tweak()
-    colors = @stickers.join
     sides = @on_sides.join
-
-    (colors == sides) ? '' : "#{colors}:#{sides}"
+    (@name == sides) ? '' : "#{@name}:#{sides}"
   end
 
-  def for_state(position)
+  def state_code_at(position)
     state_on(position[0])
   end
 
-  def for_f2l_state(position)
+  def f2l_state_code_at(position)
     @name.include?('U') ? '-' : state_on(position[0])
   end
 
   def is_solved
     solved = true
-    @sides.times { |i| solved &= (@stickers[i] == @on_sides[i]) }
+    @side_count.times { |i| solved &= (@stickers[i] == @on_sides[i]) }
     solved
   end
 
   def to_s
     stickers = ""
-    @sides.times { |i| stickers += "#{@stickers[i]}@#{@on_sides[i]}, " }
+    @side_count.times { |i| stickers += "#{@stickers[i]}@#{@on_sides[i]}, " }
     "name: #{@name},  #{stickers}"
   end
 end
