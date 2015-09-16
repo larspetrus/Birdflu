@@ -5,20 +5,20 @@ describe AlgMiner do
   AlgMiner::LOGGING = false
 
   it 'as_alg' do
-    expect(AlgMiner.as_alg([[:R, 1], [:L, 2], [:U, 3]])).to eq("R L2 U'")
+    expect(AlgMiner.as_alg([Move::R, Move::L2, Move::Up])).to eq("R L2 U'")
   end
 
   describe '#next_moves' do
     it 'do not move same side again' do
-      expect(AlgMiner.as_alg(AlgMiner.next_moves([:B,1]))).to eq("F F2 F' R R2 R' L L2 L' U U2 U' D D2 D'")
-      expect(AlgMiner.as_alg(AlgMiner.next_moves([:L,1]))).to eq("F F2 F' B B2 B' R R2 R' U U2 U' D D2 D'")
-      expect(AlgMiner.as_alg(AlgMiner.next_moves([:D,1]))).to eq("F F2 F' B B2 B' R R2 R' L L2 L' U U2 U'")
+      expect(AlgMiner.as_alg(AlgMiner.next_moves(Move::B))).to eq("F F2 F' R R2 R' L L2 L' U U2 U' D D2 D'")
+      expect(AlgMiner.as_alg(AlgMiner.next_moves(Move::L))).to eq("F F2 F' B B2 B' R R2 R' U U2 U' D D2 D'")
+      expect(AlgMiner.as_alg(AlgMiner.next_moves(Move::D))).to eq("F F2 F' B B2 B' R R2 R' L L2 L' U U2 U'")
     end
 
     it '"slicey moves start with B, L or D, not F, R or U"' do
-      expect(AlgMiner.as_alg(AlgMiner.next_moves([:F,1]))).to eq("R R2 R' L L2 L' U U2 U' D D2 D'")
-      expect(AlgMiner.as_alg(AlgMiner.next_moves([:R,1]))).to eq("F F2 F' B B2 B' U U2 U' D D2 D'")
-      expect(AlgMiner.as_alg(AlgMiner.next_moves([:U,1]))).to eq("F F2 F' B B2 B' R R2 R' L L2 L'")
+      expect(AlgMiner.as_alg(AlgMiner.next_moves(Move::F))).to eq("R R2 R' L L2 L' U U2 U' D D2 D'")
+      expect(AlgMiner.as_alg(AlgMiner.next_moves(Move::R))).to eq("F F2 F' B B2 B' U U2 U' D D2 D'")
+      expect(AlgMiner.as_alg(AlgMiner.next_moves(Move::U))).to eq("F F2 F' B B2 B' R R2 R' L L2 L'")
     end
   end
 
@@ -57,7 +57,7 @@ describe AlgMiner do
   end
 
   it 'compress_alg' do
-    expect(AlgMiner.compress_alg([[:F, 1], [:R, 2], [:U, 3]])).to eq('Frn')
+    expect(AlgMiner.compress_alg([Move::F, Move::R2, Move::Up])).to eq('Frn')
   end
 
   it 'decompress_alg' do

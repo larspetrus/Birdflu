@@ -2,7 +2,7 @@ class AlgMiner
   # Currently set to store data in memory.
   # To use a file instead uncomment the %%% lines and comment the @@@ lines. (Not tested. I might have missed something)
 
-  ALL_MOVES = [[:F,1],[:F,2],[:F,3],[:B,1],[:B,2],[:B,3],[:R,1],[:R,2],[:R,3],[:L,1],[:L,2],[:L,3],[:U,1],[:U,2],[:U,3],[:D,1],[:D,2],[:D,3]].freeze
+  ALL_MOVES = %w[F F2 F' B B2 B' R R2 R' L L2 L' U U2 U' D D2 D'].map{|x| Move[x]}
 
   LOGGING = true
 
@@ -96,40 +96,23 @@ class AlgMiner
 
   def self.next_moves(last_move)
     forbidden_sides = {B: [:B], F: [:B, :F], L: [:L], R: [:L, :R], D: [:D], U: [:D, :U]}
-    all_moves_but(forbidden_sides[last_move.first])
+    all_moves_but(forbidden_sides[last_move.side])
   end
 
-  def self.all_moves_but(not_these)
-    ALL_MOVES.reject { |move| not_these.include? move.first }
+  def self.all_moves_but(not_on_these_sides)
+    ALL_MOVES.reject { |move| not_on_these_sides.include? move.side }
   end
 
-  TURN_CODES = [nil, '', '2', "'"]
   def self.as_alg(moves)
-    moves.map{ |move| "#{move.first}#{TURN_CODES[move.last]}" }.join(' ')
+    moves.map{ |move| move.name }.join(' ')
   end
 
-  MOVE_ENCODING = {
-      F: ['', 'F', 'f', 'E'],
-      B: ['', 'B', 'b', 'q'],
-      R: ['', 'R', 'r', 'P'],
-      L: ['', 'L', 'l', '1'],
-      U: ['', 'U', 'u', 'n'],
-      D: ['', 'D', 'd', 'p']
-  }
   def self.compress_alg(moves)
-    moves.map{ |move| MOVE_ENCODING[move.first][move.last] }.join('')
+    moves.map{ |move| move.compressed_code }.join('')
   end
 
-  DECOMPRESS = {
-      'F'=>'F', 'f'=>'F2', 'E'=>"F'",
-      'B'=>'B', 'b'=>'B2', 'q'=>"B'",
-      'R'=>'R', 'r'=>'R2', 'P'=>"R'",
-      'L'=>'L', 'l'=>'L2', '1'=>"L'",
-      'U'=>'U', 'u'=>'U2', 'n'=>"U'",
-      'D'=>'D', 'd'=>'D2', 'p'=>"D'"
-  }
   def self.decompress_alg(compressed)
-    compressed.chars.map{ |cc| DECOMPRESS[cc] }.join(' ')
+    compressed.chars.map{ |cc| Move[cc].name }.join(' ')
   end
 
   def self.log(string)
@@ -184,9 +167,9 @@ class GoalFinder
 
   def mine_end_states(allowed_moves, moves_so_far)
     allowed_moves.each do |move|
-      @cube.unmove(move.first, move.last)
+      @cube.unmove(move.side, move.turns)
       if moves_so_far.length <= 1
-        AlgMiner.log "Time: #{'%.2f' % (Time.now - @start_run)}. Move: #{(moves_so_far + [move]).map{|m| m.join}}. Got #{@solved_states.count} end positions."
+        AlgMiner.log "Time: #{'%.2f' % (Time.now - @start_run)}. Move: #{(moves_so_far + [move]).map{|m| m.name}}. Got #{@solved_states.count} end positions."
       end
 
       current_moves = [move] + moves_so_far
@@ -199,12 +182,12 @@ class GoalFinder
           @solved_states[@cube.f2l_state_string] = AlgMiner.compress_alg(current_moves) # @@@
         end # @@@
       else
-        dont_end_in_U_D = moves_so_far.empty? && (move.first == :D)
+        dont_end_in_U_D = moves_so_far.empty? && (move.side == :D)
         next_moves = (dont_end_in_U_D ? AlgMiner.all_moves_but([:D, :U]) : AlgMiner.next_moves(move))
         mine_end_states(next_moves, current_moves)
       end
 
-      @cube.move(move.first, move.last)
+      @cube.move(move.side, move.turns)
     end
   end
 
@@ -230,7 +213,7 @@ class AlgDigger
     @cube = Cube.new
     @candidate_algs = []
 
-    dig_deeper([[:B, 1], [:B, 2], [:B, 3]], [])
+    dig_deeper([Move::B, Move::B2, Move::Bp], [])
 
     clean_up
   end
@@ -239,17 +222,17 @@ class AlgDigger
     at_final_depth = (earlier_moves.length == @search_depth - 1)
 
     moves.each do |move|
-      @cube.move(move.first, move.last)
+      @cube.move(move.side, move.turns)
 
       @end_states.solutions_for(@cube).each do |finish|
-        unless finish.start_with? move.first.to_s # Ignore the inverse of the moves we just made
+        unless finish.start_with? move.side.to_s # Ignore the inverse of the moves we just made
           AlgMiner.log "#{@candidate_algs.count} found. At #{AlgMiner.as_alg(earlier_moves + [move])}." if @candidate_algs.count % 1000 == 0
           @candidate_algs << "#{AlgMiner.as_alg(earlier_moves + [move])} #{finish}"
         end
       end
       dig_deeper(preset_next_moves || AlgMiner.next_moves(move), earlier_moves + [move]) unless at_final_depth
 
-      @cube.unmove(move.first, move.last)
+      @cube.unmove(move.side, move.turns)
     end
   end
 
