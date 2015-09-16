@@ -30,10 +30,10 @@ class Icons::Cop < Icons::Base
       [
         [:'',:Ao,:Bo,:bo,:Co,:Do,:Eo,:Fo,:Go ].map{|id| self.by_code(id)},
         [:-, :Ad,:Bd,:bd,:Cd,:Dd,:Ed,:Fd,:Gd].map{|id| self.by_code(id)},
-        [:- ,:Af,:Bf,:bf,:Cf,:Df,:Ef,:Ff,:Gf].map{|id| self.by_code(id)},
         [:- ,:- ,:Bb,:bb,:Cb,:Db,:Eb,:- ,:Gb].map{|id| self.by_code(id)},
         [:- ,:- ,:Bl,:bl,:Cl,:Dl,:El,:Fl,:Gl].map{|id| self.by_code(id)},
         [:- ,:- ,:Br,:br,:Cr,:Dr,:Er,:- ,:Gr].map{|id| self.by_code(id)},
+        [:- ,:Af,:Bf,:bf,:Cf,:Df,:Ef,:Ff,:Gf].map{|id| self.by_code(id)},
       ]
   end
 
