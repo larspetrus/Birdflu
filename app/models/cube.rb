@@ -46,9 +46,7 @@ class Cube
   end
 
   def apply_reverse_alg(moves)
-    moves.split(' ').reverse.each do |move|
-      unmove(move[0], Move.turns(move))
-    end
+    moves.split(' ').reverse.each { |move| undo(Move[move]) }
     self
   end
 
@@ -73,16 +71,16 @@ class Cube
     @pieces[position.to_sym]
   end
 
-  def move(side, turns)
-    movement = Piece.movement(side)
+  def do(move)
+    movement = Piece.movement(move.side)
       movement.cycles.each do |cyc|
-        cyc.each { |position| @pieces[position].shift(movement, turns) }
-        turns.times { @pieces[cyc[0]],@pieces[cyc[1]],@pieces[cyc[2]],@pieces[cyc[3]] = @pieces[cyc[1]],@pieces[cyc[2]],@pieces[cyc[3]],@pieces[cyc[0]] }
+        cyc.each { |position| @pieces[position].shift(movement, move.turns) }
+        move.turns.times { @pieces[cyc[0]],@pieces[cyc[1]],@pieces[cyc[2]],@pieces[cyc[3]] = @pieces[cyc[1]],@pieces[cyc[2]],@pieces[cyc[3]],@pieces[cyc[0]] }
     end
   end
 
-  def unmove(side, turns)
-    move(side, 4 - turns)
+  def undo(move)
+    self.do(move.inverse)
   end
 
   def standard_ll_code(mirror = false)

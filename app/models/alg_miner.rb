@@ -167,7 +167,8 @@ class GoalFinder
 
   def mine_end_states(allowed_moves, moves_so_far)
     allowed_moves.each do |move|
-      @cube.unmove(move.side, move.turns)
+      @cube.undo(move)
+
       if moves_so_far.length <= 1
         AlgMiner.log "Time: #{'%.2f' % (Time.now - @start_run)}. Move: #{(moves_so_far + [move]).map{|m| m.name}}. Got #{@solved_states.count} end positions."
       end
@@ -187,7 +188,7 @@ class GoalFinder
         mine_end_states(next_moves, current_moves)
       end
 
-      @cube.move(move.side, move.turns)
+      @cube.do(move)
     end
   end
 
@@ -222,7 +223,7 @@ class AlgDigger
     at_final_depth = (earlier_moves.length == @search_depth - 1)
 
     moves.each do |move|
-      @cube.move(move.side, move.turns)
+      @cube.do(move)
 
       @end_states.solutions_for(@cube).each do |finish|
         unless finish.start_with? move.side.to_s # Ignore the inverse of the moves we just made
@@ -232,7 +233,7 @@ class AlgDigger
       end
       dig_deeper(preset_next_moves || AlgMiner.next_moves(move), earlier_moves + [move]) unless at_final_depth
 
-      @cube.unmove(move.side, move.turns)
+      @cube.undo(move)
     end
   end
 
@@ -253,7 +254,7 @@ class AlgDigger
   def solvedish(alg)
     unless @solvedish_states
       cube = Cube.new
-      @solvedish_states = 4.times.map { |i| cube.move(:U, 1); cube.state_string }
+      @solvedish_states = 4.times.map { |i| cube.do(Move::U); cube.state_string }
     end
 
     @solvedish_states.include?(Cube.new(alg).state_string)

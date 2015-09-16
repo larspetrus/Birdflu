@@ -19,13 +19,13 @@ RSpec.describe Cube, :type => :model do
   end
 
   it 'moves stickers' do
-    new_cube.move(:R, 1)
+    new_cube.do(Move::R)
 
     expect(new_cube.sticker_at(:URF, :U)).to eq(:F)
     expect(new_cube.sticker_at(:URF, :F)).to eq(:D)
     expect(new_cube.sticker_at(:URF, :R)).to eq(:R)
 
-    new_cube.move(:L, 2)
+    new_cube.do(Move::L2)
     expect(new_cube.sticker_at(:UFL, :U)).to eq(:D)
   end
 
@@ -80,27 +80,27 @@ RSpec.describe Cube, :type => :model do
   it 'f2l_solved' do
     cube = Cube.new
     expect(cube.f2l_solved).to eq(true)
-    cube.move(:F, 3)
-    cube.move(:U, 3)
-    cube.move(:L, 3)
-    cube.move(:U, 1)
-    cube.move(:L, 1)
+    cube.do(Move::Fp)
+    cube.do(Move::Up)
+    cube.do(Move::Lp)
+    cube.do(Move::U)
+    cube.do(Move::L)
     expect(cube.f2l_solved).to eq(false)
-    cube.move(:F, 1)
+    cube.do(Move::F)
     expect(cube.f2l_solved).to eq(true)
   end
 
   it 'state_string' do
     cube = Cube.new
     expect(cube.state_string).to eq('aceADgGJikmoqMPsSVux')
-    cube.move(:F, 1)
+    cube.do(Move::F)
     expect(cube.state_string).to eq('aceADpLXikhtqMPnHUux')
   end
 
   it 'f2l_state_string' do
     cube = Cube.new
     expect(cube.f2l_state_string).to eq('aceADgGJikmo--------')
-    cube.move(:F, 1)
+    cube.do(Move::F)
     expect(cube.f2l_state_string).to eq('aceADpL-ikh----nH---')
   end
 
@@ -108,7 +108,7 @@ RSpec.describe Cube, :type => :model do
     cube = Cube.new
     5.times do |i|
       puts cube.state_string
-      cube.move(:U, 1)
+      cube.do(Move::U)
     end
   end
 end

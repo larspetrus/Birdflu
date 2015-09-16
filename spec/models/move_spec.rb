@@ -50,4 +50,10 @@ describe Move do
     expect(Move.turns("U'")).to eq(3)
   end
 
+  it ".inverse" do
+    expect(Move::F.inverse ).to eq(Move::Fp)
+    expect(Move::L2.inverse).to eq(Move::L2)
+    expect(Move::Dp.inverse).to eq(Move::D)
+  end
+
 end

@@ -16,6 +16,7 @@ class Move
     @compressed_code = compression_codes[side][turns]
 
     @@move_lookup[name] = self
+    @@move_lookup[[side, turns]] = self
     @@move_lookup[@compressed_code] = self
 
     @@all_moves << self
@@ -64,6 +65,10 @@ class Move
 
   def self.turns(move)
     {"2"=>2, "'"=>3}[move[1]] || 1
+  end
+
+  def inverse
+    Move[[@side, 4-@turns]]
   end
 
 end
