@@ -11,11 +11,12 @@ class AlgSet
   attr_reader :name
 
   def where_clause
-    unless @ids.nil?
-      { base_alg1_id: @ids, base_alg2_id: @ids }
-    else
-      { single: false }
-    end
+    ''
+    # unless @ids.nil?
+    #   { base_alg1_id: @ids, base_alg2_id: @ids }
+    # else
+    #   { single: false }
+    # end
   end
 
   def shortest(position)

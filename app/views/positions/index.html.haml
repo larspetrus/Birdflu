@@ -3,7 +3,7 @@
 %hr{style: 'clear:both;'}
 
 %div{style: 'position: absolute; top:32px; right:0px; font-size: 8px;'}
-  #{@combos[0]} / #{@combos[1] - @combos[0]}
+  #{@counts[0]} / #{@counts[1]}
   Cache #{number_to_human_size Rails.cache.instance_variable_get('@cache_size')}
 
 .welcome

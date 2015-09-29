@@ -2,7 +2,17 @@ class RawAlg < ActiveRecord::Base
   belongs_to :position
   belongs_to :mirror, class_name: 'RawAlg'
 
-  # Populate DB columns
+  before_create do
+    set_alg_variants
+    set_position
+    set_display_adjustments
+  end
+
+  def algs(u_shift)
+    [b_alg, r_alg, f_alg, l_alg][u_shift]
+  end
+
+  # --- Populate DB columns ---
   def self.populate_mirror_id
     update_all do |alg|
       alg.mirror = RawAlg.find_by_b_alg(Algs.mirror(alg.b_alg))
@@ -30,8 +40,7 @@ class RawAlg < ActiveRecord::Base
 
   def set_display_adjustments
     self.display_alg = [:b_alg, :r_alg, :f_alg, :l_alg][-Cube.new(b_alg).standard_ll_code_offset % 4]
-    cube = Cube.new(self[display_alg])
-    self.u_setup = ('BRFL'.index(cube.piece_at('UB').name[1]) - LL.edge_data(cube.standard_ll_code[1]).distance) % 4
+    self.u_setup = Algs.u_setup(self[display_alg])
   end
 
   def self.update_all

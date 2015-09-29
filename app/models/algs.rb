@@ -33,7 +33,7 @@ module Algs
     alg
   end
 
-  def u_setup(alg)
+  def self.u_setup(alg)
     cube = Cube.new(alg)
     ('BRFL'.index(cube.piece_at('UB').name[1]) - LL.edge_data(cube.standard_ll_code[1]).distance) % 4
   end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150916050847) do
+ActiveRecord::Schema.define(version: 20150917181601) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -81,6 +81,7 @@ ActiveRecord::Schema.define(version: 20150916050847) do
     t.integer "position_id"
     t.integer "u_setup"
     t.string  "display_alg"
+    t.boolean "combined",    default: false
   end
 
   add_index "raw_algs", ["b_alg"], name: "index_raw_algs_on_b_alg", using: :btree

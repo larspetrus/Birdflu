@@ -12,8 +12,8 @@ RSpec.describe ComboAlg, :type => :model do
 
   describe "#make" do
     it 'combines the algs' do
-      sune1 = BaseAlg.make("F U F' U F U2 F'",   name: 'Sune')
-      sune2 = BaseAlg.make("F' U' F U' F' U2 F", name: 'SuneM')
+      sune1 = RawAlg.create(b_alg: "F U F' U F U2 F'",   alg_id: 'Sune')
+      sune2 = RawAlg.create(b_alg: "F' U' F U' F' U2 F", alg_id: 'SuneM')
 
       combo = ComboAlg.make(sune1, sune2, 0)
 
@@ -28,19 +28,19 @@ RSpec.describe ComboAlg, :type => :model do
     end
 
     it "aligns with the LL_CODE" do
-      combo1 = ComboAlg.make(BaseAlg.make("L' U' L U L F' L' F", name: 'Mid'), BaseAlg.make("R U' L' U R' U' L", name: 'Nik'), 0)
+      combo1 = ComboAlg.make(RawAlg.create(b_alg: "L' U' L U L F' L' F", alg_id: 'Mid'), RawAlg.create(b_alg: "R U' L' U R' U' L", alg_id: 'Nik'), 0)
       expect(combo1.position.ll_code).to eq("a1b4a3c6")
       expect(combo1.moves).to eq("F' U' F U F R' F' R B U' F' U B' U' F")
       expect(combo1.u_setup).to eq(3)
       expect(combo1.is_aligned_with_ll_code).to eq(true)
 
-      combo2 = ComboAlg.make(BaseAlg.make("R B' R' F R B R' F'", name: 'Evl'), BaseAlg.make("R' F' U' F U R", name: 'Sho'), 0)
+      combo2 = ComboAlg.make(RawAlg.create(b_alg: "R B' R' F R B R' F'", alg_id: 'Evl'), RawAlg.create(b_alg: "R' F' U' F U R", alg_id: 'Sho'), 0)
       expect(combo2.position.ll_code).to eq("b2f1q4c7")
       expect(combo2.moves).to eq("B L' B' R B L B' R' B' R' U' R U B")
       expect(combo2.u_setup).to eq(1)
       expect(combo2.is_aligned_with_ll_code).to eq(true)
 
-      single = ComboAlg.make_single(BaseAlg.make("F' U' L' U L F", name: 'A435M'))
+      single = ComboAlg.make_single(RawAlg.create(b_alg: "F' U' L' U L F", alg_id: 'A435M'))
       expect(single.position.ll_code).to eq("a3i8c2j1")
       expect(single.moves).to eq("R' U' F' U F R")
       expect(single.u_setup).to eq(3)

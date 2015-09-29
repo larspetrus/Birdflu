@@ -1,7 +1,7 @@
 class ComboAlg < ActiveRecord::Base
   belongs_to :position
-  belongs_to :base_alg1, class_name: 'BaseAlg'
-  belongs_to :base_alg2, class_name: 'BaseAlg'
+  belongs_to :base_alg1, class_name: 'RawAlg'
+  belongs_to :base_alg2, class_name: 'RawAlg'
 
   before_create do
     self.moves = Algs.normalize(self.moves)
@@ -9,18 +9,16 @@ class ComboAlg < ActiveRecord::Base
     cube = Cube.new(self.moves)
     ll_code = cube.standard_ll_code # validates
     self.position = Position.by_ll_code(ll_code)
-    self.u_setup = ('BRFL'.index(cube.piece_at('UB').name[1]) - LL.edge_data(cube.standard_ll_code[1]).distance) % 4
+    self.u_setup = Algs.u_setup(self.moves)
   end
 
-  def self.make(a1, a2, u_shift)
-    return if a1.moves.empty?
-
-    move_parms = merge_moves(a1.moves, a2.moves(u_shift))
-    return if move_parms[:moves].empty?
+  def self.make(a1, a2, u_shift = 0)
+    move_parms = merge_moves(a1.b_alg, a2.algs(u_shift))
+    return if move_parms[:moves].empty? # algs cancelled
 
     self.align_moves(move_parms)
 
-    create_parms = {name: "#{a1.name}+#{a2.name}", base_alg1_id: a1.id, base_alg2_id: a2.id, alg2_u_shift: u_shift}
+    create_parms = {name: "#{a1.alg_id}+#{a2.alg_id}", base_alg1_id: a1.id, base_alg2_id: a2.id, alg2_u_shift: u_shift}
     ComboAlg.create(create_parms.merge(move_parms))
   end
 
@@ -90,7 +88,7 @@ class ComboAlg < ActiveRecord::Base
   end
 
   def oneAlg?
-    not base_alg2
+    false
   end
 
   def css_kind

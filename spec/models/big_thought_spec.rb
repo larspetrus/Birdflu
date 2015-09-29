@@ -2,12 +2,6 @@ require 'rails_helper'
 
 describe BigThought do
 
-  it 'alg_label' do
-    expect(BigThought.alg_label("F U F'")).to eq("F")
-    expect(BigThought.alg_label("F2 U F'")).to eq("F2U")
-    expect(BigThought.alg_label("F2 U2 F'")).to eq("F2U2F'")
-  end
-
   describe 'root_algs' do
 
     xit "algs are unique" do
@@ -38,38 +32,42 @@ describe BigThought do
   end
 
   describe 'combine' do
-    let (:root1) { RootAlg.new("H435",  "F R U R' U' F'") }
-    let (:root2) { RootAlg.new("Arne",  "R2 F2 B2 L2 D L2 B2 F2 R2")} # :singleton
-    let (:root3) { RootAlg.new("Niklas","L U' R' U L' U' R") } # :mirror_only
+    let (:root1) { {b_alg: "B' R2 F R F' R B",  alg_id: 'G7', length: 7} }
+    let (:root2) { {b_alg: "B L U L' U' B'",    alg_id: 'F1', length: 6} }
+    let (:root3) { {b_alg: "B U' F' U B' U' F", alg_id: 'G4', length: 7} }
 
     it "populates incrementally" do
-      alg1 = BaseAlg.make(root1.moves, name: root1.name)
-      expect(counts(alg1.id)).to eq(base_alg1: 1, base_alg2: 0, total: 1)
+      alg1 = RawAlg.create(root1)
+      alg2 = RawAlg.create(root2)
+      alg3 = RawAlg.create(root3)
+
+      expect(counts(alg1.id)).to eq(base_alg1: 0, base_alg2: 0, total: 0)
+
       BigThought.combine(alg1)
-      expect(counts(alg1.id)).to eq(base_alg1: 5, base_alg2: 4, total: 5)
+      expect(counts(alg1.id)).to eq(base_alg1: 4, base_alg2: 4, total: 4)
 
-      BigThought.combine(alg2 = BaseAlg.make(root2.moves, name: root2.name))
-      expect(counts(alg1.id)).to eq(base_alg1: 9, base_alg2: 8, total: 18)
-      expect(counts(alg2.id)).to eq(base_alg1: 9, base_alg2: 8, total: 18)
+      BigThought.combine(alg2)
+      expect(counts(alg1.id)).to eq(base_alg1: 8, base_alg2: 8, total: 16)
+      expect(counts(alg2.id)).to eq(base_alg1: 8, base_alg2: 8, total: 16)
 
-      BigThought.combine(alg3 = BaseAlg.make(root3.moves, name: root3.name))
-      expect(counts(alg1.id)).to eq(base_alg1: 13, base_alg2: 12, total: 39)
-      expect(counts(alg2.id)).to eq(base_alg1: 13, base_alg2: 12, total: 39)
-      expect(counts(alg3.id)).to eq(base_alg1: 13, base_alg2: 12, total: 39)
+      BigThought.combine(alg3)
+      expect(counts(alg1.id)).to eq(base_alg1: 12, base_alg2: 12, total: 36)
+      expect(counts(alg2.id)).to eq(base_alg1: 12, base_alg2: 12, total: 36)
+      expect(counts(alg3.id)).to eq(base_alg1: 12, base_alg2: 12, total: 36)
     end
 
     it 'keeps track of what algs are combined' do
-      alg = BaseAlg.make(root1.moves, name: root1.name)
+      alg = RawAlg.create(root1)
       expect(alg.combined).to eq(false)
       BigThought.combine(alg)
       expect(alg.combined).to eq(true)
     end
 
     it 'removes cancellations' do
-      BigThought.combine(alg1 = BaseAlg.make(root1.moves, name: root1.name))
-      BigThought.combine(alg2 = BaseAlg.make("F U R U' R' F'", name: "AntiH435"))
-      expect(counts(alg1.id)).to eq(base_alg1: 8, base_alg2: 7, total: 16)
-      expect(counts(alg2.id)).to eq(base_alg1: 8, base_alg2: 7, total: 16)
+      BigThought.combine(alg1 = RawAlg.create(root1))
+      BigThought.combine(alg2 = RawAlg.create({b_alg: "B' R' F R' F' R2 B",  alg_id: 'Reverse G7', length: 7}))
+      expect(counts(alg1.id)).to eq(base_alg1: 7, base_alg2: 7, total: 14)
+      expect(counts(alg2.id)).to eq(base_alg1: 7, base_alg2: 7, total: 14)
     end
 
     def counts(base_id)

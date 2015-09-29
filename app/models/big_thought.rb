@@ -31,23 +31,31 @@ class BigThought
     puts "After BigThought.populate_db(): #{BaseAlg.count} base algs. Took #{Time.new - start_time}"
   end
 
-  def self.combine(new_base_alg)
+  def self.combine(new_alg)
+    puts "combining #{new_alg.alg_id}"
     ActiveRecord::Base.transaction do
-      BaseAlg.where(combined: true).each do |old|
-        ComboAlg.make_4(old, new_base_alg)
-        ComboAlg.make_4(new_base_alg, old)
+      RawAlg.where(combined: true).each do |old|
+        ComboAlg.make_4(old, new_alg)
+        ComboAlg.make_4(new_alg, old)
       end
-      ComboAlg.make_4(new_base_alg, new_base_alg)
-      new_base_alg.update(combined: true)
+      ComboAlg.make_4(new_alg, new_alg)
+      new_alg.update(combined: true)
     end
   end
 
-  def self.alg_label(moves)
-    result = ""
-    moves.split(' ').each do |move|
-      result += move
-      break unless result.ends_with? '2'
+  def self.combine_many(raw_algs)
+    ActiveRecord::Base.transaction do
+      raw_algs.each do |alg|
+        combine(alg) unless alg.combined
+      end
+      update_positions
     end
-    result
+  end
+
+  def self.update_positions
+    alg_counts = ComboAlg.group(:position_id).count
+    Position.includes(:combo_algs).find_each do |p|
+      p.update(alg_count: alg_counts[p.id], best_combo_alg_id: p.best_combo.try(:id))
+    end
   end
 end

@@ -38,7 +38,7 @@
     %tr
       %td{class: @position.is_optimal(alg) ? 'optimal' : ''}= alg.length unless dupes.include? alg.moves
       %td{class: alg.css_kind}= alg.name
-      %td{class: @top_3.include?(alg) ? 'top3' : ''}= alg.moves unless dupes.include? alg.moves
+      %td{class: "#{@top_3.include?(alg) ? 'top3' : ''} #{dupes.include?(alg.moves) ? 'copy' : ''}"}= alg.moves
       %td
         - unless alg.oneAlg?
           = alg.mv_start

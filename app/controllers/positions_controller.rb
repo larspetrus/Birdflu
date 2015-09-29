@@ -37,7 +37,7 @@ class PositionsController < ApplicationController
     @icon_grids = {}
     FILTERS.each{ |f| @icon_grids[f] = Icons::Base.class_by(f)::grid }
 
-    @combos = [ComboAlg.where('base_alg2_id is not null').count, ComboAlg.count]
+    @counts = [RawAlg.count, ComboAlg.count]
 
     @joke_header = ['Grail Moth', 'Oral Might', 'A Girl Moth', 'Ham To Girl', 'Roam Light', 'Mortal Sigh', 'A Grim Sloth', 'Glamor Shit', 'Solar Might'].sample
   end
@@ -45,7 +45,7 @@ class PositionsController < ApplicationController
   def show
     @position = Position.by_ll_code(params[:id])
     @cube = @position.as_cube
-    @algs = (@position.algs_in_set + RawAlg.where(position_id: @position.id)).sort_by{|alg| [alg.length, alg.id]}
+    @algs = (@position.algs_in_set + RawAlg.where(position_id: @position.id, length: @position.optimal_alg_length)).sort_by{|alg| [alg.length, alg.moves]}
     @top_3 = @algs.first(3)
   end
 end
