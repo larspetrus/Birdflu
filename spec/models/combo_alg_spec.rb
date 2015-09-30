@@ -28,23 +28,18 @@ RSpec.describe ComboAlg, :type => :model do
     end
 
     it "aligns with the LL_CODE" do
-      combo1 = ComboAlg.make(RawAlg.create(b_alg: "L' U' L U L F' L' F", alg_id: 'Mid'), RawAlg.create(b_alg: "R U' L' U R' U' L", alg_id: 'Nik'), 0)
+      combo1 = ComboAlg.make(RawAlg.create(b_alg: "L' U' L U L F' L' F", alg_id: 'Mid'), RawAlg.create(b_alg: "R U' L' U R' U' L", alg_id: 'Nik'))
       expect(combo1.position.ll_code).to eq("a1b4a3c6")
       expect(combo1.moves).to eq("F' U' F U F R' F' R B U' F' U B' U' F")
       expect(combo1.u_setup).to eq(3)
       expect(combo1.is_aligned_with_ll_code).to eq(true)
 
-      combo2 = ComboAlg.make(RawAlg.create(b_alg: "R B' R' F R B R' F'", alg_id: 'Evl'), RawAlg.create(b_alg: "R' F' U' F U R", alg_id: 'Sho'), 0)
+      combo2 = ComboAlg.make(RawAlg.create(b_alg: "R B' R' F R B R' F'", alg_id: 'Evl'), RawAlg.create(b_alg: "R' F' U' F U R", alg_id: 'Sho'))
       expect(combo2.position.ll_code).to eq("b2f1q4c7")
       expect(combo2.moves).to eq("B L' B' R B L B' R' B' R' U' R U B")
       expect(combo2.u_setup).to eq(1)
       expect(combo2.is_aligned_with_ll_code).to eq(true)
 
-      single = ComboAlg.make_single(RawAlg.create(b_alg: "F' U' L' U L F", alg_id: 'A435M'))
-      expect(single.position.ll_code).to eq("a3i8c2j1")
-      expect(single.moves).to eq("R' U' F' U F R")
-      expect(single.u_setup).to eq(3)
-      expect(single.is_aligned_with_ll_code).to eq(true)
     end
   end
 
@@ -68,11 +63,6 @@ RSpec.describe ComboAlg, :type => :model do
 
     expect(aligned.standard_ll_code).to eq(unaligned.standard_ll_code)
     expect(aligned.standard_ll_code).to eq(aligned.natural_ll_code)
-  end
-
-  it 'normalizes algs' do
-    expect(ComboAlg.make_single(BaseAlg.make("F2 U L R' F2 R L' U F2")).moves).to eq("F2 U L R' F2 L' R U F2")
-    expect(ComboAlg.make_single(BaseAlg.make("F R U R' U B' U B U2 F' B' U B")).moves).to eq("F R U R' U B' U B U2 B' F' U B")
   end
 
 end

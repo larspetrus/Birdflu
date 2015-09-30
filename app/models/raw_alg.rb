@@ -2,6 +2,8 @@ class RawAlg < ActiveRecord::Base
   belongs_to :position
   belongs_to :mirror, class_name: 'RawAlg'
 
+  validates :alg_id, :length, presence: true
+
   before_create do
     set_alg_variants
     set_position

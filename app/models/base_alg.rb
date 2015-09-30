@@ -17,7 +17,7 @@ class BaseAlg < ActiveRecord::Base
     unless fields[:root_base_id]
       new_alg.update(root_base_id: new_alg.id)
     end
-    ComboAlg.make_single(new_alg)
+    # ComboAlg.make_single(new_alg)
     new_alg
   end
 

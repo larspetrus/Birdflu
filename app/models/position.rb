@@ -2,7 +2,9 @@
 # change. It could live in memory instead of (or in addition to) the DB, and maybe that's a future feature.
 class Position < ActiveRecord::Base
   has_many :combo_algs, -> { order "length, moves, base_alg2_id DESC" }
-  belongs_to :best_alg, class_name: 'ComboAlg'
+  has_many :raw_algs, -> { order "length, b_alg" }
+
+  belongs_to :best_alg, class_name: 'RawAlg'
   belongs_to :best_combo_alg, class_name: 'ComboAlg'
 
   enum corner_swap: [ :no, :left, :right, :back, :front, :diagonal]
