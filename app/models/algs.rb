@@ -22,10 +22,18 @@ module Algs
   end
 
   def self.normalize(alg)
+    _normalize(alg, %w(RL UD FB))
+  end
+
+  def self.anti_normalize(alg)
+    _normalize(alg, %w(LR DU BF))
+  end
+
+  def self._normalize(alg, pair_order)
     # Sort pairs of L & R, D & U, B & F alphabetically
     moves = alg.split(' ')
     (moves.length-1).times do |i|
-      if %w(RL UD FB).include? moves[i][0]+moves[i+1][0]
+      if pair_order.include? moves[i][0]+moves[i+1][0]
         moves[i+1], moves[i] = moves[i], moves[i+1]
         alg = moves.join(' ') # questionable speed optimization
       end

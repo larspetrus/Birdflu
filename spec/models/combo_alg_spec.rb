@@ -50,11 +50,13 @@ RSpec.describe ComboAlg, :type => :model do
     expect(ComboAlg.merge_moves("F U2 R2", "R2 U F")).to eq(mv_start: "F", mv_cancel1: "U2 R2", mv_merged: "U'", mv_cancel2: "R2 U", mv_end: "F", moves: "F U' F")
     expect(ComboAlg.merge_moves("F U2 R2", "R2 U2 F'")).to eq(mv_start: "", mv_cancel1: "F U2 R2", mv_merged: "", mv_cancel2: "R2 U2 F'", mv_end: "", moves: "")
 
-    expect(ComboAlg.merge_moves("L R", "L")).to eq(mv_start: "R", mv_cancel1: "L", mv_merged: "L2", mv_cancel2: "L", mv_end: "", moves: "R L2")
+    expect(ComboAlg.merge_moves("L R", "L")).to eq(mv_start: "R", mv_cancel1: "L", mv_merged: "L2", mv_cancel2: "L", mv_end: "", moves: "L2 R")
     expect(ComboAlg.merge_moves("L", "R L")).to eq(mv_start: "", mv_cancel1: "L", mv_merged: "L2", mv_cancel2: "L", mv_end: "R", moves: "L2 R")
-    expect(ComboAlg.merge_moves("D L R", "L' R' D")).to eq(mv_start: "", mv_cancel1: "D R L", mv_merged: "D2", mv_cancel2: "L' R' D", mv_end: "", moves: "D2")
-    expect(ComboAlg.merge_moves("D L R", "L R F")).to eq(mv_start: "D", mv_cancel1: "R L", mv_merged: "L2 R2", mv_cancel2: "L R", mv_end: "F", moves: "D L2 R2 F")
-    expect(ComboAlg.merge_moves("L F B2", "F B2 D")).to eq(mv_start: "L", mv_cancel1: "B2 F", mv_merged: "F2", mv_cancel2: "F B2", mv_end: "D", moves: "L F2 D")
+    expect(ComboAlg.merge_moves("D L R", "L' R' D")).to eq(mv_start: "", mv_cancel1: "D L R", mv_merged: "D2", mv_cancel2: "L' R' D", mv_end: "", moves: "D2")
+    expect(ComboAlg.merge_moves("D L R", "L R F")).to eq(mv_start: "D", mv_cancel1: "L R", mv_merged: "L2 R2", mv_cancel2: "L R", mv_end: "F", moves: "D L2 R2 F")
+    expect(ComboAlg.merge_moves("L F B2", "F B2 D")).to eq(mv_start: "L", mv_cancel1: "B2 F", mv_merged: "F2", mv_cancel2: "B2 F", mv_end: "D", moves: "L F2 D")
+
+    expect(ComboAlg.merge_moves("B F' U'", "U B' F")).to eq(mv_start: "", mv_cancel1: "B F' U'", mv_merged: "", mv_cancel2: "U B' F", mv_end: "", moves: "")
   end
 
   it 'natural_ll_code' do

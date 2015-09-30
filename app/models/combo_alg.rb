@@ -31,48 +31,37 @@ class ComboAlg < ActiveRecord::Base
     move_parms.keys.each { | key | move_parms[key] = Algs.rotate_by_U(move_parms[key], alg_adjustment) }
   end
 
-  def self.merge_moves(moves1, moves2)
-    if moves2.empty?
-      { mv_start: moves1, mv_cancel1: '', mv_merged: '', mv_cancel2: '', mv_end: '', moves: moves1 }
-    else
-      start, finish, cancels1, remains, cancels2  = moves1.split(' '), moves2.split(' '), [], [], []
-      begin
-        if Move.same_side(start.last, finish.first)
-          merged_move = Move.merge(start.last, finish.first)
-          remains << merged_move if merged_move
+  def self.merge_moves(alg1, alg2)
+    start, finish = Algs.normalize(alg1).split(' '), Algs.anti_normalize(alg2).split(' ')
+    cancels1, remains, cancels2 = [], [], []
 
-          cancels1.insert(0, start.pop)
-          cancels2 << finish.shift
-        else
-          # For cases like "R L + R", flip to "L R + R", and run through again.
-          if Move.opposite_sides(start.last, finish.first)
-              if Move.opposite_sides(start[-1], start[-2])
-                start[-1], start[-2] = start[-2], start[-1]
-              elsif Move.opposite_sides(finish[0], finish[1])
-                finish[0], finish[1] = finish[1], finish[0]
-              end
-          end
-        end
-      end while Move.same_side(start.last, finish.first) && remains.empty?
-
-      #Did we end up with a "R + L2 + R" case?
-      if remains.size == 1 && Move.same_side(start.last, finish.first) && Move.opposite_sides(start.last, remains.first)
+    begin
+      if Move.same_side(start.last, finish.first)
         merged_move = Move.merge(start.last, finish.first)
         remains << merged_move if merged_move
 
         cancels1.insert(0, start.pop)
         cancels2 << finish.shift
+      else
+        # For cases like "R L + R", flip to "L R + R", and run through again.
+        if Move.opposite_sides(start.last, finish.first)
+            if Move.opposite_sides(start[-1], start[-2])
+              start[-1], start[-2] = start[-2], start[-1]
+            elsif Move.opposite_sides(finish[0], finish[1])
+              finish[0], finish[1] = finish[1], finish[0]
+            end
+        end
       end
+    end while Move.same_side(start.last, finish.first) && (remains.empty? || Move.opposite_sides(start.last, remains[0]))
 
-      {
-        mv_start: start.join(' '),
-        mv_cancel1: cancels1.join(' '),
-        mv_merged: remains.join(' '),
-        mv_cancel2: cancels2.join(' '),
-        mv_end: finish.join(' '),
-        moves: (start + remains + finish).join(' ')
-      }
-    end
+    {
+      mv_start:  Algs.normalize(start.join(' ')),
+      mv_cancel1:Algs.normalize(cancels1.join(' ')),
+      mv_merged: Algs.normalize(remains.join(' ')),
+      mv_cancel2:Algs.normalize(cancels2.join(' ')),
+      mv_end:    Algs.normalize(finish.join(' ')),
+      moves:     Algs.normalize((start + remains + finish).join(' '))
+    }
   end
 
   def setup_moves
