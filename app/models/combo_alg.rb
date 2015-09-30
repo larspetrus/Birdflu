@@ -26,13 +26,6 @@ class ComboAlg < ActiveRecord::Base
     0.upto(3) { |u_shift| make(a1, a2, u_shift) }
   end
 
-  def self.make_single(alg)
-    parms = {name: "- #{alg.name} -", base_alg1_id: alg.id, alg2_u_shift: 0, single: true }
-    move_parms = merge_moves(alg.moves, '')
-    self.align_moves(move_parms)
-    ComboAlg.create(parms.merge(move_parms))
-  end
-
   def self.align_moves(move_parms) # Make the alg make the STANDARD ll_code, so the Roofpig matches the position page image
     alg_adjustment = 4 - Cube.new(move_parms[:moves]).standard_ll_code_offset
     move_parms.keys.each { | key | move_parms[key] = Algs.rotate_by_U(move_parms[key], alg_adjustment) }
@@ -92,9 +85,7 @@ class ComboAlg < ActiveRecord::Base
   end
 
   def css_kind
-    return 'single' if single
-    return 'one-alg' if oneAlg?
-    ''
+    oneAlg? ? 'one-alg' : ''
   end
 
   def is_aligned_with_ll_code
