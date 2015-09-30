@@ -23,8 +23,8 @@ RSpec.describe ComboAlg, :type => :model do
       expect(combo.moves).to eq("R U R' U R U2 R2 U' R U' R' U2 R")
       expect(combo.u_setup).to eq(0)
 
-      expect(combo.base_alg1).to eq(sune1)
-      expect(combo.base_alg2).to eq(sune2)
+      expect(combo.base_alg1_id).to eq(sune1.id)
+      expect(combo.base_alg2_id).to eq(sune2.id)
     end
 
     it "aligns with the LL_CODE" do

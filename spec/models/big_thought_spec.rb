@@ -2,35 +2,6 @@ require 'rails_helper'
 
 describe BigThought do
 
-  describe 'root_algs' do
-
-    xit "algs are unique" do
-      pending(%Q(This takes 5 seconds AND fails on "L R'" vs "R' L" diffs))
-      dupes = []
-      seen_moves = {}
-      RootAlg.all.each do |alg|
-        if seen_moves[alg.moves]
-          dupes << "#{alg.name} has the same moves as #{seen_moves[alg.moves]}"
-        end
-        all_variations(alg.moves).each do |variation|
-          seen_moves[variation] = alg.name
-        end
-
-      end
-      expect(dupes).to eq([])
-    end
-
-    def all_variations(moves)
-      all = []
-      [moves, Algs.mirror(moves), Algs.reverse(moves), Algs.mirror(Algs.reverse(moves))].each do |base_variant|
-        all << base_variant
-        3.times { all << Algs.rotate_by_U(all.last) }
-      end
-      all.uniq
-    end
-
-  end
-
   describe 'combine' do
     let (:root1) { {b_alg: "B' R2 F R F' R B",  alg_id: 'G7', length: 7} }
     let (:root2) { {b_alg: "B L U L' U' B'",    alg_id: 'F1', length: 6} }

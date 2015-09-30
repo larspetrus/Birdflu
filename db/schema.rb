@@ -11,22 +11,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150917181601) do
+ActiveRecord::Schema.define(version: 20150930133212) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-
-  create_table "base_algs", force: true do |t|
-    t.string  "name"
-    t.string  "moves_u0"
-    t.string  "moves_u1"
-    t.string  "moves_u2"
-    t.string  "moves_u3"
-    t.integer "root_base_id"
-    t.boolean "combined",     default: false
-    t.boolean "root_mirror",  default: false
-    t.boolean "root_inverse", default: false
-  end
 
   create_table "combo_algs", force: true do |t|
     t.string  "name"
@@ -42,7 +30,6 @@ ActiveRecord::Schema.define(version: 20150917181601) do
     t.string  "mv_merged"
     t.string  "mv_cancel2"
     t.string  "mv_end"
-    t.boolean "single",       default: false
   end
 
   add_index "combo_algs", ["base_alg1_id"], name: "index_combo_algs_on_base_alg1_id", using: :btree
