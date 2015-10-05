@@ -5,7 +5,6 @@ class BigThought
 
     if initial_run
       ActiveRecord::Base.transaction { Position.generate_all }
-      RawAlg.create(b_alg: "", alg_id: 'Nothing', length: 0)
     end
   end
 
@@ -39,6 +38,7 @@ class BigThought
 
   # Run once and for all when we have optimal RawAlgs for all positions
   def self.initialize_positions
+    puts "Initializing Position: best_alg_id, optimal_alg_length, inverse_ll_code"
     timed_transaction do
       Position.find_each do |pos|
         optimal_alg = pos.raw_algs.first

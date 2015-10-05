@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe ComboAlg, :type => :model do
+  let(:sune) { RawAlg.create(b_alg: "F U F' U F U2 F'",   alg_id: 'Sune') }
 
   it 'verifies F2L is preserved' do
     expect{ComboAlg.create(name: "Not a LL alg!", moves: "F U D")}.to raise_error( RuntimeError, "Can't make LL code with F2L unsolved" )
@@ -12,10 +13,9 @@ RSpec.describe ComboAlg, :type => :model do
 
   describe "#make" do
     it 'combines the algs' do
-      sune1 = RawAlg.create(b_alg: "F U F' U F U2 F'",   alg_id: 'Sune')
       sune2 = RawAlg.create(b_alg: "F' U' F U' F' U2 F", alg_id: 'SuneM')
 
-      combo = ComboAlg.make(sune1, sune2, 0)
+      combo = ComboAlg.make(sune, sune2, 0)
 
       expect(combo.position.ll_code).to eq("a3a7c3b7")
       expect(combo.name).to eq("Sune+SuneM")
@@ -23,7 +23,7 @@ RSpec.describe ComboAlg, :type => :model do
       expect(combo.moves).to eq("R U R' U R U2 R2 U' R U' R' U2 R")
       expect(combo.u_setup).to eq(0)
 
-      expect(combo.base_alg1_id).to eq(sune1.id)
+      expect(combo.base_alg1_id).to eq(sune.id)
       expect(combo.base_alg2_id).to eq(sune2.id)
     end
 
@@ -39,7 +39,13 @@ RSpec.describe ComboAlg, :type => :model do
       expect(combo2.moves).to eq("B L' B' R B L B' R' B' R' U' R U B")
       expect(combo2.u_setup).to eq(1)
       expect(combo2.is_aligned_with_ll_code).to eq(true)
+    end
 
+    it "doesn't combine with empty alg" do
+      none = RawAlg.create(b_alg: "", alg_id: 'Nothing', length: 0)
+      expect{ComboAlg.make(sune, none, 0)}.to change{ComboAlg.count}.by 0
+      expect{ComboAlg.make(none, sune, 0)}.to change{ComboAlg.count}.by 0
+      expect{ComboAlg.make(sune, sune, 0)}.to change{ComboAlg.count}.by 1
     end
   end
 

@@ -45,7 +45,7 @@ class PositionsController < ApplicationController
   def show
     @position = Position.by_ll_code(params[:id])
     @cube = @position.as_cube
-    @algs = (@position.algs_in_set + RawAlg.where(position_id: @position.id)).sort_by{|alg| [alg.length, alg.moves]}
+    @algs = (@position.algs_in_set + RawAlg.where("position_id=#{@position.id} AND length <= #{@position.optimal_alg_length + 1}")).sort_by{|alg| [alg.length, alg.moves]}
     @top_3 = @algs.first(3)
   end
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150930133212) do
+ActiveRecord::Schema.define(version: 20151005034201) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -59,15 +59,15 @@ ActiveRecord::Schema.define(version: 20150930133212) do
 
   create_table "raw_algs", force: true do |t|
     t.string  "alg_id"
-    t.string  "f_alg"
     t.integer "length"
-    t.string  "l_alg"
+    t.integer "position_id"
     t.string  "b_alg"
     t.string  "r_alg"
+    t.string  "f_alg"
+    t.string  "l_alg"
     t.integer "mirror_id"
-    t.integer "position_id"
-    t.integer "u_setup"
     t.string  "display_alg"
+    t.integer "u_setup"
     t.boolean "combined",    default: false
   end
 

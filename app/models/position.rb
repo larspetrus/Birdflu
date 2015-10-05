@@ -123,7 +123,7 @@ class Position < ActiveRecord::Base
   end
 
   def best_combo
-    combo_algs.where(single: false).first
+    combo_algs.first
   end
 
   def set_corner_swap
