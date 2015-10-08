@@ -28,25 +28,25 @@
 
 %hr{style: 'clear:both;'}
 
-- dupes = Set.new
 %table.index
-  %th Moves
-  %th Name
-  %th Alg
-  %th Composition
-  - @algs.each do |alg|
-    %tr
-      %td{class: @position.is_optimal(alg) ? 'optimal' : ''}= alg.length unless dupes.include? alg.moves
-      %td{class: alg.css_kind}= alg.name
-      %td{class: "#{@top_3.include?(alg) ? 'top3' : ''} #{dupes.include?(alg.moves) ? 'copy' : ''}"}= alg.moves
-      %td
-        - unless alg.oneAlg?
-          = alg.mv_start
-          %span.cancel1= alg.mv_cancel1
-          %span.merged=  alg.mv_merged
-          %span.cancel2= alg.mv_cancel2
-          %span.alg2=    alg.mv_end
-    - dupes << alg.moves
-
+  %thead
+    %th Moves
+    %th Name
+    %th Alg
+    %th Composition
+  %tbody
+  - @solution_order.each do |key|
+    - @solutions[key].each_with_index do |alg, i|
+      %tr
+        %td{class: @position.is_optimal(alg) ? 'optimal' : ''}= alg.length unless i > 0
+        %td{class: alg.css_kind}= alg.name
+        %td{class: "#{@top_3.include?(alg) ? 'top3' : ''} #{i > 0 ? 'copy' : ''}"}= alg.moves
+        %td
+          - unless alg.oneAlg?
+            = alg.mv_start
+            %span.cancel1= alg.mv_cancel1
+            %span.merged=  alg.mv_merged
+            %span.cancel2= alg.mv_cancel2
+            %span.alg2=    alg.mv_end
 
 %script ROOFPIG_CONF_AD = "solved=U-| hover=3 | speed=600"

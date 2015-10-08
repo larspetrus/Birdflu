@@ -43,9 +43,16 @@ class PositionsController < ApplicationController
   end
 
   def show
-    @position = Position.by_ll_code(params[:id])
+    @position = Position.by_ll_code(params[:id]) || Position.find(params[:id])
     @cube = @position.as_cube
-    @algs = (@position.algs_in_set + RawAlg.where("position_id=#{@position.id} AND length <= #{@position.optimal_alg_length + 1}")).sort_by{|alg| [alg.length, alg.moves]}
-    @top_3 = @algs.first(3)
+
+    @solutions = Hash.new { |hash, key| hash[key] = Array.new }
+
+    raw_algs = RawAlg.where("position_id=#{@position.id} AND length <= #{@position.optimal_alg_length + 2}")
+    raw_algs.each { |ra| @solutions[[ra.length, ra.moves]] << ra }
+    @position.algs_in_set.each { |ca| @solutions[[ca.length, ca.moves]] << ca }
+
+    @solution_order = @solutions.keys.sort
+    @top_3 = @solution_order.first(3).map{|key| @solutions[key].first}
   end
 end

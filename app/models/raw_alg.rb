@@ -16,7 +16,7 @@ class RawAlg < ActiveRecord::Base
 
   # --- Populate DB columns ---
   def self.populate_mirror_id
-    update_all do |alg|
+    update_all("mirror_id") do |alg|
       alg.mirror = RawAlg.find_by_b_alg(Algs.mirror(alg.b_alg))
     end
   end
@@ -45,15 +45,14 @@ class RawAlg < ActiveRecord::Base
     self.u_setup = Algs.u_setup(self[display_alg])
   end
 
-  def self.update_all
+  def self.update_all(description = nil)
+    puts "Updating #{description} for all RawAlgs" if description
     t1 = Time.now
-    ActiveRecord::Base.transaction do
-      RawAlg.find_each do |alg|
-        yield(alg)
-        alg.save
-      end
+    RawAlg.find_each do |alg|
+      yield(alg)
+      alg.save
     end
-    puts "Update done in #{'%.2f' % (Time.now - t1)}"
+    puts "Update #{description} done in #{'%.2f' % (Time.now - t1)}"
   end
 
   # View API

@@ -42,5 +42,7 @@ task import_raw_algs: :environment do
 
   puts "Done. #{alg_count} algs total. Took #{'%.2f' % (Time.now - t1)}"
 
+  RawAlg.populate_mirror_id
+
   BigThought.initialize_positions
 end
