@@ -48,8 +48,7 @@ class PositionsController < ApplicationController
 
     @solutions = Hash.new { |hash, key| hash[key] = Array.new }
 
-    raw_algs = RawAlg.where("position_id=#{@position.id} AND length <= #{@position.optimal_alg_length + 2}")
-    raw_algs.each { |ra| @solutions[[ra.length, ra.moves]] << ra }
+    RawAlg.where(position_id: @position.id).each { |ra| @solutions[[ra.length, ra.moves]] << ra }
     @position.algs_in_set.each { |ca| @solutions[[ca.length, ca.moves]] << ca }
 
     @solution_order = @solutions.keys.sort

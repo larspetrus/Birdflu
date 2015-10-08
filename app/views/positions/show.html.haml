@@ -28,6 +28,14 @@
 
 %hr{style: 'clear:both;'}
 
+.center{style: 'height:30px; width:600px; background-color:#bfb;'}
+  =check_box_tag('raw', 'raw2', true)
+  %label{for: 'raw'}
+    Show Single Algs
+  =check_box_tag('combo', 'combo2', true)
+  %label{for: 'combo'}
+    Show Combo Algs
+
 %table.index
   %thead
     %th Moves
@@ -35,12 +43,12 @@
     %th Alg
     %th Composition
   %tbody
-  - @solution_order.each do |key|
+  - @solution_order.first(100).each do |key|
     - @solutions[key].each_with_index do |alg, i|
-      %tr
-        %td{class: @position.is_optimal(alg) ? 'optimal' : ''}= alg.length unless i > 0
+      %tr{class: alg.filter_marker}
+        %td{class: [@position.is_optimal(alg) ? 'optimal' : nil, i > 0 ? 'copy' : nil]}= alg.length
         %td{class: alg.css_kind}= alg.name
-        %td{class: "#{@top_3.include?(alg) ? 'top3' : ''} #{i > 0 ? 'copy' : ''}"}= alg.moves
+        %td{class: [@top_3.include?(alg) ? 'top3' : nil, i > 0 ? 'copy' : nil]}= alg.moves
         %td
           - unless alg.oneAlg?
             = alg.mv_start
@@ -50,3 +58,16 @@
             %span.alg2=    alg.mv_end
 
 %script ROOFPIG_CONF_AD = "solved=U-| hover=3 | speed=600"
+
+:javascript
+  function show_algs(kind, show) {
+    if (show) {
+      $('.' + kind).show();
+    } else {
+      $('.' + kind).hide();
+    }
+  }
+
+  $('#raw, #combo').on('click', function() {
+    show_algs($(this).prop("id"), $(this).is(":checked"))
+  });

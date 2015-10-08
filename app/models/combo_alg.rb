@@ -75,6 +75,10 @@ class ComboAlg < ActiveRecord::Base
     false
   end
 
+  def filter_marker
+    "combo L#{length}"
+  end
+
   def css_kind
     oneAlg? ? 'one-alg' : ''
   end

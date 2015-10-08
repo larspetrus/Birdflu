@@ -77,6 +77,10 @@ class RawAlg < ActiveRecord::Base
     "| setupmoves=#{Move.name_from('U', u_setup)}"
   end
 
+  def filter_marker
+    "raw L#{length}"
+  end
+
   def to_s
     "#{alg_id}: #{moves}  (id: #{id})"
   end
