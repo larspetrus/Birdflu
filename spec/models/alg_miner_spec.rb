@@ -60,8 +60,4 @@ describe AlgMiner do
     expect(AlgMiner.compress_alg([Move::F, Move::R2, Move::Up])).to eq('Frn')
   end
 
-  it 'decompress_alg' do
-    expect(AlgMiner.decompress_alg('Frn')).to eq("F R2 U'")
-  end
-
 end

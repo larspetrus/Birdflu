@@ -46,6 +46,57 @@ module Algs
     ('BRFL'.index(cube.piece_at('UB').name[1]) - LL.edge_data(cube.standard_ll_code[1]).distance) % 4
   end
 
+  def self.compress(human_alg)
+    human_alg.split(' ').map { |m| Move[m].compressed_code }.join
+  end
+
+  def self.expand(compressed_alg)
+    compressed_alg.chars.map{ |cc| Move[cc].name }.join(' ')
+  end
+
+  def self.sides(alg)
+    alg.gsub(/[ '2]/,'').chars.uniq.sort.join
+  end
+
+  GENS = {
+      "BU" => '2gen',
+
+      "BFU"=> '3genOpp',
+      "BFR"=> '3genOpp',
+      "BFL"=> '3genOpp',
+      "BLR"=> '3genOpp',
+      "BDU"=> '3genOpp',
+      "BDF"=> '3genOpp',
+
+      "BLU"=> '3genAdj',
+      "BRU"=> '3genAdj',
+      "BDL"=> '3genAdj',
+      "BDR"=> '3genAdj',
+  }
+  def self.specialness(b_alg)
+    GENS[Algs.sides(b_alg)]
+  end
+
+  def self.speed_score(alg)
+    side_base = {'D' => 1.2, 'U' => 0.8}
+
+    as_moves = alg.split(' ')
+    scores = as_moves.map do |move|
+      factor = (move[1] == '2' ? 1.5 : 1.0)
+      (side_base[move[0]] || 1.0) * factor
+    end
+
+    as_moves.size.times do |i|
+      if i >= 2 && Move.same_side(as_moves[i-2], as_moves[i])
+        scores[i] *= 0.6
+      end
+      if i >= 1 && Move.opposite_sides(as_moves[i-1], as_moves[i])
+        scores[i] *= 0.8
+      end
+    end
+    scores.sum.round(2)
+  end
+
   MIRROR_MOVES = begin
     {}.tap do |result|
       %w(R L U D F B).each do |side|

@@ -10,6 +10,7 @@ class ComboAlg < ActiveRecord::Base
     ll_code = cube.standard_ll_code # validates
     self.position = Position.by_ll_code(ll_code)
     self.u_setup = Algs.u_setup(self.moves)
+    self.speed = Algs.speed_score(self.moves)
   end
 
   def self.make(a1, a2, u_shift = 0)

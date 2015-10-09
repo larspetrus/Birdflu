@@ -8,6 +8,8 @@ class RawAlg < ActiveRecord::Base
     set_alg_variants
     set_position
     set_display_adjustments
+    set_specialness
+    set_speed
   end
 
   def algs(u_shift)
@@ -43,6 +45,14 @@ class RawAlg < ActiveRecord::Base
   def set_display_adjustments
     self.display_alg = [:b_alg, :r_alg, :f_alg, :l_alg][-Cube.new(b_alg).standard_ll_code_offset % 4]
     self.u_setup = Algs.u_setup(self[display_alg])
+  end
+
+  def set_specialness
+    self.specialness = Algs.specialness(b_alg)
+  end
+
+  def set_speed
+    self.speed = Algs.speed_score(b_alg)
   end
 
   def self.update_all(description = nil)

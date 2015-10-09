@@ -31,4 +31,23 @@ RSpec.describe Algs do
     expect(Algs.anti_normalize("B L' R F D2 U F B' R")).to eq("B R L' F U D2 F B' R")
   end
 
+  it 'compress' do
+    expect(Algs.compress("F R2 L2 U D' B F2")).to eq('FrlUpBf')
+    expect(Algs.compress("B F2 U' L F2 L' R U2 R' U B' F2")).to eq('BfnLf1RuPUqf')
+
+    expect{Algs.compress('incorrect')}.to raise_error(RuntimeError)
+  end
+
+  it 'expand' do
+    expect(Algs.expand('FrlUpBf')).to eq("F R2 L2 U D' B F2")
+    expect(Algs.expand('BfnLf1RuPUqf')).to eq("B F2 U' L F2 L' R U2 R' U B' F2")
+
+    expect{Algs.expand('incorrect')}.to raise_error(RuntimeError)
+  end
+
+  it 'sides' do
+    expect(Algs.sides("F U2 F'")).to eq('FU')
+    expect(Algs.sides("F U' B' U F' U' B")).to eq('BFU')
+  end
+
 end

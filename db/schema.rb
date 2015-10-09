@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151005034201) do
+ActiveRecord::Schema.define(version: 20151009135850) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,6 +30,7 @@ ActiveRecord::Schema.define(version: 20151005034201) do
     t.string  "mv_merged"
     t.string  "mv_cancel2"
     t.string  "mv_end"
+    t.float   "speed"
   end
 
   add_index "combo_algs", ["base_alg1_id"], name: "index_combo_algs_on_base_alg1_id", using: :btree
@@ -69,6 +70,8 @@ ActiveRecord::Schema.define(version: 20151005034201) do
     t.string  "display_alg"
     t.integer "u_setup"
     t.boolean "combined",    default: false
+    t.string  "specialness"
+    t.float   "speed"
   end
 
   add_index "raw_algs", ["b_alg"], name: "index_raw_algs_on_b_alg", using: :btree

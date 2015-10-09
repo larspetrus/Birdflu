@@ -9,10 +9,10 @@ RSpec.describe Piece, :type => :model do
   end
 
   it 'only accepts the standard (clockwise) names' do
-    expect{Piece.new('ABC')}.to raise_error
-    expect{Piece.new('UFR')}.to raise_error
-    expect{Piece.new('FRU')}.to raise_error
-    expect{Piece.new('URF')}.not_to raise_error
+    expect {Piece.new('ABC')}.to raise_error
+    expect {Piece.new('UFR')}.to raise_error
+    expect {Piece.new('FRU')}.to raise_error
+    expect {Piece.new('URF')}.not_to raise_error
   end
 
   it '#rotate' do

@@ -103,17 +103,14 @@ class AlgMiner
     ALL_MOVES.reject { |move| not_on_these_sides.include? move.side }
   end
 
-  def self.as_alg(moves)
-    moves.map{ |move| move.name }.join(' ')
+  def self.as_alg(move_array)
+    move_array.map{ |move| move.name }.join(' ')
   end
 
-  def self.compress_alg(moves)
-    moves.map{ |move| move.compressed_code }.join('')
+  def self.compress_alg(move_array)
+    move_array.map{ |move| move.compressed_code }.join('')
   end
 
-  def self.decompress_alg(compressed)
-    compressed.chars.map{ |cc| Move[cc].name }.join(' ')
-  end
 
   def self.log(string)
     puts string if LOGGING
@@ -195,11 +192,11 @@ class GoalFinder
   def solutions_for(cube)
     return [] unless @solved_states.has_key?(cube.f2l_state_string)
 
-    @solved_states[cube.f2l_state_string].split('|').map{|cmprsd| AlgMiner.decompress_alg(cmprsd) }
+    @solved_states[cube.f2l_state_string].split('|').map{|cmprsd| Algs.expand(cmprsd) }
   end
 
   def finishes # for test
-    @solved_states.values.map {|x| AlgMiner.decompress_alg(x)}
+    @solved_states.values.map {|x| Algs.expand(x) }
   end
 end
 

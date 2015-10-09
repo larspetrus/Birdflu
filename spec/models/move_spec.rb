@@ -11,6 +11,8 @@ describe Move do
     expect(r2.side).to eq(:R)
     expect(r2.turns).to eq(2)
     expect(r2.name).to eq('R2')
+
+    expect {Move['M']}.to raise_error
   end
 
   it "There can only be 18 moves" do

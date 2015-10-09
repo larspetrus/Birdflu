@@ -45,7 +45,7 @@ RSpec.describe Cube, :type => :model do
     expect(cube2.standard_ll_code()).to eq("a8j7o1q6")
     expect(cube2.standard_ll_code_offset()).to eq(0)
 
-    expect{ Cube.new("F").ll_codes()}.to raise_error(RuntimeError, "Can't make LL code with F2L unsolved")
+    expect { Cube.new("F").ll_codes()}.to raise_error(RuntimeError, "Can't make LL code with F2L unsolved")
   end
 
   it '#standard_ll_code()' do

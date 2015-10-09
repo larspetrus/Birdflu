@@ -4,7 +4,7 @@ RSpec.describe ComboAlg, :type => :model do
   let(:sune) { RawAlg.create(b_alg: "F U F' U F U2 F'",   alg_id: 'Sune') }
 
   it 'verifies F2L is preserved' do
-    expect{ComboAlg.create(name: "Not a LL alg!", moves: "F U D")}.to raise_error( RuntimeError, "Can't make LL code with F2L unsolved" )
+    expect {ComboAlg.create(name: "Not a LL alg!", moves: "F U D")}.to raise_error( RuntimeError, "Can't make LL code with F2L unsolved" )
   end
 
   it 'length' do
@@ -20,6 +20,7 @@ RSpec.describe ComboAlg, :type => :model do
       expect(combo.position.ll_code).to eq("a3a7c3b7")
       expect(combo.name).to eq("Sune+SuneM")
       expect(combo.length).to eq(13)
+      expect(combo.speed).to eq(8.58)
       expect(combo.moves).to eq("R U R' U R U2 R2 U' R U' R' U2 R")
       expect(combo.u_setup).to eq(0)
 

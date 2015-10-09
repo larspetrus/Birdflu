@@ -48,10 +48,13 @@ class PositionsController < ApplicationController
 
     @solutions = Hash.new { |hash, key| hash[key] = Array.new }
 
-    RawAlg.where(position_id: @position.id).each { |ra| @solutions[[ra.length, ra.moves]] << ra }
-    @position.algs_in_set.each { |ca| @solutions[[ca.length, ca.moves]] << ca }
+    RawAlg.where(position_id: @position.id).each { |ra| @solutions[[ra.speed, ra.moves]] << ra }
+    @raw_count = @solutions.size
+    @position.algs_in_set.each { |ca| @solutions[[ca.speed, ca.moves]] << ca }
+    @combo_count = @position.algs_in_set.size
+    @shown_count = 100
 
-    @solution_order = @solutions.keys.sort
+    @solution_order = @solutions.keys.sort.first(@shown_count)
     @top_3 = @solution_order.first(3).map{|key| @solutions[key].first}
   end
 end
