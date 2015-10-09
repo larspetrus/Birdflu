@@ -43,7 +43,9 @@ class PositionsController < ApplicationController
   end
 
   def show
-    @position = Position.by_ll_code(params[:id]) || Position.find(params[:id])
+    @position = Position.by_ll_code(params[:id])
+    return redirect_to "/positions/#{Position.find(params[:id]).ll_code}" unless @position
+
     @cube = @position.as_cube
 
     @solutions = Hash.new { |hash, key| hash[key] = Array.new }

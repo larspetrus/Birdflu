@@ -8,6 +8,7 @@
   .leftmenu= link_to "Inverse - #{@position.inverse.display_name}", "#{@position.inverse_ll_code}"
 - else
   .leftmenu Self inversed
+.leftmenu= link_to 'Random Position', "#{Random.rand(3916) + 1}"
 
 %hr{style: 'clear:both;'}
 
