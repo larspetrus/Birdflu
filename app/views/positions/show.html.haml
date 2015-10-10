@@ -37,9 +37,7 @@
   %label{for: 'combo'}
     Show Combo Algs
   %br
-  Raws: #{@raw_count}
-  Combos: #{@combo_count}
-  Shown: #{@shown_count}
+  Shown: #{@page_size} of #{@position.alg_count}
 
 %table.index
   %thead
@@ -52,7 +50,7 @@
   - @solution_order.each do |key|
     - @solutions[key].each_with_index do |alg, i|
       %tr{class: alg.filter_marker}
-        %td= alg.speed
+        %td= '%.2f' % alg.speed
         %td{class: [@position.is_optimal(alg) ? 'optimal' : nil, i > 0 ? 'copy' : nil]}= alg.length
         %td{class: alg.css_kind}= alg.name
         %td{class: [@top_3.include?(alg) ? 'top3' : nil, i > 0 ? 'copy' : nil]}= alg.moves

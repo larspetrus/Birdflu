@@ -1,4 +1,5 @@
 .leftmenu= AlgSet.active.name
+.leftmenu= link_to 'Random Position', "positions/#{Random.rand(3916) + 1}"
 
 %hr{style: 'clear:both;'}
 
@@ -16,8 +17,8 @@
     weird code in the Position column brings up
     a page for that position.
   %p
-    For now the DB has all optimal solves for all positions,
-    and all combinations of all 10 move or less algs. 300k algs total.
+    Currently the DB has all 15 moves or less algs (1.7M) for all
+    positions, and the combinations of all 9 move or less algs.
 
 %table.center
   %tr

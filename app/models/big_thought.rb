@@ -26,13 +26,11 @@ class BigThought
     update_positions
   end
 
-  # Update Positions table after adding ComboAlgs
+  # Update Positions table after adding RawAlgs
   def self.update_positions
-    timed_transaction do
-      alg_counts = ComboAlg.group(:position_id).count
-      Position.includes(:combo_algs).find_each do |pos|
-        pos.update(alg_count: alg_counts[pos.id], best_combo_alg_id: pos.best_combo.try(:id))
-      end
+    alg_counts = RawAlg.group(:position_id).count
+    Position.find_each do |pos|
+      pos.update(alg_count: alg_counts[pos.id], best_combo_alg_id: nil)
     end
   end
 

@@ -43,6 +43,7 @@ class PositionsController < ApplicationController
   end
 
   def show
+    @page_size = (params[:pg] || 50).to_i
     @position = Position.by_ll_code(params[:id])
     return redirect_to "/positions/#{Position.find(params[:id]).ll_code}" unless @position
 
@@ -50,13 +51,10 @@ class PositionsController < ApplicationController
 
     @solutions = Hash.new { |hash, key| hash[key] = Array.new }
 
-    RawAlg.where(position_id: @position.id).each { |ra| @solutions[[ra.speed, ra.moves]] << ra }
-    @raw_count = @solutions.size
+    RawAlg.where(position_id: @position.id).order(:speed).limit(@page_size).each { |ra| @solutions[[ra.speed, ra.moves]] << ra }
     @position.algs_in_set.each { |ca| @solutions[[ca.speed, ca.moves]] << ca }
-    @combo_count = @position.algs_in_set.size
-    @shown_count = 100
 
-    @solution_order = @solutions.keys.sort.first(@shown_count)
+    @solution_order = @solutions.keys.sort.first(@page_size)
     @top_3 = @solution_order.first(3).map{|key| @solutions[key].first}
   end
 end
