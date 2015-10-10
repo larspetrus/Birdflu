@@ -1,18 +1,12 @@
 class PositionsController < ApplicationController
 
-  FILTERS = [:cop, :eo, :ep, :oll]
+  INDEX_FILTERS = [:cop, :eo, :ep, :oll]
 
   def index
-    form_submitted = params.has_key?(FILTERS.first)
-    if form_submitted
-      form_params = params
-      cookies[:form_params] = JSON.generate(params)
-    else
-      form_params = cookies[:form_params] ? JSON.parse(cookies[:form_params]).with_indifferent_access : {} # TODO handle bad cookie
-    end
+    pos_filter = store_parameters(:pos_filter, {cop: '', eo: '', ep: '', oll: ''})
 
     @db_query = {}
-    FILTERS.each { |f| @db_query[f] = form_params[f] if form_params[f].present? }
+    INDEX_FILTERS.each { |f| @db_query[f] = pos_filter[f] if pos_filter[f].present? }
 
     @positions = Position.includes(:best_combo_alg).where(@db_query).to_a.sort_by! {|pos| pos.best_alg_length}
     @position_count = @positions.count
@@ -26,16 +20,12 @@ class PositionsController < ApplicationController
     algset_sum = @positions.reduce(0.0) { |sum, pos| sum + pos.best_alg_set_length }
     @algset_average = '%.2f' % (algset_sum/@positions.count)
 
-    @set_solved = @positions.reduce(0) do |sum, pos|
-        sum += pos.best_alg_set_length < 99 ? 1 : 0
-    end
-
     @positions = @positions.first(100)
 
     @active_icons = {}
-    FILTERS.each{ |f| @active_icons[f] = Icons::Base.by_code(f, form_params[f]) }
+    INDEX_FILTERS.each{ |f| @active_icons[f] = Icons::Base.by_code(f, pos_filter[f]) }
     @icon_grids = {}
-    FILTERS.each{ |f| @icon_grids[f] = Icons::Base.class_by(f)::grid }
+    INDEX_FILTERS.each{ |f| @icon_grids[f] = Icons::Base.class_by(f)::grid }
 
     @counts = [RawAlg.count, ComboAlg.count]
 
@@ -43,18 +33,34 @@ class PositionsController < ApplicationController
   end
 
   def show
-    @page_size = (params[:pg] || 50).to_i
     @position = Position.by_ll_code(params[:id])
     return redirect_to "/positions/#{Position.find(params[:id]).ll_code}" unless @position
+
+    alg_filter = store_parameters(:alg_filter, {page: 25, algtypes: 'both', sortby: 'speed'})
+    @page     = alg_filter[:page].to_i
+    @algtypes = alg_filter[:algtypes]
+    @sortby   = alg_filter[:sortby]
 
     @cube = @position.as_cube
 
     @solutions = Hash.new { |hash, key| hash[key] = Array.new }
 
-    RawAlg.where(position_id: @position.id).order(:speed).limit(@page_size).each { |ra| @solutions[[ra.speed, ra.moves]] << ra }
-    @position.algs_in_set.each { |ca| @solutions[[ca.speed, ca.moves]] << ca }
+    RawAlg.where(position_id: @position.id).order(@sortby).limit(@page).each { |ra| @solutions[[ra[@sortby], ra.moves]] << ra } unless @algtypes == 'combo'
+    @position.algs_in_set.order(@sortby).limit(@page).each { |ca| @solutions[[ca[@sortby], ca.moves]] << ca } unless @algtypes == 'single'
 
-    @solution_order = @solutions.keys.sort.first(@page_size)
+    @solution_order = @solutions.keys.sort.first(@page)
     @top_3 = @solution_order.first(3).map{|key| @solutions[key].first}
+  end
+
+  def store_parameters(cookie_name, defaults)
+    stored_parameters = defaults.keys
+    form_submission = params.has_key?(stored_parameters.first)
+    if form_submission
+      values = params.select {|k,v| stored_parameters.include? k.to_sym }
+      cookies[cookie_name] = JSON.generate(values)
+    else
+      values = cookies[cookie_name] ? JSON.parse(cookies[cookie_name], symbolize_names: true) : defaults # TODO handle bad cookie
+    end
+    values
   end
 end

@@ -30,26 +30,28 @@
 %hr{style: 'clear:both;'}
 
 .center.alg_list_header
-  =check_box_tag('raw', 'raw2', true)
-  %label{for: 'raw'}
-    Show Single Algs
-  =check_box_tag('combo', 'combo2', true)
-  %label{for: 'combo'}
-    Show Combo Algs
-  %br
-  Shown: #{@page_size} of #{@position.alg_count}
+  =form_tag url_for(controller: "positions", action: "show", id: @position.ll_code), method: 'get' do
+    Show first
+    =select_tag("page", options_for_select([25, 50, 100, 200, 500], selected: @page))
+
+    =select_tag("algtypes", options_for_select([['single and combo', 'both'], ['only single', 'single'], ['only combo', 'combo']], selected: @algtypes))
+    algs.
+
+    .right
+      Sort by
+      =select_tag("sortby", options_for_select(['speed', ['moves', 'length']], selected: @sortby))
 
 %table.index
   %thead
-    %th Speed
-    %th Moves
+    %th{class: @sortby == 'speed' ? 'sortby' : nil} Speed
+    %th{class: @sortby == 'length' ? 'sortby' : nil} Moves
     %th Name
     %th Alg
     %th Notes
   %tbody
   - @solution_order.each do |key|
     - @solutions[key].each_with_index do |alg, i|
-      %tr{class: alg.filter_marker}
+      %tr
         %td= '%.2f' % alg.speed
         %td{class: [@position.is_optimal(alg) ? 'optimal' : nil, i > 0 ? 'copy' : nil]}= alg.length
         %td{class: alg.css_kind}= alg.name
@@ -75,6 +77,6 @@
     }
   }
 
-  $('#raw, #combo').on('click', function() {
-    show_algs($(this).prop("id"), $(this).is(":checked"))
+  $('#page, #sortby, #algtypes').change(function() {
+    $('form').submit();
   });

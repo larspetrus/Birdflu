@@ -286,10 +286,12 @@ td:last-child.icon-grid-h {
 
 // ------------ Alg list header
 .alg_list_header {
-  height: 30px;
-  width: 600px;
-  background-color: #efe;
-  border: 1px solid #afa;
+  font-size: 14px;
+  width: 500px;
+  margin: 8px auto;
+}
 
-  font-size: 11px;
+.sortby {
+  background-color: #000;
+  color: #fff;
 }

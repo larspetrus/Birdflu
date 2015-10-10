@@ -73,7 +73,7 @@
   =hidden_field_tag(:ep,  @db_query[:ep])
 
 %h4
-  Selected #{@position_count} of the #{Position.count} LL positions. #{@set_solved} solved.
+  Selected #{@position_count} of the #{Position.count} LL positions.
   - if @position_count != @positions.count
     Showing first #{@positions.count}
 %h5 Average optimal solve: #{@optimal_average}, Optimal combo solve: #{@combo_average}, Alg set combo solve: #{@algset_average}
