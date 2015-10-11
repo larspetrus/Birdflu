@@ -77,7 +77,7 @@ class ComboAlg < ActiveRecord::Base
   end
 
   def css_kind
-    oneAlg? ? 'one-alg' : ''
+    'combo'
   end
 
   def is_aligned_with_ll_code

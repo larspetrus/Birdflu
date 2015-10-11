@@ -30,7 +30,7 @@
   = render 'svg_cube', iconf: Icons::Big.new(@cube, Icons::Ep.for(@position).arrows + Icons::Cop.for(@position).arrows), size: 160, label: '', add_class: 'big-icon'
 
 .center{style: "width: 528px;"}
-  %h4.top3 Top 3 Algs
+  %h4{style: "margin-bottom: 0;"} Top 3 Algs
   - @top_3.each do |t3|
     .roofpig.rp160{:'data-config' => "base=AD | alg=#{t3.moves} | flags=showalg #{t3.setup_moves}" }
       .name
@@ -52,8 +52,7 @@
 
 %table.index
   %thead
-    %th{class: @sortby == 'speed'  ? 'sortby' : nil} Speed
-    %th{class: @sortby == 'length' ? 'sortby' : nil} Moves
+    =first_2_headers(@sortby)
     %th Name
     %th Alg
     %th Notes
@@ -61,8 +60,7 @@
   - @solution_order.each do |key|
     - @solutions[key].each_with_index do |alg, i|
       %tr
-        %td= '%.2f' % alg.speed
-        %td{class: [@position.is_optimal(alg) ? 'optimal' : nil, i > 0 ? 'copy' : nil]}= alg.length
+        =first_2_columns(@sortby, alg, i>0)
         %td{class: alg.css_kind}= alg.name
         %td{class: [@top_3.include?(alg) ? 'top3' : nil, i > 0 ? 'copy' : nil]}= alg.moves
         %td

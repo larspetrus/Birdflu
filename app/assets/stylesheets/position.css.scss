@@ -42,16 +42,24 @@ h4, h5 {
     font-size: 11px;
     border-left: 1px solid #ddd;
   }
+  th {
+    background-color: #cef;
+  }
   .num {
     text-align: right;
     padding-right: 6px;
   }
-  .one-alg { background: #cfc; }
-  .single  { background: #eff; color: grey; }
+  .single  { color: #03c; }
+  .combo   { color: #900; }
   .top3    { background: $top3_color; }
   .copy    { color: #aaa; }
   .optimal { color: #69f; }
+  .sortby {
+    background: #05f;
+    color: #fff;
+  }
 }
+
 
 .rp160 {
   height:205px;
@@ -292,11 +300,6 @@ td:last-child.icon-grid-h {
   font-size: 14px;
   width: 500px;
   margin: 8px auto;
-}
-
-.sortby {
-  background-color: #700;
-  color: #fff;
 }
 
 // ------------ Position info
