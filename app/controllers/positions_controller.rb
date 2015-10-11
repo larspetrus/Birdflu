@@ -50,6 +50,7 @@ class PositionsController < ApplicationController
 
     @solution_order = @solutions.keys.sort.first(@page)
     @top_3 = @solution_order.first(3).map{|key| @solutions[key].first}
+    @raw_counts = RawAlg.where(position_id: @position.id).group(:length).count()
   end
 
   def store_parameters(cookie_name, defaults)

@@ -12,13 +12,22 @@
 
 %hr{style: 'clear:both;'}
 
+.pos_stats.left
+  %span#rubric
+    Position #{@position.display_name}
+  %table
+    - @raw_counts.keys.sort.each do |length|
+      %tr
+        %td #{length} moves:
+        %td= pluralize(@raw_counts[length], 'alg')
+
 .right= render 'svg_cube', iconf: Icons::Oll.for(@position), size: 50
 .right= render 'svg_cube', iconf: Icons::Ep.for(@position), size: 50
 .right= render 'svg_cube', iconf: Icons::Eo.for(@position), size: 50
 .right= render 'svg_cube', iconf: Icons::Cop.for(@position), size: 50
 
-.center{style: "width: 200px; "}
-  = render 'svg_cube', iconf: Icons::Big.new(@cube, Icons::Ep.for(@position).arrows + Icons::Cop.for(@position).arrows), size: 160, label: @position.display_name, add_class: 'big-icon'
+.center{style: "width: 200px;"}
+  = render 'svg_cube', iconf: Icons::Big.new(@cube, Icons::Ep.for(@position).arrows + Icons::Cop.for(@position).arrows), size: 160, label: '', add_class: 'big-icon'
 
 .center{style: "width: 528px;"}
   %h4.top3 Top 3 Algs
@@ -43,7 +52,7 @@
 
 %table.index
   %thead
-    %th{class: @sortby == 'speed' ? 'sortby' : nil} Speed
+    %th{class: @sortby == 'speed'  ? 'sortby' : nil} Speed
     %th{class: @sortby == 'length' ? 'sortby' : nil} Moves
     %th Name
     %th Alg
@@ -69,14 +78,6 @@
 %script ROOFPIG_CONF_AD = "solved=U-| hover=3 | speed=600"
 
 :javascript
-  function show_algs(kind, show) {
-    if (show) {
-      $('.' + kind).show();
-    } else {
-      $('.' + kind).hide();
-    }
-  }
-
   $('#page, #sortby, #algtypes').change(function() {
     $('form').submit();
   });

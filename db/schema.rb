@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151009135850) do
+ActiveRecord::Schema.define(version: 20151011012111) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,6 +37,7 @@ ActiveRecord::Schema.define(version: 20151009135850) do
   add_index "combo_algs", ["base_alg2_id"], name: "index_combo_algs_on_base_alg2_id", using: :btree
   add_index "combo_algs", ["length"], name: "index_combo_algs_on_length", using: :btree
   add_index "combo_algs", ["position_id"], name: "index_combo_algs_on_position_id", using: :btree
+  add_index "combo_algs", ["speed"], name: "index_combo_algs_on_speed", using: :btree
 
   create_table "positions", force: true do |t|
     t.string  "ll_code"
@@ -75,6 +76,8 @@ ActiveRecord::Schema.define(version: 20151009135850) do
   end
 
   add_index "raw_algs", ["b_alg"], name: "index_raw_algs_on_b_alg", using: :btree
+  add_index "raw_algs", ["length"], name: "index_raw_algs_on_length", using: :btree
   add_index "raw_algs", ["position_id"], name: "index_raw_algs_on_position_id", using: :btree
+  add_index "raw_algs", ["speed"], name: "index_raw_algs_on_speed", using: :btree
 
 end

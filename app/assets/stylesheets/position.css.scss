@@ -82,6 +82,9 @@ h4, h5 {
   a:hover { text-shadow: 2px 2px 5px red; }
   a:active {color: white; text-shadow: 0px 0px 5px #000, 0 0 8px #00F; }
 }
+.left {
+  float: left;
+}
 .right {
   float: right;
 }
@@ -292,6 +295,26 @@ td:last-child.icon-grid-h {
 }
 
 .sortby {
-  background-color: #000;
+  background-color: #700;
   color: #fff;
+}
+
+// ------------ Position info
+.pos_stats {
+  border: 1px solid #bbb;
+  font-size: 12px;
+  padding: 6px;
+  margin: 4px;
+
+  #rubric {
+    font-size: 14px;
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 4px;
+  }
+
+  table {
+    border-collapse: collapse;
+    font-size: 11px;
+  }
 }
