@@ -53,6 +53,13 @@ class PositionsController < ApplicationController
     @raw_counts = RawAlg.where(position_id: @position.id).group(:length).count()
   end
 
+  def find_by_alg
+    ll_code = Cube.new(params[:alg].upcase).standard_ll_code
+    render json: { ll_code: ll_code }
+  rescue Exception => e
+    render json: { error: e.message }
+  end
+
   def store_parameters(cookie_name, defaults)
     stored_parameters = defaults.keys
     form_submission = params.has_key?(stored_parameters.first)

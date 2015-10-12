@@ -45,7 +45,7 @@ class Move
   Bp = Move.new(:B, 3)
 
   def self.[](key)
-    @@move_lookup[key] || raise("invalid move code: '#{key}'")
+    @@move_lookup[key] || raise(%Q(Invalid move code: "#{key}"))
   end
 
   def self.same_side(move1, move2)

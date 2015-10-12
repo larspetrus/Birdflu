@@ -5,4 +5,6 @@ Rails.application.routes.draw do
   root 'positions#index'
   resources :positions
 
+  post 'positions/find_by_alg'
+
 end

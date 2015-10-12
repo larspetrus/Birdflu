@@ -9,6 +9,7 @@
 - else
   .leftmenu Self inversed
 .leftmenu= link_to 'Random Position', "#{Random.rand(3916) + 1}"
+= render 'find_by_alg'
 
 %hr{style: 'clear:both;'}
 
@@ -39,7 +40,7 @@
 %hr{style: 'clear:both;'}
 
 .center.alg_list_header
-  =form_tag url_for(controller: "positions", action: "show", id: @position.ll_code), method: 'get' do
+  =form_tag url_for(controller: "positions", action: "show", id: @position.ll_code), method: 'get', id: 'algs_options' do
     Show first
     =select_tag("page", options_for_select([25, 50, 100, 200, 500], selected: @page))
 
@@ -77,5 +78,5 @@
 
 :javascript
   $('#page, #sortby, #algtypes').change(function() {
-    $('form').submit();
+    $('form#algs_options').submit();
   });

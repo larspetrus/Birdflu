@@ -96,7 +96,7 @@ class Cube
   end
 
   def ll_codes(mirror = false)
-    raise "Can't make LL code with F2L unsolved" unless f2l_solved()
+    raise "Alg does not solve F2L" unless f2l_solved()
 
     corners = LL.corners
     edges = LL.edges

@@ -1,5 +1,6 @@
 .leftmenu= AlgSet.active.name
 .leftmenu= link_to 'Random Position', "positions/#{Random.rand(3916) + 1}"
+= render 'find_by_alg'
 
 %hr{style: 'clear:both;'}
 
@@ -10,15 +11,14 @@
 .welcome
   %p
     Welcome to the poorly implemented,
-    way pre-alpha LL AlgNotDB (aka <I>#{@joke_header}"</I>)!
+    pre-alpha LL AlgNotDB (aka <I>#{@joke_header}"</I>)!
   %p
     Search by selecting corner/edge configs
     (COP, EO, EP, OLL) to the right. Clicking the
-    weird code in the Position column brings up
-    a page for that position.
+    weird code in the Position column shows
+    a page with algs etc for that position.
   %p
-    Currently the DB has all 15 moves or less algs (1.7M) for all
-    positions, and the combinations of all 9 move or less algs.
+    Currently the DB has all <= 15 moves algs (1.7M), and the combinations of all <= 9 move algs.
 
 %table.center
   %tr
@@ -66,7 +66,7 @@
 
 %br{clear: 'both'}
 
-=form_tag url_for(controller: "positions", action: "index"), method: 'get' do
+=form_tag url_for(controller: "positions", action: "index"), method: 'get', id: 'icon-picker' do
   =hidden_field_tag(:oll, @db_query[:oll])
   =hidden_field_tag(:cop, @db_query[:cop])
   =hidden_field_tag(:eo,  @db_query[:eo])
@@ -86,9 +86,6 @@
   %th OLL
   %th Solutions
   %th{colspan: 2} Optimal Solution
-  %th{colspan: 2} (not Best Combo Solution)
-  %th Name
-  %th Set
 
   - @positions.each do |pos|
     - cache([pos.ll_code, pos.alg_count], skip_digest: true) do
@@ -103,15 +100,6 @@
         %td.num= pos.alg_count
         %td.num.optimal= best.length
         %td=best.moves
-        %td.num{class: pos.is_optimal(best_combo) ? 'optimal' : ''}= best_combo.length
-        %td{style: "background-color: #bbb"}
-          =best_combo.mv_start
-          %span.cancel1= best_combo.mv_cancel1
-          %span.merged=  best_combo.mv_merged
-          %span.cancel2= best_combo.mv_cancel2
-          %span.alg2=    best_combo.mv_end
-        %td{:class => best_combo.css_kind}= best_combo.name
-        %td.num= pos.best_alg_set_length
 
 :javascript
   $('.ll-icon, .svg-icon').on('click', function() {
@@ -120,13 +108,17 @@
       $('#eo, #ep').val('');
     }
     $(field).val($(this).data('code'));
-    $('form').submit();
+    $('form#icon-picker').submit();
   });
 
   function opts(specifics, field) {
-    var bind_closer = function(){ $('.ui-widget-overlay').bind('mouseenter',function(){ $(field+'-picker').dialog('close'); })};
+    var close_on_mouse_exit = function(){
+      $('.ui-widget-overlay').bind('mouseenter', function(){
+        $(field+'-picker').dialog('close');
+      });
+    };
     var pos = { my: 'center top', at: 'center top', of: '#pickers' };
-    return $.extend(specifics, {resizable: false, modal: true, position: pos, open: bind_closer});
+    return $.extend(specifics, {resizable: false, modal: true, position: pos, open: close_on_mouse_exit});
   }
   $('#oll-selected').on('mouseover', function() {
     $('#oll-picker').dialog(opts({ width: '580px', title: 'Corner and edge orientation (OLL)'}, '#oll'));
