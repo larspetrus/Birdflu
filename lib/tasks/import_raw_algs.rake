@@ -36,7 +36,7 @@ task import_raw_algs: :environment do
     end
   end
 
-  # Optimal solutions for the only positions that needs 16 moves
+  # Optimal solutions for the only positions that need 16 moves
   RawAlg.create(b_alg: "B L2 F' L' F U2 F' L F L2 U' B' U R' U2 R", alg_id: 'X1', length: 16)
   RawAlg.create(b_alg: "B' R2 F R F' U2 F R' F' R2 U B U' L U2 L'", alg_id: 'X2', length: 16)
 

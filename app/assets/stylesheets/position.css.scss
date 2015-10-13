@@ -59,6 +59,10 @@ h4, h5 {
     color: #fff;
   }
 }
+.alg-list {
+  td { padding: 0 2px; }
+  td:nth-child(-n+2) { text-align: right; }
+}
 
 
 .rp160 {
@@ -79,16 +83,19 @@ h4, h5 {
   float: left;
   font-size: 13px;
   padding: 3px 14px;
+  font-weight: bold;
 
   a {
     color: black;
-    text-shadow: 2px 2px 5px orange;    font-weight: bold;
+    text-shadow: 2px 2px 5px orange;
     text-decoration: none;
   }
   a:link {  }
   a:visited { }
   a:hover { text-shadow: 2px 2px 5px red; }
   a:active {color: white; text-shadow: 0px 0px 5px #000, 0 0 8px #00F; }
+
+  input { background-color: #fc7; }
 }
 .left {
   float: left;
@@ -296,7 +303,7 @@ td:last-child.icon-grid-h {
 
 
 // ------------ Alg list header
-.alg_list_header {
+.alg-list-header {
   font-size: 14px;
   width: 500px;
   margin: 8px auto;

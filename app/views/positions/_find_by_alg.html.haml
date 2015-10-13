@@ -1,6 +1,6 @@
 .leftmenu
   =form_tag url_for(controller: 'positions', action: 'find_by_alg'), method: 'post', id: 'find_by_alg', remote: true do
-    Find by Alg
+    Find by Alg:
     =text_field_tag "alg", nil, placeholder: 'fbrlud only' ,size: 30
     #find_by_alg_msg{style: "padding: 10px; display:none;"}
 
