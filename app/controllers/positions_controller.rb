@@ -14,20 +14,12 @@ class PositionsController < ApplicationController
     optimal_sum = @positions.reduce(0.0) { |sum, pos| sum + pos.best_alg_length }
     @optimal_average = '%.2f' % (optimal_sum/@positions.count)
 
-    combo_sum = @positions.reduce(0.0) { |sum, pos| sum + pos.best_combo_alg_length }
-    @combo_average = '%.2f' % (combo_sum/@positions.count)
-
-    algset_sum = @positions.reduce(0.0) { |sum, pos| sum + pos.best_alg_set_length }
-    @algset_average = '%.2f' % (algset_sum/@positions.count)
-
     @positions = @positions.first(100)
 
     @active_icons = {}
     INDEX_FILTERS.each{ |f| @active_icons[f] = Icons::Base.by_code(f, pos_filter[f]) }
     @icon_grids = {}
     INDEX_FILTERS.each{ |f| @icon_grids[f] = Icons::Base.class_by(f)::grid }
-
-    @counts = [RawAlg.count, ComboAlg.count]
 
     @joke_header = ['Grail Moth', 'Oral Might', 'A Girl Moth', 'Ham To Girl', 'Roam Light', 'Mortal Sigh', 'A Grim Sloth', 'Glamor Shit', 'Solar Might'].sample
   end
@@ -49,7 +41,6 @@ class PositionsController < ApplicationController
     @position.algs_in_set.order(@sortby).limit(@page).each { |ca| @solutions[[ca[@sortby], ca.moves]] << ca } unless @algtypes == 'single'
 
     @solution_order = @solutions.keys.sort.first(@page)
-    @top_3 = @solution_order.first(3).map{|key| @solutions[key].first}
     @raw_counts = RawAlg.where(position_id: @position.id).group(:length).count()
   end
 

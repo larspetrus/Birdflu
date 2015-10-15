@@ -1,11 +1,9 @@
-.leftmenu= AlgSet.active.name
 .leftmenu= link_to 'Random Position', "positions/#{Random.rand(3916) + 1}"
 = render 'find_by_alg'
 
 %hr{style: 'clear:both;'}
 
 %div{style: 'position: absolute; top:32px; right:0px; font-size: 8px;'}
-  #{@counts[0]} / #{@counts[1]}
   Cache #{number_to_human_size Rails.cache.instance_variable_get('@cache_size')}
 
 .welcome
@@ -76,30 +74,34 @@
   Selected #{@position_count} of the #{Position.count} LL positions.
   - if @position_count != @positions.count
     Showing first #{@positions.count}
-%h5 Average optimal solve: #{@optimal_average}, Optimal combo solve: #{@combo_average}, Alg set combo solve: #{@algset_average}
+%h5 Average shortest solve: #{@optimal_average}
 
-%table.index
+%table.index.pos-list
   %th Position
   %th COP
   %th EO
   %th EP
   %th OLL
   %th Solutions
-  %th{colspan: 2} Shortest Solution
+  %th{colspan: 3} Shortest Solution
 
   - @positions.each do |pos|
     - cache([pos.ll_code, pos.alg_count], skip_digest: true) do
       - best = pos.best_alg || OpenStruct.new
-      - best_combo = pos.best_combo_alg || OpenStruct.new
       %tr
         %td= link_to pos.display_name, "positions/#{pos.ll_code}"
         %td= render 'svg_cube', iconf: Icons::Cop.for(pos), size: 25, label: ''
         %td= render 'svg_cube', iconf: Icons::Eo.for(pos),  size: 25, label: ''
         %td= render 'svg_cube', iconf: Icons::Ep.for(pos),  size: 25, label: ''
         %td= render 'svg_cube', iconf: Icons::Oll.for(pos), size: 25, label: ''
-        %td.num= pos.alg_count
-        %td.num.optimal= best.length
+        %td= pos.alg_count
+        %td= best.length
         %td=best.moves
+        %td{:'data-us' => best.setup_moves}
+          %a{href: "#", class: "summon-pig"} show
+
+#show-alg{style: 'height:200px; width:200px;'}
+%script ROOFPIG_CONF_AD = "solved=U-| hover=3 | speed=600"
 
 :javascript
   $('.ll-icon, .svg-icon').on('click', function() {
@@ -131,4 +133,22 @@
   });
   $('#ep-selected').on('mouseover', function() {
     $('#ep-picker').dialog(opts({ width: '562px', title: 'Edge position (EP)'}, '#ep'));
+  });
+
+  $(document).on('click', '.summon-pig', function(e) {
+    $('#show-alg').empty()
+
+    var td = $(event.target).parent();
+    var alg = td.prev().text();
+    var pos_name = td.siblings().first().text();
+    $('#show-alg').append("<div id=alg-pig class=\"roofpig rp160\" data-config=\"alg=" + alg + "|base=AD|flags=showalg"+td.data('us')+"\"></div>");
+    EventHandlers.set_focus(new CubeAnimation($("#alg-pig")));
+
+    $('#show-alg').dialog({
+      width: '200px',
+      title: pos_name + ' shortest',
+      modal: true,
+      closeOnEscape: true,
+      dialogClass: 'lars-dialog',
+    });
   });
