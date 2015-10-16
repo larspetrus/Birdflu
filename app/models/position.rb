@@ -7,6 +7,8 @@ class Position < ActiveRecord::Base
   belongs_to :best_alg, class_name: 'RawAlg'
   belongs_to :best_combo_alg, class_name: 'ComboAlg'
 
+  has_one :stats, class_name: 'PositionStats'
+
   enum corner_swap: [ :no, :left, :right, :back, :front, :diagonal]
 
   validates :ll_code, uniqueness: true
@@ -156,6 +158,17 @@ class Position < ActiveRecord::Base
 
   def set_ep_name
     self.ep = @ll_code_obj.ep_code
+  end
+
+  def compute_stats
+    {
+      raw_counts:  RawAlg.where(position_id: id).group(:length).order(:length).count(),
+      shortest:    RawAlg.where(position_id: id).order(:length, :speed, :alg_id).first().length,
+      fastest:     RawAlg.where(position_id: id).order(:speed, :length, :alg_id).first().speed,
+      combo_count:    ComboAlg.where(position_id: id).count(),
+      shortest_combo: ComboAlg.where(position_id: id).order(:length, :speed, :name).first().try(:length),
+      fastest_combo:  ComboAlg.where(position_id: id).order(:speed, :length, :name).first().try(:speed),
+    }
   end
 
   def self.update_each

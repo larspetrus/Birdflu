@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151011012111) do
+ActiveRecord::Schema.define(version: 20151015040823) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -38,6 +38,13 @@ ActiveRecord::Schema.define(version: 20151011012111) do
   add_index "combo_algs", ["length"], name: "index_combo_algs_on_length", using: :btree
   add_index "combo_algs", ["position_id"], name: "index_combo_algs_on_position_id", using: :btree
   add_index "combo_algs", ["speed"], name: "index_combo_algs_on_speed", using: :btree
+
+  create_table "position_stats", force: true do |t|
+    t.integer "position_id"
+    t.string  "marshaled_stats"
+  end
+
+  add_index "position_stats", ["position_id"], name: "index_position_stats_on_position_id", using: :btree
 
   create_table "positions", force: true do |t|
     t.string  "ll_code"
@@ -73,6 +80,7 @@ ActiveRecord::Schema.define(version: 20151011012111) do
     t.boolean "combined",    default: false
     t.string  "specialness"
     t.float   "speed"
+    t.string  "moves"
   end
 
   add_index "raw_algs", ["b_alg"], name: "index_raw_algs_on_b_alg", using: :btree

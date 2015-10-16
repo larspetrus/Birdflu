@@ -33,6 +33,7 @@ h4, h5 {
 }
 
 $optimal_color: #69f;
+.optimal { color: $optimal_color; }
 
 .index {
   margin: 0 auto;
@@ -46,10 +47,9 @@ $optimal_color: #69f;
   th {
     background-color: #cef;
   }
-  .single  { color: #03c; }
-  .combo   { color: #900; }
+  .single  { color: #03b; }
+  .combo   { color: #700; }
   .copy    { color: #aaa; }
-  .optimal { color: $optimal_color; }
   .optimalcopy { color: #9ac; }
   .sortby {
     background: #05f;
@@ -327,6 +327,9 @@ td:last-child.icon-grid-h {
   table {
     border-collapse: collapse;
     font-size: 11px;
+    td:nth-child(2) {
+      padding-left: 8px;
+    }
   }
 }
 

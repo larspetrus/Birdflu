@@ -43,8 +43,9 @@ class RawAlg < ActiveRecord::Base
   end
 
   def set_display_adjustments
-    self.display_alg = [:b_alg, :r_alg, :f_alg, :l_alg][-Cube.new(b_alg).standard_ll_code_offset % 4]
-    self.u_setup = Algs.u_setup(self[display_alg])
+    display_variant = [:b_alg, :r_alg, :f_alg, :l_alg][-Cube.new(b_alg).standard_ll_code_offset % 4]
+    self.moves = self[display_variant]
+    self.u_setup = Algs.u_setup(self[display_variant])
   end
 
   def set_specialness
@@ -68,10 +69,6 @@ class RawAlg < ActiveRecord::Base
   # View API
   def css_kind
     'single'
-  end
-
-  def moves
-    self[display_alg]
   end
 
   def name
