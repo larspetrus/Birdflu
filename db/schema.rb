@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151015040823) do
+ActiveRecord::Schema.define(version: 20151016183431) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,6 +36,8 @@ ActiveRecord::Schema.define(version: 20151015040823) do
   add_index "combo_algs", ["base_alg1_id"], name: "index_combo_algs_on_base_alg1_id", using: :btree
   add_index "combo_algs", ["base_alg2_id"], name: "index_combo_algs_on_base_alg2_id", using: :btree
   add_index "combo_algs", ["length"], name: "index_combo_algs_on_length", using: :btree
+  add_index "combo_algs", ["position_id", "length"], name: "index_combo_algs_on_position_id_and_length", using: :btree
+  add_index "combo_algs", ["position_id", "speed"], name: "index_combo_algs_on_position_id_and_speed", using: :btree
   add_index "combo_algs", ["position_id"], name: "index_combo_algs_on_position_id", using: :btree
   add_index "combo_algs", ["speed"], name: "index_combo_algs_on_speed", using: :btree
 
@@ -63,6 +65,9 @@ ActiveRecord::Schema.define(version: 20151015040823) do
     t.string  "inverse_ll_code"
   end
 
+  add_index "positions", ["cop"], name: "index_positions_on_cop", using: :btree
+  add_index "positions", ["eo"], name: "index_positions_on_eo", using: :btree
+  add_index "positions", ["ep"], name: "index_positions_on_ep", using: :btree
   add_index "positions", ["ll_code"], name: "index_positions_on_ll_code", using: :btree
   add_index "positions", ["oll"], name: "index_positions_on_oll", using: :btree
 
@@ -83,8 +88,11 @@ ActiveRecord::Schema.define(version: 20151015040823) do
     t.string  "moves"
   end
 
+  add_index "raw_algs", ["alg_id"], name: "index_raw_algs_on_alg_id", using: :btree
   add_index "raw_algs", ["b_alg"], name: "index_raw_algs_on_b_alg", using: :btree
   add_index "raw_algs", ["length"], name: "index_raw_algs_on_length", using: :btree
+  add_index "raw_algs", ["position_id", "length"], name: "index_raw_algs_on_position_id_and_length", using: :btree
+  add_index "raw_algs", ["position_id", "speed"], name: "index_raw_algs_on_position_id_and_speed", using: :btree
   add_index "raw_algs", ["position_id"], name: "index_raw_algs_on_position_id", using: :btree
   add_index "raw_algs", ["speed"], name: "index_raw_algs_on_speed", using: :btree
 
