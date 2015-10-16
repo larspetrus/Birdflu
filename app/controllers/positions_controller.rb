@@ -41,12 +41,19 @@ class PositionsController < ApplicationController
     @position.algs_in_set.order(@sortby).limit(@page).each { |ca| @solutions[[ca[@sortby], ca.moves]] << ca } unless @algtypes == 'single'
 
     @solution_order = @solutions.keys.sort.first(@page)
-    @raw_counts = RawAlg.where(position_id: @position.id).group(:length).count()
+    @stats = @position.stats
   end
 
   def find_by_alg
-    ll_code = Cube.new(params[:alg].upcase).standard_ll_code
-    render json: { ll_code: ll_code }
+    alg_from_user = params[:alg].upcase
+
+    if alg_from_user.include? ' '
+      actual_alg = alg_from_user
+    else
+      actual_alg = RawAlg.find_by_alg_id(alg_from_user).try(:moves)
+      raise "There is no alg named '#{alg_from_user}'" unless actual_alg
+    end
+    render json: { ll_code: Cube.new(actual_alg).standard_ll_code}
   rescue Exception => e
     render json: { error: e.message }
   end
