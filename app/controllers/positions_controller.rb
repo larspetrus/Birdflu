@@ -26,7 +26,10 @@ class PositionsController < ApplicationController
 
   def show
     @position = Position.by_ll_code(params[:id])
-    return redirect_to "/positions/#{Position.find(params[:id]).ll_code}" unless @position
+    unless @position
+      pos = Position.find_by_id(params[:id]) || RawAlg.find_by_alg_id(params[:id]).position # Try DB id or alg name
+      return redirect_to "/positions/#{pos.ll_code}"
+    end
 
     alg_filter = store_parameters(:alg_filter, {page: 25, algtypes: 'both', sortby: 'speed'})
     @page     = alg_filter[:page].to_i

@@ -377,3 +377,10 @@ td:last-child.icon-grid-h {
   position:relative;
   top:1px;
 }
+
+.goto-pos {
+  &:hover {
+    font-weight: bold;
+    cursor: pointer;
+  }
+}

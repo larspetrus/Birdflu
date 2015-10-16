@@ -67,7 +67,7 @@
     - @solutions[key].each_with_index do |alg, i|
       %tr
         =first_2_columns(@sortby, alg, copy: i > 0, shortest: alg.length == @stats.shortest)
-        %td{class: alg.css_kind}= alg.name
+        %td{class: alg.css_kind}= alg_name_td(alg)
         %td{class: (i > 0 ? 'copy' : nil)}= alg.moves
         %td{:'data-us' => alg.setup_moves}
           %a{href: "#", class: "summon-pig"} show
@@ -104,4 +104,8 @@
       closeOnEscape: true,
       dialogClass: 'lars-dialog',
     });
+  });
+
+  $('.goto-pos').on('click', function(e) {
+    window.location.href = '/positions/' + $(event.target).text();
   });

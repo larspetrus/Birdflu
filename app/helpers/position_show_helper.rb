@@ -18,4 +18,14 @@ module PositionShowHelper
     classes = class_names.present? ? {class: class_names} : {}
     content_tag(:td, alg.length, classes)
   end
+
+
+  def alg_name_td(alg)
+    if alg.oneAlg?
+      alg.name
+    else
+      names = alg.name.split('+')
+      content_tag(:span, names[0], class: 'goto-pos') + '+' + content_tag(:span, names[1], class: 'goto-pos')
+    end
+  end
 end
