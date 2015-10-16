@@ -39,7 +39,8 @@ $optimal_color: #69f;
   margin: 0 auto;
   border-collapse: collapse;
   border: 1px solid #ddd;
-  tr:nth-child(4n) {background: #eee; border: solid 1px #ddd;}
+  tr:hover {background: #eef; }
+  tr:nth-child(4n) { border-bottom: solid 1px #ddd;}
   th, td {
     font-size: 11px;
     border-left: 1px solid #ddd;
