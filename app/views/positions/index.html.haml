@@ -98,7 +98,7 @@
         %td= best.length
         %td=best.moves
         %td{:'data-us' => best.setup_moves}
-          %a{href: "#", class: "summon-pig"} show
+          %a{href: "#", class: "show-pig"} show
 
 #show-alg{style: 'height:200px; width:200px;'}
 %script ROOFPIG_CONF_AD = "solved=U-| hover=3 | speed=600"
@@ -135,20 +135,23 @@
     $('#ep-picker').dialog(opts({ width: '562px', title: 'Edge position (EP)'}, '#ep'));
   });
 
-  $(document).on('click', '.summon-pig', function(e) {
-    $('#show-alg').empty()
-
+  $(document).on('click', '.show-pig', function(e) {
     var td = $(event.target).parent();
     var alg = td.prev().text();
-    var pos_name = td.siblings().first().text();
-    $('#show-alg').append("<div id=alg-pig class=\"roofpig rp160\" data-config=\"alg=" + alg + "|base=AD|flags=showalg"+td.data('us')+"\"></div>");
-    EventHandlers.set_focus(new CubeAnimation($("#alg-pig")));
+    var title = td.siblings().first().text() + ' shortest';
 
+    CubeAnimation.create_in_dom('#show-alg', 'alg='+alg+'|base=AD|flags=showalg'+td.data("us"), "id=alg-pig class='roofpig rp160'")
     $('#show-alg').dialog({
       width: '200px',
-      title: pos_name + ' shortest',
+      title: title,
       modal: true,
       closeOnEscape: true,
       dialogClass: 'lars-dialog',
+      close: function( event, ui ) {
+            var cube_id = $('#show-alg').children().attr('data-cube-id');
+            if (cube_id) {
+              CubeAnimation.by_id[cube_id].remove();
+            }
+        }
     });
   });

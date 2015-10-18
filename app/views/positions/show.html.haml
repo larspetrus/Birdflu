@@ -70,7 +70,7 @@
         %td{class: alg.css_kind}= alg_name_td(alg)
         %td{class: (i > 0 ? 'copy' : nil)}= alg.moves
         %td{:'data-us' => alg.setup_moves}
-          %a{href: "#", class: "summon-pig"} show
+          %a{href: "#", class: "show-pig"} show
         %td
           - unless alg.oneAlg?
             = alg.mv_start
@@ -89,20 +89,24 @@
     $('form#algs_options').submit();
   });
 
-  $(document).on('click', '.summon-pig', function(e) {
-    $('#show-alg').empty()
-
+  $(document).on('click', '.show-pig', function(e) {
     var td = $(event.target).parent()
     var alg = td.prev().text()
     var alg_name = td.prev().prev().text()
-    $('#show-alg').append("<div id=alg-pig class=\"roofpig rp160\" data-config=\"alg=" + alg + "|base=AD|flags=showalg"+td.data('us')+"\"></div>")
-    EventHandlers.set_focus(new CubeAnimation($("#alg-pig")))
+
+    CubeAnimation.create_in_dom('#show-alg', 'alg='+alg+'|base=AD|flags=showalg'+td.data("us"), "id=alg-pig class='roofpig rp160'")
     $('#show-alg').dialog({
       width: '200px',
       title: alg_name,
       modal: true,
       closeOnEscape: true,
       dialogClass: 'lars-dialog',
+      close: function( event, ui ) {
+            var cube_id = $('#show-alg').children().attr('data-cube-id');
+            if (cube_id) {
+              CubeAnimation.by_id[cube_id].remove();
+            }
+        }
     });
   });
 
