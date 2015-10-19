@@ -6,18 +6,6 @@
 %div{style: 'position: absolute; top:32px; right:0px; font-size: 8px;'}
   Cache #{number_to_human_size Rails.cache.instance_variable_get('@cache_size')}
 
-.welcome
-  %p
-    Welcome to the poorly implemented,
-    pre-alpha LL AlgNotDB (aka <I>#{@joke_header}"</I>)!
-  %p
-    Search by selecting corner/edge configs
-    (COP, EO, EP, OLL) to the right. Clicking the
-    weird code in the Position column shows
-    a page with algs etc for that position.
-  %p
-    Currently the DB has all <= 15 moves algs (1.7M), and the combinations of all <= 9 move algs.
-
 %table.center
   %tr
     %th COP
@@ -65,16 +53,16 @@
 %br{clear: 'both'}
 
 =form_tag url_for(controller: "positions", action: "index"), method: 'get', id: 'icon-picker' do
-  =hidden_field_tag(:oll, @db_query[:oll])
-  =hidden_field_tag(:cop, @db_query[:cop])
-  =hidden_field_tag(:eo,  @db_query[:eo])
-  =hidden_field_tag(:ep,  @db_query[:ep])
+  =hidden_field_tag(:oll, @filters[:oll])
+  =hidden_field_tag(:cop, @filters[:cop])
+  =hidden_field_tag(:eo,  @filters[:eo])
+  =hidden_field_tag(:ep,  @filters[:ep])
 
 %h4
   Selected #{@position_count} of the #{Position.count} LL positions.
   - if @position_count != @positions.count
     Showing first #{@positions.count}
-%h5 Average shortest solve: #{@optimal_average}
+%h5 Average shortest solve: #{@shortest_average}
 
 %table.index.pos-list
   %th Position

@@ -20,18 +20,6 @@ h4, h5 {
   margin: 8px;
 }
 
-.welcome {
-  position: absolute;
-  top:32px;
-  left:8px;
-  float: left;
-  font-size: 10px;
-  color: grey;
-  background: #eee;
-  width: 200px;
-  z-index: -1;
-}
-
 $optimal_color: #69f;
 .optimal { color: $optimal_color; }
 

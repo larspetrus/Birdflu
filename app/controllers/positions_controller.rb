@@ -1,27 +1,21 @@
 class PositionsController < ApplicationController
 
-  INDEX_FILTERS = [:cop, :eo, :ep, :oll]
+  POSITION_FILTERS = [:cop, :eo, :ep, :oll]
 
   def index
-    pos_filter = store_parameters(:pos_filter, {cop: '', eo: '', ep: '', oll: ''})
+    @filters = store_parameters(:pos_filter, {cop: '', eo: '', ep: '', oll: ''})
 
-    @db_query = {}
-    INDEX_FILTERS.each { |f| @db_query[f] = pos_filter[f] if pos_filter[f].present? }
+    @positions = Position.where(@filters.select{|k,v| v.present?}).order(:optimal_alg_length).to_a
+    optimal_sum = @positions.reduce(0.0) { |sum, pos| sum + (pos.optimal_alg_length || 100)}
+    @shortest_average = '%.2f' % (optimal_sum/@positions.count)
 
-    @positions = Position.includes(:best_combo_alg).where(@db_query).to_a.sort_by! {|pos| pos.best_alg_length}
     @position_count = @positions.count
-
-    optimal_sum = @positions.reduce(0.0) { |sum, pos| sum + pos.best_alg_length }
-    @optimal_average = '%.2f' % (optimal_sum/@positions.count)
-
     @positions = @positions.first(100)
 
     @active_icons = {}
-    INDEX_FILTERS.each{ |f| @active_icons[f] = Icons::Base.by_code(f, pos_filter[f]) }
+    POSITION_FILTERS.each{ |f| @active_icons[f] = Icons::Base.by_code(f, @filters[f]) }
     @icon_grids = {}
-    INDEX_FILTERS.each{ |f| @icon_grids[f] = Icons::Base.class_by(f)::grid }
-
-    @joke_header = ['Grail Moth', 'Oral Might', 'A Girl Moth', 'Ham To Girl', 'Roam Light', 'Mortal Sigh', 'A Grim Sloth', 'Glamor Shit', 'Solar Might'].sample
+    POSITION_FILTERS.each{ |f| @icon_grids[f] = Icons::Base.class_by(f)::grid }
   end
 
   def show

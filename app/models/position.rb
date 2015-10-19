@@ -112,10 +112,6 @@ class Position < ActiveRecord::Base
     cop + Icons::Eo.name_for_code(eo) + Icons::Ep.name_for_code(ep)
   end
 
-  def best_alg_length
-    optimal_alg_length || 99
-  end
-
   def best_combo_alg_length
     best_combo_alg ? best_combo_alg.length : 99
   end
