@@ -54,10 +54,10 @@
 %br{clear: 'both'}
 
 =form_tag url_for(controller: "positions", action: "index"), method: 'get', id: 'icon-picker' do
-  =hidden_field_tag(:oll, @filters[:oll])
   =hidden_field_tag(:cop, @filters[:cop])
   =hidden_field_tag(:eo,  @filters[:eo])
   =hidden_field_tag(:ep,  @filters[:ep])
+  =hidden_field_tag(:oll, @filters[:oll])
 
 %h4
   Selected #{@position_count} of the #{Position.count} LL positions.
@@ -111,9 +111,6 @@
     var pos = { my: 'center top', at: 'center top', of: '#pickers' };
     return $.extend(specifics, {resizable: false, modal: true, position: pos, open: close_on_mouse_exit});
   }
-  $('#oll-selected').on('mouseover', function() {
-    $('#oll-picker').dialog(opts({ width: '580px', title: 'Corner and edge orientation (OLL)'}, '#oll'));
-  });
   $('#cop-selected').on('mouseover', function() {
     $('#cop-picker').dialog(opts({ width: '460px', title: 'Corner orientation and position (COP)'}, '#cop'));
   });
@@ -123,7 +120,11 @@
   $('#ep-selected').on('mouseover', function() {
     $('#ep-picker').dialog(opts({ width: '562px', title: 'Edge position (EP)'}, '#ep'));
   });
+  $('#oll-selected').on('mouseover', function() {
+      $('#oll-picker').dialog(opts({ width: '580px', title: 'Corner and edge orientation (OLL)'}, '#oll'));
+  });
 
+  // --------- Show Roofpigs ---
   $(document).on('click', '.show-pig', function(e) {
     var td = $(event.target).parent();
     var alg = td.prev().text();
