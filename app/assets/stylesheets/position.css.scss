@@ -86,11 +86,14 @@ $optimal_color: #69f;
   font-size: 13px;
   padding: 3px 14px;
   font-weight: bold;
+}
 
+.leftmenu, .pos_stats {
   a {
     color: black;
     text-shadow: 2px 2px 5px orange;
     text-decoration: none;
+    display: block;
   }
   a:link {  }
   a:visited { }
@@ -99,6 +102,33 @@ $optimal_color: #69f;
 
   input { background-color: #fc7; }
 }
+
+// ------------ Position info
+.pos_stats {
+  border: 1px solid #bbb;
+  font-size: 12px;
+  padding: 6px;
+  margin: 4px;
+
+  #rubric {
+    font-size: 14px;
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 4px;
+  }
+
+  table {
+    border-collapse: collapse;
+    font-size: 11px;
+    td:nth-child(2) {
+      padding-left: 8px;
+    }
+  }
+  .dead-link {
+    color: #aaa;
+  }
+}
+
 .left {
   float: left;
 }
@@ -309,29 +339,6 @@ td:last-child.icon-grid-h {
   font-size: 14px;
   width: 500px;
   margin: 8px auto;
-}
-
-// ------------ Position info
-.pos_stats {
-  border: 1px solid #bbb;
-  font-size: 12px;
-  padding: 6px;
-  margin: 4px;
-
-  #rubric {
-    font-size: 14px;
-    font-weight: bold;
-    display: inline-block;
-    margin-bottom: 4px;
-  }
-
-  table {
-    border-collapse: collapse;
-    font-size: 11px;
-    td:nth-child(2) {
-      padding-left: 8px;
-    }
-  }
 }
 
 .lars-dialog {
