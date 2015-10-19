@@ -34,7 +34,8 @@
     %td
       #ep-selected= render 'svg_cube', iconf: @active_icons[:ep], size: 44, add_class: 'selected'
       #ep-picker
-        %table.icon-grid-h
+        %table.icon-grid-h.relative
+          .ubl-text Images assume top left corner (UBL) is placed correctly.
           - @icon_grids[:ep].each do |ep_row|
             %tr
               - ep_row.each do |ep|

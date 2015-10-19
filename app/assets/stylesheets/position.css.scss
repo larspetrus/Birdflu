@@ -117,12 +117,9 @@ $optimal_color: #69f;
   }
 }
 
-.left {
-  float: left;
-}
-.right {
-  float: right;
-}
+.left     { float: left; }
+.right    { float: right; }
+.relative { position: relative; }
 
 $wide: 8px;
 $narrow: 3px;
@@ -304,6 +301,12 @@ td:last-child.icon-grid-h {
 
 #oll-picker, #cop-picker, #eo-picker, #ep-picker {
   display: none;
+}
+.ubl-text {
+  position: absolute;
+  top: 30px;
+  right: 74px;
+  font-size: 12px;
 }
 // ------------ Alg sections
 .cancel1 {
