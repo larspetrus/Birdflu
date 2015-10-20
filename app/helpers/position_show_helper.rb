@@ -5,18 +5,21 @@ module PositionShowHelper
   end
 
   def first_2_columns(sortby, alg, flags)
-    tags = [speed_value(alg), length_value(alg, flags)].rotate(sortby == 'speed' ? 0 : 1)
+    tags = [speed_value(alg, flags), length_value(alg, flags)].rotate(sortby == 'speed' ? 0 : 1)
     tags[0] + tags[1]
   end
 
-  def speed_value(alg)
-    content_tag(:td, '%.2f' % alg.speed)
+  def speed_value(alg, flags)
+    content_tag(:td, '%.2f' % alg.speed, class_for(flags[:fastest], flags[:copy]))
   end
 
   def length_value(alg, flags)
-    class_names = [flags[:shortest] ? 'optimal' : nil, flags[:copy] ? 'copy' : nil].join
-    classes = class_names.present? ? {class: class_names} : {}
-    content_tag(:td, alg.length, classes)
+    content_tag(:td, alg.length, class_for(flags[:shortest], flags[:copy]))
+  end
+
+  def class_for(optimal, copy)
+    class_names = [optimal ? 'optimal' : nil, copy ? 'copy' : nil].join
+    class_names.present? ? {class: class_names} : {}
   end
 
 

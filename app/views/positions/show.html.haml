@@ -67,7 +67,7 @@
   - @solution_order.each do |key|
     - @solutions[key].each_with_index do |alg, i|
       %tr
-        =first_2_columns(@sortby, alg, copy: i > 0, shortest: alg.length == @stats.shortest)
+        =first_2_columns(@sortby, alg, copy: i > 0, shortest: alg.length == @stats.shortest, fastest: alg.speed == @stats.fastest)
         %td{class: alg.css_kind}= alg_name_td(alg)
         %td{class: (i > 0 ? 'copy' : nil)}= alg.moves
         %td{:'data-us' => alg.setup_moves}
