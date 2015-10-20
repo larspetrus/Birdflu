@@ -53,7 +53,7 @@ $optimal_color: #69f;
   th {
     background-color: #cef;
   }
-  .single  { color: #03b; }
+  .single  { color: #073; }
   .combo   { color: #700; }
   .copy    { color: #aaa; }
   .optimalcopy { color: #9ac; }
@@ -93,7 +93,7 @@ $optimal_color: #69f;
   font-weight: bold;
 }
 
-.leftmenu, .pos_stats {
+.leftmenu, .left_side_stats {
   a {
     color: black;
     text-shadow: 2px 2px 5px orange;
@@ -109,7 +109,11 @@ $optimal_color: #69f;
 }
 
 // ------------ Position info
-.pos_stats {
+.left_side_stats {
+  position: absolute;
+  top:40px;
+  left:8px;
+
   border: 1px solid #bbb;
   font-size: 12px;
   padding: 6px;
@@ -337,6 +341,13 @@ td:last-child.icon-grid-h {
   color: #a33;
 }
 
+
+// ------------ Page format header
+.page-format-header {
+  font-size: 16px;
+  width: 200px;
+  margin: 8px auto;
+}
 
 // ------------ Alg list header
 .alg-list-header {

@@ -4,6 +4,7 @@ class PositionsController < ApplicationController
 
   def index
     @filters = store_parameters(:pos_filter, {cop: '', eo: '', ep: '', oll: ''})
+    @page_format = store_parameters(:page, {page_format: 'positions'})[:page_format]
 
     @positions = Position.where(@filters.select{|k,v| v.present?}).order(:optimal_alg_length).to_a
     optimal_sum = @positions.reduce(0.0) { |sum, pos| sum + (pos.optimal_alg_length || 100)}
@@ -16,6 +17,11 @@ class PositionsController < ApplicationController
     POSITION_FILTERS.each{ |f| @active_icons[f] = Icons::Base.by_code(f, @filters[f]) }
     @icon_grids = {}
     POSITION_FILTERS.each{ |f| @icon_grids[f] = Icons::Base.class_by(f)::grid }
+
+    if @page_format == 'algs'
+      get_alg_list_params
+      @raw_algs = RawAlg.where(position_id: @positions.map(&:id)).includes(:position).order(@sortby).limit(@page)
+    end
   end
 
   def show
@@ -25,10 +31,7 @@ class PositionsController < ApplicationController
       return redirect_to "/positions/#{pos.ll_code}"
     end
 
-    alg_filter = store_parameters(:alg_filter, {page: 25, algtypes: 'both', sortby: 'speed'})
-    @page     = alg_filter[:page].to_i
-    @algtypes = alg_filter[:algtypes]
-    @sortby   = alg_filter[:sortby]
+    get_alg_list_params
 
     @cube = @position.as_cube
 
@@ -65,5 +68,12 @@ class PositionsController < ApplicationController
       values = cookies[cookie_name] ? JSON.parse(cookies[cookie_name], symbolize_names: true) : defaults # TODO handle bad cookie
     end
     values
+  end
+
+  def get_alg_list_params
+    alg_list_params = store_parameters(:alg_filter, {page: 25, algtypes: 'both', sortby: 'speed'})
+    @page     = alg_list_params[:page].to_i
+    @algtypes = alg_list_params[:algtypes]
+    @sortby   = alg_list_params[:sortby]
   end
 end

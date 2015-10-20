@@ -3,7 +3,18 @@
 
 %hr{style: 'clear:both;'}
 
-%div{style: 'position: absolute; top:32px; right:0px; font-size: 8px;'}
+.left_side_stats
+  %span#rubric
+    #{@position_count} positions
+  %table
+    %tr
+    - if @position_count != @positions.count
+      %tr
+        %td Showing first #{@positions.count}
+    %tr
+      %td Average shortest solve: #{@shortest_average}
+
+%div{style: 'position: absolute; top:4px; right:4px; font-size: 8px; color: #888;'}
   Cache #{number_to_human_size Rails.cache.instance_variable_get('@cache_size')}
 
 %table.center
@@ -51,7 +62,6 @@
                 %td.icon-grid-h
                   = render 'll_icon', pos: oll, add_class: oll.highlight(params[:oll]) if oll
 
-%br{clear: 'both'}
 
 =form_tag url_for(controller: "positions", action: "index"), method: 'get', id: 'icon-picker' do
   =hidden_field_tag(:cop, @filters[:cop])
@@ -59,35 +69,69 @@
   =hidden_field_tag(:ep,  @filters[:ep])
   =hidden_field_tag(:oll, @filters[:oll])
 
-%h4
-  Selected #{@position_count} of the #{Position.count} LL positions.
-  - if @position_count != @positions.count
-    Showing first #{@positions.count}
-%h5 Average shortest solve: #{@shortest_average}
+.center.page-format-header
+  =form_tag url_for(controller: "positions", action: "index"), method: 'get', id: 'page_format_form' do
+    Show as
+    =select_tag("page_format", options_for_select(['positions', 'algs'], selected: @page_format))
 
-%table.index.pos-list
-  %th Position
-  %th COP
-  %th EO
-  %th EP
-  %th OLL
-  %th Solutions
-  %th{colspan: 3} Shortest Solution
+- if @page_format == 'algs'
 
-  - @positions.each do |pos|
-    - cache([pos.ll_code, pos.alg_count], skip_digest: true) do
-      - best = pos.best_alg || OpenStruct.new
+  %hr
+  .center.alg-list-header
+    =form_tag url_for(controller: "positions", action: "index"), method: 'get', id: 'algs_options' do
+      Show first
+      =select_tag("page", options_for_select([25, 50, 100, 200, 500], selected: @page))
+
+      =hidden_field_tag(:algtypes, @algtypes)
+      only single algs
+
+      .right
+        Sort by
+        =select_tag("sortby", options_for_select(['speed', ['moves', 'length']], selected: @sortby))
+
+
+  %table.index.alg-list
+    %thead
+      =first_2_headers(@sortby)
+      %th Name
+      %th Position
+      %th Alg
+      %th
+      %th Notes
+    - @raw_algs.each do |alg|
       %tr
-        %td= link_to pos.display_name, "positions/#{pos.ll_code}"
-        %td= render 'svg_cube', iconf: Icons::Cop.for(pos), size: 25, label: ''
-        %td= render 'svg_cube', iconf: Icons::Eo.for(pos),  size: 25, label: ''
-        %td= render 'svg_cube', iconf: Icons::Ep.for(pos),  size: 25, label: ''
-        %td= render 'svg_cube', iconf: Icons::Oll.for(pos), size: 25, label: ''
-        %td= pos.alg_count
-        %td= best.length
-        %td=best.moves
-        %td{:'data-us' => best.setup_moves}
+        =first_2_columns(@sortby, alg, copy: false, shortest: false)
+        %td{class: alg.css_kind}= alg_name_td(alg)
+        %td= link_to alg.position.display_name, "/positions/#{alg.position.ll_code}"
+        %td= alg.moves
+        %td{:'data-us' => alg.setup_moves}
           %a{href: "#", class: "show-pig"} show
+        %td
+          = alg.specialness
+- else
+  %table.index.pos-list
+    %th Position
+    %th COP
+    %th EO
+    %th EP
+    %th OLL
+    %th Solutions
+    %th{colspan: 3} Shortest Solution
+
+    - @positions.each do |pos|
+      - cache([pos.ll_code, pos.alg_count], skip_digest: true) do
+        - best = pos.best_alg || OpenStruct.new
+        %tr
+          %td= link_to pos.display_name, "/positions/#{pos.ll_code}"
+          %td= render 'svg_cube', iconf: Icons::Cop.for(pos), size: 25, label: ''
+          %td= render 'svg_cube', iconf: Icons::Eo.for(pos),  size: 25, label: ''
+          %td= render 'svg_cube', iconf: Icons::Ep.for(pos),  size: 25, label: ''
+          %td= render 'svg_cube', iconf: Icons::Oll.for(pos), size: 25, label: ''
+          %td= pos.alg_count
+          %td= best.length
+          %td=best.moves
+          %td{:'data-us' => best.setup_moves}
+            %a{href: "#", class: "show-pig"} show
 
 #show-alg{style: 'height:200px; width:200px;'}
 %script ROOFPIG_CONF_AD = "solved=U-| hover=3 | speed=600"
@@ -145,3 +189,14 @@
         }
     });
   });
+
+  // ---- page format form
+  $('#page_format').change(function() {
+    $('form#page_format_form').submit();
+  });
+
+  // ---- alg list form
+  $('#page, #sortby, #algtypes').change(function() {
+    $('form#algs_options').submit();
+  });
+
