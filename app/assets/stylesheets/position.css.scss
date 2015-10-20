@@ -2,6 +2,23 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+// ---- Universal stuff ----
+
+body {
+  font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}
+
+a {
+  color: #07c;
+  &:hover {
+    color: #30a7fc;
+  }
+  text-decoration: none;
+}
+
+.left     { float: left; }
+.right    { float: right; }
+.relative { position: relative; }
 
 // The side colors. Same as Roofpig.
 $f_color: red;
@@ -116,10 +133,6 @@ $optimal_color: #69f;
     color: #aaa;
   }
 }
-
-.left     { float: left; }
-.right    { float: right; }
-.relative { position: relative; }
 
 $wide: 8px;
 $narrow: 3px;
