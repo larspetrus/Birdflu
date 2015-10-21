@@ -6,11 +6,11 @@ class PositionsController < ApplicationController
     @filters = store_parameters(:pos_filter, {cop: '', eo: '', ep: '', oll: ''})
     @page_format = store_parameters(:page, {page_format: 'positions'})[:page_format]
 
-    @positions = Position.where(@filters.select{|k,v| v.present?}).order(:optimal_alg_length).to_a
+    @positions = Position.where(@filters.select{|k,v| v.present?}).order(:optimal_alg_length).includes(:stats).to_a
     optimal_sum = @positions.reduce(0.0) { |sum, pos| sum + (pos.optimal_alg_length || 100)}
     @shortest_average = '%.2f' % (optimal_sum/@positions.count)
 
-    @position_count = @positions.count
+    @aggregate_stats = PositionStats.aggregate(@positions.map(&:stats))
     @positions = @positions.first(100)
 
     @active_icons = {}

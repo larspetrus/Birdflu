@@ -5,14 +5,18 @@
 
 .left_side_stats
   %span#rubric
-    #{@position_count} positions
+    #{@aggregate_stats.position_count} positions
   %table
     %tr
-    - if @position_count != @positions.count
+      %td Shortest
+      %td.optimal= @aggregate_stats.shortest
+    %tr{style: "border-bottom: 10px solid #fff;"}
+      %td Fastest
+      %td.optimal= '%.2f' % @aggregate_stats.fastest
+    - @aggregate_stats.raw_counts.keys.sort.each do |length|
       %tr
-        %td Showing first #{@positions.count}
-    %tr
-      %td Average shortest solve: #{@shortest_average}
+        %td #{length} moves
+        %td= pluralize(@aggregate_stats.raw_counts[length], 'alg')
 
 %div{style: 'position: absolute; top:4px; right:4px; font-size: 8px; color: #888;'}
   Cache #{number_to_human_size Rails.cache.instance_variable_get('@cache_size')}
@@ -76,8 +80,7 @@
 
 - if @page_format == 'algs'
 
-  %hr
-  .center.alg-list-header
+  .center.alg-list-header{style: "border-top: 1px solid #aaa; padding-top: 8px;"}
     =form_tag url_for(controller: "positions", action: "index"), method: 'get', id: 'algs_options' do
       Show first
       =select_tag("page", options_for_select([25, 50, 100, 200, 500], selected: @page))
@@ -100,7 +103,7 @@
       %th Notes
     - @raw_algs.each do |alg|
       %tr
-        =first_2_columns(@sortby, alg, copy: false, shortest: false)
+        =first_2_columns(@sortby, alg, shortest: alg.length == @aggregate_stats.shortest, fastest: alg.speed == @aggregate_stats.fastest)
         %td{class: alg.css_kind}= alg_name_td(alg)
         %td= link_to alg.position.display_name, "/positions/#{alg.position.ll_code}"
         %td= alg.moves

@@ -13,6 +13,17 @@ class PositionStats < ActiveRecord::Base
     end
   end
 
+  def self.aggregate(pos_stats)
+    count_sums = Hash.new(0)
+    pos_stats.each {|stat| stat.raw_counts.each{|moves, count| count_sums[moves] += count } }
+    OpenStruct.new(
+      position_count: pos_stats.count,
+      shortest: pos_stats.map(&:shortest).min || 99,
+      fastest:  pos_stats.map(&:fastest).min || 99,
+      raw_counts: count_sums,
+    )
+  end
+
   def raw_counts()
     _stats()[:raw_counts]
   end
