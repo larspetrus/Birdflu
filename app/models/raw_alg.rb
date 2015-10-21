@@ -75,7 +75,7 @@ class RawAlg < ActiveRecord::Base
     alg_id
   end
 
-  def oneAlg?
+  def single?
     true
   end
 

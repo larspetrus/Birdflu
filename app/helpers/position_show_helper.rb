@@ -24,7 +24,7 @@ module PositionShowHelper
 
 
   def alg_name_td(alg)
-    if alg.oneAlg?
+    if alg.single?
       alg.name
     else
       names = alg.name.split('+')

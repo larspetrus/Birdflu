@@ -73,7 +73,7 @@
         %td{:'data-us' => alg.setup_moves}
           %a{href: "#", class: "show-pig"} show
         %td
-          - unless alg.oneAlg?
+          - unless alg.single?
             = alg.mv_start
             %span.cancel1= alg.mv_cancel1
             %span.merged=  alg.mv_merged

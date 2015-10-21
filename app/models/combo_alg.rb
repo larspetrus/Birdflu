@@ -72,7 +72,7 @@ class ComboAlg < ActiveRecord::Base
     "| setupmoves=#{Move.name_from('U', u_setup)}"
   end
 
-  def oneAlg?
+  def single?
     false
   end
 
