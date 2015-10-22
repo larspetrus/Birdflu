@@ -140,36 +140,57 @@
 %script ROOFPIG_CONF_AD = "solved=U-| hover=3 | speed=600"
 
 :javascript
+  // --------- Icon dependencies (quite primitive) ---
   $('.ll-icon, .svg-icon').on('click', function() {
     var field = $(this).data('field');
-    if (field === '#cop' || field === '#oll') {
+    if (field === '#cop') {
       $('#eo, #ep').val('');
+    }
+    if (field === '#oll') {
+      $('#cop, #eo, #ep').val('');
     }
     $(field).val($(this).data('code'));
     $('form#icon-picker').submit();
   });
 
-  function opts(specifics, field) {
-    var close_on_mouse_exit = function(){
-      $('.ui-widget-overlay').bind('mouseenter', function(){
-        $(field+'-picker').dialog('close');
-      });
-    };
-    var pos = { my: 'center top', at: 'center top', of: '#pickers' };
-    return $.extend(specifics, {resizable: false, modal: true, position: pos, open: close_on_mouse_exit});
-  }
-  $('#cop-selected').on('mouseover', function() {
-    $('#cop-picker').dialog(opts({ width: '460px', title: 'Corner orientation and position (COP)'}, '#cop'));
-  });
-  $('#eo-selected').on('mouseover', function() {
-    $('#eo-picker').dialog(opts({ width: '479px', title: 'Edge orientation (EO)'}, '#eo'));
-  });
-  $('#ep-selected').on('mouseover', function() {
-    $('#ep-picker').dialog(opts({ width: '562px', title: 'Edge position (EP)'}, '#ep'));
-  });
-  $('#oll-selected').on('mouseover', function() {
-      $('#oll-picker').dialog(opts({ width: '580px', title: 'Corner and edge orientation (OLL)'}, '#oll'));
-  });
+  // --------- Open/Close picker dialogs ---
+  var mouse_inside_picker = '';
+
+  var picker_dialog_props = {
+    cop: opts({ width: '460px', title: 'Corner orientation and position (COP)'}),
+    eo:  opts({ width: '479px', title: 'Edge orientation (EO)'}),
+    ep:  opts({ width: '562px', title: 'Edge position (EP)'}),
+    oll: opts({ width: '580px', title: 'Corner and edge orientation (OLL)'}),
+  };
+  function opts(specifics) {
+    var pos = { my: 'center top', at: 'center bottom', of: '#pickers' };
+    return $.extend(specifics, {resizable: false, modal: false, draggable: false, position: pos, dialogClass: "picker-dialog"});
+  };
+
+  $('#cop-selected, #eo-selected, #ep-selected, #oll-selected').hover(
+    function(event){
+      var field = event.currentTarget.id.split('-')[0];
+      var picker = $('#'+field+'-picker').dialog(picker_dialog_props[field]);
+      picker.parent().attr('data-field', field)
+    },
+    function(event){
+      var field = event.currentTarget.id.split('-')[0];
+      setTimeout(function(){
+        if (mouse_inside_picker != field) $('#'+field+'-picker').dialog('close');
+      }, 100);
+    }
+  );
+
+  $(document).on({
+    mouseenter: function(event) {
+      mouse_inside_picker = $(event.currentTarget).attr('data-field')
+    },
+    mouseleave: function(event) {
+      var field = $(event.currentTarget).attr('data-field')
+      $('#'+field+'-picker').dialog('close');
+      mouse_inside_picker = ''
+    }
+  }, ".picker-dialog");
 
   // --------- Show Roofpigs ---
   $(document).on('click', '.show-pig', function(e) {
