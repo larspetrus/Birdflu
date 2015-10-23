@@ -3,7 +3,14 @@ class PositionsController < ApplicationController
   POSITION_FILTERS = [:cop, :eo, :ep, :oll]
 
   def index
-    @filters = store_parameters(:pos_filter, {cop: '', eo: '', ep: '', oll: ''})
+    de_facto_pos_params = {}
+    POSITION_FILTERS.each do |f|
+      if params[f]
+        de_facto_pos_params[f] = (params[f] == 'random') ? Position.find(Position.random_id)[f] : params[f]
+      end
+    end
+
+    @filters = store_parameters(:pos_filter, {cop: '', eo: '', ep: '', oll: ''}, de_facto_pos_params)
     @page_format = store_parameters(:page, {page_format: 'positions'})[:page_format]
 
     @positions = Position.where(@filters.select{|k,v| v.present?}).order(:optimal_alg_length).includes(:stats).to_a
@@ -58,11 +65,10 @@ class PositionsController < ApplicationController
     render json: { error: e.message }
   end
 
-  def store_parameters(cookie_name, defaults)
+  def store_parameters(cookie_name, defaults, new_data = params)
     stored_parameters = defaults.keys
-    form_submission = params.has_key?(stored_parameters.first)
-    if form_submission
-      values = params.select {|k,v| stored_parameters.include? k.to_sym }
+    if new_data.has_key?(stored_parameters.first)
+      values = new_data.select {|k,v| stored_parameters.include? k.to_sym }
       cookies[cookie_name] = JSON.generate(values)
     else
       values = cookies[cookie_name] ? JSON.parse(cookies[cookie_name], symbolize_names: true) : defaults # TODO handle bad cookie
