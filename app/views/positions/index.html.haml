@@ -1,4 +1,4 @@
-.leftmenu= link_to 'Random Position', "positions/#{Random.rand(3916) + 1}"
+.leftmenu= link_to 'Random Position', "positions/#{Position.random_id}"
 = render 'find_by_alg'
 
 %hr{style: 'clear:both;'}
@@ -31,50 +31,62 @@
     %td
       #cop-selected= render 'svg_cube', iconf: @active_icons[:cop], size: 44, add_class: 'selected'
       #cop-picker
+        .picker_buttons
+          %a{class: "random knapp knapp-enabled",   data: {field: '#cop', code: 'random'}} Random
+          %a{class: "unselect knapp knapp-enabled", data: {field: '#cop', code: ''}} Unselect
         %table.icon-grid
           - @icon_grids[:cop].each do |cop_row|
             %tr
               - cop_row.each do |cop|
                 %td.icon-grid
-                  = render 'svg_cube', iconf: cop, size: 44, add_class: cop.highlight(params[:cop]) if cop
+                  = render 'svg_cube', iconf: cop, size: 44, add_class: cop.highlight(@filters[:cop]) if cop
     %td
       #eo-selected= render 'svg_cube', iconf: @active_icons[:eo], size: 44, add_class: 'selected'
       #eo-picker
+        .picker_buttons
+          %a{class: "random knapp knapp-enabled",   data: {field: '#eo', code: 'random'}} Random
+          %a{class: "unselect knapp knapp-enabled", data: {field: '#eo', code: ''}} Unselect
         %table.icon-grid-h
           - @icon_grids[:eo].each do |eo_row|
             %tr
               - eo_row.each do |eo|
                 %td.icon-grid-h
-                  = render 'll_icon', pos: eo, add_class: eo.highlight(params[:eo]) if eo
+                  = render 'll_icon', pos: eo, add_class: eo.highlight(@filters[:eo]) if eo
     %td
       #ep-selected= render 'svg_cube', iconf: @active_icons[:ep], size: 44, add_class: 'selected'
       #ep-picker
+        .picker_buttons
+          %a{class: "random knapp knapp-enabled",   data: {field: '#ep', code: 'random'}} Random
+          %a{class: "unselect knapp knapp-enabled", data: {field: '#ep', code: ''}} Unselect
         %table.icon-grid-h.relative
-          .ubl-text Images assume top left corner (UBL) is placed correctly.
           - @icon_grids[:ep].each do |ep_row|
             %tr
               - ep_row.each do |ep|
                 %td.icon-grid-h
-                  = render 'svg_cube', iconf: ep, size: 44, add_class: ep.highlight(params[:ep]) if ep
+                  = render 'svg_cube', iconf: ep, size: 44, add_class: ep.highlight(@filters[:ep]) if ep
+          .ubl-text Images assume top left corner (UBL) is placed correctly.
     %td
       #oll-selected= render 'svg_cube', iconf: @active_icons[:oll], size: 44, add_class: 'selected'
       #oll-picker
+        .picker_buttons
+          %a{class: "random knapp knapp-enabled",   data: {field: '#oll', code: 'random'}} Random
+          %a{class: "unselect knapp knapp-enabled", data: {field: '#oll', code: ''}} Unselect
         %table.icon-grid-h
           - @icon_grids[:oll].each do |oll_row|
             %tr
               - oll_row.each do |oll|
                 %td.icon-grid-h
-                  = render 'll_icon', pos: oll, add_class: oll.highlight(params[:oll]) if oll
+                  = render 'll_icon', pos: oll, add_class: oll.highlight(@filters[:oll]) if oll
 
 
-=form_tag url_for(controller: "positions", action: "index"), method: 'get', id: 'icon-picker' do
+=form_tag url_for(controller: "positions", action: "index"), method: 'post', id: 'icon-picker' do
   =hidden_field_tag(:cop, @filters[:cop])
   =hidden_field_tag(:eo,  @filters[:eo])
   =hidden_field_tag(:ep,  @filters[:ep])
   =hidden_field_tag(:oll, @filters[:oll])
 
 .center.page-format-header
-  =form_tag url_for(controller: "positions", action: "index"), method: 'get', id: 'page_format_form' do
+  =form_tag url_for(controller: "positions", action: "index"), method: 'post', id: 'page_format_form' do
     Show as
     =select_tag("page_format", options_for_select(['positions', 'algs'], selected: @page_format))
 
@@ -108,7 +120,7 @@
         %td= link_to alg.position.display_name, "/positions/#{alg.position.ll_code}"
         %td= alg.moves
         %td{:'data-us' => alg.setup_moves}
-          %a{href: "#", class: "show-pig"} show
+          %a{class: "show-pig"} show
         %td
           = alg.specialness
 - else
@@ -132,7 +144,7 @@
           %td= render 'svg_cube', iconf: Icons::Oll.for(pos), size: 25, label: ''
           %td= pos.alg_count
           %td= best.length
-          %td=best.moves
+          %td= best.moves
           %td{:'data-us' => best.setup_moves}
             %a{href: "#", class: "show-pig"} show
 
@@ -141,14 +153,10 @@
 
 :javascript
   // --------- Icon dependencies (quite primitive) ---
-  $('.ll-icon, .svg-icon').on('click', function() {
+  $('.ll-icon, .svg-icon, .random, .unselect').on('click', function() {
     var field = $(this).data('field');
-    if (field === '#cop') {
-      $('#eo, #ep').val('');
-    }
-    if (field === '#oll') {
-      $('#cop, #eo, #ep').val('');
-    }
+    if (field === '#cop') { $('#eo, #ep').val(''); }
+    if (field === '#oll') { $('#cop, #eo, #ep').val(''); }
     $(field).val($(this).data('code'));
     $('form#icon-picker').submit();
   });
@@ -157,8 +165,8 @@
   var mouse_inside_picker = '';
 
   var picker_dialog_props = {
-    cop: opts({ width: '460px', title: 'Corner orientation and position (COP)'}),
-    eo:  opts({ width: '479px', title: 'Edge orientation (EO)'}),
+    cop: opts({ width: '390px', title: 'Corner orientation & position (COP)'}),
+    eo:  opts({ width: '436px', title: 'Edge orientation (EO)'}),
     ep:  opts({ width: '562px', title: 'Edge position (EP)'}),
     oll: opts({ width: '580px', title: 'Corner and edge orientation (OLL)'}),
   };
@@ -176,7 +184,7 @@
     function(event){
       var field = event.currentTarget.id.split('-')[0];
       setTimeout(function(){
-        if (mouse_inside_picker != field) $('#'+field+'-picker').dialog('close');
+        if (mouse_inside_picker != field) { $('#'+field+'-picker').dialog('close'); }
       }, 100);
     }
   );

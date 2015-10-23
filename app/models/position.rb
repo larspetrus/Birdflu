@@ -174,10 +174,9 @@ class Position < ActiveRecord::Base
     end
   end
 
-  def top_3
-    dupes = Set.new
-    uniques = algs_in_set.select { |alg| dupes.add? alg.moves }
-    uniques.first(3)
+  def self.random_id
+    @total_count ||= Position.count
+    Random.rand(@total_count) + 1
   end
 
   def self.generate_all # All LL positions

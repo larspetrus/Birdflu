@@ -26,7 +26,7 @@ class Icons::Oll < Icons::Base
   def self.grid
     @@grid ||=
         [
-            [:'', :-, :m0].map{|id| self.by_code(id)},
+            [:-, :-, :-, :-, :-, :m0].map{|id| self.by_code(id)},
             %i(m28 m57 m20 - m23 m24 m25 m27 m26 m22 m21).map{|id| self.by_code(id)},
             %i(m3 m4 m17 m19 m18 m2 m1).map{|id| self.by_code(id)},
             %i(m33 m45 - m44 m43 m32 m31 - m38 m36).map{|id| self.by_code(id)},
