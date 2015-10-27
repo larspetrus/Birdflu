@@ -32,8 +32,8 @@ class Icons::Eo < Icons::Base
   def self.grid
     @@grid ||=
         [
-            ['2222', '1212', '2121', '1111', '1122', '2112', '2211', '1221'].map{|id| self.by_code(id)},
-        ]
+            ['2222', '1212', '2121', '1111', '1122', '2112', '2211', '1221']
+        ].map{|row| row.map{|id| self.by_code(id)}}
   end
 
   ALL = [

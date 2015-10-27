@@ -59,7 +59,7 @@
           %a{class: "random knapp knapp-enabled",   data: {field: '#ep', code: 'random'}} Random
           %a{class: "unselect knapp knapp-enabled", data: {field: '#ep', code: ''}} Unselect
         %table.icon-grid-h.relative
-          - @icon_grids[:ep].each do |ep_row|
+          - @ep_grid.each do |ep_row|
             %tr
               - ep_row.each do |ep|
                 %td.icon-grid-h

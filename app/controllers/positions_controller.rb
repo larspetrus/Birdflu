@@ -6,7 +6,7 @@ class PositionsController < ApplicationController
     de_facto_pos_params = {}
     POSITION_FILTERS.each do |f|
       if params[f]
-        de_facto_pos_params[f] = (params[f] == 'random') ? Position.find(Position.random_id)[f] : params[f]
+        de_facto_pos_params[f] = (params[f] == 'random') ? PosSubsets.random_code(f, params) : params[f]
       end
     end
 
@@ -23,7 +23,9 @@ class PositionsController < ApplicationController
     @active_icons = {}
     POSITION_FILTERS.each{ |f| @active_icons[f] = Icons::Base.by_code(f, @filters[f]) }
     @icon_grids = {}
-    POSITION_FILTERS.each{ |f| @icon_grids[f] = Icons::Base.class_by(f)::grid }
+    POSITION_FILTERS.each{ |f| @icon_grids[f] = Icons::Base.class_by(f)::grid  unless f == :ep }
+
+    @ep_grid = Icons::Ep.grid_for(@filters[:cop])
 
     if @page_format == 'algs'
       get_alg_list_params

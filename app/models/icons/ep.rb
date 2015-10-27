@@ -44,12 +44,8 @@ class Icons::Ep < Icons::Base
     by_code(position.ep)
   end
 
-  def self.grid
-    @@grid ||=
-        [
-            %w(1111 5555 7373 3737 1335 1577 5133 7157 3513 7715 3351 5771).map{|id| self.by_code(id)},
-            %w(7777 3333 1515 5151 3711 5735 1371 5573 1137 3557 7113 7355).map{|id| self.by_code(id)},
-        ]
+  def self.grid_for(cop)
+    PosSubsets.ep_code_grid_by_cop(cop).map{|row| row.map{|id| self.by_code(id)}}
   end
 
   ALL = [
