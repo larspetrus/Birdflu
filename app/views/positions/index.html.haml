@@ -21,6 +21,7 @@
 %div{style: 'position: absolute; top:4px; right:4px; font-size: 8px; color: #888;'}
   Cache #{number_to_human_size Rails.cache.instance_variable_get('@cache_size')}
 
+- icon_size = 45
 %table.center
   %tr
     %th COP
@@ -29,54 +30,54 @@
     %th OLL
   %tr#pickers
     %td
-      #cop-selected= render 'svg_cube', icon: @active_icons[:cop], size: 44, add_class: 'selected'
+      #cop-selected= render 'svg_cube', icon: @active_icons[:cop], size: icon_size, add_class: 'selected'
       #cop-picker
         .picker_buttons
           %a{class: "random knapp knapp-enabled",   data: {field: '#cop', code: 'random'}} Random
           %a{class: "unselect knapp knapp-enabled", data: {field: '#cop', code: ''}} Unselect
-        %table.icon-grid
+        %table.icon-grid-v
           - @icon_grids[:cop].each do |cop_row|
             %tr
               - cop_row.each do |cop|
-                %td.icon-grid
-                  = render 'svg_cube', icon: cop, size: 44, add_class: cop.highlight(@filters[:cop]) if cop
+                %td
+                  = render 'svg_cube', icon: cop, size: icon_size, add_class: cop.highlight(@filters[:cop]) if cop
     %td
-      #eo-selected= render 'svg_cube', icon: @active_icons[:eo], size: 44, add_class: 'selected'
+      #eo-selected= render 'svg_cube', icon: @active_icons[:eo], size: icon_size, add_class: 'selected'
       #eo-picker
         .picker_buttons
           %a{class: "random knapp knapp-enabled",   data: {field: '#eo', code: 'random'}} Random
           %a{class: "unselect knapp knapp-enabled", data: {field: '#eo', code: ''}} Unselect
-        %table.icon-grid-h
+        %table.icon-grid
           - @icon_grids[:eo].each do |eo_row|
             %tr
               - eo_row.each do |eo|
-                %td.icon-grid-h
-                  = render 'll_icon', pos: eo, add_class: eo.highlight(@filters[:eo]) if eo
+                %td
+                  = render 'svg_cube', icon: eo, size: icon_size, add_class: eo.highlight(@filters[:eo]) if eo
     %td
-      #ep-selected= render 'svg_cube', icon: @active_icons[:ep], size: 44, add_class: 'selected'
+      #ep-selected= render 'svg_cube', icon: @active_icons[:ep], size: icon_size, add_class: 'selected'
       #ep-picker
         .picker_buttons
           %a{class: "random knapp knapp-enabled",   data: {field: '#ep', code: 'random'}} Random
           %a{class: "unselect knapp knapp-enabled", data: {field: '#ep', code: ''}} Unselect
-        %table.icon-grid-h.relative
+        %table.icon-grid.relative
           - @ep_grid.each do |ep_row|
             %tr
               - ep_row.each do |ep|
-                %td.icon-grid-h
-                  = render 'svg_cube', icon: ep, size: 44, add_class: ep.highlight(@filters[:ep]) if ep
+                %td
+                  = render 'svg_cube', icon: ep, size: icon_size, add_class: ep.highlight(@filters[:ep]) if ep
           .ubl-text Images assume top left corner (UBL) is placed correctly.
     %td
-      #oll-selected= render 'svg_cube', icon: @active_icons[:oll], size: 44, add_class: 'selected'
+      #oll-selected= render 'svg_cube', icon: @active_icons[:oll], size: icon_size, add_class: 'selected'
       #oll-picker
         .picker_buttons
           %a{class: "random knapp knapp-enabled",   data: {field: '#oll', code: 'random'}} Random
           %a{class: "unselect knapp knapp-enabled", data: {field: '#oll', code: ''}} Unselect
-        %table.icon-grid-h
+        %table.icon-grid
           - @icon_grids[:oll].each do |oll_row|
             %tr
               - oll_row.each do |oll|
-                %td.icon-grid-h
-                  = render 'll_icon', pos: oll, add_class: oll.highlight(@filters[:oll]) if oll
+                %td
+                  = render 'svg_cube', icon: oll, size: icon_size, add_class: oll.highlight(@filters[:oll]) if oll
 
 
 =form_tag url_for(controller: "positions", action: "index"), method: 'post', id: 'icon-picker' do
@@ -165,10 +166,10 @@
   var mouse_is_inside_picker = '';
 
   var picker_dialog_props = {
-    cop: opts({ width: '390px', title: 'Corner orientation & position (COP)'}),
-    eo:  opts({ width: '436px', title: 'Edge orientation (EO)'}),
-    ep:  opts({ width: '562px', title: 'Edge position (EP)'}),
-    oll: opts({ width: '580px', title: 'Corner and edge orientation (OLL)'}),
+    cop: opts({ width: '400px', title: 'Corner orientation & position (COP)'}),
+    eo:  opts({ width: '394px', title: 'Edge orientation (EO)'}),
+    ep:  opts({ width: '572px', title: 'Edge position (EP)'}),
+    oll: opts({ width: '526px', title: 'Corner and edge orientation (OLL)'}),
   };
   function opts(specifics) {
     var pos = { my: 'center top', at: 'center bottom', of: '#pickers' };

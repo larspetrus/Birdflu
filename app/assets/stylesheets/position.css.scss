@@ -291,29 +291,28 @@ svg {
   background-color: $selected;
 }
 
+table.icon-grid-v {
+  border-collapse: collapse;
+  svg {
+    margin: 3px;
+  }
+  td {
+    padding: 0;
+    border-right: solid 1px #aaa;
+  }
+  td:last-child {
+    border-right: none;
+  }
+}
+
 table.icon-grid {
   border-collapse: collapse;
   svg {
     margin: 3px;
   }
-}
-td.icon-grid {
-  padding: 0;
-  border-right: solid 1px #aaa;
-}
-td:last-child.icon-grid {
-  border-right: none;
-}
-
-table.icon-grid-h {
-  border-collapse: collapse;
-}
-td.icon-grid-h {
-  padding: 0;
-  border-bottom: solid 1px #aaa;
-}
-td:last-child.icon-grid-h {
-  border-right: none;
+  td {
+    padding: 0;
+  }
 }
 
 #oll-picker, #cop-picker, #eo-picker, #ep-picker {
@@ -367,7 +366,9 @@ td:last-child.icon-grid-h {
 }
 
 .picker-dialog {
-  font-size: 90% !important;
+  .ui-dialog-title {
+    font-size: 90% !important;
+  }
 }
 
 .picker_buttons {
