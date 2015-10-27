@@ -29,7 +29,7 @@
     %th OLL
   %tr#pickers
     %td
-      #cop-selected= render 'svg_cube', iconf: @active_icons[:cop], size: 44, add_class: 'selected'
+      #cop-selected= render 'svg_cube', icon: @active_icons[:cop], size: 44, add_class: 'selected'
       #cop-picker
         .picker_buttons
           %a{class: "random knapp knapp-enabled",   data: {field: '#cop', code: 'random'}} Random
@@ -39,9 +39,9 @@
             %tr
               - cop_row.each do |cop|
                 %td.icon-grid
-                  = render 'svg_cube', iconf: cop, size: 44, add_class: cop.highlight(@filters[:cop]) if cop
+                  = render 'svg_cube', icon: cop, size: 44, add_class: cop.highlight(@filters[:cop]) if cop
     %td
-      #eo-selected= render 'svg_cube', iconf: @active_icons[:eo], size: 44, add_class: 'selected'
+      #eo-selected= render 'svg_cube', icon: @active_icons[:eo], size: 44, add_class: 'selected'
       #eo-picker
         .picker_buttons
           %a{class: "random knapp knapp-enabled",   data: {field: '#eo', code: 'random'}} Random
@@ -53,7 +53,7 @@
                 %td.icon-grid-h
                   = render 'll_icon', pos: eo, add_class: eo.highlight(@filters[:eo]) if eo
     %td
-      #ep-selected= render 'svg_cube', iconf: @active_icons[:ep], size: 44, add_class: 'selected'
+      #ep-selected= render 'svg_cube', icon: @active_icons[:ep], size: 44, add_class: 'selected'
       #ep-picker
         .picker_buttons
           %a{class: "random knapp knapp-enabled",   data: {field: '#ep', code: 'random'}} Random
@@ -63,10 +63,10 @@
             %tr
               - ep_row.each do |ep|
                 %td.icon-grid-h
-                  = render 'svg_cube', iconf: ep, size: 44, add_class: ep.highlight(@filters[:ep]) if ep
+                  = render 'svg_cube', icon: ep, size: 44, add_class: ep.highlight(@filters[:ep]) if ep
           .ubl-text Images assume top left corner (UBL) is placed correctly.
     %td
-      #oll-selected= render 'svg_cube', iconf: @active_icons[:oll], size: 44, add_class: 'selected'
+      #oll-selected= render 'svg_cube', icon: @active_icons[:oll], size: 44, add_class: 'selected'
       #oll-picker
         .picker_buttons
           %a{class: "random knapp knapp-enabled",   data: {field: '#oll', code: 'random'}} Random
@@ -138,10 +138,10 @@
         - best = pos.best_alg || OpenStruct.new
         %tr
           %td= link_to pos.display_name, "/positions/#{pos.ll_code}"
-          %td= render 'svg_cube', iconf: Icons::Cop.for(pos), size: 25, label: ''
-          %td= render 'svg_cube', iconf: Icons::Eo.for(pos),  size: 25, label: ''
-          %td= render 'svg_cube', iconf: Icons::Ep.for(pos),  size: 25, label: ''
-          %td= render 'svg_cube', iconf: Icons::Oll.for(pos), size: 25, label: ''
+          %td= render 'svg_cube', icon: Icons::Cop.for(pos), size: 25, label: ''
+          %td= render 'svg_cube', icon: Icons::Eo.for(pos),  size: 25, label: ''
+          %td= render 'svg_cube', icon: Icons::Ep.for(pos),  size: 25, label: ''
+          %td= render 'svg_cube', icon: Icons::Oll.for(pos), size: 25, label: ''
           %td= pos.alg_count
           %td= best.length
           %td= best.moves

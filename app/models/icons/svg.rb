@@ -55,10 +55,10 @@ class Icons::Svg
     @@box_size
   end
 
-  def self.rects_for(iconf)
+  def self.rects_for(icon)
     result = [@@cube_rect]
     @@dimensions.keys.each do |sticker|
-      color = iconf.color_at(sticker)
+      color = icon.color_at(sticker)
       if sticker[-1] == 'U'
         color ||= 'white-hole'
       end

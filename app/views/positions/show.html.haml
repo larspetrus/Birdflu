@@ -37,13 +37,13 @@
   - else
     .dead-link No inverse
 
-.right= render 'svg_cube', iconf: Icons::Oll.for(@position), size: 50
-.right= render 'svg_cube', iconf: Icons::Ep.for(@position), size: 50
-.right= render 'svg_cube', iconf: Icons::Eo.for(@position), size: 50
-.right= render 'svg_cube', iconf: Icons::Cop.for(@position), size: 50
+.right= render 'svg_cube', icon: Icons::Oll.for(@position), size: 50
+.right= render 'svg_cube', icon: Icons::Ep.for(@position), size: 50
+.right= render 'svg_cube', icon: Icons::Eo.for(@position), size: 50
+.right= render 'svg_cube', icon: Icons::Cop.for(@position), size: 50
 
 .center{style: "width: 200px;"}
-  = render 'svg_cube', iconf: Icons::Big.new(@cube, Icons::Ep.for(@position).arrows + Icons::Cop.for(@position).arrows), size: 160, label: '', add_class: 'big-icon'
+  = render 'svg_cube', icon: Icons::Big.new(@cube, Icons::Ep.for(@position).arrows + Icons::Cop.for(@position).arrows), size: 160, label: '', add_class: 'big-icon'
 
 .center.alg-list-header
   =form_tag url_for(controller: "positions", action: "show", id: @position.ll_code), method: 'get', id: 'algs_options' do
