@@ -153,7 +153,7 @@
 %script ROOFPIG_CONF_AD = "solved=U-| hover=3 | speed=600"
 
 :javascript
-  // --------- Icon dependencies (quite primitive) ---
+  // --------- Icon dependencies (quite primitive) ----
   $('.ll-icon, .svg-icon, .random, .unselect').on('click', function() {
     var field = $(this).data('field');
     if (field === '#cop') { $('#eo, #ep').val(''); }
@@ -196,7 +196,7 @@
     },
     mouseleave: function(event) {
       var field = $(event.currentTarget).attr('data-field')
-      $('#'+field+'-picker').dialog('close');
+      //$('#'+field+'-picker').dialog('close');
       mouse_is_inside_picker = ''
     }
   }, ".picker-dialog");
