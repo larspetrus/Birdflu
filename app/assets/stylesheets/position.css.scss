@@ -226,6 +226,10 @@ table.icon-grid {
   }
 }
 
+#pickers {
+  td { padding: 0 2px; }
+}
+
 #oll-picker, #cop-picker, #eo-picker, #ep-picker {
   display: none;
 }
