@@ -72,7 +72,7 @@
         .picker_buttons
           %a{class: "random knapp knapp-enabled",   data: {field: '#oll', code: 'random'}} Random
           %a{class: "unselect knapp knapp-enabled", data: {field: '#oll', code: ''}} Unselect
-        %table.icon-grid
+        %table.icon-grid-v
           - @icon_grids[:oll].each do |oll_row|
             %tr
               - oll_row.each do |oll|
@@ -169,7 +169,7 @@
     cop: opts({ width: '400px', title: 'Corner orientation & position (COP)'}),
     eo:  opts({ width: '394px', title: 'Edge orientation (EO)'}),
     ep:  opts({ width: '572px', title: 'Edge position (EP)'}),
-    oll: opts({ width: '526px', title: 'Corner and edge orientation (OLL)'}),
+    oll: opts({ width: '404px', title: 'Corner and edge orientation (OLL)'}),
   };
   function opts(specifics) {
     var pos = { my: 'center top', at: 'center bottom', of: '#pickers' };
@@ -196,7 +196,7 @@
     },
     mouseleave: function(event) {
       var field = $(event.currentTarget).attr('data-field')
-      $('#'+field+'-picker').dialog('close');
+      $('#'+field+'-picker').dialog('close'); //TODO
       mouse_is_inside_picker = ''
     }
   }, ".picker-dialog");

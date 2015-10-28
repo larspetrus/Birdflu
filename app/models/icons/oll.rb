@@ -26,14 +26,14 @@ class Icons::Oll < Icons::Base
   def self.grid
     @@grid ||=
         [
-            [:-, :-, :-, :-, :-, :m0],
-            %i(m28 m57 m20 - m23 m24 m25 m27 m26 m22 m21),
-            %i(m3 m4 m17 m19 m18 m2 m1),
-            %i(m33 m45 - m44 m43 m32 m31 - m38 m36),
-            %i(m54 m53 m50 m49 m48 m47 - m5 m6),
-            %i(m39 m40 - m34 m46 - m7 m12 m8 m11),
-            %i(m37 m35 m10 m9 - m51 m52 m56 m55),
-            %i(m13 m16 m14 m15 - m41 m30 m42 m29),
+            %i(m0  m27 m26 m24 m23 m25 m21 m22),
+            %i( -  m13 m16 m33 m45 m39 m55 m52),
+            %i(m57 m15 m14 m34 m46 m40 m56 m51),
+            %i( -  m7  m12 m32 m44 m36 m54 m49),
+            %i( -  m10 m9  m30 m41 m37  -  m50),
+            %i( -  m11 m8  m29 m42 m38  -  m47),
+            %i(m28 m5  m6  m31 m43 m35 m53 m48),
+            %i(m20 m3  m4  m19 m18 m17 m1  m2 ),
         ].map{|row| row.map{|id| self.by_code(id)}}
   end
 
@@ -59,7 +59,7 @@ class Icons::Oll < Icons::Base
     self.new(:m43, 'OLL 43', %w(U U U U R F F F)),
     self.new(:m44, 'OLL 44', %w(U U U L U F F F)),
     self.new(:m36, 'OLL 36', %w(U U B L U L F U)),
-    self.new(:m38, 'OLL 38', %w(B U U U R U F R)),
+    self.new(:m38, 'OLL 38', %w(U B B U R L U U)),
     self.new(:m48, 'OLL 48', %w(L U B U R L F F)),
     self.new(:m47, 'OLL 47', %w(L B B U R L U F)),
     self.new(:m53, 'OLL 53', %w(L U R U R L F R)),
