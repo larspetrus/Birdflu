@@ -13,22 +13,23 @@ class PositionsController < ApplicationController
     @filters = store_parameters(:pos_filter, {cop: '', eo: '', ep: '', oll: ''}, de_facto_pos_params)
     @page_format = store_parameters(:page, {page_format: 'positions'})[:page_format]
 
-    @positions = Position.where(@filters.select{|k,v| v.present?}).order(:optimal_alg_length).includes(:stats).to_a
+    includes = (@page_format == 'algs') ? :stats : [:stats, :best_alg]
+    @positions = Position.where(@filters.select{|k,v| v.present?}).order(:optimal_alg_length).includes(includes).to_a
     optimal_sum = @positions.reduce(0.0) { |sum, pos| sum + (pos.optimal_alg_length || 100)}
     @shortest_average = '%.2f' % (optimal_sum/@positions.count)
 
     @aggregate_stats = PositionStats.aggregate(@positions.map(&:stats))
     @positions = @positions.first(100)
 
-    @active_icons = {}
-    POSITION_FILTERS.each{ |f| @active_icons[f] = Icons::Base.by_code(f, @filters[f]) }
+    @selected_icons = {}
+    POSITION_FILTERS.each{ |f| @selected_icons[f] = Icons::Base.by_code(f, @filters[f]) }
+
     @icon_grids = {}
     POSITION_FILTERS.each{ |f| @icon_grids[f] = Icons::Base.class_by(f)::grid  unless f == :ep }
-
     @ep_grid = Icons::Ep.grid_for(@filters[:cop])
 
     if @page_format == 'algs'
-      get_alg_list_params
+      alg_list_settings
       @raw_algs = RawAlg.where(position_id: @positions.map(&:id)).includes(:position).order(@sortby).limit(@page)
     end
   end
@@ -40,7 +41,7 @@ class PositionsController < ApplicationController
       return redirect_to "/positions/#{pos.ll_code}"
     end
 
-    get_alg_list_params
+    alg_list_settings
 
     @cube = @position.as_cube
 
@@ -78,7 +79,7 @@ class PositionsController < ApplicationController
     values
   end
 
-  def get_alg_list_params
+  def alg_list_settings
     alg_list_params = store_parameters(:alg_filter, {page: 25, algtypes: 'both', sortby: 'speed'})
     @page     = alg_list_params[:page].to_i
     @algtypes = alg_list_params[:algtypes]
