@@ -60,7 +60,7 @@ class Icons::Svg
     @@dimensions.keys.each do |sticker|
       color = icon.color_at(sticker)
       if sticker[-1] == 'U'
-        color ||= 'white-hole'
+        color ||= 'white'
       end
       if color
         result << {class: color}.merge!(@@dimensions[sticker]) #'shape-rendering'=>"crispEdges"
