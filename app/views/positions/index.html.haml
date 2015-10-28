@@ -196,7 +196,7 @@
     },
     mouseleave: function(event) {
       var field = $(event.currentTarget).attr('data-field')
-      //$('#'+field+'-picker').dialog('close');
+      $('#'+field+'-picker').dialog('close');
       mouse_is_inside_picker = ''
     }
   }, ".picker-dialog");
