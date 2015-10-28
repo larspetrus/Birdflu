@@ -37,7 +37,7 @@
       #cop-picker
         .picker_buttons
           %a{class: "random knapp knapp-enabled",   data: {field: '#cop', code: 'random'}} Random
-          %a{class: "unselect knapp knapp-enabled", data: {field: '#cop', code: ''}} Unselect
+          %a{class: "unselect knapp" + (@selected_icons[:cop].is_none ? "" : " knapp-enabled"), data: {field: '#cop', code: ''}} Unselect
         %table.icon-grid-v
           - @icon_grids[:cop].each do |cop_row|
             %tr
@@ -49,7 +49,7 @@
       #eo-picker
         .picker_buttons
           %a{class: "random knapp knapp-enabled",   data: {field: '#eo', code: 'random'}} Random
-          %a{class: "unselect knapp knapp-enabled", data: {field: '#eo', code: ''}} Unselect
+          %a{class: "unselect knapp" + (@selected_icons[:eo].is_none ? "" : " knapp-enabled"), data: {field: '#eo', code: ''}} Unselect
         %table.icon-grid
           - @icon_grids[:eo].each do |eo_row|
             %tr
@@ -61,7 +61,7 @@
       #ep-picker
         .picker_buttons
           %a{class: "random knapp knapp-enabled",   data: {field: '#ep', code: 'random'}} Random
-          %a{class: "unselect knapp knapp-enabled", data: {field: '#ep', code: ''}} Unselect
+          %a{class: "unselect knapp" + (@selected_icons[:ep].is_none ? "" : " knapp-enabled"), data: {field: '#ep', code: ''}} Unselect
         %table.icon-grid.relative
           - @ep_grid.each do |ep_row|
             %tr
@@ -74,7 +74,7 @@
       #oll-picker
         .picker_buttons
           %a{class: "random knapp knapp-enabled",   data: {field: '#oll', code: 'random'}} Random
-          %a{class: "unselect knapp knapp-enabled", data: {field: '#oll', code: ''}} Unselect
+          %a{class: "unselect knapp" + (@selected_icons[:oll].is_none ? "" : " knapp-enabled"), data: {field: '#oll', code: ''}} Unselect
         %table.icon-grid-v
           - @icon_grids[:oll].each do |oll_row|
             %tr
@@ -199,7 +199,7 @@
     },
     mouseleave: function(event) {
       var field = $(event.currentTarget).attr('data-field')
-      $('#'+field+'-picker').dialog('close');
+      //$('#'+field+'-picker').dialog('close');
       mouse_is_inside_picker = ''
     }
   }, ".picker-dialog");
