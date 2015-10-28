@@ -26,7 +26,7 @@ class PositionsController < ApplicationController
 
     @icon_grids = {}
     POSITION_FILTERS.each{ |f| @icon_grids[f] = Icons::Base.class_by(f)::grid  unless f == :ep }
-    @ep_grid = Icons::Ep.grid_for(@filters[:cop])
+    @icon_grids[:ep] = Icons::Ep.grid_for(@filters[:cop])
 
     if @page_format == 'algs'
       alg_list_settings

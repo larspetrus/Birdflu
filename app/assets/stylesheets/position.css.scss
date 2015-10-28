@@ -202,18 +202,8 @@ svg {
   background-color: $selected;
 }
 
-table.icon-grid-v {
-  border-collapse: collapse;
-  svg {
-    margin: 3px;
-  }
-  td {
-    padding: 0;
-    border-right: solid 1px #aaa;
-  }
-  td:last-child {
-    border-right: none;
-  }
+#pickers {
+  td { padding: 0 2px; }
 }
 
 table.icon-grid {
@@ -225,9 +215,13 @@ table.icon-grid {
     padding: 0;
   }
 }
-
-#pickers {
-  td { padding: 0 2px; }
+table.with-lines {
+  td {
+    border-right: solid 1px #aaa;
+  }
+  td:last-child {
+    border-right: none;
+  }
 }
 
 #oll-picker, #cop-picker, #eo-picker, #ep-picker {

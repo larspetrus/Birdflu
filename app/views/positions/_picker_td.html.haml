@@ -1,0 +1,20 @@
+- field = "##{prop}"
+- add_class ||= ""
+- ubl_text ||= false
+
+- icon_size = 45
+%td
+  %div{id: "#{prop}-selected"}= render 'svg_cube', icon: @selected_icons[prop], size: icon_size, add_class: 'selected'
+  %div{id: "#{prop}-picker"}
+    .picker_buttons
+      %a{class: "random knapp knapp-enabled",   data: {field: field, code: 'random'}} Random
+      %a{class: "unselect knapp" + (@selected_icons[prop].is_none ? "" : " knapp-enabled"), data: {field: field, code: ''}} Unselect
+    %table{class: "icon-grid " + add_class}
+      - @icon_grids[prop].each do |icon_row|
+        %tr
+          - icon_row.each do |icon|
+            %td
+              = render 'svg_cube', icon: icon, size: icon_size, add_class: icon.highlight(@filters[prop]) if icon
+      - if ubl_text
+        .ubl-text Images assume top left corner (UBL) is placed correctly.
+
