@@ -138,95 +138,6 @@ $optimal_color: #69f;
   }
 }
 
-$wide: 8px;
-$narrow: 3px;
-
-.ll-icon {
-  position:relative;
-  float: left;
-  &:hover {
-    .u {
-      background-color: #bbb;
-    }
-    th {
-      color:yellow;
-      background-color:purple;
-    }
-  }
-
-  table {
-    border-collapse: collapse;
-    margin: 3px;
-    th { font-size: 9px; text-align: center; }
-    td { border: 1px solid #444; }
-  }
-
-  .u {
-    height: $wide;
-    width: $wide;
-  }
-  .f, .b {
-    height: $narrow;
-    border: none;
-    border-right: 1px solid white;
-  }
-  .l, .r {
-    width: $narrow;
-    border: none;
-    border-top: 1px solid white;
-  }
-
-  .arrow_v {
-    top:24px;
-    height:27px;
-    width:2px;
-    position:absolute;
-    background-color: black;
-  }
-  .arrow_h {
-    left:12px;
-    height:2px;
-    width:27px;
-    position:absolute;
-    background-color: black;
-  }
-  .arrow_L { @extend .arrow_v; left:13px; }
-  .arrow_M { @extend .arrow_v; left:24px; }
-  .arrow_R { @extend .arrow_v; left:35px; }
-  .arrow_B { @extend .arrow_h; top:26px; }
-  .arrow_S { @extend .arrow_h; top:37px; }
-  .arrow_F { @extend .arrow_h; top:48px; }
-
-  .arrow_D {
-    left:9px;
-    top:37px;
-    height:2px;
-    width:32px;
-    position:absolute;
-    transform: rotate(-45deg);
-    background-color: black;
-  }
-  .none { border: none !important; }
-
-}
-
-// icon colors
-$oll: deeppink;
-$cop: #0c0;
-$eo: #fb0;
-$ep-across: #adf;
-$ignore: #d7d7d7;
-$selected: #aff;
-
-.ll-icon {
-  .oll { background-color: $oll !important; }
-  .cop { background-color: #0c0 !important; }
-  .eo { background-color: #fb0 !important; }
-  .ep-across { background-color: $ep-across !important; }
-
-  .ignore { background-color: $ignore; }
-}
-
 .svg-icon {
   .name {
     font-weight: bold;
@@ -259,11 +170,11 @@ $selected: #aff;
     stroke-width: 0.2;
   }
 }
+$selected: #aff;
+
 
 .selected {
-  .name {
-    background-color: $selected;
-  }
+  .name { background-color: $selected; }
 }
 
 svg {
@@ -276,12 +187,12 @@ svg {
   .u-color { fill: $u_color; }
   .d-color { fill: $d_color; }
 
-  .oll { fill: $oll; }
-  .cop { fill: $cop; }
-  .eo  { fill: $eo; }
-  .ep-across { fill: $ep-across; }
+  .oll { fill: deeppink; }
+  .cop { fill: #fb0; }
+  .eo  { fill: #0c0; }
+  .ep-across { fill: #adf; }
 
-  .ignore { fill: $ignore; }
+  .ignore { fill: #d7d7d7; }
 
   .white-hole { fill: white; }
 }
