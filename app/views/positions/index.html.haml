@@ -13,9 +13,10 @@
     %tr
       %td Fastest
       %td.optimal= '%.2f' % @aggregate_stats.fastest
-    %tr{style: "border-bottom: 10px solid #fff;"}
+    %tr
       %td Avg shortest
       %td= @shortest_average
+    %tr.spacer
     - @aggregate_stats.raw_counts.keys.sort.each do |length|
       %tr
         %td #{length} moves
