@@ -93,22 +93,9 @@
   $(document).on('click', '.show-pig', function(e) {
     var td = $(event.target).parent()
     var alg = td.prev().text()
-    var alg_name = td.prev().prev().text()
+    var title = td.prev().prev().text()
 
-    CubeAnimation.create_in_dom('#show-alg', 'alg='+alg+'|base=AD|flags=showalg'+td.data("us"), "id=alg-pig class='roofpig rp160'")
-    $('#show-alg').dialog({
-      width: '200px',
-      title: alg_name,
-      modal: true,
-      closeOnEscape: true,
-      dialogClass: 'lars-dialog',
-      close: function( event, ui ) {
-            var cube_id = $('#show-alg').children().attr('data-cube-id');
-            if (cube_id) {
-              CubeAnimation.by_id[cube_id].remove();
-            }
-        }
-    });
+    roofpig_dialog(title, alg, td.data("us"))
   });
 
   $('.goto-pos').on('click', function(e) {

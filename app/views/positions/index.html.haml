@@ -104,7 +104,7 @@
           %td= best.length
           %td= best.moves
           %td{:'data-us' => best.setup_moves}
-            %a{href: "#", class: "show-pig"} show
+            %a{class: "show-pig"} show
 
 #show-alg{style: 'height:200px; width:200px;'}
 %script ROOFPIG_CONF_AD = "solved=U-| hover=3 | speed=600"
@@ -159,25 +159,20 @@
   }, ".picker-dialog");
 
   // --------- Show Roofpigs ---
-  $(document).on('click', '.show-pig', function(e) {
+  $(document).on('click', '.alg-list .show-pig', function(e) {
+    var td = $(event.target).parent()
+    var alg = td.prev().text()
+    var title = td.prev().prev().prev().text()
+
+    roofpig_dialog(title, alg, td.data("us"))
+  });
+
+  $(document).on('click', '.pos-list .show-pig', function(e) {
     var td = $(event.target).parent();
     var alg = td.prev().text();
     var title = td.siblings().first().text() + ' shortest';
 
-    CubeAnimation.create_in_dom('#show-alg', 'alg='+alg+'|base=AD|flags=showalg'+td.data("us"), "id=alg-pig class='roofpig rp160'")
-    $('#show-alg').dialog({
-      width: '200px',
-      title: title,
-      modal: true,
-      closeOnEscape: true,
-      dialogClass: 'lars-dialog',
-      close: function( event, ui ) {
-            var cube_id = $('#show-alg').children().attr('data-cube-id');
-            if (cube_id) {
-              CubeAnimation.by_id[cube_id].remove();
-            }
-        }
-    });
+    roofpig_dialog(title, alg, td.data("us"))
   });
 
   // ---- page format form
