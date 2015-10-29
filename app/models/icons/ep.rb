@@ -1,14 +1,18 @@
 class Icons::Ep < Icons::Base
 
-  def initialize(code)
-    super(:ep, code.to_sym)
+  EP_CODES = Position::EP_NAMES.invert
 
-    @name = (@is_none ? 'NONE' : Icons::Ep.name_for_code(code))
+  def initialize(name)
+    super(:ep, name.to_sym)
+
+    @name = (@is_none ? 'NONE' : name.to_s)
     @arrows = []
 
     edges = [:UB_U, :UR_U, :UF_U, :UL_U]
     edge_sides = edges.map{|edge| edge[1]}
     edge_movements = {}
+
+    code = EP_CODES[name] || ''
     code.length.times do |i|
       offset = '1357'.index(code[i])
       @colors[edges[i]] = "ep-across" if offset == 2
@@ -28,13 +32,6 @@ class Icons::Ep < Icons::Base
     set_colors('ignore', :U, :ULB_U, :UBR_U, :UFL_U, :URF_U)
   end
 
-  def self.name_for_code(code)
-    {'1111'=>'A', '5555'=>'B', '7373'=>'C', '3737'=>'D', '1335'=>'E', '1577'=>'F',
-     '5133'=>'G', '7157'=>'H', '3513'=>'I', '7715'=>'J', '3351'=>'K', '5771'=>'L',
-     '7777'=>'a', '3333'=>'b', '1515'=>'c', '5151'=>'d', '3711'=>'e', '5735'=>'f',
-     '1371'=>'g', '5573'=>'h', '1137'=>'i', '3557'=>'j', '7113'=>'k', '7355'=>'l'}[code]
-  end
-
   def self.by_code(code)
     code ||= ''
     ALL.find { |op| op.code == code.to_sym }
@@ -50,29 +47,29 @@ class Icons::Ep < Icons::Base
 
   ALL = [
       self.new(:''),
-      self.new('1111'),
-      self.new('1335'),
-      self.new('3351'),
-      self.new('3513'),
-      self.new('1577'),
-      self.new('7157'),
-      self.new('5133'),
-      self.new('5771'),
-      self.new('7715'),
-      self.new('5555'),
-      self.new('3737'),
-      self.new('7373'),
-      self.new('7777'),
-      self.new('7113'),
-      self.new('1137'),
-      self.new('7355'),
-      self.new('3557'),
-      self.new('5151'),
-      self.new('3711'),
-      self.new('3333'),
-      self.new('5735'),
-      self.new('1371'),
-      self.new('1515'),
-      self.new('5573'),
+      self.new('A'),
+      self.new('E'),
+      self.new('K'),
+      self.new('I'),
+      self.new('F'),
+      self.new('H'),
+      self.new('G'),
+      self.new('L'),
+      self.new('J'),
+      self.new('B'),
+      self.new('D'),
+      self.new('C'),
+      self.new('a'),
+      self.new('k'),
+      self.new('i'),
+      self.new('l'),
+      self.new('j'),
+      self.new('d'),
+      self.new('e'),
+      self.new('b'),
+      self.new('f'),
+      self.new('g'),
+      self.new('c'),
+      self.new('h'),
   ]
 end

@@ -109,7 +109,7 @@ class Position < ActiveRecord::Base
   end
 
   def display_name
-    cop + Icons::Eo.name_for_code(eo) + Icons::Ep.name_for_code(ep)
+    cop + eo + ep
   end
 
   def best_combo_alg_length
@@ -149,11 +149,11 @@ class Position < ActiveRecord::Base
   end
 
   def set_eo_name
-    self.eo = @ll_code_obj.eo_code
+    self.eo = EO_NAMES[@ll_code_obj.eo_code]
   end
 
   def set_ep_name
-    self.ep = @ll_code_obj.ep_code
+    self.ep = EP_NAMES[@ll_code_obj.ep_code]
   end
 
   def compute_stats
@@ -383,8 +383,11 @@ class Position < ActiveRecord::Base
       b2c2b2c2: :m1,
   }
 
-  EDGE_ORIENTATION_CODES = %w(1111 1122 1212 1221 2112 2121 2211 2222)
+  EO_NAMES = {'1111'=>'4', '1122'=>'6', '1212'=>'1', '1221'=>'9', '2112'=>'7', '2121'=>'2', '2211'=>'8', '2222'=>'0'}
 
-  EDGE_POSITION_CODES =
-      %w(1111 1335 3351 3513 1577 7157 5133 5771 7715 5555 3737 7373 7777 7113 1137 7355 3557 5151 3711 3333 5735 1371 1515 5573)
+  EP_NAMES = {'1111'=>'A', '5555'=>'B', '7373'=>'C', '3737'=>'D', '1335'=>'E', '1577'=>'F',
+              '5133'=>'G', '7157'=>'H', '3513'=>'I', '7715'=>'J', '3351'=>'K', '5771'=>'L',
+              '7777'=>'a', '3333'=>'b', '1515'=>'c', '5151'=>'d', '3711'=>'e', '5735'=>'f',
+              '1371'=>'g', '5573'=>'h', '1137'=>'i', '3557'=>'j', '7113'=>'k', '7355'=>'l'}
+
 end

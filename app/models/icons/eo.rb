@@ -1,9 +1,9 @@
 class Icons::Eo < Icons::Base
 
-  def initialize(code, stickers)
-    super(:eo, code.to_sym)
+  def initialize(name, stickers)
+    super(:eo, name.to_sym)
 
-    @name = (@is_none ? 'NONE' : Icons::Eo.name_for_code(code))
+    @name = (@is_none ? 'NONE' : name.to_s)
 
     pieces = %w(UB_ UR_ UF_ UL_)
     stickers.each_with_index do |sticker, i|
@@ -14,10 +14,6 @@ class Icons::Eo < Icons::Base
   def base_colors
     @colors = { U: 'eo'}
     set_colors('ignore', :ULB_U, :UBR_U, :UFL_U, :URF_U)
-  end
-
-  def self.name_for_code(code)
-    {'1111'=>'4','1122'=>'6','1212'=>'1','1221'=>'9','2112'=>'7','2121'=>'2','2211'=>'8','2222'=>'0'}[code]
   end
 
   def self.by_code(code)
@@ -32,19 +28,19 @@ class Icons::Eo < Icons::Base
   def self.grid
     @@grid ||=
         [
-            ['2222', '1212', '2121', '1111', '1122', '2112', '2211', '1221']
+            %w(0 1 2 4 6 7 8 9)
         ].map{|row| row.map{|id| self.by_code(id)}}
   end
 
   ALL = [
       self.new(:'', []),
-      self.new('1111', %w(U U U U)),
-      self.new('1122', %w(U U F L)),
-      self.new('1212', %w(U R U L)),
-      self.new('1221', %w(U R F U)),
-      self.new('2112', %w(B U U L)),
-      self.new('2121', %w(B U F U)),
-      self.new('2211', %w(B R U U)),
-      self.new('2222', %w(B R F L)),
+      self.new('4', %w(U U U U)),
+      self.new('6', %w(U U F L)),
+      self.new('1', %w(U R U L)),
+      self.new('9', %w(U R F U)),
+      self.new('7', %w(B U U L)),
+      self.new('2', %w(B U F U)),
+      self.new('8', %w(B R U U)),
+      self.new('0', %w(B R F L)),
   ]
 end

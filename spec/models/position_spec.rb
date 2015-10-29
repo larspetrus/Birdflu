@@ -38,10 +38,17 @@ RSpec.describe Position, :type => :model do
     expect(Position.corner_swap_for('b5f1q5c1')).to eq(:right)
   end
 
-  it '#set_cop_name' do
+  it '#set_x_name' do
     messy = Position.create(ll_code: 'a4c5c1c4', cop: 'none')
+
     messy.set_cop_name
     expect(messy.cop).to eq('Bo')
+
+    messy.set_eo_name
+    expect(messy.eo).to eq('7')
+
+    messy.set_ep_name
+    expect(messy.ep).to eq('I')
   end
 
 end
