@@ -28,7 +28,7 @@
       %td= @stats.shortest_combo
     %tr
       %td Fastest
-      %td= @stats.fastest_combo
+      %td= '%.2f' % @stats.fastest_combo
     %tr.spacer
 
   - if @position.has_mirror

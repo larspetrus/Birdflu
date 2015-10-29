@@ -294,40 +294,47 @@ table.with-lines {
   }
 }
 // http://www.bestcssbuttongenerator.com/#/4
+
+$fg_light_gradient: #ccc;
+$fg_dark_gradient: #999;
+$fg_box_shadow: #000;
+$fg_border: #666;
+$fg_text_shadow: #000;
+
 .show-pig {
-  -moz-box-shadow: 0px 10px 14px -7px #3e7327;
-  -webkit-box-shadow: 0px 10px 14px -7px #3e7327;
-  box-shadow: 0px 10px 14px -7px #3e7327;
-  background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #a3f57a), color-stop(1, #5cad30));
-  background:-moz-linear-gradient(top, #a3f57a 5%, #5cad30 100%);
-  background:-webkit-linear-gradient(top, #a3f57a 5%, #5cad30 100%);
-  background:-o-linear-gradient(top, #a3f57a 5%, #5cad30 100%);
-  background:-ms-linear-gradient(top, #a3f57a 5%, #5cad30 100%);
-  background:linear-gradient(to bottom, #a3f57a 5%, #5cad30 100%);
-  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#a3f57a', endColorstr='#5cad30',GradientType=0);
-  background-color:#a3f57a;
+  -moz-box-shadow: 0px 10px 14px -7px $fg_box_shadow;
+  -webkit-box-shadow: 0px 10px 14px -7px $fg_box_shadow;
+  box-shadow: 0px 10px 14px -7px $fg_box_shadow;
+  background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, $fg_light_gradient), color-stop(1, $fg_dark_gradient));
+  background:-moz-linear-gradient(top, $fg_light_gradient 5%, $fg_dark_gradient 100%);
+  background:-webkit-linear-gradient(top, $fg_light_gradient 5%, $fg_dark_gradient 100%);
+  background:-o-linear-gradient(top, $fg_light_gradient 5%, $fg_dark_gradient 100%);
+  background:-ms-linear-gradient(top, $fg_light_gradient 5%, $fg_dark_gradient 100%);
+  background:linear-gradient(to bottom, $fg_light_gradient 5%, $fg_dark_gradient 100%);
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='$fg1', endColorstr='$fg2',GradientType=0);
+  background-color: $fg_light_gradient;
   -moz-border-radius:2px;
   -webkit-border-radius:2px;
   border-radius:2px;
-  border:1px solid #4b8f29;
+  border:1px solid $fg_border;
   display:inline-block;
   cursor:pointer;
-  color:#ffffff;
+  color:#fff;
   font-family:Arial;
   font-size:9px;
   padding:1px 5px;
   text-decoration:none;
-  text-shadow:0px 1px 0px #5b8a3c;
+  text-shadow:0px 1px 0px $fg_text_shadow;
 }
 .show-pig:hover {
-  background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #5cad30), color-stop(1, #a3f57a));
-  background:-moz-linear-gradient(top, #5cad30 5%, #a3f57a 100%);
-  background:-webkit-linear-gradient(top, #5cad30 5%, #a3f57a 100%);
-  background:-o-linear-gradient(top, #5cad30 5%, #a3f57a 100%);
-  background:-ms-linear-gradient(top, #5cad30 5%, #a3f57a 100%);
-  background:linear-gradient(to bottom, #5cad30 5%, #a3f57a 100%);
-  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#5cad30', endColorstr='#a3f57a',GradientType=0);
-  background-color:#5cad30;
+  background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, $fg_dark_gradient), color-stop(1, $fg_light_gradient));
+  background:-moz-linear-gradient(top, $fg_dark_gradient 5%, $fg_light_gradient 100%);
+  background:-webkit-linear-gradient(top, $fg_dark_gradient 5%, $fg_light_gradient 100%);
+  background:-o-linear-gradient(top, $fg_dark_gradient 5%, $fg_light_gradient 100%);
+  background:-ms-linear-gradient(top, $fg_dark_gradient 5%, $fg_light_gradient 100%);
+  background:linear-gradient(to bottom, $fg_dark_gradient 5%, $fg_light_gradient 100%);
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='$fg2', endColorstr='$fg1',GradientType=0);
+  background-color: $fg_dark_gradient;
 }
 .show-pig:active {
   position:relative;
