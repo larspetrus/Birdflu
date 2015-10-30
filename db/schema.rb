@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151016183431) do
+ActiveRecord::Schema.define(version: 20151030221358) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -51,7 +51,6 @@ ActiveRecord::Schema.define(version: 20151016183431) do
   create_table "positions", force: true do |t|
     t.string  "ll_code"
     t.integer "weight"
-    t.integer "corner_swap"
     t.integer "best_alg_id"
     t.integer "alg_count"
     t.string  "mirror_ll_code"
@@ -63,6 +62,8 @@ ActiveRecord::Schema.define(version: 20151016183431) do
     t.integer "optimal_alg_length"
     t.integer "best_combo_alg_id"
     t.string  "inverse_ll_code"
+    t.string  "co"
+    t.string  "cp"
   end
 
   add_index "positions", ["cop"], name: "index_positions_on_cop", using: :btree

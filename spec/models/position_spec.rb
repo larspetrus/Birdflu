@@ -26,18 +26,6 @@ RSpec.describe Position, :type => :model do
     expect(Position.find_by!(ll_code: "a1b5b7b7").combo_algs.map(&:name)).to contain_exactly("a2+x")
   end
 
-  it '#corner_swap_for' do
-    expect(Position.corner_swap_for('a1a1a1a1')).to eq(:no)
-    expect(Position.corner_swap_for('a1a1o1a1')).to eq(nil)
-    expect(Position.corner_swap_for('a4e6o5a7')).to eq(:right)
-    expect(Position.corner_swap_for('a6k5p5o6')).to eq(:back)
-    expect(Position.corner_swap_for('a4i8c1j1')).to eq(:diagonal)
-    expect(Position.corner_swap_for('b4k8p3q7')).to eq(:back)
-    expect(Position.corner_swap_for('b2c2b2c2')).to eq(:no)
-    expect(Position.corner_swap_for('b3f6g1k4')).to eq(:left)
-    expect(Position.corner_swap_for('b5f1q5c1')).to eq(:right)
-  end
-
   it '#set_x_name' do
     messy = Position.create(ll_code: 'a4c5c1c4', cop: 'none')
 

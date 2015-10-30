@@ -9,12 +9,9 @@ class Position < ActiveRecord::Base
 
   has_one :stats, class_name: 'PositionStats'
 
-  enum corner_swap: [ :no, :left, :right, :back, :front, :diagonal]
-
   validates :ll_code, uniqueness: true
 
   before_create do
-    self.set_corner_swap
     self.set_mirror_ll_code
     self.set_is_mirror
     self.set_cop_name
@@ -25,25 +22,6 @@ class Position < ActiveRecord::Base
 
   after_initialize do
     @ll_code_obj = LlCode.new(ll_code)
-  end
-
-  def self.corner_swap_for(ll_code)
-    d2 = LL.corner_data(ll_code[2]).distance
-    d3 = LL.corner_data(ll_code[4]).distance
-
-    case "#{d2}#{d3}"
-      when '00' then :no
-      when '23' then :back
-      when '13' then :right
-      when '01' then :front
-      when '11' then :left
-      when '20' then :diagonal
-    end
-  end
-
-  CP_SYMS = {'diagonal'=>'⤢', 'no'=>'', 'front'=>'F', 'left'=>'L', 'back'=>'B', 'right'=>'R'} #↕↔
-  def corner_swap_symbol
-    CP_SYMS[corner_swap]
   end
 
   def algs_in_set(alg_set = AlgSet.active)
@@ -124,10 +102,6 @@ class Position < ActiveRecord::Base
     combo_algs.first
   end
 
-  def set_corner_swap
-    self.corner_swap = Position.corner_swap_for(ll_code)
-  end
-
   def co_code
     LlCode.co_code(ll_code)
   end
@@ -141,7 +115,10 @@ class Position < ActiveRecord::Base
   end
 
   def set_cop_name
-    self.cop = COP_NAMES[cop_code]
+    cop_name = COP_NAMES[cop_code]
+    self.cop = cop_name
+    self.co  = cop_name[0]
+    self.cp  = cop_name[1]
   end
 
   def set_oll_name

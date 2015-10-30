@@ -13,7 +13,7 @@ class Icons::Base
   end
 
   def self.class_by(form_field)
-    {cop: Icons::Cop, eo: Icons::Eo, ep: Icons::Ep, oll: Icons::Oll}[form_field]
+    {cop: Icons::Cop, co: Icons::Co, cp: Icons::Cp, eo: Icons::Eo, ep: Icons::Ep, oll: Icons::Oll}[form_field]
   end
 
   def self.by_code(form_field, code)

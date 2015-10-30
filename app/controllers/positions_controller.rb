@@ -1,16 +1,15 @@
 class PositionsController < ApplicationController
 
-  POSITION_FILTERS = [:cop, :eo, :ep, :oll]
+  POSITION_FILTERS = [:cop, :oll, :co, :cp, :eo, :ep]
 
   def index
-    de_facto_pos_params = {}
-    POSITION_FILTERS.each do |f|
-      if params[f]
-        de_facto_pos_params[f] = (params[f] == 'random') ? PosSubsets.random_code(f, params) : params[f]
-      end
+    effective_pos_params = {}
+
+    if params[:clicked]
+      effective_pos_params = PosSubsets.selected_subsets(params)
     end
 
-    @filters = store_parameters(:pos_filter, {cop: '', eo: '', ep: '', oll: ''}, de_facto_pos_params)
+    @filters = store_parameters(:pos_filter, {cop: '',oll: '',co: '',cp: '', eo: '', ep: ''}, effective_pos_params)
     @page_format = store_parameters(:page, {page_format: 'positions'})[:page_format]
 
     includes = (@page_format == 'algs') ? :stats : [:stats, :best_alg]

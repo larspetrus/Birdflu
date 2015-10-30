@@ -192,6 +192,8 @@ svg {
 
   .oll { fill: deeppink; }
   .cop { fill: #fb0; }
+  .cp  { fill: #fdf; }
+  .co  { fill: #6df; }
   .eo  { fill: #0c0; }
   .ep-across { fill: #adf; }
 
@@ -227,7 +229,7 @@ table.with-lines {
   }
 }
 
-#oll-picker, #cop-picker, #eo-picker, #ep-picker {
+#oll-picker, #cop-picker, #cp-picker, #co-picker, #eo-picker, #ep-picker {
   display: none;
 }
 .ubl-text {

@@ -1,8 +1,61 @@
 class PosSubsets
+
+  def self.selected_subsets(params)
+    ss = {}
+    PositionsController::POSITION_FILTERS.each do |f|
+      if params[f]
+        ss[f] = (params[f] == 'random') ? self.random_code(f, params) : params[f]
+      end
+    end
+
+    clicked = params[:clicked]
+
+    if clicked == '#cop'
+      ss[:oll] = ss[:eo] = ss[:ep] = ''
+      ss[:co], ss[:cp] = ss[:cop].split('')
+    end
+
+    if clicked == '#oll'
+      ss[:cop] = ss[:cp] = ss[:ep] = ''
+      ss[:eo] = self.eo_by_oll(ss[:oll])
+      ss[:co] = self.co_by_oll(ss[:oll])
+    end
+
+    if clicked == '#co' || clicked == '#cp'
+      if ss[:co].present? && ss[:cp].present?
+        ss[:cop] = "#{ss[:co]}#{ss[:cp]}"
+
+        case ss[:cop] # ugh...
+          when 'Ab', 'Al', 'Ar'
+            ss[:cop] = 'Af'
+            ss[:cp] = 'f'
+          when 'Fb'
+            ss[:cop] = 'Ff'
+            ss[:cp] = 'f'
+          when 'Fr'
+            ss[:cop] = 'Fl'
+            ss[:cp] = 'l'
+        end
+      end
+    end
+
+    if clicked == '#co' || clicked == '#eo'
+      if ss[:co].present? && ss[:eo].present?
+        ss[:oll] = self.oll_by_co_eo(ss[:co], ss[:eo])
+      end
+    end
+
+    ss
+  end
+
   def self.random_code(subset, contraints)
     case subset.to_sym
       when :cop, :oll
         Position.find(Position.random_id)[subset]
+      when :co
+        %w(A B b C D E F G).sample
+      when :cp
+        %w(o d b l r f).sample
       when :eo
         %w(0 1 2 4 6 7 8 9).sample
       when :ep
@@ -16,13 +69,54 @@ class PosSubsets
     @upper ||= %w(A B C D E F G H I J K L)
     @lower ||= %w(a b c d e f g h i j k l)
 
-    case cop.to_sym
-      when :Ao, :Bo, :Bb, :Bl, :Cb, :Cl, :Co, :Db, :Dl, :Do, :Eb, :El, :Eo, :Fl, :Fo, :Gb, :Gl, :Go, :bb, :bl, :bo
-        [@upper]
-      when :Ad, :Af, :Bd, :Bf, :Br, :Cd, :Cf, :Cr, :Dd, :Df, :Dr, :Ed, :Ef, :Er, :Fd, :Ff, :Gd, :Gf, :Gr, :bd, :bf, :br
-        [@lower]
-      else
-        [@upper, @lower]
+    [].tap{|result|
+      result << @upper unless self.ep_type_by_cop(cop) == :lower
+      result << @lower unless self.ep_type_by_cop(cop) == :upper
+    }
+  end
+
+  def self.co_by_oll(oll)
+    @co_oll ||= begin
+      {}.tap{ |h|
+        ActiveRecord::Base.connection.execute("select distinct oll, co from positions").each do |q|
+          h[q['oll']] = q['co']
+        end
+      }
     end
+    @co_oll[oll.to_s]
+  end
+
+  def self.eo_by_oll(oll)
+    @eo_oll ||= begin
+      {}.tap{ |h|
+        ActiveRecord::Base.connection.execute("select distinct oll, eo from positions").each do |q|
+          h[q['oll']] = q['eo']
+        end
+      }
+    end
+    @eo_oll[oll.to_s]
+  end
+
+  def self.oll_by_co_eo(co, eo)
+    @oll_co_eo ||= begin
+      {}.tap{ |h|
+        ActiveRecord::Base.connection.execute("select distinct oll, co, eo from positions").each do |q|
+          h[[q['co'], q['eo']]] = q['oll']
+        end
+      }
+    end
+    @oll_co_eo[[co.to_s, eo.to_s]]
+  end
+
+  def self.ep_type_by_cop(cop)
+    @ep_cop ||= begin
+      {}.tap{ |h|
+        ActiveRecord::Base.connection.execute("select distinct cop, ep from positions").each do |q|
+          ep = q['ep']
+          h[q['cop']] = (ep == ep.upcase()) ? :upper : :lower
+        end
+      }
+    end
+    @ep_cop[cop.to_s]
   end
 end
