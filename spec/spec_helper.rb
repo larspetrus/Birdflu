@@ -17,6 +17,7 @@
 RSpec.configure do |config|
 
     config.before(:suite) do
+      # Position.delete_all # uncomment to regenerate
       if Position.count == 0
         ActiveRecord::Base.transaction { Position.generate_all }
       end
