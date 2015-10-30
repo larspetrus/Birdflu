@@ -3,8 +3,6 @@ class Icons::Eo < Icons::Base
   def initialize(name, stickers)
     super(:eo, name.to_sym)
 
-    @name = (@is_none ? 'NONE' : name.to_s)
-
     pieces = %w(UB_ UR_ UF_ UL_)
     stickers.each_with_index do |sticker, i|
       @colors[(pieces[i] + sticker).to_sym] = 'eo'

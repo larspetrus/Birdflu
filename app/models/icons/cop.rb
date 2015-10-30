@@ -2,7 +2,6 @@ class Icons::Cop < Icons::Base
 
   def initialize(code, stickers, *arrows)
     super(:cop, code)
-    @name = (@is_none ? 'NONE' : code.to_s)
     @arrows = arrows
 
     pieces = %w(ULB_ UBR_ UFL_ URF_)

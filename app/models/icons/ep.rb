@@ -5,7 +5,6 @@ class Icons::Ep < Icons::Base
   def initialize(name)
     super(:ep, name.to_sym)
 
-    @name = (@is_none ? 'NONE' : name.to_s)
     @arrows = []
 
     edges = [:UB_U, :UR_U, :UF_U, :UL_U]

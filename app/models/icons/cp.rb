@@ -2,7 +2,6 @@ class Icons::Cp < Icons::Base
 
   def initialize(code, *arrows)
     super(:cp, code)
-    @name = (@is_none ? 'NONE' : code.to_s)
     @arrows = arrows
   end
 

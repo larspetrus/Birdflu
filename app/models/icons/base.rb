@@ -3,6 +3,7 @@ class Icons::Base
 
   def initialize(form_field, code)
     @is_none = (code == :'')
+    @name = (@is_none ? 'NONE' : code.to_s)
 
     @field = "##{form_field}"
     @code = code

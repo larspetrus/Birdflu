@@ -2,7 +2,6 @@ class Icons::Co < Icons::Base
 
   def initialize(code, stickers)
     super(:co, code)
-    @name = (@is_none ? 'NONE' : code.to_s)
 
     pieces = %w(ULB_ UBR_ UFL_ URF_)
     stickers.each_with_index do |sticker, i|
