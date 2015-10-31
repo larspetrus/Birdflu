@@ -64,12 +64,12 @@ $optimal_color: #69f;
 }
 .alg-list {
   td { padding: 0 2px; }
-  td:nth-child(-n+2) { text-align: right; }
+  td:nth-child(-n+2) { text-align: right; } // first two columns
 }
 .pos-list {
   td { padding: 0 2px; }
-  td:nth-child(6) { text-align: right; }
-  td:nth-child(7) { color: $optimal_color; text-align: right; }
+  td:nth-last-child(4) { text-align: right; }
+  td:nth-last-child(3) { color: $optimal_color; text-align: right; }
 }
 
 

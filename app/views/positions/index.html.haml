@@ -78,14 +78,25 @@
       =first_2_headers(@sortby)
       %th Name
       %th Position
-      %th Alg
-      %th
+      - if @selected_icons[:cop].is_none
+        %th COP
+      - if @selected_icons[:eo].is_none
+        %th EO
+      - if @selected_icons[:ep].is_none
+        %th EP
+      %th{colspan: 2} Alg
       %th Notes
     - @raw_algs.each do |alg|
       %tr
         =first_2_columns(@sortby, alg, shortest: alg.length == @aggregate_stats.shortest, fastest: alg.speed == @aggregate_stats.fastest)
         %td{class: alg.css_kind}= alg_name_td(alg)
         %td= link_to alg.position.display_name, "/positions/#{alg.position.ll_code}"
+        - if @selected_icons[:cop].is_none
+          %td= render 'svg_cube', icon: Icons::Cop.for(alg.position), size: 25, label: ''
+        - if @selected_icons[:eo].is_none
+          %td= render 'svg_cube', icon: Icons::Eo.for(alg.position),  size: 25, label: ''
+        - if @selected_icons[:ep].is_none
+          %td= render 'svg_cube', icon: Icons::Ep.for(alg.position),  size: 25, label: ''
         %td= alg.moves
         %td{:'data-us' => alg.setup_moves}
           %a{class: "show-pig"} show
@@ -136,25 +147,25 @@
 
   var picker_dialog_props = {
     cop: opts({ width: '400px', title: 'Corner orientation & position (COP)'}),
-    cp:  opts({ width: '308px', title: 'Corner position (CP)'}),
+    oll: opts({ width: '404px', title: 'Corner and edge orientation (OLL)'}),
     co:  opts({ width: '394px', title: 'Corner orientation (CO)'}),
+    cp:  opts({ width: '308px', title: 'Corner position (CP)'}),
     eo:  opts({ width: '394px', title: 'Edge orientation (EO)'}),
     ep:  opts({ width: '572px', title: 'Edge position (EP)'}),
-    oll: opts({ width: '404px', title: 'Corner and edge orientation (OLL)'}),
   };
   function opts(specifics) {
     var pos = { my: 'center top', at: 'center bottom', of: '#pickers' };
     return $.extend(specifics, {resizable: false, modal: false, draggable: false, position: pos, dialogClass: "picker-dialog"});
   };
 
-  $('#cop-selected, #cp-selected, #co-selected, #eo-selected, #ep-selected, #oll-selected').hover(
+  $('.selected-icon').hover(
     function(event){
-      var field = event.currentTarget.id.split('-')[0];
+      var field = $(event.currentTarget).attr('data-prop');
       var picker = $('#'+field+'-picker').dialog(picker_dialog_props[field]);
-      picker.parent().attr('data-field', field)
+      picker.parent().attr('data-dialog-field', field)
     },
     function(event){
-      var field = event.currentTarget.id.split('-')[0];
+      var field = $(event.currentTarget).attr('data-prop');
       setTimeout(function(){
         if (mouse_is_inside_picker != field) { $('#'+field+'-picker').dialog('close'); }
       }, 100);
@@ -163,10 +174,10 @@
 
   $(document).on({
     mouseenter: function(event) {
-      mouse_is_inside_picker = $(event.currentTarget).attr('data-field')
+      mouse_is_inside_picker = $(event.currentTarget).attr('data-dialog-field')
     },
     mouseleave: function(event) {
-      var field = $(event.currentTarget).attr('data-field')
+      var field = $(event.currentTarget).attr('data-dialog-field')
       $('#'+field+'-picker').dialog('close');
       mouse_is_inside_picker = ''
     }
@@ -176,7 +187,7 @@
   $(document).on('click', '.alg-list .show-pig', function(e) {
     var td = $(event.target).parent()
     var alg = td.prev().text()
-    var title = td.prev().prev().prev().text()
+    var title = td.siblings()[2].text()
 
     roofpig_dialog(title, alg, td.data("us"))
   });
@@ -184,7 +195,7 @@
   $(document).on('click', '.pos-list .show-pig', function(e) {
     var td = $(event.target).parent();
     var alg = td.prev().text();
-    var title = td.siblings().first().text() + ' shortest';
+    var title = td.siblings()[0].text() + ' shortest';
 
     roofpig_dialog(title, alg, td.data("us"))
   });
