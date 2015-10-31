@@ -192,7 +192,7 @@ svg {
 
   .oll { fill: deeppink; }
   .cop { fill: #fb0; }
-  .cp  { fill: #fdf; }
+  .cp  { fill: #ff9; }
   .co  { fill: #6df; }
   .eo  { fill: #0c0; }
   .ep-across { fill: #adf; }
@@ -213,14 +213,10 @@ svg {
 
 table.icon-grid {
   border-collapse: collapse;
-  svg {
-    margin: 3px;
-  }
-  td {
-    padding: 0;
-  }
+  svg { margin: 3px; }
+  td { padding: 0; }
 }
-table.with-lines {
+table.grid-lines {
   td {
     border-right: solid 1px #aaa;
   }

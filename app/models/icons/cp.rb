@@ -6,7 +6,8 @@ class Icons::Cp < Icons::Base
   end
 
   def base_colors
-    set_colors('cp', :U, :ULB_U, :UBR_U, :UFL_U, :URF_U, :UB_U, :UR_U, :UF_U, :UL_U)
+    set_colors('cp', :U, :ULB_U, :UBR_U, :UFL_U, :URF_U)
+    set_colors('ignore', :UB_U, :UL_U, :UR_U, :UF_U)
   end
 
   def self.by_code(code)
@@ -15,7 +16,7 @@ class Icons::Cp < Icons::Base
   end
 
   def self.for(position)
-    by_code(position.cop)
+    by_code(position.cp)
   end
 
   def self.grid

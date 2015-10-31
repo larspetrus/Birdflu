@@ -27,14 +27,11 @@ class PosSubsets
 
         case ss[:cop] # ugh...
           when 'Ab', 'Al', 'Ar'
-            ss[:cop] = 'Af'
-            ss[:cp] = 'f'
+            ss[:cop], ss[:cp] = 'Af', 'f'
           when 'Fb'
-            ss[:cop] = 'Ff'
-            ss[:cp] = 'f'
+            ss[:cop], ss[:cp] = 'Ff', 'f'
           when 'Fr'
-            ss[:cop] = 'Fl'
-            ss[:cp] = 'l'
+            ss[:cop], ss[:cp] = 'Fl', 'l'
         end
       end
     end
@@ -43,6 +40,11 @@ class PosSubsets
       if ss[:co].present? && ss[:eo].present?
         ss[:oll] = self.oll_by_co_eo(ss[:co], ss[:eo])
       end
+    end
+
+    if clicked == '#cp' && ss[:ep].present?
+      ep_case = (ss[:ep] == ss[:ep].upcase()) ? :upper : :lower
+      ss[:ep] = '' if self.ep_type_by_cp(ss[:cp]) != ep_case
     end
 
     ss
