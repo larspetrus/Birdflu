@@ -187,7 +187,7 @@
   $(document).on('click', '.alg-list .show-pig', function(e) {
     var td = $(event.target).parent()
     var alg = td.prev().text()
-    var title = td.siblings()[2].text()
+    var title = td.siblings().eq(2).text()
 
     roofpig_dialog(title, alg, td.data("us"))
   });
@@ -195,7 +195,7 @@
   $(document).on('click', '.pos-list .show-pig', function(e) {
     var td = $(event.target).parent();
     var alg = td.prev().text();
-    var title = td.siblings()[0].text() + ' shortest';
+    var title = td.siblings().eq(0).text() + ' shortest';
 
     roofpig_dialog(title, alg, td.data("us"))
   });

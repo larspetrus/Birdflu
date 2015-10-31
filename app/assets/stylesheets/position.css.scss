@@ -65,11 +65,13 @@ $optimal_color: #69f;
 .alg-list {
   td { padding: 0 2px; }
   td:nth-child(-n+2) { text-align: right; } // first two columns
+  td:nth-last-child(2) { border-left: none; }
 }
 .pos-list {
   td { padding: 0 2px; }
   td:nth-last-child(4) { text-align: right; }
   td:nth-last-child(3) { color: $optimal_color; text-align: right; }
+  td:nth-last-child(1) { border-left: none; }
 }
 
 
