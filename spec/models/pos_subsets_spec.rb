@@ -16,12 +16,18 @@ describe PosSubsets do
 
   end
 
-  it '#ep_type_by_cop' do
-    expect(PosSubsets.ep_type_by_cop(:Ao)).to eq(:upper)
-    expect(PosSubsets.ep_type_by_cop(:Eb)).to eq(:upper)
-    expect(PosSubsets.ep_type_by_cop(:Ad)).to eq(:lower)
-    expect(PosSubsets.ep_type_by_cop(:Gf)).to eq(:lower)
-    expect(PosSubsets.ep_type_by_cop('invalid')).to eq(nil)
-    expect(PosSubsets.ep_type_by_cop(nil)).to eq(nil)
+  it '#ep_type_by_cp' do
+    expect(PosSubsets.ep_type_by_cp(:o)).to eq(:upper)
+    expect(PosSubsets.ep_type_by_cp(:b)).to eq(:upper)
+    expect(PosSubsets.ep_type_by_cp(:d)).to eq(:lower)
+    expect(PosSubsets.ep_type_by_cp(:f)).to eq(:lower)
+    expect(PosSubsets.ep_type_by_cp('invalid')).to eq(:both)
+    expect(PosSubsets.ep_type_by_cp(nil)).to eq(:both)
+  end
+
+  it '#ep_codes_by_cp' do
+    expect(PosSubsets.ep_codes_by_cp(:o)).to eq(Icons::Ep.upper_codes)
+    expect(PosSubsets.ep_codes_by_cp(:d)).to eq(Icons::Ep.lower_codes)
+    expect(PosSubsets.ep_codes_by_cp(nil)).to eq(Icons::Ep.upper_codes + Icons::Ep.lower_codes)
   end
 end

@@ -40,35 +40,26 @@ class Icons::Ep < Icons::Base
     by_code(position.ep)
   end
 
-  def self.grid_for(cop)
-    PosSubsets.ep_code_grid_by_cop(cop).map{|row| row.map{|id| self.by_code(id)}}
+  def self.grid_for(cp)
+    case PosSubsets.ep_type_by_cp(cp)
+      when :upper
+        @upper_icons ||= [self.upper_codes].map{|row| row.map{|id| self.by_code(id)}}
+      when :lower
+        @lower_icons ||= [self.lower_codes].map{|row| row.map{|id| self.by_code(id)}}
+      when :both
+        @both_icons ||= [self.upper_codes, self.lower_codes].map{|row| row.map{|id| self.by_code(id)}}
+      else
+        raise "Impossible EP type '#{PosSubsets.ep_type_by_cp(cp)}'!"
+    end
   end
 
-  ALL = [
-      self.new(:''),
-      self.new('A'),
-      self.new('E'),
-      self.new('K'),
-      self.new('I'),
-      self.new('F'),
-      self.new('H'),
-      self.new('G'),
-      self.new('L'),
-      self.new('J'),
-      self.new('B'),
-      self.new('D'),
-      self.new('C'),
-      self.new('a'),
-      self.new('k'),
-      self.new('i'),
-      self.new('l'),
-      self.new('j'),
-      self.new('d'),
-      self.new('e'),
-      self.new('b'),
-      self.new('f'),
-      self.new('g'),
-      self.new('c'),
-      self.new('h'),
-  ]
+  def self.upper_codes
+    @upper_codes ||= %w(A B C D E F G H I J K L)
+  end
+
+  def self.lower_codes
+    @lower_codes ||= %w(a b c d e f g h i j k l)
+  end
+
+  ALL = [self.new(:'')] + (self.upper_codes + self.lower_codes).map{|code| self.new(code)}
 end
