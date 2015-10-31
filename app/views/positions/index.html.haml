@@ -94,27 +94,30 @@
 - else
   %table.index.pos-list
     %th Position
-    %th COP
-    %th EO
-    %th EP
-    %th OLL
+    - if @selected_icons[:cop].is_none
+      %th COP
+    - if @selected_icons[:eo].is_none
+      %th EO
+    - if @selected_icons[:ep].is_none
+      %th EP
     %th Solutions
     %th{colspan: 3} Shortest Solution
 
     - @positions.each do |pos|
-      - cache([pos.ll_code, pos.alg_count], skip_digest: true) do
-        - best = pos.best_alg || OpenStruct.new
-        %tr
-          %td= link_to pos.display_name, "/positions/#{pos.ll_code}"
+      - best = pos.best_alg || OpenStruct.new
+      %tr
+        %td= link_to pos.display_name, "/positions/#{pos.ll_code}"
+        - if @selected_icons[:cop].is_none
           %td= render 'svg_cube', icon: Icons::Cop.for(pos), size: 25, label: ''
+        - if @selected_icons[:eo].is_none
           %td= render 'svg_cube', icon: Icons::Eo.for(pos),  size: 25, label: ''
+        - if @selected_icons[:ep].is_none
           %td= render 'svg_cube', icon: Icons::Ep.for(pos),  size: 25, label: ''
-          %td= render 'svg_cube', icon: Icons::Oll.for(pos), size: 25, label: ''
-          %td= pos.alg_count
-          %td= best.length
-          %td= best.moves
-          %td{:'data-us' => best.setup_moves}
-            %a{class: "show-pig"} show
+        %td= pos.alg_count
+        %td= best.length
+        %td= best.moves
+        %td{:'data-us' => best.setup_moves}
+          %a{class: "show-pig"} show
 
 #show-alg{style: 'height:200px; width:200px;'}
 %script ROOFPIG_CONF_AD = "solved=U-| hover=3 | speed=600"

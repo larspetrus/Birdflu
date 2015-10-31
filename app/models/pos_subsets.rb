@@ -10,17 +10,20 @@ class PosSubsets
 
     clicked = params[:clicked]
 
+    # New start with COP
     if clicked == '#cop'
       ss[:oll] = ss[:eo] = ss[:ep] = ''
       ss[:co], ss[:cp] = ss[:cop].split('')
     end
 
+    # New start with OLL
     if clicked == '#oll'
       ss[:cop] = ss[:cp] = ss[:ep] = ''
       ss[:eo] = self.eo_by_oll(ss[:oll])
       ss[:co] = self.co_by_oll(ss[:oll])
     end
 
+    # Compute new COP
     if clicked == '#co' || clicked == '#cp'
       if ss[:co].present? && ss[:cp].present?
         ss[:cop] = "#{ss[:co]}#{ss[:cp]}"
@@ -33,18 +36,22 @@ class PosSubsets
           when 'Fr'
             ss[:cop], ss[:cp] = 'Fl', 'l'
         end
+      else
+        ss[:cop] = ''
       end
     end
 
+    # Compute new OLL
     if clicked == '#co' || clicked == '#eo'
-      if ss[:co].present? && ss[:eo].present?
-        ss[:oll] = self.oll_by_co_eo(ss[:co], ss[:eo])
-      end
+      ss[:oll] = self.oll_by_co_eo(ss[:co], ss[:eo]) || ''
     end
 
+    # Did EP become incompatible?
     if clicked == '#cp' && ss[:ep].present?
       ep_case = (ss[:ep] == ss[:ep].upcase()) ? :upper : :lower
-      ss[:ep] = '' if self.ep_type_by_cp(ss[:cp]) != ep_case
+      if self.ep_type_by_cp(ss[:cp]) != ep_case
+        ss[:ep] = ''
+      end
     end
 
     ss
