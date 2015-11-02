@@ -10,7 +10,8 @@ class PositionsController < ApplicationController
     end
 
     @filters = store_parameters(:pos_filter, {cop: '',oll: '',co: '',cp: '', eo: '', ep: ''}, effective_pos_params)
-    @page_format = store_parameters(:page, {page_format: 'positions'})[:page_format]
+    @single_position = @filters[:cop].present? && @filters[:eo].present? && @filters[:ep].present?
+    @page_format = @single_position ? 'algs' : store_parameters(:page, {page_format: 'positions'})[:page_format]
 
     includes = (@page_format == 'algs') ? :stats : [:stats, :best_alg]
     @positions = Position.where(@filters.select{|k,v| v.present?}).order(:optimal_alg_length).includes(includes).to_a
@@ -20,6 +21,8 @@ class PositionsController < ApplicationController
     @aggregate_stats = PositionStats.aggregate(@positions.map(&:stats))
     @positions = @positions.first(100)
 
+    @page_stats = stats_for_view(@single_position ? @positions.first : nil, @aggregate_stats)
+
     @selected_icons = {}
     POSITION_FILTERS.each{ |f| @selected_icons[f] = Icons::Base.by_code(f, @filters[f]) }
 
@@ -27,30 +30,57 @@ class PositionsController < ApplicationController
     POSITION_FILTERS.each{ |f| @icon_grids[f] = Icons::Base.class_by(f)::grid  unless f == :ep }
     @icon_grids[:ep] = Icons::Ep.grid_for(@filters[:cp])
 
+    if @single_position
+      @single_position = @positions.first
+      @cube = @single_position.as_cube
+    end
+
     if @page_format == 'algs'
       alg_list_settings
       @raw_algs = RawAlg.where(position_id: @positions.map(&:id)).includes(:position).order(@sortby).limit(@page)
     end
   end
 
-  def show
-    @position = Position.by_ll_code(params[:id])
-    unless @position
-      pos = Position.find_by_id(params[:id]) || RawAlg.find_by_alg_id(params[:id]).position # Try DB id or alg name
-      return redirect_to "/positions/#{pos.ll_code}"
+  def stats_for_view(single_pos, stats)
+    result = OpenStruct.new(sections: [])
+
+    result.sections << [
+        OpenStruct.new(label: 'Shortest', text: stats.shortest, class_name: 'optimal'),
+        OpenStruct.new(label: 'Fastest',  text: stats.fastest,  class_name: 'optimal'),
+    ]
+    result.sections << stats.raw_counts.keys.sort.map do |length|
+      OpenStruct.new(label: "#{length} moves", text: "#{view_context.pluralize(stats.raw_counts[length], 'alg')}")
     end
 
-    alg_list_settings
+    if single_pos
+      result.headline = "Position #{single_pos.display_name}"
+      result.link_section = [
+          single_pos.has_mirror  ? view_context.link_to("Mirror - #{single_pos.mirror.display_name}",   "positions/#{single_pos.mirror_ll_code}")  : "No mirror",
+          single_pos.has_inverse ? view_context.link_to("Inverse - #{single_pos.inverse.display_name}", "positions/#{single_pos.inverse_ll_code}") : "No inverse",
+      ]
+    else
+      result.headline = "#{stats.position_count} positions"
+      result.sections[0] << OpenStruct.new(label: "Avg shortest", text: @shortest_average)
+    end
+    result
+  end
 
-    @cube = @position.as_cube
-
-    @solutions = Hash.new { |hash, key| hash[key] = Array.new }
-
-    RawAlg.where(position_id: @position.id).order(@sortby).limit(@page).each { |ra| @solutions[[ra[@sortby], ra.moves]] << ra } unless @algtypes == 'combo'
-    @position.algs_in_set.order(@sortby).limit(@page).each { |ca| @solutions[[ca[@sortby], ca.moves]] << ca } unless @algtypes == 'single'
-
-    @solution_order = @solutions.keys.sort.first(@page)
-    @stats = @position.stats
+  def show
+    pos = Position.by_ll_code(params[:id]) || Position.find_by_id(params[:id]) || RawAlg.find_by_alg_id(params[:id]).position # Try LL code, DB id or alg name
+    store_parameters(:pos_filter, {cop: '',oll: '',co: '',cp: '', eo: '', ep: ''}, {cop: pos.cop, oll: pos.oll, co: pos.co, cp: pos.cp, eo: pos.eo, ep: pos.ep})
+    return redirect_to "/"
+    #
+    # alg_list_settings
+    #
+    # @cube = @position.as_cube
+    #
+    # @solutions = Hash.new { |hash, key| hash[key] = Array.new }
+    #
+    # RawAlg.where(position_id: @position.id).order(@sortby).limit(@page).each { |ra| @solutions[[ra[@sortby], ra.moves]] << ra } unless @algtypes == 'combo'
+    # @position.algs_in_set.order(@sortby).limit(@page).each { |ca| @solutions[[ca[@sortby], ca.moves]] << ca } unless @algtypes == 'single'
+    #
+    # @solution_order = @solutions.keys.sort.first(@page)
+    # @stats = @position.stats
   end
 
   def find_by_alg

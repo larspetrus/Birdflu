@@ -4,23 +4,21 @@
 %hr{style: 'clear:both;'}
 
 .left_side_stats
-  %span#rubric
-    #{@aggregate_stats.position_count} positions
+  %span#headline= @page_stats.headline
   %table
-    %tr
-      %td Shortest
-      %td.optimal= @aggregate_stats.shortest
-    %tr
-      %td Fastest
-      %td.optimal= '%.2f' % @aggregate_stats.fastest
-    %tr
-      %td Avg shortest
-      %td= @shortest_average
-    %tr.spacer
-    - @aggregate_stats.raw_counts.keys.sort.each do |length|
+    - @page_stats.sections[0].each do |line|
       %tr
-        %td #{length} moves
-        %td= pluralize(@aggregate_stats.raw_counts[length], 'alg')
+        %td= line.label
+        %td{class: line.class_name}= line.text
+    %tr.spacer
+    - @page_stats.sections[1].each do |line|
+      %tr
+        %td= line.label
+        %td{class: line.class_name}= line.text
+  - if @page_stats.link_section
+    .spacer
+    - @page_stats.link_section.each do |link|
+      .link= link
 
 %div{style: 'position: absolute; top:4px; right:4px; font-size: 8px; color: #888;'}
   Cache #{number_to_human_size Rails.cache.instance_variable_get('@cache_size')}
@@ -43,6 +41,10 @@
     = render 'picker_td', prop: :eo
     = render 'picker_td', prop: :ep,  add_class: 'relative', ubl_text: true
 
+-if @single_position
+  .right{style: "width: 180px; position: absolute; top:40px; right:0px;"}
+    = render 'svg_cube', icon: Icons::Big.new(@cube, Icons::Ep.for(@single_position).arrows + Icons::Cp.for(@single_position).arrows), size: 160, label: '', add_class: 'big-icon'
+
 
 =form_tag url_for(controller: "positions", action: "index"), method: 'post', id: 'icon-picker' do
   =hidden_field_tag(:cop, @filters[:cop])
@@ -53,10 +55,11 @@
   =hidden_field_tag(:ep,  @filters[:ep])
   =hidden_field_tag(:clicked, 'fail')
 
-.center.page-format-header
-  =form_tag url_for(controller: "positions", action: "index"), method: 'post', id: 'page_format_form' do
-    Show as
-    =select_tag("page_format", options_for_select(['positions', 'algs'], selected: @page_format))
+- unless @single_position
+  .center.page-format-header
+    =form_tag url_for(controller: "positions", action: "index"), method: 'post', id: 'page_format_form' do
+      Show as
+      =select_tag("page_format", options_for_select(['positions', 'algs'], selected: @page_format))
 
 - if @page_format == 'algs'
 
@@ -66,7 +69,7 @@
       =select_tag("page", options_for_select([25, 50, 100, 200, 500], selected: @page))
 
       =hidden_field_tag(:algtypes, @algtypes)
-      only single algs
+      algs
 
       .right
         Sort by

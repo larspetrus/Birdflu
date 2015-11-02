@@ -121,7 +121,7 @@ $optimal_color: #69f;
   padding: 6px;
   margin: 4px;
 
-  #rubric {
+  #headline {
     font-size: 14px;
     font-weight: bold;
     display: inline-block;
@@ -131,18 +131,13 @@ $optimal_color: #69f;
   table {
     border-collapse: collapse;
     font-size: 11px;
-    td:nth-child(2) {
-      padding-left: 8px;
-    }
-    .spacer {
-      height: 10px;
-    }
+    td:nth-child(2) { padding-left: 8px; }
   }
-  .dead-link {
-    color: #aaa;
-  }
+  .link { color: #aaa; }
+  .spacer { height: 10px; }
 }
 
+// --- SVG ---
 .svg-icon {
   .name {
     font-weight: bold;
@@ -194,7 +189,7 @@ svg {
 
   .oll { fill: deeppink; }
   .cop { fill: #fb0; }
-  .cp  { fill: #ff9; }
+  .cp  { fill: #fff; }
   .co  { fill: #6df; }
   .eo  { fill: #0c0; }
   .ep-across { fill: #adf; }
