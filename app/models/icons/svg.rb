@@ -17,7 +17,7 @@ class Icons::Svg
     sticker_xy2 = sticker_xy1+sticker_distance
     sticker_xy3 = sticker_xy2+sticker_distance
 
-    @@cube_rect = {x:cube_start, y:cube_start, width:cube_size, height:cube_size}
+    @@cube_rect = {x:cube_start, y:cube_start, width:cube_size, height:cube_size, rx: 3}
 
     @@dimensions = {
       ULB_B: {x:sticker_xy1, y:0, width:sticker_width, height:cube_start},
@@ -36,17 +36,17 @@ class Icons::Svg
       UL_L:  {x:0, y:sticker_xy2, width:cube_start, height:sticker_width},
       UFL_L: {x:0, y:sticker_xy3, width:cube_start, height:sticker_width},
 
-      ULB_U: {x:sticker_xy1, y:sticker_xy1, width:sticker_width, height:sticker_width},
-      UB_U:  {x:sticker_xy2, y:sticker_xy1, width:sticker_width, height:sticker_width},
-      UBR_U: {x:sticker_xy3, y:sticker_xy1, width:sticker_width, height:sticker_width},
+      ULB_U: {x:sticker_xy1, y:sticker_xy1, width:sticker_width, height:sticker_width, rx: 1},
+      UB_U:  {x:sticker_xy2, y:sticker_xy1, width:sticker_width, height:sticker_width, rx: 1},
+      UBR_U: {x:sticker_xy3, y:sticker_xy1, width:sticker_width, height:sticker_width, rx: 1},
 
-      UL_U:  {x:sticker_xy1, y:sticker_xy2, width:sticker_width, height:sticker_width},
-      U:     {x:sticker_xy2, y:sticker_xy2, width:sticker_width, height:sticker_width},
-      UR_U:  {x:sticker_xy3, y:sticker_xy2, width:sticker_width, height:sticker_width},
+      UL_U:  {x:sticker_xy1, y:sticker_xy2, width:sticker_width, height:sticker_width, rx: 1},
+      U:     {x:sticker_xy2, y:sticker_xy2, width:sticker_width, height:sticker_width, rx: 1},
+      UR_U:  {x:sticker_xy3, y:sticker_xy2, width:sticker_width, height:sticker_width, rx: 1},
 
-      UFL_U: {x:sticker_xy1, y:sticker_xy3, width:sticker_width, height:sticker_width},
-      UF_U:  {x:sticker_xy2, y:sticker_xy3, width:sticker_width, height:sticker_width},
-      URF_U: {x:sticker_xy3, y:sticker_xy3, width:sticker_width, height:sticker_width},
+      UFL_U: {x:sticker_xy1, y:sticker_xy3, width:sticker_width, height:sticker_width, rx: 1},
+      UF_U:  {x:sticker_xy2, y:sticker_xy3, width:sticker_width, height:sticker_width, rx: 1},
+      URF_U: {x:sticker_xy3, y:sticker_xy3, width:sticker_width, height:sticker_width, rx: 1},
     }
   end
   self.init_dimensions
