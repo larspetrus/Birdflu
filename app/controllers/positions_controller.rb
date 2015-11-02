@@ -32,13 +32,13 @@ class PositionsController < ApplicationController
 
     if @single_position
       @single_position = @positions.first
-      @cube = @single_position.as_cube
     end
 
     if @page_format == 'algs'
       alg_list_settings
       @raw_algs = RawAlg.where(position_id: @positions.map(&:id)).includes(:position).order(@sortby).limit(@page)
     end
+    @svg_ids = Set.new
   end
 
   def stats_for_view(single_pos, stats)
@@ -71,8 +71,6 @@ class PositionsController < ApplicationController
     return redirect_to "/"
     #
     # alg_list_settings
-    #
-    # @cube = @position.as_cube
     #
     # @solutions = Hash.new { |hash, key| hash[key] = Array.new }
     #

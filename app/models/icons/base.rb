@@ -1,9 +1,10 @@
 class Icons::Base
-  attr_reader :code, :name, :arrows, :field, :colors, :is_none
+  attr_reader :code, :name, :arrows, :field, :colors, :is_none, :id
 
   def initialize(form_field, code)
     @is_none = (code == :'')
     @name = (@is_none ? 'NONE' : code.to_s)
+    @id = "#{form_field}_#{@name}"
 
     @field = "##{form_field}"
     @code = code

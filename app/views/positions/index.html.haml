@@ -43,7 +43,7 @@
 
 -if @single_position
   .right{style: "width: 180px; position: absolute; top:40px; right:0px;"}
-    = render 'svg_cube', icon: Icons::Big.new(@cube, Icons::Ep.for(@single_position).arrows + Icons::Cp.for(@single_position).arrows), size: 160, label: '', add_class: 'big-icon'
+    = render 'svg_cube', icon: Icons::Big.new(@single_position), size: 160, label: '', add_class: 'big-icon'
 
 
 =form_tag url_for(controller: "positions", action: "index"), method: 'post', id: 'icon-picker' do
