@@ -40,8 +40,7 @@ class PositionsController < ApplicationController
     end
     @svg_ids = Set.new
 
-    @alg_columns = make_alg_columns
-    @pos_columns = make_pos_columns
+    @columns = (@page_format == 'algs') ? make_alg_columns : make_pos_columns
   end
 
   def make_alg_columns
@@ -106,6 +105,13 @@ class PositionsController < ApplicationController
     render json: { error: e.message }
   end
 
+  def alg_list_settings
+    alg_list_params = store_parameters(:alg_filter, {page: 25, algtypes: 'both', sortby: 'speed'})
+    @page     = alg_list_params[:page].to_i
+    @algtypes = alg_list_params[:algtypes]
+    @sortby   = alg_list_params[:sortby]
+  end
+
   def store_parameters(cookie_name, defaults, new_data = params)
     stored_parameters = defaults.keys
     if new_data.has_key?(stored_parameters.first)
@@ -115,12 +121,5 @@ class PositionsController < ApplicationController
       values = cookies[cookie_name] ? JSON.parse(cookies[cookie_name], symbolize_names: true) : defaults # TODO handle bad cookie
     end
     values
-  end
-
-  def alg_list_settings
-    alg_list_params = store_parameters(:alg_filter, {page: 25, algtypes: 'both', sortby: 'speed'})
-    @page     = alg_list_params[:page].to_i
-    @algtypes = alg_list_params[:algtypes]
-    @sortby   = alg_list_params[:sortby]
   end
 end

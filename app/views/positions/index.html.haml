@@ -77,25 +77,24 @@
 
 
   %table.alg-list
-    %thead
-      - @alg_columns.each do |column|
-        %th= column.header
+    - @columns.each do |column|
+      %th= column.header
     - @raw_algs.each do |alg|
       - flags = {shortest: alg.length == @aggregate_stats.shortest, fastest: alg.speed == @aggregate_stats.fastest}
       %tr
-        - @alg_columns.each do |column|
+        - @columns.each do |column|
           - if column.is_svg
             %td= render 'svg_cube', column.svg_locals.call(alg)
           -else
             =column.td(alg, flags)
 - else
   %table.pos-list
-    - @pos_columns.each do |column|
+    - @columns.each do |column|
       %th= column.header
 
     - @positions.each do |pos|
       %tr
-        - @pos_columns.each do |column|
+        - @columns.each do |column|
           - if column.is_svg
             %td= render 'svg_cube', column.svg_locals.call(pos)
           -else
@@ -180,4 +179,3 @@
   $('#page, #sortby, #algtypes').change(function() {
     $('form#algs_options').submit();
   });
-
