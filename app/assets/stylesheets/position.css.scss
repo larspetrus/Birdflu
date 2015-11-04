@@ -48,7 +48,7 @@ $optimal_color: #69f;
   tr:nth-child(4n) { border-bottom: solid 1px #ddd;}
   th, td {
     font-size: 11px;
-    border-left: 1px solid #ddd;
+    border-left: 1px solid #aaa;
   }
   th {
     background-color: #cef;
@@ -57,35 +57,31 @@ $optimal_color: #69f;
   .combo   { color: #700; }
   .copy    { color: #aaa; }
   .optimalcopy { color: #9cc; }
-  .sortby {
+}
+.alg-list {
+  th:nth-child(1) { // Sortby column header
     background: #05f;
     color: #fff;
   }
-}
-.alg-list {
   td { padding: 0 2px; }
   td:nth-child(-n+2) { text-align: right; } // first two columns
-  td:nth-last-child(2) { border-left: none; }
+  th:nth-last-child(2), td:nth-last-child(2) { border-left: none; }
 }
 .pos-list {
+  th { background-color: #cfc; }
+
   td { padding: 0 2px; }
   td:nth-last-child(4) { text-align: right; }
   td:nth-last-child(3) { color: $optimal_color; text-align: right; }
-  td:nth-last-child(1) { border-left: none; }
+  td:nth-last-child(1), th:nth-last-child(1), th:nth-last-child(2) { border-left: none; }
 }
 
 
-.rp160 {
-  height:205px;
-  width:160px;
+.rp-dialog {
+  height:245px;
+  width:200px;
   float:left;
   margin: 6px;
-
-  .name {
-    text-align: center;
-    font-size: 9px;
-    font-weight: bold;
-  }
 }
 
 .leftmenu {

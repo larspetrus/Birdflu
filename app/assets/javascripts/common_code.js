@@ -1,7 +1,7 @@
 function roofpig_dialog(title, alg, u_setup) {
-  CubeAnimation.create_in_dom('#show-alg', 'alg='+alg+'|base=AD|flags=showalg'+u_setup, "class='roofpig rp160'");
+  CubeAnimation.create_in_dom('#show-alg', 'alg='+alg+'|base=AD|flags=showalg'+u_setup, "class='roofpig rp-dialog'");
   $('#show-alg').dialog({
-    width: '200px',
+    width: '240px',
     title: title,
     modal: true,
     closeOnEscape: true,

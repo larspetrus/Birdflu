@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe PositionShowHelper do
+RSpec.describe TableHelper do
 
   it 'length_value' do
     expect(length_value("length7", {})).to eq('<td>7</td>')

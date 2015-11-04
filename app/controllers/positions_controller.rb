@@ -39,6 +39,27 @@ class PositionsController < ApplicationController
       @raw_algs = RawAlg.where(position_id: @positions.map(&:id)).includes(:position).order(@sortby).limit(@page)
     end
     @svg_ids = Set.new
+
+    @alg_columns = make_alg_columns
+    @pos_columns = make_pos_columns
+  end
+
+  def make_alg_columns
+    columns = [Cols::SPEED, Cols::MOVES].rotate(@sortby == 'speed' ? 0 : 1)
+    columns << Cols::NAME
+    columns << Cols::POSITION unless @single_position
+    columns << Cols::COP if @selected_icons[:cop].is_none
+    columns << Cols::EO  if @selected_icons[:eo].is_none
+    columns << Cols::EP  if @selected_icons[:ep].is_none
+    columns << Cols::ALG << Cols::SHOW << Cols::NOTES
+  end
+
+  def make_pos_columns
+    columns = [Cols::POSITION]
+    columns << Cols::COP if @selected_icons[:cop].is_none
+    columns << Cols::EO  if @selected_icons[:eo].is_none
+    columns << Cols::EP  if @selected_icons[:ep].is_none
+    columns << Cols::SOLUTIONS << Cols::MOVES_P << Cols::ALG_P << Cols::SHOW
   end
 
   def stats_for_view(single_pos, stats)
@@ -68,17 +89,7 @@ class PositionsController < ApplicationController
   def show
     pos = Position.by_ll_code(params[:id]) || Position.find_by_id(params[:id]) || RawAlg.find_by_alg_id(params[:id]).position # Try LL code, DB id or alg name
     store_parameters(:pos_filter, {cop: '',oll: '',co: '',cp: '', eo: '', ep: ''}, {cop: pos.cop, oll: pos.oll, co: pos.co, cp: pos.cp, eo: pos.eo, ep: pos.ep})
-    return redirect_to "/"
-    #
-    # alg_list_settings
-    #
-    # @solutions = Hash.new { |hash, key| hash[key] = Array.new }
-    #
-    # RawAlg.where(position_id: @position.id).order(@sortby).limit(@page).each { |ra| @solutions[[ra[@sortby], ra.moves]] << ra } unless @algtypes == 'combo'
-    # @position.algs_in_set.order(@sortby).limit(@page).each { |ca| @solutions[[ca[@sortby], ca.moves]] << ca } unless @algtypes == 'single'
-    #
-    # @solution_order = @solutions.keys.sort.first(@page)
-    # @stats = @position.stats
+    redirect_to "/"
   end
 
   def find_by_alg
