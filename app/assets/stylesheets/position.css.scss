@@ -40,27 +40,26 @@ h4, h5 {
 $optimal_color: #69f;
 .optimal { color: $optimal_color; }
 
-.index {
+.alg-list, .pos-list {
+  font-size: 11px;
+
   margin: 0 auto;
   border-collapse: collapse;
   border: 1px solid #ddd;
-  tr:hover {background: #eef; }
+  tr:hover { background: #eef; }
   tr:nth-child(4n) { border-bottom: solid 1px #ddd;}
-  th, td {
-    font-size: 11px;
-    border-left: 1px solid #aaa;
-  }
-  th {
-    background-color: #cef;
-  }
+  td { border-left: 1px solid #ddd; }
+  th { border-left: 1px solid #fff; padding: 0 4px;}
   .single  { color: #073; }
   .combo   { color: #700; }
   .copy    { color: #aaa; }
   .optimalcopy { color: #9cc; }
 }
 .alg-list {
+  th { background-color: #cef; }
+
   th:nth-child(1) { // Sortby column header
-    background: #05f;
+    background: #37f;
     color: #fff;
   }
   td { padding: 0 2px; }
@@ -118,7 +117,7 @@ $optimal_color: #69f;
   margin: 4px;
 
   #headline {
-    font-size: 14px;
+    font-size: 16px;
     font-weight: bold;
     display: inline-block;
     margin-bottom: 4px;

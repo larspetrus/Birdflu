@@ -76,7 +76,7 @@
         =select_tag("sortby", options_for_select(['speed', ['moves', 'length']], selected: @sortby))
 
 
-  %table.index.alg-list
+  %table.alg-list
     %thead
       - @alg_columns.each do |column|
         %th= column.header
@@ -89,7 +89,7 @@
           -else
             =column.td(alg, flags)
 - else
-  %table.index.pos-list
+  %table.pos-list
     - @pos_columns.each do |column|
       %th= column.header
 
