@@ -46,7 +46,7 @@
     = render 'svg_cube', icon: Icons::Big.new(@single_position), size: 160, label: '', add_class: 'big-icon'
 
 
-=form_tag url_for(controller: "positions", action: "index"), method: 'post', id: 'icon-picker' do
+=form_tag url_for(controller: "positions", action: "index"), method: 'get', id: 'icon-picker' do
   =hidden_field_tag(:cop, @filters[:cop])
   =hidden_field_tag(:oll, @filters[:oll])
   =hidden_field_tag(:co,  @filters[:co])
@@ -104,6 +104,8 @@
 %script ROOFPIG_CONF_AD = "solved=U-| hover=3 | speed=600"
 
 :javascript
+  history.replaceState('', '', "#{@bookmark_url}");
+
   $('.svg-icon, .random, .unselect').on('click', function() {
     var field = $(this).data('field');
 

@@ -1,11 +1,15 @@
 class PosSubsets
 
   def self.selected_subsets(params)
-    ss = {}
+    ss = {} # ss = Selected Sets to show on page
     PositionsController::POSITION_FILTERS.each do |f|
       if params[f]
         ss[f] = (params[f] == 'random') ? self.random_code(f, params) : params[f]
       end
+    end
+
+    if params[:bm] #bm = BookMark
+      return ss
     end
 
     clicked = params[:clicked]
