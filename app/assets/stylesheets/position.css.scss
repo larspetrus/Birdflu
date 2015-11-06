@@ -217,13 +217,13 @@ table.grid-lines {
   }
 }
 
-#oll-picker, #cop-picker, #cp-picker, #co-picker, #eo-picker, #ep-picker {
+.hidden-picker {
   display: none;
-}
-.ubl-text {
-  font-size: 12px;
-  padding: 5px;
-  text-align: center;
+  .ubl-text {
+    font-size: 12px;
+    padding: 5px;
+    text-align: center;
+  }
 }
 // ------------ Alg sections
 .cancel1 {
@@ -249,6 +249,11 @@ table.grid-lines {
   margin: 8px auto;
 }
 
+.singlepos-format-header {
+  text-align: center;
+  font-size: 10px;
+  padding: 3px 0;
+}
 // ------------ Alg list header
 .alg-list-header {
   font-size: 14px;

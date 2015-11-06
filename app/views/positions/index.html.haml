@@ -60,6 +60,8 @@
     =form_tag url_for(controller: "positions", action: "index"), method: 'post', id: 'page_format_form' do
       Show as
       =select_tag("page_format", options_for_select(['positions', 'algs'], selected: @page_format))
+- else
+  .singlepos-format-header Showing algs for single selected position.
 
 - if @page_format == 'algs'
 
@@ -161,7 +163,7 @@
     var alg = td.prev().text()
     var title = td.siblings().eq(2).text()
 
-    roofpig_dialog(title, alg, td.data("us"))
+    roofpig_dialog(title, alg, td.data("us"), td.parent())
   });
 
   $(document).on('click', '.pos-list .show-pig', function(e) {
@@ -169,7 +171,7 @@
     var alg = td.prev().text();
     var title = td.siblings().eq(0).text() + ' shortest';
 
-    roofpig_dialog(title, alg, td.data("us"))
+    roofpig_dialog(title, alg, td.data("us"), td.parent())
   });
 
   // ---- page format form

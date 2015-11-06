@@ -5,7 +5,7 @@
 - icon_size = 45
 %td
   %div{class: "selected-icon", data: {prop: prop}}= render 'svg_cube', icon: @selected_icons[prop], size: icon_size, add_class: 'selected'
-  %div{id: "#{prop}-picker"}
+  %div{id: "#{prop}-picker", class: 'hidden-picker'}
     .picker_buttons
       %a{class: "random knapp knapp-enabled", data: {field: field, code: 'random'}} Random
       %a{class: "unselect knapp" + (@selected_icons[prop].is_none ? "" : " knapp-enabled"), data: {field: field, code: ''}} Unselect
