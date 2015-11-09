@@ -15,6 +15,7 @@ class PositionsController < ApplicationController
 
     includes = (@page_format == 'algs') ? :stats : [:stats, :best_alg]
     @positions = Position.where(@filters.select{|k,v| v.present?}).order(:optimal_alg_length).includes(includes).to_a
+
     optimal_sum = @positions.reduce(0.0) { |sum, pos| sum + (pos.optimal_alg_length || 100)}
     @shortest_average = '%.2f' % (optimal_sum/@positions.count)
 
@@ -30,17 +31,16 @@ class PositionsController < ApplicationController
     POSITION_FILTERS.each{ |f| @icon_grids[f] = Icons::Base.class_by(f)::grid  unless f == :ep }
     @icon_grids[:ep] = Icons::Ep.grid_for(@filters[:cp])
 
-    if @single_position
-      @single_position = @positions.first
-    end
+    @single_position = @positions.first if @single_position # Convert from boolean to object, now that we have the position
 
     if @page_format == 'algs'
       alg_list_params = store_parameters(:alg_filter, {page: 25, algtypes: 'both', sortby: 'speed'})
       @page = alg_list_params[:page].to_i
-      @algtypes = alg_list_params[:algtypes]
       @sortby = alg_list_params[:sortby]
 
-      @raw_algs = RawAlg.where(position_id: @positions.map(&:id)).includes(:position).order(@sortby).limit(@page)
+      @list_items = RawAlg.where(position_id: @positions.map(&:id)).includes(:position).order(@sortby).limit(@page)
+    else
+      @list_items = @positions
     end
 
     @svg_ids = Set.new
@@ -71,7 +71,7 @@ class PositionsController < ApplicationController
 
     result.sections << [
         OpenStruct.new(label: 'Shortest', text: stats.shortest, class_name: 'optimal'),
-        OpenStruct.new(label: 'Fastest',  text: stats.fastest,  class_name: 'optimal'),
+        OpenStruct.new(label: 'Fastest',  text: '%.2f' % stats.fastest,  class_name: 'optimal'),
     ]
     result.sections << stats.raw_counts.keys.sort.map do |length|
       OpenStruct.new(label: "#{length} moves", text: "#{view_context.pluralize(stats.raw_counts[length], 'alg')}")

@@ -40,7 +40,7 @@ h4, h5 {
 $optimal_color: #69f;
 .optimal { color: $optimal_color; }
 
-.alg-list, .pos-list {
+.algs-list, .positions-list {
   font-size: 11px;
 
   margin: 0 auto;
@@ -55,7 +55,7 @@ $optimal_color: #69f;
   .copy    { color: #aaa; }
   .optimalcopy { color: #9cc; }
 }
-.alg-list {
+.algs-list {
   th { background-color: #cef; }
 
   th:nth-child(1) { // Sortby column header
@@ -66,8 +66,8 @@ $optimal_color: #69f;
   td:nth-child(-n+2) { text-align: right; } // first two columns
   th:nth-last-child(2), td:nth-last-child(2) { border-left: none; }
 }
-.pos-list {
-  th { background-color: #cfc; }
+.positions-list {
+  th { background-color: #484; color: #fff; }
 
   td { padding: 0 2px; }
   td:nth-last-child(4) { text-align: right; }
@@ -255,10 +255,12 @@ table.grid-lines {
   padding: 3px 0;
 }
 // ------------ Alg list header
-.alg-list-header {
+.algs-list-header {
   font-size: 14px;
   width: 450px;
   margin: 8px auto;
+  border-top: 1px solid #aaa;
+  padding-top: 8px;
 }
 
 .lars-dialog {

@@ -47,12 +47,8 @@
 
 
 =form_tag url_for(controller: "positions", action: "index"), method: 'get', id: 'icon-picker' do
-  =hidden_field_tag(:cop, @filters[:cop])
-  =hidden_field_tag(:oll, @filters[:oll])
-  =hidden_field_tag(:co,  @filters[:co])
-  =hidden_field_tag(:cp,  @filters[:cp])
-  =hidden_field_tag(:eo,  @filters[:eo])
-  =hidden_field_tag(:ep,  @filters[:ep])
+  - PositionsController::POSITION_FILTERS.each do |f|
+    =hidden_field_tag(f, @filters[f])
   =hidden_field_tag(:clicked, 'fail')
 
 - unless @single_position
@@ -65,47 +61,35 @@
 
 - if @page_format == 'algs'
 
-  .center.alg-list-header{style: "border-top: 1px solid #aaa; padding-top: 8px;"}
+  .center.algs-list-header
     =form_tag url_for(controller: "positions", action: "index"), method: 'get', id: 'algs_options' do
       Show first
       =select_tag("page", options_for_select([25, 50, 100, 200, 500], selected: @page))
-
-      =hidden_field_tag(:algtypes, @algtypes)
       algs
 
       .right
         Sort by
         =select_tag("sortby", options_for_select(['speed', ['moves', 'length']], selected: @sortby))
 
-
-  %table.alg-list
-    - @columns.each do |column|
-      %th= column.header
-    - @raw_algs.each do |alg|
-      - flags = {shortest: alg.length == @aggregate_stats.shortest, fastest: alg.speed == @aggregate_stats.fastest}
-      %tr
-        - @columns.each do |column|
-          - if column.is_svg
-            %td= render 'svg_cube', column.svg_locals.call(alg)
-          -else
-            =column.td(alg, flags)
+  - flags = -> (alg) do  {shortest: alg.length == @aggregate_stats.shortest, fastest: alg.speed == @aggregate_stats.fastest} end
 - else
-  %table.pos-list
-    - @columns.each do |column|
-      %th= column.header
+  - flags = -> (pos) do {} end
 
-    - @positions.each do |pos|
-      %tr
-        - @columns.each do |column|
-          - if column.is_svg
-            %td= render 'svg_cube', column.svg_locals.call(pos)
-          -else
-            =column.td(pos, {})
+%table{class: "#{@page_format}-list"}
+  - @columns.each do |column|
+    %th= column.header
+  - @list_items.each do |item|
+    %tr
+      - @columns.each do |column|
+        - if column.is_svg
+          %td= render 'svg_cube', column.svg_locals.call(item)
+        -else
+          =column.td(item, flags.call(item))
 
 #show-alg{style: 'height:200px; width:200px;'}
-%script ROOFPIG_CONF_AD = "solved=U-| hover=3 | speed=600"
 
 :javascript
+  var ROOFPIG_CONF_AD = "solved=U-| hover=3 | speed=600"
   history.replaceState('', '', "#{@bookmark_url}");
 
   $('.svg-icon, .random, .unselect').on('click', function() {
@@ -158,7 +142,7 @@
   }, ".picker-dialog");
 
   // --------- Show Roofpigs ---
-  $(document).on('click', '.alg-list .show-pig', function(e) {
+  $(document).on('click', '.algs-list .show-pig', function(e) {
     var td = $(event.target).parent()
     var alg = td.prev().text()
     var title = td.siblings().eq(2).text()
@@ -166,7 +150,7 @@
     roofpig_dialog(title, alg, td.data("us"), td.parent())
   });
 
-  $(document).on('click', '.pos-list .show-pig', function(e) {
+  $(document).on('click', '.positions-list .show-pig', function(e) {
     var td = $(event.target).parent();
     var alg = td.prev().text();
     var title = td.siblings().eq(0).text() + ' shortest';
