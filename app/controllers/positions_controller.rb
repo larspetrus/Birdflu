@@ -3,26 +3,24 @@ class PositionsController < ApplicationController
   POSITION_FILTERS = [:cop, :oll, :co, :cp, :eo, :ep]
 
   def index
-    effective_pos_params = {}
-
-    if params[:clicked] || params[:bm]
-      effective_pos_params = PosSubsets.selected_subsets(params)
-    end
-
-    @filters = store_parameters(:pos_filter, {cop: '',oll: '',co: '',cp: '', eo: '', ep: ''}, effective_pos_params)
+    @filters = PosSubsets.compute_filters(params)
     @single_position = @filters[:cop].present? && @filters[:eo].present? && @filters[:ep].present?
-    @page_format = @single_position ? 'algs' : store_parameters(:page, {page_format: 'positions'})[:page_format]
 
-    includes = (@page_format == 'algs') ? :stats : [:stats, :best_alg]
+    format_params = store_parameters(:format, {list_type: 'positions', lines: 25, sortby: 'speed'})
+    @format = OpenStruct.new(
+        list_type: format_params[:list_type],
+        lines:     format_params[:lines].to_i,
+        sortby:    format_params[:sortby],
+        algs:      format_params[:list_type] == 'algs',
+    )
+
+    @list_algs =  @format.algs || @single_position
+
+    includes = @list_algs ? :stats : [:stats, :best_alg]
     @positions = Position.where(@filters.select{|k,v| v.present?}).order(:optimal_alg_length).includes(includes).to_a
+    @single_position = @positions.first if @single_position # Now we know which position
 
-    optimal_sum = @positions.reduce(0.0) { |sum, pos| sum + (pos.optimal_alg_length || 100)}
-    @shortest_average = '%.2f' % (optimal_sum/@positions.count)
-
-    @aggregate_stats = PositionStats.aggregate(@positions.map(&:stats))
-    @positions = @positions.first(100)
-
-    @page_stats = stats_for_view(@single_position ? @positions.first : nil, @aggregate_stats)
+    @stats = stats_for_view(@single_position)
 
     @selected_icons = {}
     POSITION_FILTERS.each{ |f| @selected_icons[f] = Icons::Base.by_code(f, @filters[f]) }
@@ -31,25 +29,17 @@ class PositionsController < ApplicationController
     POSITION_FILTERS.each{ |f| @icon_grids[f] = Icons::Base.class_by(f)::grid  unless f == :ep }
     @icon_grids[:ep] = Icons::Ep.grid_for(@filters[:cp])
 
-    @single_position = @positions.first if @single_position # Convert from boolean to object, now that we have the position
-
-    if @page_format == 'algs'
-      alg_list_params = store_parameters(:alg_filter, {page: 25, algtypes: 'both', sortby: 'speed'})
-      @page = alg_list_params[:page].to_i
-      @sortby = alg_list_params[:sortby]
-
-      @list_items = RawAlg.where(position_id: @positions.map(&:id)).includes(:position).order(@sortby).limit(@page)
-    else
-      @list_items = @positions
-    end
+    @list_items =
+        @list_algs ?
+          RawAlg.where(position_id: @positions.map(&:id)).includes(:position).order(@format.sortby).limit(@format.lines) :
+          @positions.first(100)
 
     @svg_ids = Set.new
-    @columns = (@page_format == 'algs') ? make_alg_columns : make_pos_columns
-    @bookmark_url = '?bm=&' + @filters.keys.map{|k| "#{k}=#{@filters[k]}"}.join('&')
+    @columns = @list_algs ? make_alg_columns : make_pos_columns
   end
 
   def make_alg_columns
-    columns = [Cols::SPEED, Cols::MOVES].rotate(@sortby == 'speed' ? 0 : 1)
+    columns = [Cols::SPEED, Cols::MOVES].rotate(@format.sortby == 'speed' ? 0 : 1)
     columns << Cols::NAME
     columns << Cols::POSITION unless @single_position
     columns << Cols::COP if @selected_icons[:cop].is_none
@@ -66,34 +56,36 @@ class PositionsController < ApplicationController
     columns << Cols::SOLUTIONS << Cols::MOVES_P << Cols::ALG_P << Cols::SHOW
   end
 
-  def stats_for_view(single_pos, stats)
-    result = OpenStruct.new(sections: [])
+  def stats_for_view(single_pos)
+    data = PositionStats.aggregate(@positions.map(&:stats))
+    result = OpenStruct.new(sections: [], data: data)
 
     result.sections << [
-        OpenStruct.new(label: 'Shortest', text: stats.shortest, class_name: 'optimal'),
-        OpenStruct.new(label: 'Fastest',  text: '%.2f' % stats.fastest,  class_name: 'optimal'),
+        OpenStruct.new(label: 'Shortest', text: data.shortest, class_name: 'optimal'),
+        OpenStruct.new(label: 'Fastest',  text: '%.2f' % data.fastest,  class_name: 'optimal'),
     ]
-    result.sections << stats.raw_counts.keys.sort.map do |length|
-      OpenStruct.new(label: "#{length} moves", text: "#{view_context.pluralize(stats.raw_counts[length], 'alg')}")
+    result.sections << data.raw_counts.keys.sort.map do |length|
+      OpenStruct.new(label: "#{length} moves", text: "#{view_context.pluralize(data.raw_counts[length], 'alg')}")
     end
 
     if single_pos
       result.headline = "Position #{single_pos.display_name}"
       result.link_section = [
-          single_pos.has_mirror  ? view_context.link_to("Mirror - #{single_pos.mirror.display_name}",   "positions/#{single_pos.mirror_ll_code}")  : "No mirror",
-          single_pos.has_inverse ? view_context.link_to("Inverse - #{single_pos.inverse.display_name}", "positions/#{single_pos.inverse_ll_code}") : "No inverse",
+          single_pos.has_mirror  ? view_context.link_to("Mirror - #{single_pos.mirror.display_name}",  "positions/#{single_pos.mirror_ll_code}")  : "No mirror",
+          single_pos.has_inverse ? view_context.link_to("Inverse - #{single_pos.inverse.display_name}","positions/#{single_pos.inverse_ll_code}") : "No inverse",
       ]
     else
-      result.headline = "#{stats.position_count} positions"
-      result.sections[0] << OpenStruct.new(label: "Avg shortest", text: @shortest_average)
+      result.headline = "#{data.position_count} positions"
+
+      optimal_sum = @positions.reduce(0.0) { |sum, pos| sum + (pos.optimal_alg_length || 100)}
+      result.sections[0] << OpenStruct.new(label: "Avg shortest", text: '%.2f' % (optimal_sum/@positions.count))
     end
     result
   end
 
   def show
     pos = Position.by_ll_code(params[:id]) || Position.find_by_id(params[:id]) || RawAlg.find_by_alg_id(params[:id]).position # Try LL code, DB id or alg name
-    store_parameters(:pos_filter, {cop: '',oll: '',co: '',cp: '', eo: '', ep: ''}, {cop: pos.cop, oll: pos.oll, co: pos.co, cp: pos.cp, eo: pos.eo, ep: pos.ep})
-    redirect_to "/"
+    redirect_to "/?" + POSITION_FILTERS.map{|k| "#{k}=#{pos[k]}"}.join('&')
   end
 
   def find_by_alg
@@ -114,7 +106,8 @@ class PositionsController < ApplicationController
   def store_parameters(cookie_name, defaults, new_data = params)
     stored_parameters = defaults.keys
     if new_data.has_key?(stored_parameters.first)
-      values = new_data.select {|k,v| stored_parameters.include? k.to_sym }
+      values = {}
+      stored_parameters.each { |k| values[k] = new_data[k] || defaults[k] }
       cookies[cookie_name] = JSON.generate(values)
     else
       values = cookies[cookie_name] ? JSON.parse(cookies[cookie_name], symbolize_names: true) : defaults # TODO handle bad cookie

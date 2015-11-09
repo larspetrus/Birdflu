@@ -103,12 +103,4 @@ RSpec.describe Cube, :type => :model do
     cube.do(Move::F)
     expect(cube.f2l_state_string).to eq('aceADpL-ikh----nH---')
   end
-
-  it 'iuh' do
-    cube = Cube.new
-    5.times do |i|
-      puts cube.state_string
-      cube.do(Move::U)
-    end
-  end
 end
