@@ -4,7 +4,12 @@ class PosSubsets
     ss = {} # ss = Selected Sets to show on page
     PositionsController::POSITION_FILTERS.each do |f|
       if params[f]
-        ss[f] = (params[f] == 'random') ? self.random_code(f, params) : params[f]
+        ss[f] = if params[f] == 'random'
+                  ss[:_reload] = true
+                  self.random_code(f, params)
+                else
+                  params[f]
+                end
       end
     end
 

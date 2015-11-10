@@ -4,6 +4,8 @@ class PositionsController < ApplicationController
 
   def index
     @filters = PosSubsets.compute_filters(params)
+    return redirect_to "/?" + POSITION_FILTERS.map{|k| "#{k}=#{@filters[k]}"}.join('&') if @filters[:_reload]
+
     @single_position = @filters[:cop].present? && @filters[:eo].present? && @filters[:ep].present?
 
     format_params = store_parameters(:format, {list_type: 'positions', lines: 25, sortby: 'speed'})
