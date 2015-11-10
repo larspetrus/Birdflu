@@ -1,22 +1,18 @@
 class PositionsController < ApplicationController
 
-  POSITION_FILTERS = [:cop, :oll, :co, :cp, :eo, :ep]
-
   def index
     @filters = PosSubsets.compute_filters(params)
-    return redirect_to "/?" + POSITION_FILTERS.map{|k| "#{k}=#{@filters[k]}"}.join('&') if @filters[:_reload]
+    return redirect_to "/?" + Fields::FILTER_NAMES.map{|k| "#{k}=#{@filters[k]}"}.join('&') if @filters[:_reload]
 
     @single_position = @filters[:cop].present? && @filters[:eo].present? && @filters[:ep].present?
 
-    format_params = store_parameters(:format, {list_type: 'positions', lines: 25, sortby: 'speed'})
+    format_params = store_parameters(:format, Fields.defaults(Fields::FORMATS))
     @format = OpenStruct.new(
-        list_type: format_params[:list_type],
-        lines:     format_params[:lines].to_i,
-        sortby:    format_params[:sortby],
-        algs:      format_params[:list_type] == 'algs',
+        list:   Fields::LIST.value(format_params),
+        lines:  Fields::LINES.value(format_params),
+        sortby: Fields::SORTBY.value(format_params),
     )
-
-    @list_algs =  @format.algs || @single_position
+    @list_algs =  @format.list == 'algs' || @single_position
 
     includes = @list_algs ? :stats : [:stats, :best_alg]
     @positions = Position.where(@filters.select{|k,v| v.present?}).order(:optimal_alg_length).includes(includes).to_a
@@ -25,15 +21,15 @@ class PositionsController < ApplicationController
     @stats = stats_for_view(@single_position)
 
     @selected_icons = {}
-    POSITION_FILTERS.each{ |f| @selected_icons[f] = Icons::Base.by_code(f, @filters[f]) }
+    Fields::FILTER_NAMES.each{ |f| @selected_icons[f] = Icons::Base.by_code(f, @filters[f]) }
 
     @icon_grids = {}
-    POSITION_FILTERS.each{ |f| @icon_grids[f] = Icons::Base.class_by(f)::grid  unless f == :ep }
+    Fields::FILTER_NAMES.each{ |f| @icon_grids[f] = Icons::Base.class_by(f)::grid  unless f == :ep }
     @icon_grids[:ep] = Icons::Ep.grid_for(@filters[:cp])
 
     @list_items =
         @list_algs ?
-          RawAlg.where(position_id: @positions.map(&:id)).includes(:position).order(@format.sortby).limit(@format.lines) :
+          RawAlg.where(position_id: @positions.map(&:id)).includes(:position).order(@format.sortby).limit(@format.lines.to_i) :
           @positions.first(100)
 
     @svg_ids = Set.new
@@ -87,7 +83,7 @@ class PositionsController < ApplicationController
 
   def show
     pos = Position.by_ll_code(params[:id]) || Position.find_by_id(params[:id]) || RawAlg.find_by_alg_id(params[:id]).position # Try LL code, DB id or alg name
-    redirect_to "/?" + POSITION_FILTERS.map{|k| "#{k}=#{pos[k]}"}.join('&')
+    redirect_to "/?" + Fields::FILTER_NAMES.map{|k| "#{k}=#{pos[k]}"}.join('&')
   end
 
   def find_by_alg

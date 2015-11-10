@@ -2,7 +2,7 @@ class PosSubsets
 
   def self.compute_filters(params)
     ss = {} # ss = Selected Sets to show on page
-    PositionsController::POSITION_FILTERS.each do |f|
+    Fields::FILTER_NAMES.each do |f|
       if params[f]
         ss[f] = if params[f] == 'random'
                   ss[:_reload] = true

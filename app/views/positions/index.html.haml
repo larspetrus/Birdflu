@@ -42,29 +42,29 @@
 
 
 =form_tag url_for(controller: "positions", action: "index"), method: 'get', id: 'main-form' do
-  - PositionsController::POSITION_FILTERS.each do |f|
+  - Fields::FILTER_NAMES.each do |f|
     =hidden_field_tag(f, @filters[f])
   =hidden_field_tag(:clicked, 'none')
 
   - unless @single_position
     .center.page-format-header
       Show as
-      =select_tag("list_type", options_for_select(['positions', 'algs'], selected: @format.list_type))
+      =Fields::LIST.as_tag(@format)
   - else
     .singlepos-format-header Showing algs for single selected position.
 
   - if @list_algs
     .center.algs-list-header
       Show first
-      =select_tag("lines", options_for_select([25, 50, 100, 200, 500], selected: @format.lines))
+      =Fields::LINES.as_tag(@format)
       algs
 
       .right
         Sort by
-        =select_tag("sortby", options_for_select(['speed', ['moves', 'length']], selected: @format.sortby))
+        =Fields::SORTBY.as_tag(@format)
 
 - flags = @list_algs ? -> (alg) do {shortest: alg.length == @stats.data.shortest, fastest: alg.speed == @stats.data.fastest} end : -> (pos) do {} end
-%table{class: "#{@format.list_type}-list"}
+%table{class: "#{Fields::LIST.value(@format)}-list"}
   - @columns.each do |column|
     %th= column.header
   - @list_items.each do |item|
@@ -86,7 +86,7 @@
     $('form#main-form').submit();
   });
 
-  $('#list_type#lines, #sortby').change(function() {
+  $("#{Fields::FORMATS.map{|f| f.as_css_id}.join(', ')}").change(function() {
     $('form#main-form').submit();
   });
 
