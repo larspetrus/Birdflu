@@ -38,7 +38,7 @@ class Icons::Oll < Icons::Base
   end
 
   ALL = [
-    self.new(:'',  'NONE',   []),
+    self.new(:'',  '-',   []),
     self.new(:m0,  'PLL',    %w(U U U U U U U U)),
     self.new(:m1,  'OLL 1',  %w(L B R L R L F R)),
     self.new(:m2,  'OLL 2',  %w(L B B L R L F F)),

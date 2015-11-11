@@ -52,6 +52,7 @@
       =Fields::LIST.as_tag(@format)
   - else
     .singlepos-format-header Showing algs for single selected position.
+    =hidden_field_tag(Fields::LIST.name, Fields::LIST.value(@format))
 
   - if @list_algs
     .center.algs-list-header
@@ -64,7 +65,7 @@
         =Fields::SORTBY.as_tag(@format)
 
 - flags = @list_algs ? -> (alg) do {shortest: alg.length == @stats.data.shortest, fastest: alg.speed == @stats.data.fastest} end : -> (pos) do {} end
-%table{class: "#{Fields::LIST.value(@format)}-list"}
+%table{class: @list_algs ? 'algs-list' : 'positions-list'}
   - @columns.each do |column|
     %th= column.header
   - @list_items.each do |item|

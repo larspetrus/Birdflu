@@ -146,6 +146,9 @@ $optimal_color: #69f;
     }
   }
 }
+.selected {
+  .name { background-color: #aff; }
+}
 .big-icon svg {
   border: dotted 4px;
   padding: 8px;
@@ -164,12 +167,6 @@ $optimal_color: #69f;
     stroke: black;
     stroke-width: 0.2;
   }
-}
-$selected: #aff;
-
-
-.selected {
-  .name { background-color: $selected; }
 }
 
 svg {
@@ -194,10 +191,6 @@ svg {
   .white { fill: white; }
 }
 
-
-.selected th {
-  background-color: $selected;
-}
 
 #pickers {
   td { padding: 0 2px; }

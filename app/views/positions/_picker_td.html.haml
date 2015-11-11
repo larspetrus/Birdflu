@@ -1,10 +1,11 @@
 - field = "##{prop}"
 - add_class ||= ""
 - ubl_text ||= false
+- icon = @selected_icons[prop]
 
 - icon_size = 45
 %td
-  %div{class: "selected-icon", data: {prop: prop}}= render 'svg_cube', icon: @selected_icons[prop], size: icon_size, add_class: 'selected'
+  %div{class: "selected-icon", data: {prop: prop}}= render 'svg_cube', icon: icon, size: icon_size, add_class: icon.is_none ? '' : 'selected'
   %div{id: "#{prop}-picker", class: 'hidden-picker'}
     .picker_buttons
       %a{class: "random knapp knapp-enabled", data: {field: field, code: 'random'}} Random
