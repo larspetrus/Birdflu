@@ -2,7 +2,7 @@
 # change. It could live in memory instead of (or in addition to) the DB, and maybe that's a future feature.
 class Position < ActiveRecord::Base
   has_many :combo_algs, -> { order "length, moves, base_alg2_id DESC" }
-  has_many :raw_algs, -> { order "length, b_alg" }
+  has_many :raw_algs, -> { order "alg_id" }
 
   belongs_to :best_alg, class_name: 'RawAlg'
   belongs_to :best_combo_alg, class_name: 'ComboAlg'

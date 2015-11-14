@@ -3,15 +3,11 @@ require 'rails_helper'
 describe BigThought do
 
   describe 'combine' do
-    let (:root1) { {b_alg: "B' R2 F R F' R B",  alg_id: 'G7', length: 7} }
-    let (:root2) { {b_alg: "B L U L' U' B'",    alg_id: 'F1', length: 6} }
-    let (:root3) { {b_alg: "B U' F' U B' U' F", alg_id: 'G4', length: 7} }
+    let (:alg1) { RawAlg.make("B' R2 F R F' R B",  'G7', 7) }
+    let (:alg2) { RawAlg.make("B L U L' U' B'",    'F1', 6) }
+    let (:alg3) { RawAlg.make("B U' F' U B' U' F", 'G4', 7) }
 
     it "populates incrementally" do
-      alg1 = RawAlg.create(root1)
-      alg2 = RawAlg.create(root2)
-      alg3 = RawAlg.create(root3)
-
       expect(counts(alg1.id)).to eq(base_alg1: 0, base_alg2: 0, total: 0)
 
       BigThought.combine(alg1)
@@ -28,17 +24,16 @@ describe BigThought do
     end
 
     it 'keeps track of what algs are combined' do
-      alg = RawAlg.create(root1)
-      expect(alg.combined).to eq(false)
-      BigThought.combine(alg)
-      expect(alg.combined).to eq(true)
+      expect(alg1.combined).to eq(false)
+      BigThought.combine(alg1)
+      expect(alg1.combined).to eq(true)
     end
 
     it 'removes cancellations' do
-      BigThought.combine(alg1 = RawAlg.create(root1))
-      BigThought.combine(alg2 = RawAlg.create({b_alg: "B' R' F R' F' R2 B",  alg_id: 'Reverse G7', length: 7}))
+      BigThought.combine(alg1)
+      BigThought.combine(alg9 = RawAlg.make("B' R' F R' F' R2 B",  'Reverse G7', 7))
       expect(counts(alg1.id)).to eq(base_alg1: 7, base_alg2: 7, total: 14)
-      expect(counts(alg2.id)).to eq(base_alg1: 7, base_alg2: 7, total: 14)
+      expect(counts(alg9.id)).to eq(base_alg1: 7, base_alg2: 7, total: 14)
     end
 
     def counts(base_id)

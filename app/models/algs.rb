@@ -59,22 +59,22 @@ module Algs
   end
 
   GENS = {
-      "BU" => '2gen',
+      "BU" => '2gen', # FU
 
-      "BFU"=> '3genOpp',
-      "BFR"=> '3genOpp',
-      "BFL"=> '3genOpp',
-      "BLR"=> '3genOpp',
-      "BDU"=> '3genOpp',
-      "BDF"=> '3genOpp',
+      "BFU"=> '3genOpp', # FUB
+      "BFR"=> '3genOpp', # LRF
+      "BFL"=> '3genOpp', # LRF
+      "BLR"=> '3genOpp', # LRF
+      "BDU"=> '3genOpp', # FUB
+      "BDF"=> '3genOpp', # FDB
 
-      "BLU"=> '3genAdj',
-      "BRU"=> '3genAdj',
-      "BDL"=> '3genAdj',
-      "BDR"=> '3genAdj',
+      "BLU"=> '3genAdj', # FUR
+      "BRU"=> '3genAdj', # FUR
+      "BDL"=> '3genAdj', # FDR
+      "BDR"=> '3genAdj', # FDR
   }
-  def self.specialness(b_alg)
-    GENS[Algs.sides(b_alg)]
+  def self.specialness(alg)
+    GENS[Algs.sides(Algs.as_variant_b(alg))]
   end
 
   def self.speed_score(alg)
@@ -104,6 +104,14 @@ module Algs
         1.upto(3) { |turns| result[Move.name_from(side, turns)] = Move.name_from(opposite_side, 4-turns) }
       end
     end
+  end
+
+  def self.variant(alg)
+    alg.gsub(/[ '2DU]/, '').first
+  end
+
+  def self.as_variant_b(alg)
+    self.rotate_by_U(alg, 'BLFR'.index(self.variant(alg)))
   end
 
 end

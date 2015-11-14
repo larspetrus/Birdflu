@@ -1,7 +1,7 @@
 task import_raw_algs: :environment do
 
-  RawAlg.create(b_alg: "", alg_id: 'Nothing', length: 0) # Debatable entry, but I want it in the DB
 
+  RawAlg.make("", 'Nothing', 0) # Debatable entry, but I want it in the DB
   t1 = Time.now
   alg_count = 0
   length = nil
@@ -24,7 +24,7 @@ task import_raw_algs: :environment do
 
         rotated_dupe = Algs.rotate_by_U(b_alg, 2)
         unless seen_algs.include? rotated_dupe
-          RawAlg.create(b_alg: b_alg, alg_id: code, length: length)
+          RawAlg.make(b_alg, code, length)
           seen_algs << b_alg
         end
 
@@ -37,8 +37,8 @@ task import_raw_algs: :environment do
   end
 
   # Optimal solutions for the only positions that need 16 moves
-  RawAlg.create(b_alg: "B L2 F' L' F U2 F' L F L2 U' B' U R' U2 R", alg_id: 'X1', length: 16)
-  RawAlg.create(b_alg: "B' R2 F R F' U2 F R' F' R2 U B U' L U2 L'", alg_id: 'X2', length: 16)
+  RawAlg.make("B L2 F' L' F U2 F' L F L2 U' B' U R' U2 R", 'X1', 16)
+  RawAlg.make("B' R2 F R F' U2 F R' F' R2 U B U' L U2 L'", 'X2', 16)
 
   puts "Done. #{alg_count} algs total. Took #{'%.2f' % (Time.now - t1)}"
 

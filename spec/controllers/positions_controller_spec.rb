@@ -9,7 +9,7 @@ RSpec.describe PositionsController do
     end
 
     it "finds the ll_code by alg name" do
-      RawAlg.create(b_alg: "B D U' F U L F' D' B' U' L'", alg_id: 'H25', length: 8)
+      RawAlg.make("B D U' F U L F' D' B' U' L'", 'H25', 8)
 
       xhr :post, :find_by_alg, alg: "H25", format: :json
       expect(response.code).to eq("200")

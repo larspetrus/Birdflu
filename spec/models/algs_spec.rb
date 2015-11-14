@@ -50,4 +50,27 @@ RSpec.describe Algs do
     expect(Algs.sides("F U' B' U F' U' B")).to eq('BFU')
   end
 
+  it 'specialness' do
+    expect(Algs.specialness("B' U' B U' R U' B' U' B U2 R' U R U2 R'")).to eq('3genAdj')
+    expect(Algs.specialness("R B R' F R B' R' F'")).to eq('3genOpp')
+    expect(Algs.specialness("F U F' U F U2 F'")).to eq('2gen')
+    expect(Algs.specialness("L' B' R' U R U2 B U L")).to eq(nil)
+  end
+
+  it 'speed_score is symmetrical' do
+    b, r, f, l = "B L F U' F' U L' B'", "R B L U' L' U B' R'", "F R B U' B' U R' F'", "L F R U' R' U F' L'"
+
+    expect(Algs.speed_score(b)).to eq(Algs.speed_score(r))
+    expect(Algs.speed_score(b)).to eq(Algs.speed_score(f))
+    expect(Algs.speed_score(b)).to eq(Algs.speed_score(l))
+  end
+
+  it 'as_b_alg' do
+    expect(Algs.as_variant_b("L' B2 R B R' B L")).to eq("B' R2 F R F' R B")
+    expect(Algs.as_variant_b("F' L' U' L U L2 D' L' D L' F2 U' F'")).to eq("B' R' U' R U R2 D' R' D R' B2 U' B'")
+    expect(Algs.as_variant_b("R B U B' U' R'")).to eq("B L U L' U' B'")
+    expect(Algs.as_variant_b("B L U L' U' B'")).to eq("B L U L' U' B'")
+    expect(Algs.as_variant_b("D' F B2")).to eq("D' B F2")
+  end
+
 end

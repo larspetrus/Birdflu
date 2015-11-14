@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151030221358) do
+ActiveRecord::Schema.define(version: 20151114220332) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -76,12 +76,7 @@ ActiveRecord::Schema.define(version: 20151030221358) do
     t.string  "alg_id"
     t.integer "length"
     t.integer "position_id"
-    t.string  "b_alg"
-    t.string  "r_alg"
-    t.string  "f_alg"
-    t.string  "l_alg"
     t.integer "mirror_id"
-    t.string  "display_alg"
     t.integer "u_setup"
     t.boolean "combined",    default: false
     t.string  "specialness"
@@ -90,7 +85,6 @@ ActiveRecord::Schema.define(version: 20151030221358) do
   end
 
   add_index "raw_algs", ["alg_id"], name: "index_raw_algs_on_alg_id", using: :btree
-  add_index "raw_algs", ["b_alg"], name: "index_raw_algs_on_b_alg", using: :btree
   add_index "raw_algs", ["length"], name: "index_raw_algs_on_length", using: :btree
   add_index "raw_algs", ["position_id", "length"], name: "index_raw_algs_on_position_id_and_length", using: :btree
   add_index "raw_algs", ["position_id", "speed"], name: "index_raw_algs_on_position_id_and_speed", using: :btree

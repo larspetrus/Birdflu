@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe ComboAlg, :type => :model do
-  let(:sune) { RawAlg.create(b_alg: "F U F' U F U2 F'",   alg_id: 'Sune') }
+  let(:sune) { RawAlg.make("F U F' U F U2 F'", 'Sune') }
 
   it 'verifies F2L is preserved' do
     expect {ComboAlg.create(name: "Not a LL alg!", moves: "F U D")}.to raise_error( RuntimeError, "Alg does not solve F2L" )
@@ -13,7 +13,7 @@ RSpec.describe ComboAlg, :type => :model do
 
   describe "#make" do
     it 'combines the algs' do
-      sune2 = RawAlg.create(b_alg: "F' U' F U' F' U2 F", alg_id: 'SuneM')
+      sune2 = RawAlg.make("F' U' F U' F' U2 F", 'SuneM')
 
       combo = ComboAlg.make(sune, sune2, 0)
 
@@ -29,13 +29,13 @@ RSpec.describe ComboAlg, :type => :model do
     end
 
     it "aligns with the LL_CODE" do
-      combo1 = ComboAlg.make(RawAlg.create(b_alg: "L' U' L U L F' L' F", alg_id: 'Mid'), RawAlg.create(b_alg: "R U' L' U R' U' L", alg_id: 'Nik'))
+      combo1 = ComboAlg.make(RawAlg.make("L' U' L U L F' L' F", 'Mid'), RawAlg.make("R U' L' U R' U' L", 'Nik'), 2)
       expect(combo1.position.ll_code).to eq("a1b4a3c6")
       expect(combo1.moves).to eq("F' U' F U F R' F' R B U' F' U B' U' F")
       expect(combo1.u_setup).to eq(3)
       expect(combo1.is_aligned_with_ll_code).to eq(true)
 
-      combo2 = ComboAlg.make(RawAlg.create(b_alg: "R B' R' F R B R' F'", alg_id: 'Evl'), RawAlg.create(b_alg: "R' F' U' F U R", alg_id: 'Sho'))
+      combo2 = ComboAlg.make(RawAlg.make("R B' R' F R B R' F'", 'Evl'), RawAlg.make("R' F' U' F U R", 'Sho'))
       expect(combo2.position.ll_code).to eq("b2f1q4c7")
       expect(combo2.moves).to eq("B L' B' R B L B' R' B' R' U' R U B")
       expect(combo2.u_setup).to eq(1)
@@ -43,7 +43,7 @@ RSpec.describe ComboAlg, :type => :model do
     end
 
     it "doesn't combine with empty alg" do
-      none = RawAlg.create(b_alg: "", alg_id: 'Nothing', length: 0)
+      none = RawAlg.make("", 'Nothing', 0)
       expect{ComboAlg.make(sune, none, 0)}.to change{ComboAlg.count}.by 0
       expect{ComboAlg.make(none, sune, 0)}.to change{ComboAlg.count}.by 0
       expect{ComboAlg.make(sune, sune, 0)}.to change{ComboAlg.count}.by 1

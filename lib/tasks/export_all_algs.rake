@@ -4,7 +4,7 @@ task export_all_algs: :environment do
     f.puts "All unique LL algs up to 15 moves, written with a starting B move. Ordered by length and alphabetically by standard notation. By Lars Petrus 2015."
 
     RawAlg.order(:id).find_each do |alg|
-      f.puts [alg.id, alg.alg_id, alg.b_alg].join(',')
+      f.puts [alg.id, alg.alg_id, alg.variant(:B)].join(',')
       puts alg.id if alg.id % 50_000 == 1
     end
   end

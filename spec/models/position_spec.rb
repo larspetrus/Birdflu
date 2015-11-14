@@ -17,10 +17,10 @@ RSpec.describe Position, :type => :model do
   end
 
   it "has algs" do
-    null_alg = RawAlg.create(b_alg: '', alg_id: 'x')
-    ComboAlg.make( RawAlg.create(b_alg: "F U F' U F U2 F'", alg_id: 'a1'), null_alg, 0)
-    ComboAlg.make( RawAlg.create(b_alg: "F U2 F' U' F U' F'", alg_id: 'a2'), null_alg, 0)
-    ComboAlg.make( RawAlg.create(b_alg: "B U B' U B U2 B'", alg_id: 'a3'), null_alg, 0)
+    null_alg = double(algs: '', length: 88, alg_id: 'x', id: 99)
+    ComboAlg.make( RawAlg.make("F U F' U F U2 F'", 'a1'), null_alg, 0)
+    ComboAlg.make( RawAlg.make("F U2 F' U' F U' F'", 'a2'), null_alg, 0)
+    ComboAlg.make( RawAlg.make("B U B' U B U2 B'", 'a3'), null_alg, 0)
 
     expect(Position.find_by!(ll_code: "a1c3c3c5").combo_algs.map(&:name)).to contain_exactly("a1+x", "a3+x")
     expect(Position.find_by!(ll_code: "a1b5b7b7").combo_algs.map(&:name)).to contain_exactly("a2+x")
