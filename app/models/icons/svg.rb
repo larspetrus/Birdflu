@@ -102,7 +102,7 @@ class Icons::Svg
           raise ArgumentError.new("Unknown arrow place '#{place}'")
       end
 
-    type = ([:L, :R, :B, :F, :D].include?(place) ? 'corner' : 'edge')
+    type = ([:L, :R, :B, :F, :D].include?(place) ? 'cp' : 'ep')
     result.merge(class: type)
   end
 

@@ -154,10 +154,10 @@ $optimal_color: #69f;
   padding: 8px;
   margin: 10px;
   border-color: $b_color $r_color $f_color $l_color;
-  path.edge {
+  path.ep {
     fill-opacity: 0.7;
   }
-  path.corner {
+  path.cp {
     fill: #aaa;
     stroke: white;
     stroke-opacity: 0.8;
