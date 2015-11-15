@@ -59,22 +59,24 @@ module Algs
   end
 
   GENS = {
-      "BU" => '2gen', # FU
+      "BU" => 'FU',
 
-      "BFU"=> '3genOpp', # FUB
-      "BFR"=> '3genOpp', # LRF
-      "BFL"=> '3genOpp', # LRF
-      "BLR"=> '3genOpp', # LRF
-      "BDU"=> '3genOpp', # FUB
-      "BDF"=> '3genOpp', # FDB
-
-      "BLU"=> '3genAdj', # FUR
-      "BRU"=> '3genAdj', # FUR
-      "BDL"=> '3genAdj', # FDR
-      "BDR"=> '3genAdj', # FDR
   }
   def self.specialness(alg)
-    GENS[Algs.sides(Algs.as_variant_b(alg))]
+    b_sides = Algs.sides(Algs.as_variant_b(alg))
+    
+    case b_sides
+      when 'BU'                then 'FU'
+      when 'BFU'               then 'FUB'
+      when 'BFR', 'BFL', 'BLR' then 'LFR'
+      when 'BDU'               then 'UFD'
+      when 'BDF'               then 'FDB'
+      when 'BLU', 'BRU'        then 'RFU'
+      when 'BDL', 'BDR'        then 'RFD'
+      else
+        raise "Missed Gen code '#{b_sides}' for alg #{alg}" if b_sides.length == 3
+        nil
+    end
   end
 
   def self.speed_score(alg)
