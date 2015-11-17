@@ -5,9 +5,10 @@
 .svg-icon{data: { code: "#{icon.code}", field: "#{icon.field}" }, style: "width: #{size}px;", class: add_class}
   - if label.present?
     .name{style: "font-size: #{size*0.21}px;"}= label
-  - cache([icon.id, @svg_ids.include?(icon.id) ? "T" : "F"], skip_digest: true) do
+  - unrendered = @svg_ids.add?(icon.id)
+  - cache([icon.id, unrendered ? "T" : "F"], skip_digest: true) do
     %svg{viewBox: "0 0 #{Icons::Svg.box_size} #{Icons::Svg.box_size}"}
-      - if @svg_ids.add?(icon.id)
+      - if unrendered
         %g{id: icon.id}
           - Icons::Svg.rects_for(icon).each do |colored_sticker|
             %rect{colored_sticker}

@@ -1,4 +1,4 @@
-# Makes SVG icons
+# Makes SVG cube icons
 
 class Icons::Svg
   Point = Struct.new(:x, :y)
