@@ -15,7 +15,7 @@ RSpec.describe Fields, :type => :model do
     end
 
     it 'as_tag()' do
-      expect(size.as_tag(size:'XL')).to eq("<select id=\"size\" name=\"size\"><option value=\"S\">S</option>\n<option value=\"M\">M</option>\n<option value=\"L\">L</option>\n<option selected=\"selected\" value=\"XL\">XL</option></select>")
+      expect(size.as_tag(size:'XL')).to eq("<select name=\"size\" id=\"size\"><option value=\"S\">S</option>\n<option value=\"M\">M</option>\n<option value=\"L\">L</option>\n<option selected=\"selected\" value=\"XL\">XL</option></select>")
     end
 
     it 'as_css_id()' do

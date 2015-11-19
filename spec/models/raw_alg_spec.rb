@@ -14,7 +14,7 @@ describe RawAlg do
       expect(alg.position.ll_code).to eq('a5c8c8c1')
       expect(alg.u_setup).to eq(2)
       expect(alg.moves).to eq("R' F2 L F L' F R")
-      expect(alg.specialness).to eq("3genOpp")
+      expect(alg.specialness).to eq("LFR")
       expect(alg.speed).to eq(6.3)
 
       expect(alg.mirror_id).to eq(nil) # must run RawAlg.populate_mirror_id after loading algs
