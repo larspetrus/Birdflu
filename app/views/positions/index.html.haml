@@ -3,7 +3,7 @@
 
 %hr{style: 'clear:both;'}
 
-.left_side_stats
+.left_side_stats{class: @single_position ? '' : 'positions-stats'}
   %span#headline= @stats.headline
   %table
     - @stats.sections[0].each do |line|

@@ -74,7 +74,7 @@ $optimal_color: #69f;
   td:nth-last-child(3) { color: $optimal_color; text-align: right; }
   td:nth-last-child(1), th:nth-last-child(1), th:nth-last-child(2) { border-left: none; }
 }
-
+.positions-stats { background-color: #f0f8f0; }
 
 .rp-dialog {
   height:245px;
