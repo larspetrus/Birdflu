@@ -81,5 +81,6 @@ test:
 production:
   <<: *default
   database: algdb_production
-  username: algdb
+  username: postgres
+  host: localhost
   password: <%= ENV['algdb_DATABASE_PASSWORD'] %>
