@@ -35,9 +35,9 @@ class Cols
       td_tag(content, class: alg.css_kind)
     end
   )
-  COP = Cols.new('COP', nil, -> (alg) do {icon: Icons::Cop.for(as_pos(alg)), size: 25, label: ''} end)
-  EO  = Cols.new('EO',  nil, -> (alg) do {icon: Icons::Eo.for(as_pos(alg)),  size: 25, label: ''} end)
-  EP  = Cols.new('EP',  nil, -> (alg) do {icon: Icons::Ep.for(as_pos(alg)),  size: 25, label: ''} end)
+  COP = Cols.new('COP', nil, -> (alg) do {icon: Icons::Cop.for(as_pos(alg)), size: 22, label: ''} end)
+  EO  = Cols.new('EO',  nil, -> (alg) do {icon: Icons::Eo.for(as_pos(alg)),  size: 22, label: ''} end)
+  EP  = Cols.new('EP',  nil, -> (alg) do {icon: Icons::Ep.for(as_pos(alg)),  size: 22, label: ''} end)
 
   POSITION = Cols.new('Position',
     -> (aop, flags) do
