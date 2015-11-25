@@ -132,22 +132,3 @@
       mouse_is_inside_picker = ''
     }
   }, ".picker-dialog");
-
-  // --------- Show Roofpigs ---
-  var ROOFPIG_CONF_AD = "solved=U-| hover=3 | speed=600"
-
-  $(document).on('click', '.algs-list .show-pig', function(e) {
-    var td = $(event.target).parent()
-    var alg = td.prev().text()
-    var title = td.siblings().eq(2).text()
-
-    roofpig_dialog(title, alg, td.data("us"), td.parent())
-  });
-
-  $(document).on('click', '.positions-list .show-pig', function(e) {
-    var td = $(event.target).parent();
-    var alg = td.prev().text();
-    var title = td.siblings().eq(0).text() + ' shortest';
-
-    roofpig_dialog(title, alg, td.data("us"), td.parent())
-  });

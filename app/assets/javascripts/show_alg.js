@@ -1,3 +1,5 @@
+var ROOFPIG_CONF_AD = "solved=U-| hover=3 | speed=600";
+
 function roofpig_dialog(title, alg, u_setup, below_element) {
   CubeAnimation.create_in_dom('#show-alg', 'alg='+alg+'|base=AD|flags=showalg'+u_setup, "class='roofpig rp-dialog'");
   $('#show-alg').dialog({
@@ -15,3 +17,19 @@ function roofpig_dialog(title, alg, u_setup, below_element) {
     }
   });
 }
+
+$(document).on('click', '.algs-list .show-pig', function(e) {
+  var td = $(event.target).parent();
+  var alg = td.prev().text();
+  var title = td.siblings().eq(2).text();
+
+  roofpig_dialog(title, alg, td.data("us"), td.parent())
+});
+
+$(document).on('click', '.positions-list .show-pig', function(e) {
+  var td = $(event.target).parent();
+  var alg = td.prev().text();
+  var title = td.siblings().eq(0).text() + ' shortest';
+
+  roofpig_dialog(title, alg, td.data("us"), td.parent())
+});
