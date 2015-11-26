@@ -105,6 +105,14 @@ $optimal_color: #69f;
   input { background-color: #fc7; }
 }
 
+#about-link {
+  cursor: pointer;
+}
+
+#about-box {
+  display: none;
+  font-size: 11px;
+}
 // ------------ Position info
 .left_side_stats {
   position: absolute;

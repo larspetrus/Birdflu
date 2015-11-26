@@ -1,6 +1,9 @@
 .leftmenu= link_to 'Random Position', "positions/#{Position.random_id}"
 = render 'find_by_alg'
 
+.leftmenu{style: 'float: right;'}
+  #about-link About…
+
 %hr{style: 'clear:both;'}
 
 .left_side_stats{class: @single_position ? '' : 'positions-stats'}
@@ -78,6 +81,10 @@
           =column.td(item, flags.call(item))
 
 #show-alg{style: 'height:200px; width:200px;'}
+#about-box
+  %p This site aims to contain all knowledge of algorithms and positions for the last layer of Rubik's Cube, and present it in simple and useful ways. That will take a while.
+  %p For now is has all algs up to 15 moves (1.69 million), and some basic features. More to come.
+  %p Written by Lars Petrus 2015.
 
 :javascript
   $('.svg-icon, .random, .unselect').on('click', function() {
@@ -91,44 +98,3 @@
   $("#{Fields::FORMATS.map{|f| f.as_css_id}.join(', ')}").change(function() {
     $('form#main-form').submit();
   });
-
-  // --------- Open/Close picker dialogs ---
-  var mouse_is_inside_picker = '';
-
-  var picker_dialog_props = {
-    cop: opts({ width: '400px', title: 'Corner orientation & position (COP)'}),
-    oll: opts({ width: '404px', title: 'Corner and edge orientation (OLL)'}),
-    co:  opts({ width: '394px', title: 'Corner orientation (CO)'}),
-    cp:  opts({ width: '308px', title: 'Corner position (CP)'}),
-    eo:  opts({ width: '394px', title: 'Edge orientation (EO)'}),
-    ep:  opts({ width: '572px', title: 'Edge position (EP)'}),
-  };
-  function opts(specifics) {
-    var pos = { my: 'center top', at: 'center bottom', of: '#pickers' };
-    return $.extend(specifics, {resizable: false, modal: false, draggable: false, position: pos, dialogClass: "picker-dialog"});
-  };
-
-  $('.selected-icon').hover(
-    function(event){
-      var field = $(event.currentTarget).attr('data-prop');
-      var picker = $('#'+field+'-picker').dialog(picker_dialog_props[field]);
-      picker.parent().attr('data-dialog-field', field)
-    },
-    function(event){
-      var field = $(event.currentTarget).attr('data-prop');
-      setTimeout(function(){
-        if (mouse_is_inside_picker != field) { $('#'+field+'-picker').dialog('close'); }
-      }, 100);
-    }
-  );
-
-  $(document).on({
-    mouseenter: function(event) {
-      mouse_is_inside_picker = $(event.currentTarget).attr('data-dialog-field')
-    },
-    mouseleave: function(event) {
-      var field = $(event.currentTarget).attr('data-dialog-field')
-      $('#'+field+'-picker').dialog('close');
-      mouse_is_inside_picker = ''
-    }
-  }, ".picker-dialog");
