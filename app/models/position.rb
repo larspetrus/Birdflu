@@ -66,26 +66,6 @@ class Position < ActiveRecord::Base
     Position.by_ll_code(inverse_ll_code)
   end
 
-  def is_optimal(alg)
-    alg.length == optimal_alg_length
-  end
-
-  def cop_code
-    @ll_code_obj.cop_code
-  end
-
-  def eo_code
-    @ll_code_obj.eo_code
-  end
-
-  def ep_code
-    @ll_code_obj.ep_code
-  end
-
-  def oll_code
-    @ll_code_obj.oll_code
-  end
-
   def display_name
     cop + eo + ep
   end
@@ -102,10 +82,6 @@ class Position < ActiveRecord::Base
     combo_algs.first
   end
 
-  def co_code
-    LlCode.co_code(ll_code)
-  end
-
   def set_mirror_ll_code
     self.mirror_ll_code = @ll_code_obj.mirror
   end
@@ -115,14 +91,14 @@ class Position < ActiveRecord::Base
   end
 
   def set_cop_name
-    cop_name = COP_NAMES[cop_code]
+    cop_name = COP_NAMES[@ll_code_obj.cop_code]
     self.cop = cop_name
     self.co  = cop_name[0]
     self.cp  = cop_name[1]
   end
 
   def set_oll_name
-    self.oll = OLL_NAMES[oll_code]
+    self.oll = OLL_NAMES[@ll_code_obj.oll_code]
   end
 
   def set_eo_name
@@ -207,18 +183,6 @@ class Position < ActiveRecord::Base
       end
     end
     found_positions.each { |code, weight| Position.create(ll_code: code, weight: weight) }
-  end
-
-  def compare_codes
-    cube = Cube.new(ll_code)
-    new_code = cube.new_standard_ll_code
-
-    if new_code == ll_code
-      puts "Pos #{id} has the same code"
-    else
-      puts "Pos #{id}: old code: #{ll_code}  new code: #{new_code}.       Codes: #{cube.ll_codes}"
-    end
-    1
   end
 
   def self.sanity_check
