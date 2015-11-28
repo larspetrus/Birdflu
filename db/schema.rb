@@ -11,25 +11,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151114220332) do
+ActiveRecord::Schema.define(version: 20151128024516) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "combo_algs", force: true do |t|
-    t.string  "name"
-    t.string  "moves"
+  create_table "combo_algs", force: :cascade do |t|
+    t.string  "name",         limit: 255
+    t.string  "moves",        limit: 255
     t.integer "length"
     t.integer "position_id"
     t.integer "u_setup"
     t.integer "base_alg1_id"
     t.integer "base_alg2_id"
     t.integer "alg2_u_shift"
-    t.string  "mv_start"
-    t.string  "mv_cancel1"
-    t.string  "mv_merged"
-    t.string  "mv_cancel2"
-    t.string  "mv_end"
+    t.string  "mv_start",     limit: 255
+    t.string  "mv_cancel1",   limit: 255
+    t.string  "mv_merged",    limit: 255
+    t.string  "mv_cancel2",   limit: 255
+    t.string  "mv_end",       limit: 255
     t.float   "speed"
   end
 
@@ -41,29 +41,28 @@ ActiveRecord::Schema.define(version: 20151114220332) do
   add_index "combo_algs", ["position_id"], name: "index_combo_algs_on_position_id", using: :btree
   add_index "combo_algs", ["speed"], name: "index_combo_algs_on_speed", using: :btree
 
-  create_table "position_stats", force: true do |t|
+  create_table "position_stats", force: :cascade do |t|
     t.integer "position_id"
-    t.string  "marshaled_stats"
+    t.string  "marshaled_stats", limit: 255
   end
 
   add_index "position_stats", ["position_id"], name: "index_position_stats_on_position_id", using: :btree
 
-  create_table "positions", force: true do |t|
-    t.string  "ll_code"
+  create_table "positions", force: :cascade do |t|
+    t.string  "ll_code",            limit: 255
     t.integer "weight"
     t.integer "best_alg_id"
     t.integer "alg_count"
-    t.string  "mirror_ll_code"
-    t.string  "cop"
-    t.boolean "is_mirror"
-    t.string  "oll"
-    t.string  "eo"
-    t.string  "ep"
+    t.string  "cop",                limit: 255
+    t.string  "oll",                limit: 255
+    t.string  "eo",                 limit: 255
+    t.string  "ep",                 limit: 255
     t.integer "optimal_alg_length"
     t.integer "best_combo_alg_id"
-    t.string  "inverse_ll_code"
-    t.string  "co"
-    t.string  "cp"
+    t.string  "co",                 limit: 255
+    t.string  "cp",                 limit: 255
+    t.integer "mirror_id"
+    t.integer "inverse_id"
   end
 
   add_index "positions", ["cop"], name: "index_positions_on_cop", using: :btree
@@ -72,16 +71,16 @@ ActiveRecord::Schema.define(version: 20151114220332) do
   add_index "positions", ["ll_code"], name: "index_positions_on_ll_code", using: :btree
   add_index "positions", ["oll"], name: "index_positions_on_oll", using: :btree
 
-  create_table "raw_algs", force: true do |t|
-    t.string  "alg_id"
+  create_table "raw_algs", force: :cascade do |t|
+    t.string  "alg_id",      limit: 255
     t.integer "length"
     t.integer "position_id"
     t.integer "mirror_id"
     t.integer "u_setup"
-    t.boolean "combined",    default: false
-    t.string  "specialness"
+    t.boolean "combined",                default: false
+    t.string  "specialness", limit: 255
     t.float   "speed"
-    t.string  "moves"
+    t.string  "moves",       limit: 255
   end
 
   add_index "raw_algs", ["alg_id"], name: "index_raw_algs_on_alg_id", using: :btree

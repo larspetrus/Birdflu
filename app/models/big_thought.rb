@@ -36,12 +36,13 @@ class BigThought
 
   # Run once and for all when we have optimal RawAlgs for all positions
   def self.initialize_positions
-    puts "Initializing Position: best_alg_id, optimal_alg_length, inverse_ll_code"
+    puts "Initializing Position: best_alg_id, optimal_alg_length, inverse_id"
     timed_transaction do
       Position.find_each do |pos|
         optimal_alg = pos.raw_algs.first
         inverse_ll_code = Cube.new(Algs.reverse(optimal_alg.moves)).standard_ll_code
-        pos.update(best_alg_id: optimal_alg.id, optimal_alg_length: optimal_alg.length, inverse_ll_code: inverse_ll_code)
+        inverse_id = Position.find_by_ll_code(inverse_ll_code).id
+        pos.update(best_alg_id: optimal_alg.id, optimal_alg_length: optimal_alg.length, inverse_id: inverse_id)
       end
     end
   end

@@ -12,8 +12,6 @@ class Position < ActiveRecord::Base
   validates :ll_code, uniqueness: true
 
   before_create do
-    self.set_mirror_ll_code
-    self.set_is_mirror
     self.set_cop_name
     self.set_eo_name
     self.set_ep_name
@@ -32,7 +30,7 @@ class Position < ActiveRecord::Base
     Position.find_by(ll_code: ll_code)
   end
 
-  def as_roofpig_tweaks()
+  def as_roofpig_tweaks
     result = []
     4.times do |i|
       c_data = LL.corner_data(ll_code[i*2])
@@ -51,19 +49,19 @@ class Position < ActiveRecord::Base
   end
 
   def has_mirror
-    ll_code != mirror_ll_code
+    id != mirror_id
   end
 
   def mirror
-    Position.by_ll_code(mirror_ll_code)
+    Position.find(mirror_id)
   end
 
   def has_inverse
-    ll_code != inverse_ll_code
+    id != inverse_id
   end
 
   def inverse
-    Position.by_ll_code(inverse_ll_code)
+    Position.find(inverse_id)
   end
 
   def display_name
@@ -82,12 +80,8 @@ class Position < ActiveRecord::Base
     combo_algs.first
   end
 
-  def set_mirror_ll_code
-    self.mirror_ll_code = @ll_code_obj.mirror
-  end
-
-  def set_is_mirror
-    self.is_mirror = ll_code < mirror_ll_code    #completely arbitrary
+  def set_mirror_id
+    self.mirror_id = Position.find_by_ll_code(@ll_code_obj.mirror).id
   end
 
   def set_cop_name
@@ -183,6 +177,7 @@ class Position < ActiveRecord::Base
       end
     end
     found_positions.each { |code, weight| Position.create(ll_code: code, weight: weight) }
+    Position.update_each { |pos| pos.set_mirror_id }
   end
 
   def self.sanity_check
@@ -194,21 +189,13 @@ class Position < ActiveRecord::Base
       mirror_pos = pos.mirror
 
       # Do mirrors match?
-      if pos.ll_code != mirror_pos.mirror_ll_code || pos.mirror_ll_code != mirror_pos.ll_code
+      if pos.id != mirror_pos.mirror_id
         errors << "Unmatched mirrors: #{pos_id}"
       end
 
       # Do the corner looks match?
       if correct_CL_mirror[pos.cop] != mirror_pos.cop
         errors << "Unmatched corner looks '#{pos.cop}' <=> '#{mirror_pos.cop}': #{pos_id}"
-      end
-
-      # Is is_mirror consistent?
-      if pos.ll_code == pos.mirror_ll_code
-        errors << "Selfmirrored problem: #{pos_id}" if pos.is_mirror
-      else
-        errors << "Too many mirrors: #{pos_id}" if pos.is_mirror && mirror_pos.is_mirror
-        errors << "Too few mirrors: #{pos_id}" if !pos.is_mirror && !mirror_pos.is_mirror
       end
     end
 

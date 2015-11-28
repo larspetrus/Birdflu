@@ -69,8 +69,8 @@ class PositionsController < ApplicationController
     if single_pos
       result.headline = "Position #{single_pos.display_name}"
       result.link_section = [
-          single_pos.has_mirror  ? view_context.link_to("Mirror - #{single_pos.mirror.display_name}",  "positions/#{single_pos.mirror_ll_code}")  : "No mirror",
-          single_pos.has_inverse ? view_context.link_to("Inverse - #{single_pos.inverse.display_name}","positions/#{single_pos.inverse_ll_code}") : "No inverse",
+          single_pos.has_mirror  ? view_context.link_to("Mirror - #{single_pos.mirror.display_name}",  "positions/#{single_pos.mirror_id}")  : "No mirror",
+          single_pos.has_inverse ? view_context.link_to("Inverse - #{single_pos.inverse.display_name}","positions/#{single_pos.inverse_id}") : "No inverse",
       ]
     else
       result.headline = "#{data.position_count} positions"
@@ -82,7 +82,7 @@ class PositionsController < ApplicationController
   end
 
   def show
-    pos = Position.by_ll_code(params[:id]) || Position.find_by_id(params[:id]) || RawAlg.find_by_alg_id(params[:id]).position # Try LL code, DB id or alg name
+    pos = Position.find_by_id(params[:id]) || Position.by_ll_code(params[:id]) || RawAlg.find_by_alg_id(params[:id]).position # Try DB id LL code, or alg name
     redirect_to "/?" + Fields::FILTER_NAMES.map{|k| "#{k}=#{pos[k]}"}.join('&')
   end
 
