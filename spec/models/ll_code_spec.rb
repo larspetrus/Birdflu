@@ -18,8 +18,8 @@ RSpec.describe LlCode do
 
   it 'cop_code' do
     expect(LlCode.new('a8j1b2j3').cop_code).to eq(:ajbj)
-    expect(LlCode.new('b7f2g6k7').cop_code).to eq(:bcgp)
-    expect(LlCode.new('a2e5g8j7').cop_code).to eq(:acfo)
+    expect(LlCode.new('b7f2g6k7').cop_code).to eq(:bfgk)
+    expect(LlCode.new('a2e5g8j7').cop_code).to eq(:aegj)
   end
 
   it 'eo_code' do
@@ -35,7 +35,7 @@ RSpec.describe LlCode do
   end
 
   it '#official_sort' do
-    expect(LlCode.official_sort('a8j1b2j3')).to eq('abbbajbj8123')
-    expect(LlCode.official_sort('b7f2g6k7')).to eq('bbccbfgk7267')
+    expect(LlCode.official_sort('a8j1b2j3')).to eq('abbbajbj21218123')
+    expect(LlCode.official_sort('b7f2g6k7')).to eq('bbccbfgk12217267')
   end
 end

@@ -6,12 +6,10 @@ RSpec.describe Position, :type => :model do
   end
 
   it "ll_code uniqueness" do
-    expect(Position.create(ll_code: 'a1b1c1a1')).to be_valid
-    expect(Position.create(ll_code: 'a1b1c1a1')).not_to be_valid
+    expect(Position.create(ll_code: Position.find(1).ll_code)).not_to be_valid
  end
 
   it "#tweaks" do
-    expect(Position.create(ll_code: 'a1b1c1a1').as_roofpig_tweaks()).to eq('ULB:ULB UB:UB RUB:UBR UR:UR RFU:URF UF:UF UFL:UFL UL:UL')
     expect(Position.create(ll_code: 'a1c3c3c5').as_roofpig_tweaks()).to eq('ULB:ULB UB:UB BRU:UBR UF:UR RFU:URF UL:UF FLU:UFL UR:UL')
     expect(Position.create(ll_code: 'a3e6f1k4').as_roofpig_tweaks()).to eq('ULB:ULB UR:UB URF:UBR LU:UR LUF:URF UF:UF BRU:UFL BU:UL')
   end
@@ -29,13 +27,9 @@ RSpec.describe Position, :type => :model do
   it '#set_x_name' do
     messy = Position.create(ll_code: 'a4c5c1c4', cop: 'none')
 
-    messy.set_cop_name
+    messy.set_filter_names
     expect(messy.cop).to eq('Bo')
-
-    messy.set_eo_name
     expect(messy.eo).to eq('7')
-
-    messy.set_ep_name
     expect(messy.ep).to eq('I')
   end
 

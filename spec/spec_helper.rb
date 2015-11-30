@@ -17,7 +17,10 @@
 RSpec.configure do |config|
 
     config.before(:suite) do
-      # Position.delete_all # uncomment to regenerate
+      # -- uncomment to regenerate --
+      # Position.delete_all
+      # ActiveRecord::Base.connection.reset_pk_sequence!('positions')
+
       if Position.count == 0
         ActiveRecord::Base.transaction { Position.generate_all }
       end

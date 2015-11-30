@@ -9,17 +9,10 @@ class Position < ActiveRecord::Base
 
   has_one :stats, class_name: 'PositionStats'
 
-  validates :ll_code, uniqueness: true
+  validates :ll_code, uniqueness: true # TODO Validate that it's the standard ll_code?
 
   before_create do
-    self.set_cop_name
-    self.set_eo_name
-    self.set_ep_name
-    self.set_oll_name
-  end
-
-  after_initialize do
-    @ll_code_obj = LlCode.new(ll_code)
+    self.set_filter_names
   end
 
   def algs_in_set(alg_set = AlgSet.active)
@@ -81,26 +74,21 @@ class Position < ActiveRecord::Base
   end
 
   def set_mirror_id
-    self.mirror_id = Position.find_by_ll_code(@ll_code_obj.mirror).id
+    ll_code_obj = LlCode.new(ll_code)
+    self.mirror_id = Position.find_by_ll_code(ll_code_obj.mirror).id
   end
 
-  def set_cop_name
-    cop_name = COP_NAMES[@ll_code_obj.cop_code]
+  def set_filter_names
+    ll_code_obj = LlCode.new(ll_code)
+
+    cop_name = COP_NAMES[ll_code_obj.cop_code]
     self.cop = cop_name
     self.co  = cop_name[0]
     self.cp  = cop_name[1]
-  end
 
-  def set_oll_name
-    self.oll = OLL_NAMES[@ll_code_obj.oll_code]
-  end
-
-  def set_eo_name
-    self.eo = EO_NAMES[@ll_code_obj.eo_code]
-  end
-
-  def set_ep_name
-    self.ep = EP_NAMES[@ll_code_obj.ep_code]
+    self.oll = OLL_NAMES[ll_code_obj.oll_code]
+    self.eo  = EO_NAMES[ll_code_obj.eo_code]
+    self.ep  = EP_NAMES[ll_code_obj.ep_code]
   end
 
   def compute_stats
@@ -127,6 +115,8 @@ class Position < ActiveRecord::Base
   end
 
   def self.generate_all # All LL positions
+    puts "-- (RE)GENERATING POSITIONS --"
+
     corner_positioning_algs = [
       "",                                    # corners in place
       "R' F R' B2 R F' R' B2 R2",            # three cycle
@@ -247,6 +237,19 @@ class Position < ActiveRecord::Base
       bggj: 'Gb',
       bjck: 'Gd',
       bkbk: 'Fd',
+
+      aeei: 'Af',
+      aefk: 'Cl',
+      aegj: 'Dl',
+      aeoa: 'Af',
+      aioo: 'Af',
+      aipq: 'Cb',
+      aiqp: 'Db',
+      ajoq: 'Eb',
+      bfgk: 'Gl',
+      bgpc: 'Fl',
+      bjqq: 'Gb',
+      bkpq: 'Ff',
   }
 
 

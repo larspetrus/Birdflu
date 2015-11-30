@@ -29,10 +29,10 @@ class Icons::Oll < Icons::Base
             %i(m0  m27 m26 m24 m23 m25 m21 m22),
             %i( -  m13 m16 m33 m45 m39 m55 m52),
             %i(m57 m15 m14 m34 m46 m40 m56 m51),
-            %i( -  m7  m12 m32 m44 m36 m54 m49),
+            %i(m28 m7  m12 m32 m44 m36 m54 m49),
             %i( -  m10 m9  m30 m41 m37  -  m50),
             %i( -  m11 m8  m29 m42 m38  -  m47),
-            %i(m28 m5  m6  m31 m43 m35 m53 m48),
+            %i( -  m5  m6  m31 m43 m35 m53 m48),
             %i(m20 m3  m4  m19 m18 m17 m1  m2 ),
         ].map{|row| row.map{|id| self.by_code(id)}}
   end
@@ -94,7 +94,7 @@ class Icons::Oll < Icons::Base
     self.new(:m30, 'OLL 30', %w(U B U L U L U R)),
     self.new(:m41, 'OLL 41', %w(U B U L U F U F)),
     self.new(:m42, 'OLL 42', %w(U B U U R F U F)),
-    self.new(:m28, 'OLL 28', %w(U U U U R U F U)),
+    self.new(:m28, 'OLL 28', %w(U U U L U U F U)),
     self.new(:m57, 'OLL 57', %w(U B U U U U F U)),
     self.new(:m20, 'OLL 20', %w(U B U L R U F U)),
 ]
