@@ -90,4 +90,19 @@ class RawAlg < ActiveRecord::Base
     "#{alg_id}: #{moves}  (id: #{id})"
   end
 
+  def self.sanity_check
+    result = []
+    RawAlg.where('id > 1').find_each do |alg|
+      alg = RawAlg.find(start+i)
+      needed_variant = %w(B R F L)[-Cube.new(alg.variant(:B)).standard_ll_code_offset % 4]
+      moves = Algs.rotate_by_U(alg.variant(:B), 'BRFL'.index(needed_variant))
+      u_setup = Algs.u_setup(moves)
+
+      if alg.u_setup != u_setup || alg.moves != moves
+        result << ".moves and/or .u_setup is wrong: #{alg.id}: #{alg.moves} - #{alg.u_setup} Should be:!= #{moves} - #{u_setup})"
+      end
+    end
+    result
+  end
+
 end
