@@ -8,12 +8,25 @@
   - unrendered = @svg_ids.add?(icon.id)
   - cache([icon.id, unrendered ? "T" : "F"], skip_digest: true) do
     %svg{viewBox: "0 0 #{Icons::Svg.box_size} #{Icons::Svg.box_size}"}
+      - if icon.look_3d?
+        %defs
+          %linearGradient{id: "shade_L", x1: "0%", y1: "0%", x2: "100%", y2:"0%"}
+            %stop{offset:"0%"  , :'stop-color' =>"#bbb"}
+            %stop{offset:"100%", :'stop-color' =>"#555"}
+          %linearGradient{id: "shade_R", x1: "100%", y1: "0%", x2: "0%", y2:"0%"}
+            %stop{offset:"0%"  , :'stop-color' =>"#bbb"}
+            %stop{offset:"100%", :'stop-color' =>"#555"}
+          %linearGradient{id: "shade_B", x1: "0%", y1: "0%", x2: "0%", y2:"100%"}
+            %stop{offset:"0%"  , :'stop-color' =>"#bbb"}
+            %stop{offset:"100%", :'stop-color' =>"#555"}
+          %linearGradient{id: "shade_F", x1: "0%", y1: "100%", x2: "0%", y2:"0%"}
+            %stop{offset:"0%"  , :'stop-color' =>"#bbb"}
+            %stop{offset:"100%", :'stop-color' =>"#555"}
+
       - if unrendered
         %g{id: icon.id}
-          - Icons::Svg.rects_for(icon).each do |colored_sticker|
-            %rect{colored_sticker}
-          - icon.arrows.each do |place|
-            %path{Icons::Svg.arrow_on(place)}
+          - Icons::Svg.tags_for(icon).each do |colored_sticker|
+            = Svg::tag(colored_sticker)
       - else
         %use{'xlink:href' => "##{icon.id}"}
 

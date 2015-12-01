@@ -33,4 +33,8 @@ class Icons::Base
   def color_at(sticker_code)
     @colors[sticker_code]
   end
+
+  def look_3d?
+    false
+  end
 end

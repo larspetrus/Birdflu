@@ -103,4 +103,14 @@ RSpec.describe Cube, :type => :model do
     cube.do(Move::F)
     expect(cube.f2l_state_string).to eq('aceADpL-ikh----nH---')
   end
+
+  it 'color_css' do
+    cube = Cube.new
+    cube.do(Move::F)
+
+    expect(cube.color_css('U', nil)).to eq('u-color')
+    expect(cube.color_css('F', nil)).to eq('f-color')
+    expect(cube.color_css('ULB','U')).to eq('u-color')
+    expect(cube.color_css('UF', 'U')).to eq('l-color')
+  end
 end

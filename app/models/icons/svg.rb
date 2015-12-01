@@ -7,47 +7,102 @@ class Icons::Svg
     box_size = 100
     @@box_size = box_size
     cube_size = 80.0
-    cube_start = (box_size - cube_size)/2
-    cube_end = cube_start + cube_size
-    sticker_width = 23.5
-    sticker_gap = (cube_size - 3*sticker_width)/4
-    sticker_distance = sticker_width + sticker_gap
-    @@sticker_distance = sticker_distance
-    sticker_xy1 = cube_start+sticker_gap
-    sticker_xy2 = sticker_xy1+sticker_distance
-    sticker_xy3 = sticker_xy2+sticker_distance
+    cube_margin = (box_size - cube_size)/2
+    cube_end = cube_margin + cube_size
+    stk_width = 23.5
+    stk_gap = (cube_size - 3*stk_width)/4
+    stk_distance = stk_width + stk_gap
+    @@stk_distance = stk_distance
+    stk_z1 = cube_margin+stk_gap
+    stk_z2 = stk_z1+stk_distance
+    stk_z3 = stk_z2+stk_distance
 
-    @@cube_rect = {x:cube_start, y:cube_start, width:cube_size, height:cube_size, rx: 3}
+    @@cube_margin = cube_margin
+    
+    fw = 0.6*cube_margin
+    f0 = cube_margin - fw
 
-    @@dimensions = {
-      ULB_B: {x:sticker_xy1, y:0, width:sticker_width, height:cube_start},
-      UB_B:  {x:sticker_xy2, y:0, width:sticker_width, height:cube_start},
-      UBR_B: {x:sticker_xy3, y:0, width:sticker_width, height:cube_start},
+    def self.perspective(b1, b2, w, h, alt=0.0, side)
+      axis1 = [bend(b1, alt), bend(b1+w, alt), bend(b1+w, alt+h), bend(b1, alt+h)]
+      axis2 = [b2, b2, b2+h, b2+h, b2+h]
 
-      UBR_R: {x:cube_end, y:sticker_xy1, width:cube_start, height:sticker_width},
-      UR_R:  {x:cube_end, y:sticker_xy2, width:cube_start, height:sticker_width},
-      URF_R: {x:cube_end, y:sticker_xy3, width:cube_start, height:sticker_width},
+      if [:R, :L].include? side
+        axis1, axis2 = axis2.map{|i| 100-i}, axis1
+      end
+      if [:R, :B].include? side
+        axis1 = axis1.map{|i| 100-i}
+        axis2 = axis2.map{|i| 100-i}
+      end
+      { points: (0..3).map{|i| "#{axis1[i]},#{axis2[i]}" }.join(' ')}
+    end
 
-      UFL_F: {x:sticker_xy1, y:cube_end, width:sticker_width, height:cube_start},
-      UF_F:  {x:sticker_xy2, y:cube_end, width:sticker_width, height:cube_start},
-      URF_F: {x:sticker_xy3, y:cube_end, width:sticker_width, height:cube_start},
+    def self.bend(z, altitude)
+      f = 0.96 - 0.2*altitude/@@cube_margin
+      50 + (z - 50)*f
+    end
 
-      ULB_L: {x:0, y:sticker_xy1, width:cube_start, height:sticker_width},
-      UL_L:  {x:0, y:sticker_xy2, width:cube_start, height:sticker_width},
-      UFL_L: {x:0, y:sticker_xy3, width:cube_start, height:sticker_width},
+    @@cube_rect = {x:cube_margin, y:cube_margin, width:cube_size, height:cube_size, rx: 3}
+        d = stk_gap/10
+    @@shaded_sides = [
+        perspective(cube_margin, cube_end-d, cube_size, cube_margin+d, 0, :F).merge(fill: 'url(#shade_F)'),
+        perspective(cube_margin, cube_end-d, cube_size, cube_margin+d, 0, :R).merge(fill: 'url(#shade_R)'),
+        perspective(cube_margin, cube_end-d, cube_size, cube_margin+d, 0, :L).merge(fill: 'url(#shade_L)'),
+        perspective(cube_margin, cube_end-d, cube_size, cube_margin+d, 0, :B).merge(fill: 'url(#shade_B)'),
+    ]
 
-      ULB_U: {x:sticker_xy1, y:sticker_xy1, width:sticker_width, height:sticker_width, rx: 1},
-      UB_U:  {x:sticker_xy2, y:sticker_xy1, width:sticker_width, height:sticker_width, rx: 1},
-      UBR_U: {x:sticker_xy3, y:sticker_xy1, width:sticker_width, height:sticker_width, rx: 1},
+    @@u_stickers = {
+      ULB_U: {x:stk_z1, y:stk_z1, width:stk_width, height:stk_width, rx: 1},
+      UB_U:  {x:stk_z2, y:stk_z1, width:stk_width, height:stk_width, rx: 1},
+      UBR_U: {x:stk_z3, y:stk_z1, width:stk_width, height:stk_width, rx: 1},
 
-      UL_U:  {x:sticker_xy1, y:sticker_xy2, width:sticker_width, height:sticker_width, rx: 1},
-      U:     {x:sticker_xy2, y:sticker_xy2, width:sticker_width, height:sticker_width, rx: 1},
-      UR_U:  {x:sticker_xy3, y:sticker_xy2, width:sticker_width, height:sticker_width, rx: 1},
+      UL_U:  {x:stk_z1, y:stk_z2, width:stk_width, height:stk_width, rx: 1},
+      U:     {x:stk_z2, y:stk_z2, width:stk_width, height:stk_width, rx: 1},
+      UR_U:  {x:stk_z3, y:stk_z2, width:stk_width, height:stk_width, rx: 1},
 
-      UFL_U: {x:sticker_xy1, y:sticker_xy3, width:sticker_width, height:sticker_width, rx: 1},
-      UF_U:  {x:sticker_xy2, y:sticker_xy3, width:sticker_width, height:sticker_width, rx: 1},
-      URF_U: {x:sticker_xy3, y:sticker_xy3, width:sticker_width, height:sticker_width, rx: 1},
+      UFL_U: {x:stk_z1, y:stk_z3, width:stk_width, height:stk_width, rx: 1},
+      UF_U:  {x:stk_z2, y:stk_z3, width:stk_width, height:stk_width, rx: 1},
+      URF_U: {x:stk_z3, y:stk_z3, width:stk_width, height:stk_width, rx: 1},
     }
+    @@plain_side_stickers = {
+      ULB_B: {x:stk_z1, y:0, width:stk_width, height:cube_margin},
+      UB_B:  {x:stk_z2, y:0, width:stk_width, height:cube_margin},
+      UBR_B: {x:stk_z3, y:0, width:stk_width, height:cube_margin},
+
+      UBR_R: {x:cube_end, y:stk_z1, width:cube_margin, height:stk_width},
+      UR_R:  {x:cube_end, y:stk_z2, width:cube_margin, height:stk_width},
+      URF_R: {x:cube_end, y:stk_z3, width:cube_margin, height:stk_width},
+
+      UFL_F: {x:stk_z1, y:cube_end, width:stk_width, height:cube_margin},
+      UF_F:  {x:stk_z2, y:cube_end, width:stk_width, height:cube_margin},
+      URF_F: {x:stk_z3, y:cube_end, width:stk_width, height:cube_margin},
+
+      ULB_L: {x:0, y:stk_z1, width:cube_margin, height:stk_width},
+      UL_L:  {x:0, y:stk_z2, width:cube_margin, height:stk_width},
+      UFL_L: {x:0, y:stk_z3, width:cube_margin, height:stk_width},
+    }
+    @@fancy_side_stickers = {
+      UBR_B: perspective(stk_z1, cube_end,    stk_width, fw,  0, :B),
+      UB_B:  perspective(stk_z2, cube_end,    stk_width, fw,  0, :B),
+      ULB_B: perspective(stk_z3, cube_end,    stk_width, fw,  0, :B),
+      B:     perspective(stk_z2, cube_end+fw, stk_width, f0, fw, :B),
+
+      URF_R: perspective(stk_z1, cube_end,    stk_width, fw,  0, :R),
+      UR_R:  perspective(stk_z2, cube_end,    stk_width, fw,  0, :R),
+      UBR_R: perspective(stk_z3, cube_end,    stk_width, fw,  0, :R),
+      R:     perspective(stk_z2, cube_end+fw, stk_width, f0, fw, :R),
+
+      UFL_F: perspective(stk_z1, cube_end,    stk_width, fw,  0, :F),
+      UF_F:  perspective(stk_z2, cube_end,    stk_width, fw,  0, :F),
+      URF_F: perspective(stk_z3, cube_end,    stk_width, fw,  0, :F),
+      F:     perspective(stk_z2, cube_end+fw, stk_width, f0, fw, :F),
+
+      ULB_L: perspective(stk_z1, cube_end,    stk_width, fw,  0, :L),
+      UL_L:  perspective(stk_z2, cube_end,    stk_width, fw,  0, :L),
+      UFL_L: perspective(stk_z3, cube_end,    stk_width, fw,  0, :L),
+      L:     perspective(stk_z2, cube_end+fw, stk_width, f0, fw, :L),
+    }
+    @@icon_stickers  = @@u_stickers.merge(@@plain_side_stickers)
+    @@fancy_stickers = @@u_stickers.merge(@@fancy_side_stickers)
   end
   self.init_dimensions
 
@@ -55,17 +110,22 @@ class Icons::Svg
     @@box_size
   end
 
-  def self.rects_for(icon)
-    result = [@@cube_rect]
-    @@dimensions.keys.each do |sticker|
+  def self.tags_for(icon)
+    sticker_set = icon.look_3d? ? @@fancy_stickers : @@icon_stickers
+
+    result = icon.look_3d? ? @@shaded_sides + [@@cube_rect] : [@@cube_rect]
+    sticker_set.keys.each do |sticker|
       color = icon.color_at(sticker)
-      if sticker[-1] == 'U'
-        color ||= 'white'
-      end
+      color ||= 'white' if sticker[-1] == 'U'
       if color
-        result << {class: color}.merge!(@@dimensions[sticker]) #'shape-rendering'=>"crispEdges"
+        result << {class: color}.merge!(sticker_set[sticker])
       end
     end
+
+    icon.arrows.each do |place|
+      result << Icons::Svg.arrow_on(place)
+    end
+
     result
   end
 
@@ -80,7 +140,7 @@ class Icons::Svg
           end
 
           if [:L, :R, :B, :F].include? place
-            offset = ([:R, :F].include?(place) ? @@sticker_distance : -@@sticker_distance)
+            offset = ([:R, :F].include?(place) ? @@stk_distance : -@@stk_distance)
             transforms << "translate(#{offset}, 0)"
           end
           {d: long_double, transform: transforms.join(' ')}

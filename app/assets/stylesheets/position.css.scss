@@ -158,11 +158,6 @@ $optimal_color: #69f;
   .name { background-color: #aff; }
 }
 .big-icon svg {
-  border: dotted 4px;
-  padding: 8px;
-  margin: 10px;
-  border-color: $b_color $r_color $f_color $l_color;
-
   path.e_arrow {
     fill-opacity: 0.7;
   }
@@ -171,10 +166,6 @@ $optimal_color: #69f;
     stroke: white;
     stroke-opacity: 0.8;
     fill-opacity: 0.8;
-  }
-  .outline {
-    stroke: black;
-    stroke-width: 0.2;
   }
 }
 

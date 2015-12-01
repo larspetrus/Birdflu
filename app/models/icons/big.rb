@@ -9,7 +9,7 @@ class Icons::Big
 
   def color_at(sticker_code)
     piece, side = sticker_code.to_s.split('_')
-    @cube.css(piece, side)# if piece && side
+    @cube.color_css(piece, side)
   end
 
   def code
@@ -18,5 +18,10 @@ class Icons::Big
 
   def field
 
+  end
+
+
+  def look_3d?
+    true
   end
 end
