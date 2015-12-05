@@ -22,10 +22,6 @@ class Icons::Base
     class_by(form_field).by_code(code)
   end
 
-  def highlight(selected_name)
-    'selected' if (selected_name || '').to_sym == @code
-  end
-
   def set_colors(color_class, *stickers)
     stickers.each{|s| @colors[s] = color_class }
   end
@@ -34,7 +30,12 @@ class Icons::Base
     @colors[sticker_code]
   end
 
-  def look_3d?
+  def is_illustration?
     false
+  end
+
+  def css_classes(selected_name)
+    highlight = selected_name == @name && !@is_none
+    highlight ? 'ui-llicon selected' : 'ui-llicon'
   end
 end

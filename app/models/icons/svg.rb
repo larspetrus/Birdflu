@@ -111,9 +111,9 @@ class Icons::Svg
   end
 
   def self.tags_for(icon)
-    sticker_set = icon.look_3d? ? @@fancy_stickers : @@icon_stickers
+    sticker_set = icon.is_illustration? ? @@fancy_stickers : @@icon_stickers
 
-    result = icon.look_3d? ? @@shaded_sides + [@@cube_rect] : [@@cube_rect]
+    result = icon.is_illustration? ? @@shaded_sides + [@@cube_rect] : [@@cube_rect]
     sticker_set.keys.each do |sticker|
       color = icon.color_at(sticker)
       color ||= 'white' if sticker[-1] == 'U'

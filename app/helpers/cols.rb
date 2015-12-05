@@ -1,17 +1,17 @@
 # As a "view presenter" class, it makes sense to me to put this in the View helpers directory. DHH may disagree.
 
 class Cols
-  attr_reader :is_svg, :svg_locals, :header
+  attr_reader :is_svg, :svg_config, :header
 
-  def initialize(header, content, svg_locals = nil)
+  def initialize(header, content, svg_config = nil)
     @header = header
     @content = content
-    @is_svg = svg_locals.present?
-    @svg_locals = svg_locals
+    @is_svg = svg_config.present?
+    @svg_config = svg_config
   end
 
   def with_header(new_header)
-    Cols.new(new_header, @content, @svg_locals)
+    Cols.new(new_header, @content, @svg_config)
   end
 
   MOVES = Cols.new('Moves',

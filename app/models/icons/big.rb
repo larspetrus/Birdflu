@@ -20,8 +20,11 @@ class Icons::Big
 
   end
 
-
-  def look_3d?
+  def is_illustration?
     true
+  end
+
+  def css_classes(selected_name)
+    'illustration-llicon'
   end
 end

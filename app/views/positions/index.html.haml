@@ -42,7 +42,7 @@
 
 -if @single_position
   .right{style: "width: 180px; position: absolute; top:40px; right:0px;"}
-    = render 'svg_cube', icon: Icons::Big.new(@single_position), size: 160, label: '', add_class: 'big-icon'
+    = render 'cube_icon', icon: Icons::Big.new(@single_position), size: 160, label: '', add_class: 'illustration-llicon'
 
 
 =form_tag url_for(controller: "positions", action: "index"), method: 'get', id: 'main-form' do
@@ -76,7 +76,7 @@
     %tr
       - @columns.each do |column|
         - if column.is_svg
-          %td= render 'svg_cube', column.svg_locals.call(item)
+          %td= render 'cube_icon', column.svg_config.call(item)
         -else
           =column.td(item, flags.call(item))
 
@@ -87,7 +87,7 @@
   %p Written by Lars Petrus 2015.
 
 :javascript
-  $('.svg-icon, .random, .unselect').on('click', function() {
+  $('.ui-llicon, .random, .unselect').on('click', function() {
     var field = $(this).data('field');
 
     $(field).val($(this).data('code'));
