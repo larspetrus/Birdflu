@@ -8,7 +8,7 @@
     .name{style: "font-size: #{size*0.21}px;"}= label
   - unrendered = @svg_ids.add?(icon.id)
   - cache([icon.id, unrendered ? "T" : "F"], skip_digest: true) do
-    %svg{viewBox: "0 0 #{Icons::Svg.box_size} #{Icons::Svg.box_size}"}
+    %svg{Icons::Svg.box_dimension}
       - if icon.is_illustration?
         %defs
           %linearGradient{id: "shade_L", x1: "0%", y1: "0%", x2: "100%", y2:"0%"}
