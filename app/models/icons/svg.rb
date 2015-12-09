@@ -1,6 +1,6 @@
 # Makes SVG cube icons
 
-class Icons::Svg
+class Icons::Svg # TODO ::Geometry
   Point = Struct.new(:x, :y)
 
   VIEWBOX_SIZE = 100
@@ -17,53 +17,59 @@ class Icons::Svg
     stk_z2 = stk_z1+STK_DISTANCE
     stk_z3 = stk_z2+STK_DISTANCE
 
-
     fw = 0.6*MARGIN
     f0 = MARGIN - fw
 
     # The rectangle defined by the (x,y) point and w(idth) / h(eight) is "squeezed" into perspective by
     # narrowing the x values to the center, proportional to "altitude" from the cube edge.
-    def self.perspective(x, y, w, h, alt=0.0, side)
-      x_values = [far(x, alt), far(x+w, alt), far(x+w, alt+h), far(x, alt+h)]
+    def self.depth(side, x, y, w, h)
+      x_values = [far(x, y), far(x+w, y), far(x+w, y+h), far(x, y+h)]
       y_values = [y, y, y+h, y+h, y+h]
 
       if [:R, :L].include? side
-        x_values, y_values = y_values.map{|i| 100-i}, x_values
+        x_values, y_values = y_values.map{|i| VIEWBOX_SIZE-i}, x_values
       end
       if [:R, :B].include? side
-        x_values = x_values.map{|i| 100-i}
-        y_values = y_values.map{|i| 100-i}
+        x_values = x_values.map{|i| VIEWBOX_SIZE-i}
+        y_values = y_values.map{|i| VIEWBOX_SIZE-i}
       end
       { points: (0..3).map{|i| "#{x_values[i]},#{y_values[i]}" }.join(' ')}
     end
 
-    def self.far(z, altitude)
-      f = 0.96 - 0.2*altitude/MARGIN
-      50 + (z - 50)*f
+    def self.far(x, y)
+      adjust1, adjust2 = STK_GAP*0.4, 0.972   # line up with rounded corners
+      altitude = y - (MARGIN + CUBE_SIZE - adjust1)
+
+      f = adjust2 - 0.2*altitude/MARGIN
+      50 + (x - 50)*f
     end
 
-    @@cube_rect = {x:MARGIN, y:MARGIN, width:CUBE_SIZE, height:CUBE_SIZE, rx: 3}
+    @@cube_rect = {x: MARGIN, y: MARGIN, width: CUBE_SIZE, height: CUBE_SIZE, rx: 3}
 
     d = STK_GAP/10 # line up with rounded corners
     @@shaded_sides = [
-        perspective(MARGIN, cube_end-d, CUBE_SIZE, MARGIN+d, 0, :F).merge(fill: 'url(#shade_F)'),
-        perspective(MARGIN, cube_end-d, CUBE_SIZE, MARGIN+d, 0, :R).merge(fill: 'url(#shade_R)'),
-        perspective(MARGIN, cube_end-d, CUBE_SIZE, MARGIN+d, 0, :L).merge(fill: 'url(#shade_L)'),
-        perspective(MARGIN, cube_end-d, CUBE_SIZE, MARGIN+d, 0, :B).merge(fill: 'url(#shade_B)'),
+        depth(:F, MARGIN, cube_end-d, CUBE_SIZE, MARGIN+d).merge(fill: 'url(#shade_F)'),
+        depth(:R, MARGIN, cube_end-d, CUBE_SIZE, MARGIN+d).merge(fill: 'url(#shade_R)'),
+        depth(:L, MARGIN, cube_end-d, CUBE_SIZE, MARGIN+d).merge(fill: 'url(#shade_L)'),
+        depth(:B, MARGIN, cube_end-d, CUBE_SIZE, MARGIN+d).merge(fill: 'url(#shade_B)'),
     ]
 
+    def self.u_sticker(x, y)
+      {x:x, y:y, width:STK_SIZE, height:STK_SIZE, rx: 1}
+    end
+
     @@u_stickers = {
-      ULB_U: {x:stk_z1, y:stk_z1, width:STK_SIZE, height:STK_SIZE, rx: 1},
-      UB_U:  {x:stk_z2, y:stk_z1, width:STK_SIZE, height:STK_SIZE, rx: 1},
-      UBR_U: {x:stk_z3, y:stk_z1, width:STK_SIZE, height:STK_SIZE, rx: 1},
+      ULB_U: u_sticker(stk_z1, stk_z1),
+      UB_U:  u_sticker(stk_z2, stk_z1),
+      UBR_U: u_sticker(stk_z3, stk_z1),
 
-      UL_U:  {x:stk_z1, y:stk_z2, width:STK_SIZE, height:STK_SIZE, rx: 1},
-      U:     {x:stk_z2, y:stk_z2, width:STK_SIZE, height:STK_SIZE, rx: 1},
-      UR_U:  {x:stk_z3, y:stk_z2, width:STK_SIZE, height:STK_SIZE, rx: 1},
+      UL_U:  u_sticker(stk_z1, stk_z2),
+      U:     u_sticker(stk_z2, stk_z2),
+      UR_U:  u_sticker(stk_z3, stk_z2),
 
-      UFL_U: {x:stk_z1, y:stk_z3, width:STK_SIZE, height:STK_SIZE, rx: 1},
-      UF_U:  {x:stk_z2, y:stk_z3, width:STK_SIZE, height:STK_SIZE, rx: 1},
-      URF_U: {x:stk_z3, y:stk_z3, width:STK_SIZE, height:STK_SIZE, rx: 1},
+      UFL_U: u_sticker(stk_z1, stk_z3),
+      UF_U:  u_sticker(stk_z2, stk_z3),
+      URF_U: u_sticker(stk_z3, stk_z3),
     }
     @@plain_side_stickers = {
       ULB_B: {x:stk_z1, y:0, width:STK_SIZE, height:MARGIN},
@@ -83,25 +89,25 @@ class Icons::Svg
       UFL_L: {x:0, y:stk_z3, width:MARGIN, height:STK_SIZE},
     }
     @@fancy_side_stickers = {
-      UBR_B: perspective(stk_z1, cube_end,    STK_SIZE, fw,  0, :B),
-      UB_B:  perspective(stk_z2, cube_end,    STK_SIZE, fw,  0, :B),
-      ULB_B: perspective(stk_z3, cube_end,    STK_SIZE, fw,  0, :B),
-      B:     perspective(stk_z2, cube_end+fw, STK_SIZE, f0, fw, :B),
+      UBR_B: depth(:B, stk_z1, cube_end,    STK_SIZE, fw),
+      UB_B:  depth(:B, stk_z2, cube_end,    STK_SIZE, fw),
+      ULB_B: depth(:B, stk_z3, cube_end,    STK_SIZE, fw),
+      B:     depth(:B, stk_z2, cube_end+fw, STK_SIZE, f0),
 
-      URF_R: perspective(stk_z1, cube_end,    STK_SIZE, fw,  0, :R),
-      UR_R:  perspective(stk_z2, cube_end,    STK_SIZE, fw,  0, :R),
-      UBR_R: perspective(stk_z3, cube_end,    STK_SIZE, fw,  0, :R),
-      R:     perspective(stk_z2, cube_end+fw, STK_SIZE, f0, fw, :R),
+      URF_R: depth(:R, stk_z1, cube_end,    STK_SIZE, fw),
+      UR_R:  depth(:R, stk_z2, cube_end,    STK_SIZE, fw),
+      UBR_R: depth(:R, stk_z3, cube_end,    STK_SIZE, fw),
+      R:     depth(:R, stk_z2, cube_end+fw, STK_SIZE, f0),
 
-      UFL_F: perspective(stk_z1, cube_end,    STK_SIZE, fw,  0, :F),
-      UF_F:  perspective(stk_z2, cube_end,    STK_SIZE, fw,  0, :F),
-      URF_F: perspective(stk_z3, cube_end,    STK_SIZE, fw,  0, :F),
-      F:     perspective(stk_z2, cube_end+fw, STK_SIZE, f0, fw, :F),
+      UFL_F: depth(:F, stk_z1, cube_end,    STK_SIZE, fw),
+      UF_F:  depth(:F, stk_z2, cube_end,    STK_SIZE, fw),
+      URF_F: depth(:F, stk_z3, cube_end,    STK_SIZE, fw),
+      F:     depth(:F, stk_z2, cube_end+fw, STK_SIZE, f0),
 
-      ULB_L: perspective(stk_z1, cube_end,    STK_SIZE, fw,  0, :L),
-      UL_L:  perspective(stk_z2, cube_end,    STK_SIZE, fw,  0, :L),
-      UFL_L: perspective(stk_z3, cube_end,    STK_SIZE, fw,  0, :L),
-      L:     perspective(stk_z2, cube_end+fw, STK_SIZE, f0, fw, :L),
+      ULB_L: depth(:L, stk_z1, cube_end,    STK_SIZE, fw),
+      UL_L:  depth(:L, stk_z2, cube_end,    STK_SIZE, fw),
+      UFL_L: depth(:L, stk_z3, cube_end,    STK_SIZE, fw),
+      L:     depth(:L, stk_z2, cube_end+fw, STK_SIZE, f0),
     }
     @@icon_stickers  = @@u_stickers.merge(@@plain_side_stickers)
     @@fancy_stickers = @@u_stickers.merge(@@fancy_side_stickers)
