@@ -10,123 +10,124 @@ class Icons::Svg # TODO ::Geometry
   STK_GAP = (CUBE_SIZE - 3*STK_SIZE)/4
   STK_DISTANCE = STK_SIZE + STK_GAP
 
-  def self.init_dimensions
-    cube_end = MARGIN + CUBE_SIZE
+  CUBE_RECT = {x: MARGIN, y: MARGIN, width: CUBE_SIZE, height: CUBE_SIZE, rx: 3}
+  CUBE_END = MARGIN + CUBE_SIZE
 
-    stk_z1 = MARGIN+STK_GAP
-    stk_z2 = stk_z1+STK_DISTANCE
-    stk_z3 = stk_z2+STK_DISTANCE
+  STK_Z1 = MARGIN+STK_GAP
+  STK_Z2 = STK_Z1+STK_DISTANCE
+  STK_Z3 = STK_Z2+STK_DISTANCE
 
-    fw = 0.6*MARGIN
-    f0 = MARGIN - fw
+  FW = 0.6*MARGIN
+  F0 = MARGIN - FW
 
-    # The rectangle defined by the (x,y) point and w(idth) / h(eight) is "squeezed" into perspective by
-    # narrowing the x values to the center, proportional to "altitude" from the cube edge.
-    def self.depth(side, x, y, w, h)
-      x_values = [far(x, y), far(x+w, y), far(x+w, y+h), far(x, y+h)]
-      y_values = [y, y, y+h, y+h, y+h]
+  D = STK_GAP/10 # line up with rounded corners
 
-      if [:R, :L].include? side
-        x_values, y_values = y_values.map{|i| VIEWBOX_SIZE-i}, x_values
-      end
-      if [:R, :B].include? side
-        x_values = x_values.map{|i| VIEWBOX_SIZE-i}
-        y_values = y_values.map{|i| VIEWBOX_SIZE-i}
-      end
-      { points: (0..3).map{|i| "#{x_values[i]},#{y_values[i]}" }.join(' ')}
+  def self.depth(side, x, y, w, h)
+    x_values = [deep(x, y), deep(x+w, y), deep(x+w, y+h), deep(x, y+h)]
+    y_values = [y, y, y+h, y+h, y+h]
+
+    if [:R, :L].include? side
+      x_values, y_values = y_values.map{|i| VIEWBOX_SIZE-i}, x_values
     end
-
-    def self.far(x, y)
-      adjust1, adjust2 = STK_GAP*0.4, 0.972   # line up with rounded corners
-      altitude = y - (MARGIN + CUBE_SIZE - adjust1)
-
-      f = adjust2 - 0.2*altitude/MARGIN
-      50 + (x - 50)*f
+    if [:R, :B].include? side
+      x_values = x_values.map{|i| VIEWBOX_SIZE-i}
+      y_values = y_values.map{|i| VIEWBOX_SIZE-i}
     end
-
-    @@cube_rect = {x: MARGIN, y: MARGIN, width: CUBE_SIZE, height: CUBE_SIZE, rx: 3}
-
-    d = STK_GAP/10 # line up with rounded corners
-    @@shaded_sides = [
-        depth(:F, MARGIN, cube_end-d, CUBE_SIZE, MARGIN+d).merge(fill: 'url(#shade_F)'),
-        depth(:R, MARGIN, cube_end-d, CUBE_SIZE, MARGIN+d).merge(fill: 'url(#shade_R)'),
-        depth(:L, MARGIN, cube_end-d, CUBE_SIZE, MARGIN+d).merge(fill: 'url(#shade_L)'),
-        depth(:B, MARGIN, cube_end-d, CUBE_SIZE, MARGIN+d).merge(fill: 'url(#shade_B)'),
-    ]
-
-    def self.u_sticker(x, y)
-      {x:x, y:y, width:STK_SIZE, height:STK_SIZE, rx: 1}
-    end
-
-    @@u_stickers = {
-      ULB_U: u_sticker(stk_z1, stk_z1),
-      UB_U:  u_sticker(stk_z2, stk_z1),
-      UBR_U: u_sticker(stk_z3, stk_z1),
-
-      UL_U:  u_sticker(stk_z1, stk_z2),
-      U:     u_sticker(stk_z2, stk_z2),
-      UR_U:  u_sticker(stk_z3, stk_z2),
-
-      UFL_U: u_sticker(stk_z1, stk_z3),
-      UF_U:  u_sticker(stk_z2, stk_z3),
-      URF_U: u_sticker(stk_z3, stk_z3),
-    }
-    @@plain_side_stickers = {
-      ULB_B: {x:stk_z1, y:0, width:STK_SIZE, height:MARGIN},
-      UB_B:  {x:stk_z2, y:0, width:STK_SIZE, height:MARGIN},
-      UBR_B: {x:stk_z3, y:0, width:STK_SIZE, height:MARGIN},
-
-      UBR_R: {x:cube_end, y:stk_z1, width:MARGIN, height:STK_SIZE},
-      UR_R:  {x:cube_end, y:stk_z2, width:MARGIN, height:STK_SIZE},
-      URF_R: {x:cube_end, y:stk_z3, width:MARGIN, height:STK_SIZE},
-
-      UFL_F: {x:stk_z1, y:cube_end, width:STK_SIZE, height:MARGIN},
-      UF_F:  {x:stk_z2, y:cube_end, width:STK_SIZE, height:MARGIN},
-      URF_F: {x:stk_z3, y:cube_end, width:STK_SIZE, height:MARGIN},
-
-      ULB_L: {x:0, y:stk_z1, width:MARGIN, height:STK_SIZE},
-      UL_L:  {x:0, y:stk_z2, width:MARGIN, height:STK_SIZE},
-      UFL_L: {x:0, y:stk_z3, width:MARGIN, height:STK_SIZE},
-    }
-    @@fancy_side_stickers = {
-      UBR_B: depth(:B, stk_z1, cube_end,    STK_SIZE, fw),
-      UB_B:  depth(:B, stk_z2, cube_end,    STK_SIZE, fw),
-      ULB_B: depth(:B, stk_z3, cube_end,    STK_SIZE, fw),
-      B:     depth(:B, stk_z2, cube_end+fw, STK_SIZE, f0),
-
-      URF_R: depth(:R, stk_z1, cube_end,    STK_SIZE, fw),
-      UR_R:  depth(:R, stk_z2, cube_end,    STK_SIZE, fw),
-      UBR_R: depth(:R, stk_z3, cube_end,    STK_SIZE, fw),
-      R:     depth(:R, stk_z2, cube_end+fw, STK_SIZE, f0),
-
-      UFL_F: depth(:F, stk_z1, cube_end,    STK_SIZE, fw),
-      UF_F:  depth(:F, stk_z2, cube_end,    STK_SIZE, fw),
-      URF_F: depth(:F, stk_z3, cube_end,    STK_SIZE, fw),
-      F:     depth(:F, stk_z2, cube_end+fw, STK_SIZE, f0),
-
-      ULB_L: depth(:L, stk_z1, cube_end,    STK_SIZE, fw),
-      UL_L:  depth(:L, stk_z2, cube_end,    STK_SIZE, fw),
-      UFL_L: depth(:L, stk_z3, cube_end,    STK_SIZE, fw),
-      L:     depth(:L, stk_z2, cube_end+fw, STK_SIZE, f0),
-    }
-    @@icon_stickers  = @@u_stickers.merge(@@plain_side_stickers)
-    @@fancy_stickers = @@u_stickers.merge(@@fancy_side_stickers)
+    { points: (0..3).map{|i| "#{x_values[i]},#{y_values[i]}" }.join(' ')}
   end
-  self.init_dimensions
+
+  # The rectangle defined by the (x,y) point and w(idth) / h(eight) is "squeezed" into perspective by
+  # narrowing the x values to the center, proportional to "altitude" from the cube edge.
+  def self.deep(x, y)
+    adjust1, adjust2 = STK_GAP*0.4, 0.972   # line up with rounded corners
+    altitude = y - (MARGIN + CUBE_SIZE - adjust1)
+
+    f = adjust2 - 0.2*altitude/MARGIN
+    50 + (x - 50)*f
+  end
+
+  def self.u_sticker(x, y)
+    {x:x, y:y, width:STK_SIZE, height:STK_SIZE, rx: 1}
+  end
+
+
+
+  SHADED_SIDES = [
+      depth(:F, MARGIN, CUBE_END-D, CUBE_SIZE, MARGIN+D).merge(fill: 'url(#shade_F)'),
+      depth(:R, MARGIN, CUBE_END-D, CUBE_SIZE, MARGIN+D).merge(fill: 'url(#shade_R)'),
+      depth(:L, MARGIN, CUBE_END-D, CUBE_SIZE, MARGIN+D).merge(fill: 'url(#shade_L)'),
+      depth(:B, MARGIN, CUBE_END-D, CUBE_SIZE, MARGIN+D).merge(fill: 'url(#shade_B)'),
+  ]
+
+  U_STICKERS = {
+    ULB_U: u_sticker(STK_Z1, STK_Z1),
+    UB_U:  u_sticker(STK_Z2, STK_Z1),
+    UBR_U: u_sticker(STK_Z3, STK_Z1),
+
+    UL_U:  u_sticker(STK_Z1, STK_Z2),
+    U:     u_sticker(STK_Z2, STK_Z2),
+    UR_U:  u_sticker(STK_Z3, STK_Z2),
+
+    UFL_U: u_sticker(STK_Z1, STK_Z3),
+    UF_U:  u_sticker(STK_Z2, STK_Z3),
+    URF_U: u_sticker(STK_Z3, STK_Z3),
+  }
+
+  PLAIN_SIDE_STICKERS = {
+    ULB_B: {x:STK_Z1, y:0, width:STK_SIZE, height:MARGIN},
+    UB_B:  {x:STK_Z2, y:0, width:STK_SIZE, height:MARGIN},
+    UBR_B: {x:STK_Z3, y:0, width:STK_SIZE, height:MARGIN},
+
+    UBR_R: {x:CUBE_END, y:STK_Z1, width:MARGIN, height:STK_SIZE},
+    UR_R:  {x:CUBE_END, y:STK_Z2, width:MARGIN, height:STK_SIZE},
+    URF_R: {x:CUBE_END, y:STK_Z3, width:MARGIN, height:STK_SIZE},
+
+    UFL_F: {x:STK_Z1, y:CUBE_END, width:STK_SIZE, height:MARGIN},
+    UF_F:  {x:STK_Z2, y:CUBE_END, width:STK_SIZE, height:MARGIN},
+    URF_F: {x:STK_Z3, y:CUBE_END, width:STK_SIZE, height:MARGIN},
+
+    ULB_L: {x:0, y:STK_Z1, width:MARGIN, height:STK_SIZE},
+    UL_L:  {x:0, y:STK_Z2, width:MARGIN, height:STK_SIZE},
+    UFL_L: {x:0, y:STK_Z3, width:MARGIN, height:STK_SIZE},
+  }
+
+  FANCY_SIDE_STICKERS = {
+    UBR_B: depth(:B, STK_Z1, CUBE_END,    STK_SIZE, FW),
+    UB_B:  depth(:B, STK_Z2, CUBE_END,    STK_SIZE, FW),
+    ULB_B: depth(:B, STK_Z3, CUBE_END,    STK_SIZE, FW),
+    B:     depth(:B, STK_Z2, CUBE_END+FW, STK_SIZE, F0),
+
+    URF_R: depth(:R, STK_Z1, CUBE_END,    STK_SIZE, FW),
+    UR_R:  depth(:R, STK_Z2, CUBE_END,    STK_SIZE, FW),
+    UBR_R: depth(:R, STK_Z3, CUBE_END,    STK_SIZE, FW),
+    R:     depth(:R, STK_Z2, CUBE_END+FW, STK_SIZE, F0),
+
+    UFL_F: depth(:F, STK_Z1, CUBE_END,    STK_SIZE, FW),
+    UF_F:  depth(:F, STK_Z2, CUBE_END,    STK_SIZE, FW),
+    URF_F: depth(:F, STK_Z3, CUBE_END,    STK_SIZE, FW),
+    F:     depth(:F, STK_Z2, CUBE_END+FW, STK_SIZE, F0),
+
+    ULB_L: depth(:L, STK_Z1, CUBE_END,    STK_SIZE, FW),
+    UL_L:  depth(:L, STK_Z2, CUBE_END,    STK_SIZE, FW),
+    UFL_L: depth(:L, STK_Z3, CUBE_END,    STK_SIZE, FW),
+    L:     depth(:L, STK_Z2, CUBE_END+FW, STK_SIZE, F0),
+  }
+  ICON_STICKERS  = U_STICKERS.merge(PLAIN_SIDE_STICKERS)
+  FANCY_STICKERS = U_STICKERS.merge(FANCY_SIDE_STICKERS)
 
   def self.box_dimension
     {viewBox: "0 0 #{VIEWBOX_SIZE} #{VIEWBOX_SIZE}"}
   end
 
   def self.tags_for(icon)
-    sticker_set = icon.is_illustration? ? @@fancy_stickers : @@icon_stickers
+    result = (icon.is_illustration? ? SHADED_SIDES : []) + [CUBE_RECT]
 
-    result = icon.is_illustration? ? @@shaded_sides + [@@cube_rect] : [@@cube_rect]
-    sticker_set.keys.each do |sticker|
+    stickers = icon.is_illustration? ? FANCY_STICKERS : ICON_STICKERS
+    stickers.keys.each do |sticker|
       color = icon.color_at(sticker)
       color ||= 'white' if sticker[-1] == 'U'
       if color
-        result << {class: color}.merge!(sticker_set[sticker])
+        result << {class: color}.merge!(stickers[sticker])
       end
     end
 
