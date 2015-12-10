@@ -1,6 +1,6 @@
 # Makes SVG cube icons
 
-class Icons::Svg # TODO ::Geometry
+class Icons::Geometry
   Point = Struct.new(:x, :y)
 
   VIEWBOX_SIZE = 100
@@ -132,7 +132,7 @@ class Icons::Svg # TODO ::Geometry
     end
 
     icon.arrows.each do |place|
-      result << Icons::Svg.arrow_on(place)
+      result << Icons::Geometry.arrow_on(place)
     end
 
     result
