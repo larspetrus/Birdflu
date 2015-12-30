@@ -15,7 +15,7 @@ class RawAlg < ActiveRecord::Base
     needed_variant = %w(B R F L)[-Cube.new(alg_b).standard_ll_code_offset % 4]
 
     moves = Algs.rotate_by_U(alg_b, 'BRFL'.index(needed_variant))
-    RawAlg.create(moves: moves, u_setup: Algs.u_setup(moves), alg_id: name, length: length)
+    RawAlg.create(moves: moves, u_setup: Algs.standard_u_setup(moves), alg_id: name, length: length)
   end
 
   def algs(u_shift)
@@ -81,9 +81,12 @@ class RawAlg < ActiveRecord::Base
     true
   end
 
-  def setup_moves
-    return '' if u_setup == 0 || u_setup.nil?
-    "| setupmoves=#{Move.name_from('U', u_setup)}"
+  # Set up a "premove" so the Roofpig colors look like the Position illustration
+  def setup_moves(pov_adjustment = 0)
+    net_setup = (u_setup + pov_adjustment) % 4
+
+    return '' if net_setup == 0
+    "| setupmoves=#{Move.name_from('U', net_setup)}"
   end
 
   def to_s
@@ -96,7 +99,7 @@ class RawAlg < ActiveRecord::Base
       alg = RawAlg.find(start+i)
       needed_variant = %w(B R F L)[-Cube.new(alg.variant(:B)).standard_ll_code_offset % 4]
       moves = Algs.rotate_by_U(alg.variant(:B), 'BRFL'.index(needed_variant))
-      u_setup = Algs.u_setup(moves)
+      u_setup = Algs.standard_u_setup(moves)
 
       if alg.u_setup != u_setup || alg.moves != moves
         result << ".moves and/or .u_setup is wrong: #{alg.id}: #{alg.moves} - #{alg.u_setup} Should be:!= #{moves} - #{u_setup})"

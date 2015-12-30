@@ -78,4 +78,12 @@ RSpec.describe Algs do
     expect(Algs.as_variant_b("D' F B2")).to eq("D' B F2")
   end
 
+  it 'standard_u_setup' do
+    expect(Algs.standard_u_setup("F' L' U' L U L2 D' L' D L' F2 U' F'")).to eq(0)
+    expect(Algs.standard_u_setup("R B2 U' L' B2 R D B2 D' L B2 R' U R'")).to eq(1)
+    expect(Algs.standard_u_setup("F U F' U F U2 F'")).to eq(2)
+    expect(Algs.standard_u_setup("B' D' F D R2 B2 R2 D' F' D B' U' B2 U' B2")).to eq(3)
+  end
+
+
 end

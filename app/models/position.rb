@@ -13,6 +13,7 @@ class Position < ActiveRecord::Base
 
   before_create do
     self.set_filter_names
+    self.pov_setup
   end
 
   def algs_in_set(alg_set = AlgSet.active)
@@ -21,6 +22,19 @@ class Position < ActiveRecord::Base
 
   def self.by_ll_code(ll_code)
     Position.find_by(ll_code: ll_code)
+  end
+
+  def main_pov_id
+    pov_position_id || id
+  end
+
+  def self.find_pov_variant(main_pov, selected_ids)
+    # TODO test
+    # TODO cache
+
+    return main_pov if selected_ids.include?(main_pov.id)
+
+    Position.find((selected_ids & Position.where(pov_position_id: main_pov.id).pluck(:id)).first)
   end
 
   def as_roofpig_tweaks
@@ -50,7 +64,7 @@ class Position < ActiveRecord::Base
   end
 
   def has_inverse
-    id != inverse_id
+    inverse_id && id != inverse_id
   end
 
   def inverse
@@ -91,15 +105,57 @@ class Position < ActiveRecord::Base
     self.ep  = EP_NAMES[ll_code_obj.ep_code]
   end
 
+  def pov_setup
+    if self.pov_position_id
+      source_pos = Position.find(self.pov_position_id)
+
+      self.best_alg_id       = source_pos.best_alg_id
+      self.best_combo_alg_id = source_pos.best_combo_alg_id
+      self.optimal_alg_length= source_pos.optimal_alg_length
+      self.alg_count         = source_pos.alg_count
+    else
+      self.pov_offset = 0
+    end
+
+  end
+
+  PAUS = {['d',1]=>2, ['d',2]=>0, ['d',3]=>2, ['b',2]=>1, ['l',1]=>3, ['r',2]=>1, ['r',3]=>0}
+  def pov_adjust_u_setup
+    return 0 if pov_offset == 0 || cp == 'o'
+
+    PAUS[[cp, pov_offset]]
+  end
+
+  def self.get_filter_names(lz_code)
+    ll_code_obj = LlCode.new(lz_code)
+
+    result = {}
+    cop_name = COP_NAMES[ll_code_obj.cop_code] || 'xx' # xx -> invalid orientation.
+    result[:cop] = cop_name
+    result[:co]  = cop_name[0]
+    result[:cp]  = cop_name[1]
+
+    result[:oll] = OLL_NAMES[ll_code_obj.oll_code]
+    result[:eo]  = EO_NAMES[ll_code_obj.eo_code]
+    result[:ep]  = EP_NAMES[ll_code_obj.ep_code]
+
+    result
+  end
+
   def compute_stats
     {
-      raw_counts:  RawAlg.where(position_id: id).group(:length).order(:length).count(),
-      shortest:    RawAlg.where(position_id: id).order(:length, :speed, :alg_id).first().length,
-      fastest:     RawAlg.where(position_id: id).order(:speed, :length, :alg_id).first().speed,
-      combo_count:    ComboAlg.where(position_id: id).count(),
-      shortest_combo: ComboAlg.where(position_id: id).order(:length, :speed, :name).first().try(:length),
-      fastest_combo:  ComboAlg.where(position_id: id).order(:speed, :length, :name).first().try(:speed),
+      raw_counts: RawAlg.where(position_id: main_pov_id).group(:length).order(:length).count(),
+      shortest: RawAlg.where(position_id: main_pov_id).order(:length, :speed, :alg_id).first().try(:length),
+      fastest: RawAlg.where(position_id: main_pov_id).order(:speed, :length, :alg_id).first().try(:speed),
+      combo_count: ComboAlg.where(position_id: main_pov_id).count(),
+      shortest_combo: ComboAlg.where(position_id: main_pov_id).order(:length, :speed, :name).first().try(:length),
+      fastest_combo: ComboAlg.where(position_id: main_pov_id).order(:speed, :length, :name).first().try(:speed),
     }
+  end
+
+
+  def to_s
+    "Position #{id} - #{display_name}"
   end
 
   def self.update_each
@@ -167,7 +223,24 @@ class Position < ActiveRecord::Base
       end
     end
     found_positions.each { |code, weight| Position.create(ll_code: code, weight: weight) }
+
+    Position.create_pov_positions
     Position.update_each { |pos| pos.set_mirror_id }
+
+    PositionStats.generate_all
+  end
+
+  def self.create_pov_positions
+    Position.find_each do |pos|
+      pos.as_cube.ll_codes.each_with_index do |llc, i|
+        ms = Position.get_filter_names(llc)
+        missing_pos = !(ms[:cop] == 'xx' || Position.exists?(cop: ms[:cop], eo: ms[:eo], ep: ms[:ep]))
+        if missing_pos
+          Position.create(ll_code: llc, pov_position_id: pos.id, pov_offset: 4-i)
+        end
+      end
+    end
+
   end
 
   def self.sanity_check
@@ -194,64 +267,58 @@ class Position < ActiveRecord::Base
   end
 
   COP_NAMES = {
-      aaaa: 'Ao',
-      aabc: 'Co',
-      aacb: 'Do',
-      aaeo: 'Af',
-      aafq: 'Cf',
-      aagp: 'Df',
-      abac: 'Eo',
-      abbb: 'bo',
-      abeq: 'Ef',
-      abfp: 'bf',
-      abgo: 'Cl',
-      accc: 'Bo',
-      acep: 'Eb',
-      acfo: 'Dl',
-      acgq: 'Bf',
-      aepc: 'Cr',
-      aeqb: 'Dr',
-      afek: 'El',
-      affj: 'bl',
-      afgi: 'Cb',
-      afoc: 'Er',
-      afpb: 'br',
-      agfi: 'Db',
-      aggk: 'Bl',
-      agqc: 'Br',
       aiai: 'Ad',
-      aibk: 'Cd',
-      aicj: 'Dd',
-      ajak: 'Ed',
-      ajbj: 'bd',
+      aaeo: 'Af',
+      aaaa: 'Ao',
       ajpp: 'bb',
-      akck: 'Bd',
+      ajbj: 'bd',
+      abfp: 'bf',
+      affj: 'bl',
+      abbb: 'bo',
+      afpb: 'br',
       akqq: 'Bb',
-      bbcc: 'Go',
-      bbgq: 'Gf',
-      bcbc: 'Fo',
-      bcfq: 'Ff',
-      bcgp: 'Gl',
-      bfqc: 'Gr',
-      bgfk: 'Fl',
-      bggj: 'Gb',
-      bjck: 'Gd',
+      akck: 'Bd',
+      acgq: 'Bf',
+      aggk: 'Bl',
+      accc: 'Bo',
+      agqc: 'Br',
+      aibk: 'Cd',
+      aafq: 'Cf',
+      aabc: 'Co',
+      aepc: 'Cr',
+      aicj: 'Dd',
+      aagp: 'Df',
+      aacb: 'Do',
+      aeqb: 'Dr',
+      ajak: 'Ed',
+      abeq: 'Ef',
+      afek: 'El',
+      abac: 'Eo',
+      afoc: 'Er',
       bkbk: 'Fd',
+      bcfq: 'Ff',
+      bgfk: 'Fl',
+      bcbc: 'Fo',
+      bjck: 'Gd',
+      bbgq: 'Gf',
+      bbcc: 'Go',
+      bfqc: 'Gr',
 
-      aeei: 'Af',
-      aefk: 'Cl',
-      aegj: 'Dl',
-      aeoa: 'Af',
-      aioo: 'Af',
       aipq: 'Cb',
+      aefk: 'Cl',
       aiqp: 'Db',
+      aegj: 'Dl',
       ajoq: 'Eb',
-      bfgk: 'Gl',
-      bgpc: 'Fl',
       bjqq: 'Gb',
-      bkpq: 'Ff',
-  }
+      bfgk: 'Gl',
 
+      # "ghost/pov positions"
+      aeei: 'Al',
+      aeoa: 'Ar',
+      aioo: 'Ab',
+      bgpc: 'Fr',
+      bkpq: 'Fb',
+  }
 
   OLL_NAMES = {
       a1a1a1a1: :m0,

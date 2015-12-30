@@ -35,29 +35,31 @@ class Cols
       td_tag(content, class: alg.css_kind)
     end
   )
-  COP = Cols.new('COP', nil, -> (alg) do {icon: Icons::Cop.for(as_pos(alg)), size: 22, label: ''} end)
-  EO  = Cols.new('EO',  nil, -> (alg) do {icon: Icons::Eo.for(as_pos(alg)),  size: 22, label: ''} end)
-  EP  = Cols.new('EP',  nil, -> (alg) do {icon: Icons::Ep.for(as_pos(alg)),  size: 22, label: ''} end)
+  COP = Cols.new('COP', nil, -> (aop, flags) do {icon: Icons::Cop.for(as_pos(aop, flags.call(aop))), size: 22, label: ''} end)
+  EO  = Cols.new('EO',  nil, -> (aop, flags) do {icon: Icons::Eo.for(as_pos(aop, flags.call(aop))),  size: 22, label: ''} end)
+  EP  = Cols.new('EP',  nil, -> (aop, flags) do {icon: Icons::Ep.for(as_pos(aop, flags.call(aop))),  size: 22, label: ''} end)
 
   POSITION = Cols.new('Position',
     -> (aop, flags) do
-      pos = as_pos(aop)
+      pos = as_pos(aop, flags)
       td_tag(h.link_to(pos.display_name, "/positions/#{pos.ll_code}"))
     end
   )
   ALG = Cols.new('Alg',
-    -> (alg, flags) { td_tag(as_alg(alg).moves) }
+    -> (aop, flags) { td_tag(Algs.rotate_by_U(as_alg(aop).moves, as_pos(aop, flags).pov_offset)) }
   )
   ALG_P = ALG.with_header('Shortest Solution')
 
   SHOW = Cols.new('',
-    -> (alg, flags) { td_tag(h.content_tag(:a, 'show', class: 'show-pig'), :'data-us' => as_alg(alg).setup_moves) }
+    -> (aop, flags) do
+      td_tag(h.content_tag(:a, 'show', class: 'show-pig'), :'data-us' => as_alg(aop).setup_moves(as_pos(aop, flags).pov_adjust_u_setup))
+    end
   )
   NOTES = Cols.new('Notes',
       -> (alg, flags) { td_tag(as_alg(alg).specialness) }
   )
   SOLUTIONS = Cols.new('Solutions',
-      -> (pos, flags) { td_tag(as_pos(pos).alg_count) }
+      -> (pos, flags) { td_tag(as_pos(pos, flags).alg_count) }
   )
 
   def td(alg, flags)
@@ -77,8 +79,8 @@ class Cols
     class_names.present? ? {class: class_names} : {}
   end
 
-  def self.as_pos(alg_or_pos)
-    alg_or_pos.respond_to?(:position) ? alg_or_pos.position : alg_or_pos
+  def self.as_pos(alg_or_pos, flags)
+    alg_or_pos.respond_to?(:position) ? Position.find_pov_variant(alg_or_pos.position, flags[:ugh]) : alg_or_pos
   end
 
   def self.as_alg(alg_or_pos)

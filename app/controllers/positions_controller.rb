@@ -1,10 +1,8 @@
 class PositionsController < ApplicationController
 
   def index
-    @filters = PosSubsets.compute_filters(params)
-    return redirect_to "/?" + Fields::FILTER_NAMES.map{|k| "#{k}=#{@filters[k]}"}.join('&') if @filters[:_reload]
-
-    @single_position = @filters[:cop].present? && @filters[:eo].present? && @filters[:ep].present?
+    @filters = PosSubsets.new(params)
+    return redirect_to "/?" + Fields::FILTER_NAMES.map{|k| "#{k}=#{@filters.as_params[k]}"}.join('&') if @filters.reload
 
     format_params = store_parameters(:format, Fields.defaults(Fields::FORMATS))
     @format = OpenStruct.new(
@@ -12,24 +10,25 @@ class PositionsController < ApplicationController
         lines:  Fields::LINES.value(format_params),
         sortby: Fields::SORTBY.value(format_params),
     )
-    @list_algs =  @format.list == 'algs' || @single_position
+    @list_algs = (@format.list == 'algs') || @filters.fully_defined
 
-    includes = @list_algs ? :stats : [:stats, :best_alg]
-    @positions = Position.where(@filters.select{|k,v| v.present?}).order(:optimal_alg_length).includes(includes).to_a
-    @single_position = @positions.first if @single_position # Now we know which position
+    query_includes = @list_algs ? :stats : [:stats, :best_alg]
+    @positions = Position.where(@filters.where).order(:optimal_alg_length).includes(query_includes).to_a
+    @position_ids = @positions.map(&:id)
+    @single_position = @positions.first if @filters.fully_defined
 
     @stats = stats_for_view(@single_position)
 
     @selected_icons = {}
-    Fields::FILTER_NAMES.each{ |f| @selected_icons[f] = Icons::Base.by_code(f, @filters[f]) }
+    Fields::FILTER_NAMES.each{ |f| @selected_icons[f] = Icons::Base.by_code(f, @filters.as_params[f]) }
 
     @icon_grids = {}
     Fields::FILTER_NAMES.each{ |f| @icon_grids[f] = Icons::Base.class_by(f)::grid  unless f == :ep }
-    @icon_grids[:ep] = Icons::Ep.grid_for(@filters[:cp])
+    @icon_grids[:ep] = Icons::Ep.grid_for(@filters.as_params[:cp])
 
     @list_items =
         @list_algs ?
-          RawAlg.where(position_id: @positions.map(&:id)).includes(:position).order(@format.sortby).limit(@format.lines.to_i) :
+          RawAlg.where(position_id: @positions.map(&:main_pov_id)).includes(:position).order(@format.sortby).limit(@format.lines.to_i) :
           @positions.first(100)
 
     @svg_ids = Set.new

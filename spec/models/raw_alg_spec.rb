@@ -47,5 +47,13 @@ describe RawAlg do
 
       expect(RawAlg.make("F' U2 F U F' U F", 'x', 6).moves).to eq("L' U2 L U L' U L")
     end
+
+    it 'setup_moves' do
+      u_setup_3 = RawAlg.make("B L U L' U' B'", 'x', 6)
+      expect(u_setup_3.u_setup).to eq(3)
+      expect(u_setup_3.setup_moves).to eq("| setupmoves=U'")
+      expect(u_setup_3.setup_moves(1)).to eq("")
+      expect(u_setup_3.setup_moves(2)).to eq("| setupmoves=U")
+    end
   end
 end

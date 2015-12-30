@@ -1,5 +1,28 @@
 class PosSubsets
 
+  def initialize(params)
+    @new_params = PosSubsets.compute_filters(params)
+    @reload = @new_params.delete(:_reload)
+
+    @where = @new_params.dup.select{|k,v| v.present?}
+  end
+
+  def as_params
+    @new_params
+  end
+
+  def where
+    @where
+  end
+
+  def fully_defined
+    @where.size == Fields::FILTER_NAMES.size
+  end
+
+  def reload
+    @reload
+  end
+
   def self.compute_filters(params)
     ss = {} # ss = Selected Sets to show on page
     Fields::FILTER_NAMES.each do |f|
@@ -17,33 +40,27 @@ class PosSubsets
 
     # New start with COP
     if clicked == '#cop'
-      ss[:oll] = ss[:eo] = ss[:ep] = ''
-      ss[:co], ss[:cp] = ss[:cop].split('')
+      ss[:oll] = ss[:co] = ss[:cp] = ''
+      if ss[:cop].present?
+        ss[:eo] = ss[:ep] = ''
+        ss[:co], ss[:cp] = ss[:cop].split('')
+      end
     end
 
     # New start with OLL
     if clicked == '#oll'
-      ss[:cop] = ss[:cp] = ss[:ep] = ''
-      ss[:eo] = self.eo_by_oll(ss[:oll])
-      ss[:co] = self.co_by_oll(ss[:oll])
+      ss[:co] = ss[:eo] = ss[:cop] = ''
+      if ss[:oll].present?
+        ss[:cp] = ss[:ep] = ''
+        ss[:eo] = self.eo_by_oll(ss[:oll])
+        ss[:co] = self.co_by_oll(ss[:oll])
+      end
     end
 
     # Compute new COP
     if clicked == '#co' || clicked == '#cp'
-      if ss[:co].present? && ss[:cp].present?
-        ss[:cop] = "#{ss[:co]}#{ss[:cp]}"
-
-        case ss[:cop] # ugh...
-          when 'Ab', 'Al', 'Ar'
-            ss[:cop], ss[:cp] = 'Af', 'f'
-          when 'Fb'
-            ss[:cop], ss[:cp] = 'Ff', 'f'
-          when 'Fr'
-            ss[:cop], ss[:cp] = 'Fl', 'l'
-        end
-      else
-        ss[:cop] = ''
-      end
+      has_value = ss[:co].present? && ss[:cp].present?
+      ss[:cop] =  has_value ? "#{ss[:co]}#{ss[:cp]}" : ""
     end
 
     # Compute new OLL
@@ -52,7 +69,7 @@ class PosSubsets
     end
 
     # Did EP become incompatible?
-    if clicked == '#cp' && ss[:ep].present?
+    if clicked == '#cp' && ss[:cp].present? && ss[:ep].present?
       ep_case = (ss[:ep] == ss[:ep].upcase()) ? :upper : :lower
       if self.ep_type_by_cp(ss[:cp]) != ep_case
         ss[:ep] = ''

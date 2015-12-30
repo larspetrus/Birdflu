@@ -47,7 +47,7 @@
 
 =form_tag url_for(controller: "positions", action: "index"), method: 'get', id: 'main-form' do
   - Fields::FILTER_NAMES.each do |f|
-    =hidden_field_tag(f, @filters[f])
+    =hidden_field_tag(f, @filters.as_params[f])
   =hidden_field_tag(:clicked, 'none')
 
   - unless @single_position
@@ -68,7 +68,7 @@
         Sort by
         =Fields::SORTBY.as_tag(@format)
 
-- flags = @list_algs ? -> (alg) do {shortest: alg.length == @stats.data.shortest, fastest: alg.speed == @stats.data.fastest} end : -> (pos) do {} end
+- flags = @list_algs ? -> (alg) do {shortest: alg.length == @stats.data.shortest, fastest: alg.speed == @stats.data.fastest, ugh: @position_ids} end : -> (pos) do {} end
 %table{class: @list_algs ? 'algs-list' : 'positions-list'}
   - @columns.each do |column|
     %th= column.header
@@ -76,7 +76,7 @@
     %tr
       - @columns.each do |column|
         - if column.is_svg
-          %td= render 'cube_icon', column.svg_config.call(item)
+          %td= render 'cube_icon', column.svg_config.call(item, flags)
         -else
           =column.td(item, flags.call(item))
 
@@ -84,7 +84,7 @@
 #about-box
   %p This site aims to contain all knowledge of algorithms and positions for the last layer of Rubik's Cube, and present it in simple and useful ways. That will take a while.
   %p For now is has all algs up to 15 moves (1.69 million), and some basic features. More to come.
-  %p Written by Lars Petrus 2015.
+  %p Hand crafted by Lars Petrus in Oakland 2015.
 
 :javascript
   $('.ui-llicon, .random, .unselect').on('click', function() {
@@ -98,6 +98,19 @@
   $("#{Fields::FORMATS.map{|f| f.as_css_id}.join(', ')}").change(function() {
     $('form#main-form').submit();
   });
+
+  var rott = 0;
+  function swing() {
+    rott = (rott + 90) % 360
+    $('svg g').attr("transform", "rotate("+rott+", 50, 50)");
+    $('svg use').attr("transform", "rotate("+rott+", 50, 50)");
+  }
+
+  $(document).on('keypress', function(e) {
+    swing();
+  });
+
+
 
 - if Rails.env == 'production'
   :javascript

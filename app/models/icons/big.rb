@@ -3,7 +3,7 @@ class Icons::Big
 
   def initialize(position)
     @cube = position.as_cube
-    @id = @name = @cube.standard_ll_code
+    @id = @name = position.ll_code
     @arrows = Icons::Ep.for(position).arrows + Icons::Cp.for(position).arrows
   end
 
