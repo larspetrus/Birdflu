@@ -164,8 +164,8 @@ class Position < ActiveRecord::Base
   end
 
   def self.random_id
-    @total_count ||= Position.count
-    Random.rand(@total_count) + 1
+    @main_pos_ids ||= Position.where(pov_position_id: nil).pluck(:id)
+    @main_pos_ids.sample
   end
 
   def self.generate_all # All LL positions
