@@ -18,6 +18,17 @@ RSpec.describe Position, :type => :model do
     does_not_work_for_POVs
   end
 
+  it "pov_variant_in" do
+    main_pos = Position.find_by!(ll_code: "a3a6e6o7")
+    variants = Position.where(pov_position_id: main_pos.id)
+
+    expect(main_pos.pov_variant_in([1, 2, main_pos.id, 8])).to eq(main_pos)
+    expect(main_pos.pov_variant_in([1, 2, variants[1].id, 8])).to eq(variants[1])
+
+    # pick main id over others
+    expect(main_pos.pov_variant_in([variants[1].id, variants[2].id, main_pos.id])).to eq(main_pos)
+  end
+
   it "#tweaks" do
     expect(Position.find_by!(ll_code: 'a1c3c3c5').as_roofpig_tweaks()).to eq('ULB:ULB UB:UB BRU:UBR UF:UR RFU:URF UL:UF FLU:UFL UR:UL')
     expect(Position.find_by!(ll_code: 'a3e6f1k4').as_roofpig_tweaks()).to eq('ULB:ULB UR:UB URF:UBR LU:UR LUF:URF UF:UF BRU:UFL BU:UL')

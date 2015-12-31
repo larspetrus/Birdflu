@@ -68,7 +68,7 @@
         Sort by
         =Fields::SORTBY.as_tag(@format)
 
-- flags = @list_algs ? -> (alg) do {shortest: alg.length == @stats.data.shortest, fastest: alg.speed == @stats.data.fastest, ugh: @position_ids} end : -> (pos) do {} end
+- flags = @list_algs ? -> (alg) do {shortest: alg.length == @stats.data.shortest, fastest: alg.speed == @stats.data.fastest, selected_pos_ids: @position_ids} end : -> (pos) do {} end
 %table{class: @list_algs ? 'algs-list' : 'positions-list'}
   - @columns.each do |column|
     %th= column.header

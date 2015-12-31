@@ -80,7 +80,7 @@ class Cols
   end
 
   def self.as_pos(alg_or_pos, flags)
-    alg_or_pos.respond_to?(:position) ? Position.find_pov_variant(alg_or_pos.position, flags[:ugh]) : alg_or_pos
+    alg_or_pos.respond_to?(:position) ? alg_or_pos.position.pov_variant_in(flags[:selected_pos_ids]) : alg_or_pos
   end
 
   def self.as_alg(alg_or_pos)

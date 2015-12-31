@@ -28,13 +28,11 @@ class Position < ActiveRecord::Base
     pov_position_id || id
   end
 
-  def self.find_pov_variant(main_pov, selected_ids)
-    # TODO test
-    # TODO cache
+  POV_IDS_CACHE = Hash.new{|hash, key| hash[key] = Position.where(pov_position_id: key).pluck(:id) }
+  def pov_variant_in(selected_ids)
+    return self if selected_ids.include?(id)
 
-    return main_pov if selected_ids.include?(main_pov.id)
-
-    Position.find((selected_ids & Position.where(pov_position_id: main_pov.id).pluck(:id)).first)
+    Position.find((selected_ids & POV_IDS_CACHE[id]).first)
   end
 
   def as_roofpig_tweaks
