@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151224044907) do
+ActiveRecord::Schema.define(version: 20160103160009) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -86,10 +86,9 @@ ActiveRecord::Schema.define(version: 20151224044907) do
   end
 
   add_index "raw_algs", ["alg_id"], name: "index_raw_algs_on_alg_id", using: :btree
-  add_index "raw_algs", ["length"], name: "index_raw_algs_on_length", using: :btree
-  add_index "raw_algs", ["position_id", "length"], name: "index_raw_algs_on_position_id_and_length", using: :btree
-  add_index "raw_algs", ["position_id", "speed"], name: "index_raw_algs_on_position_id_and_speed", using: :btree
-  add_index "raw_algs", ["position_id"], name: "index_raw_algs_on_position_id", using: :btree
-  add_index "raw_algs", ["speed"], name: "index_raw_algs_on_speed", using: :btree
+  add_index "raw_algs", ["length", "speed"], name: "index_raw_algs_on_length_and_speed", using: :btree
+  add_index "raw_algs", ["position_id", "length", "speed"], name: "index_raw_algs_on_position_id_and_length_and_speed", using: :btree
+  add_index "raw_algs", ["position_id", "speed", "length"], name: "index_raw_algs_on_position_id_and_speed_and_length", using: :btree
+  add_index "raw_algs", ["speed", "length"], name: "index_raw_algs_on_speed_and_length", using: :btree
 
 end
