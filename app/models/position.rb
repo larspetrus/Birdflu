@@ -11,9 +11,10 @@ class Position < ActiveRecord::Base
 
   validates :ll_code, uniqueness: true # TODO Validate that it's the standard ll_code?
 
-  before_create do
+  after_create do
     self.set_filter_names
     self.pov_setup
+    self.save
   end
 
   def algs_in_set(alg_set = AlgSet.active)
@@ -22,10 +23,6 @@ class Position < ActiveRecord::Base
 
   def self.by_ll_code(ll_code)
     Position.find_by(ll_code: ll_code)
-  end
-
-  def main_pov_id
-    pov_position_id || id
   end
 
   POV_IDS_CACHE = Hash.new{|hash, key| hash[key] = Position.where(pov_position_id: key).pluck(:id) }
@@ -112,6 +109,7 @@ class Position < ActiveRecord::Base
       self.optimal_alg_length= source_pos.optimal_alg_length
       self.alg_count         = source_pos.alg_count
     else
+      self.pov_position_id = self.id
       self.pov_offset = 0
     end
 
@@ -142,12 +140,12 @@ class Position < ActiveRecord::Base
 
   def compute_stats
     {
-      raw_counts: RawAlg.where(position_id: main_pov_id).group(:length).order(:length).count(),
-      shortest: RawAlg.where(position_id: main_pov_id).order(:length, :speed, :alg_id).first().try(:length),
-      fastest: RawAlg.where(position_id: main_pov_id).order(:speed, :length, :alg_id).first().try(:speed),
-      combo_count: ComboAlg.where(position_id: main_pov_id).count(),
-      shortest_combo: ComboAlg.where(position_id: main_pov_id).order(:length, :speed, :name).first().try(:length),
-      fastest_combo: ComboAlg.where(position_id: main_pov_id).order(:speed, :length, :name).first().try(:speed),
+      raw_counts: RawAlg.where(position_id: pov_position_id).group(:length).order(:length).count(),
+      shortest: RawAlg.where(position_id: pov_position_id).order(:length, :speed, :alg_id).first().try(:length),
+      fastest: RawAlg.where(position_id: pov_position_id).order(:speed, :length, :alg_id).first().try(:speed),
+      combo_count: ComboAlg.where(position_id: pov_position_id).count(),
+      shortest_combo: ComboAlg.where(position_id: pov_position_id).order(:length, :speed, :name).first().try(:length),
+      fastest_combo: ComboAlg.where(position_id: pov_position_id).order(:speed, :length, :name).first().try(:speed),
     }
   end
 
@@ -164,7 +162,7 @@ class Position < ActiveRecord::Base
   end
 
   def self.random_id
-    @main_pos_ids ||= Position.where(pov_position_id: nil).pluck(:id)
+    @main_pos_ids ||= Position.where("pov_position_id = id").pluck(:id)
     @main_pos_ids.sample
   end
 

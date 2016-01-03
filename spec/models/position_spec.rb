@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe Position, :type => :model do
   it "generated everything" do
     expect(Position.count).to eq(4608)
-    expect(Position.where('pov_position_id IS NULL').count).to eq(3916)
+    expect(Position.where('pov_position_id = id').count).to eq(3916)
   end
 
   it "ll_code uniqueness" do
@@ -55,13 +55,13 @@ RSpec.describe Position, :type => :model do
 
   it "has generated correct attributes" do
     pos = Position.find_by!(ll_code: "b7c7f7q7")
-    expect(pos.attributes).to eq({"id"=>pos.id,
+    expect(pos.attributes).to eq({"id"               => pos.id,
                                  "best_alg_id"       => pos.best_alg_id,
                                  "alg_count"         => pos.alg_count,
                                  "optimal_alg_length"=> pos.optimal_alg_length,
                                  "best_combo_alg_id" => pos.best_combo_alg_id,
                                  "mirror_id"         => pos.mirror_id,
-                                 "pov_position_id"   => nil,
+                                 "pov_position_id"   => pos.id,
                                  "ll_code"    => "b7c7f7q7",
                                  "cop"        => "Ff",
                                  "oll"        => "m21",
