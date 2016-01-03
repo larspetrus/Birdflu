@@ -2,7 +2,6 @@
 # change. It could live in memory instead of (or in addition to) the DB, and maybe that's a future feature.
 class Position < ActiveRecord::Base
   has_many :combo_algs, -> { order "length, moves, base_alg2_id DESC" }
-  has_many :raw_algs, -> { order "alg_id" }
 
   belongs_to :best_alg, class_name: 'RawAlg'
   belongs_to :best_combo_alg, class_name: 'ComboAlg'
@@ -51,7 +50,7 @@ class Position < ActiveRecord::Base
   end
 
   def has_mirror
-    id != mirror_id
+    pov_position_id != mirror_id
   end
 
   def mirror
@@ -59,11 +58,15 @@ class Position < ActiveRecord::Base
   end
 
   def has_inverse
-    inverse_id && id != inverse_id
+    pov_position_id != inverse_id
   end
 
   def inverse
     Position.find(inverse_id)
+  end
+
+  def is_pov
+    pov_position_id != id
   end
 
   def display_name

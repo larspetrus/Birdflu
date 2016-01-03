@@ -10,14 +10,6 @@ RSpec.describe Position, :type => :model do
     expect(Position.create(ll_code: Position.find(1).ll_code)).not_to be_valid
  end
 
-  it 'set_mirror_id' do
-    does_not_work_for_POVs
-  end
-
-  it 'the inverse id thing' do
-    does_not_work_for_POVs
-  end
-
   it "pov_variant_in" do
     main_pos = Position.find_by!(ll_code: "a3a6e6o7")
     variants = Position.where(pov_position_id: main_pos.id)
@@ -73,6 +65,7 @@ RSpec.describe Position, :type => :model do
                                  "weight"     => 1,
                                  "pov_offset" => 0,
                                  })
+    expect(pos.is_pov).to eq(false)
 
 
     pov_pos = Position.find_by!(ll_code: "b5k5p5q5")
@@ -94,6 +87,7 @@ RSpec.describe Position, :type => :model do
                                  "weight"     => nil,
                                  "pov_offset" => 2,
                                 })
+    expect(pov_pos.is_pov).to eq(true)
   end
 
 end
