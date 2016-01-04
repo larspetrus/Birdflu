@@ -21,6 +21,18 @@ RSpec.describe Position, :type => :model do
     expect(main_pos.pov_variant_in([variants[1].id, variants[2].id, main_pos.id])).to eq(main_pos)
   end
 
+  it 'pov_rotations' do
+    no_rotation_pos = Position.find_by!(ll_code: 'a7a3b7c3')
+    expect(no_rotation_pos.pov_rotations).to eq([])
+
+    main_pov = Position.find_by!(ll_code: 'a7a7e7o7')
+    alt_pov  = Position.find_by!(ll_code: 'a1e1e1i1')
+    pov_ids = Position.where(pov_position_id: main_pov.id).pluck(:id)
+
+    expect(main_pov.pov_rotations).to eq(pov_ids - [main_pov.id])
+    expect(alt_pov.pov_rotations).to  eq(pov_ids - [alt_pov.id])
+  end
+
   it "#tweaks" do
     expect(Position.find_by!(ll_code: 'a1c3c3c5').as_roofpig_tweaks()).to eq('ULB:ULB UB:UB BRU:UBR UF:UR RFU:URF UL:UF FLU:UFL UR:UL')
     expect(Position.find_by!(ll_code: 'a3e6f1k4').as_roofpig_tweaks()).to eq('ULB:ULB UR:UB URF:UBR LU:UR LUF:URF UF:UF BRU:UFL BU:UL')

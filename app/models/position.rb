@@ -24,13 +24,6 @@ class Position < ActiveRecord::Base
     Position.find_by(ll_code: ll_code)
   end
 
-  POV_IDS_CACHE = Hash.new{|hash, key| hash[key] = Position.where(pov_position_id: key).pluck(:id) }
-  def pov_variant_in(selected_ids)
-    return self if selected_ids.include?(id)
-
-    Position.find((selected_ids & POV_IDS_CACHE[id]).first)
-  end
-
   def as_roofpig_tweaks
     result = []
     4.times do |i|
@@ -67,6 +60,17 @@ class Position < ActiveRecord::Base
 
   def is_pov
     pov_position_id != id
+  end
+
+  POV_IDS_CACHE = Hash.new{|hash, key| hash[key] = Position.where(pov_position_id: key).pluck(:id).freeze }
+  def pov_variant_in(selected_ids)
+    return self if selected_ids.include?(id)
+
+    Position.find((selected_ids & POV_IDS_CACHE[id]).first)
+  end
+
+  def pov_rotations
+    POV_IDS_CACHE[pov_position_id].select{|pov_id| pov_id != id}
   end
 
   def display_name

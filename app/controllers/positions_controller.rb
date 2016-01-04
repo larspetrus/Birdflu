@@ -62,15 +62,19 @@ class PositionsController < ApplicationController
         OpenStruct.new(label: 'Fastest',  text: '%.2f' % data.fastest,  class_name: 'optimal'),
     ]
     result.sections << data.raw_counts.keys.sort.map do |length|
-      OpenStruct.new(label: "#{length} moves", text: "#{view_context.pluralize(data.raw_counts[length], 'alg')}")
+      OpenStruct.new(label: "#{length} moves", text: vc.pluralize(data.raw_counts[length], 'alg'))
     end
 
     if single_pos
+      rot_count = single_pos.pov_rotations.count
+      rot_s = rot_count == 1 ? '' : 's'
+
       result.headline = "Position #{single_pos.display_name}"
       result.link_section = [
-          single_pos.has_mirror  ? view_context.link_to("Mirror - #{single_pos.mirror.display_name}",  "positions/#{single_pos.mirror_id}")  : "No mirror",
-          single_pos.has_inverse ? view_context.link_to("Inverse - #{single_pos.inverse.display_name}","positions/#{single_pos.inverse_id}") : "No inverse",
-      ]
+          { label: 'Mirror', links: single_pos.has_mirror ? [pos_link(single_pos.mirror)]  : ['None'] },
+          { label: 'Inverse', links: single_pos.has_inverse ? [pos_link(single_pos.inverse)]  : ['None'] },
+          rot_count > 0 ? { label: 'Rotation'+rot_s, links: single_pos.pov_rotations.map{|id| pos_link(Position.find(id)) } } : nil
+      ].compact
     else
       result.headline = "#{data.position_count} positions"
 
@@ -78,6 +82,10 @@ class PositionsController < ApplicationController
       result.sections[0] << OpenStruct.new(label: "Avg shortest", text: '%.2f' % (optimal_sum/@positions.count))
     end
     result
+  end
+
+  def pos_link(pos)
+    vc.link_to(pos.display_name,  "positions/#{pos.id}")
   end
 
   def show
@@ -110,5 +118,9 @@ class PositionsController < ApplicationController
       values = cookies[cookie_name] ? JSON.parse(cookies[cookie_name], symbolize_names: true) : defaults # TODO handle bad cookie
     end
     values
+  end
+
+  def vc
+    view_context
   end
 end
