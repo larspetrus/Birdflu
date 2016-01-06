@@ -46,13 +46,14 @@ class Cols
     end
   )
   ALG = Cols.new('Alg',
-    -> (aop, flags) { td_tag(Algs.rotate_by_U(as_alg(aop).moves, as_pos(aop, flags).pov_offset)) }
+    -> (aop, flags) { td_tag(Algs.rotate_by_U(as_alg(aop).moves, as_pos(aop, flags).pov_offset), class: :alg) }
   )
   ALG_P = ALG.with_header('Shortest Solution')
 
   SHOW = Cols.new('',
     -> (aop, flags) do
-      td_tag(h.content_tag(:a, 'show', class: 'show-pig'), :'data-us' => as_alg(aop).setup_moves(as_pos(aop, flags).pov_adjust_u_setup))
+      pov_adjust = as_pos(aop, flags).pov_adjust_u_setup
+      td_tag(h.content_tag(:a, 'show', class: 'show-pig'), :'data-uset' => (as_alg(aop).u_setup + pov_adjust) % 4 )
     end
   )
   NOTES = Cols.new('Notes',

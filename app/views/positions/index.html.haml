@@ -87,7 +87,7 @@
 #about-box
   %p This site aims to contain all knowledge of algorithms and positions for the last layer of Rubik's Cube, and present it in simple and useful ways. That will take a while.
   %p For now is has all algs up to 15 moves (1.69 million), and some basic features. More to come.
-  %p Hand crafted by Lars Petrus in Oakland 2015.
+  %p Hand crafted by Lars Petrus in Oakland 2015-16.
 
 :javascript
   $('.ui-llicon, .random, .unselect').on('click', function() {
@@ -102,15 +102,40 @@
     $('form#main-form').submit();
   });
 
-  var rott = 0;
-  function swing() {
-    rott = (rott + 90) % 360
-    $('svg g').attr("transform", "rotate("+rott+", 50, 50)");
-    $('svg use').attr("transform", "rotate("+rott+", 50, 50)");
+  var u_transpositions = {
+     1:   { R: 'F', F: 'L', L: 'B', B: 'R' },
+    '-1': { R: 'B', F: 'R', L: 'F', B: 'L' },
+     2:   { R: 'L', F: 'B', L: 'R', B: 'F' },
+  }
+
+  function rotate_alg(turns, alg) {
+    result = ''
+    for (var i = 0, len = alg.length; i < len; i++) {
+      result += u_transpositions[turns][alg[i]] || alg[i]
+    }
+    return result
+  }
+
+  var u_rotation = 0; // Global state
+  function rotate_everything(diff) {
+    $('body').animate({ dummyAttr: '20px' },
+      {
+        duration:300,
+        progress: function(animation, progress) {
+          $('svg g').attr("transform", "rotate(" + (u_rotation*90 + diff*90*progress) + ", 50, 50)");
+        },
+        complete: function() {
+          $('.alg').text(function(i, current_text){ return rotate_alg(diff, current_text) });
+          u_rotation = (u_rotation + diff + 4) % 4
+        }
+      }
+    );
   }
 
   $(document).on('keypress', function(e) {
-    swing();
+    if (e.keyCode === 44) { rotate_everything(-1); } // comma = 44
+    if (e.keyCode === 46) { rotate_everything(+1); } // period = 46
+    if (e.keyCode === 47) { rotate_everything(+2); } // slash = 47
   });
 
 
