@@ -218,6 +218,18 @@ table.grid-lines {
     text-align: center;
   }
 }
+// ------- Rotation UI
+
+.rotation-ui {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  a {
+    margin: 2px;
+    width: 30%;
+  }
+}
+
 // ------------ Alg sections
 .cancel1 {
   color: #aaa;
