@@ -28,7 +28,8 @@ class Icons::Ep < Icons::Base
   end
 
   def base_colors
-    set_colors('ignore', :U, :ULB_U, :UBR_U, :UFL_U, :URF_U)
+    set_colors('ignore', :U, :UBR_U, :UFL_U, :URF_U)
+    set_colors('ep-fixed', :ULB_U)
   end
 
   def self.by_code(code)
