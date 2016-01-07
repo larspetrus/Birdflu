@@ -220,13 +220,23 @@ table.grid-lines {
 }
 // ------- Rotation UI
 
+$panel-width: 450px;
+.page-controls {
+  display: flex;
+  align-items: center;
+
+  width: $panel-width;
+  height: 20px;
+  margin: auto;
+}
+
 .rotation-ui {
   display: flex;
-  flex-direction: column;
   align-items: center;
+  font-size: 13px;
   a {
-    margin: 2px;
-    width: 30%;
+    margin: 0 2px;
+    height: 10px;
   }
 }
 
@@ -254,15 +264,10 @@ table.grid-lines {
   margin: 8px auto;
 }
 
-.singlepos-format-header {
-  text-align: center;
-  font-size: 10px;
-  padding: 3px 0;
-}
 // ------------ Alg list header
 .algs-list-header {
   font-size: 14px;
-  width: 450px;
+  width: $panel-width;
   margin: 8px auto;
   border-top: 1px solid #aaa;
   padding-top: 8px;

@@ -32,14 +32,9 @@
 
 %table.center
   %tr
-    - [:Turn, '', :COP, :OLL, '', :CO, :CP, :EO, :EP].each do |header|
+    - [:COP, :OLL, '', :CO, :CP, :EO, :EP].each do |header|
       %th= header
   %tr#pickers
-    %td.rotation-ui
-      %a{class: 'show-pig', onclick: "rotate_everything(1);"} U
-      %a{class: 'show-pig', onclick: "rotate_everything(2);"} U2
-      %a{class: 'show-pig', onclick: "rotate_everything(-1);"} U'
-    %td{style: 'width: 12px;'}
     = render 'picker_td', prop: :cop, add_class: 'grid-lines'
     = render 'picker_td', prop: :oll, add_class: 'grid-lines'
     %td{style: 'border-right: solid 1px #bbb;'}
@@ -58,13 +53,18 @@
     =hidden_field_tag(f, @filters.as_params[f])
   =hidden_field_tag(:clicked, 'none')
 
-  - unless @single_position
-    .center.page-format-header
-      Show as
-      =Fields::LIST.as_tag(@format)
-  - else
-    .singlepos-format-header Showing algs for single selected position.
-    =hidden_field_tag(Fields::LIST.name, Fields::LIST.value(@format))
+  .page-controls
+    .rotation-ui
+      %a{class: 'show-pig', onclick: "rotate_everything(1);"} U
+      %a{class: 'show-pig', onclick: "rotate_everything(2);"} U2
+      %a{class: 'show-pig', onclick: "rotate_everything(-1);"} U'
+      %div
+    - unless @single_position
+      .center.page-format-header
+        Show as
+        =Fields::LIST.as_tag(@format)
+    - else
+      =hidden_field_tag(Fields::LIST.name, Fields::LIST.value(@format))
 
   - if @list_algs
     .center.algs-list-header
