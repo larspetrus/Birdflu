@@ -1,82 +1,62 @@
 class PosSubsets
 
+  attr_reader :as_params, :where, :reload
+
   def initialize(params)
-    @new_params = PosSubsets.compute_filters(params)
-    @reload = @new_params.delete(:_reload)
+    @reload = params.values.include?('random')
+    clicked = params[:clicked]
 
-    @where = @new_params.dup.select{|k,v| v.present? && (not [:cop, :oll].include?(k))}
-  end
-
-  def as_params
-    @new_params
-  end
-
-  def where
-    @where
-  end
-
-  def fully_defined
-    @where.keys.sort == [:co, :cp, :eo, :ep]
-  end
-
-  def reload
-    @reload
-  end
-
-  def self.compute_filters(params)
-    ss = {} # ss = Selected Sets to show on page
+    np = {} # new parameters
     Fields::FILTER_NAMES.each do |f|
       if params[f]
-        ss[f] = if params[f] == 'random'
-                  ss[:_reload] = true
-                  self.random_code(f, params)
-                else
-                  params[f]
-                end
+        np[f] = (params[f] == 'random') ? PosSubsets.random_code(f, params) : params[f]
       end
     end
 
-    clicked = params[:clicked]
-
     # New start with COP
     if clicked == '#cop'
-      ss[:oll] = ss[:co] = ss[:cp] = ''
-      if ss[:cop].present?
-        ss[:eo] = ss[:ep] = ''
-        ss[:co], ss[:cp] = ss[:cop].split('')
+      np[:oll] = np[:co] = np[:cp] = ''
+      if np[:cop].present?
+        np[:eo] = np[:ep] = ''
+        np[:co], np[:cp] = np[:cop].split('')
       end
     end
 
     # New start with OLL
     if clicked == '#oll'
-      ss[:co] = ss[:eo] = ss[:cop] = ''
-      if ss[:oll].present?
-        ss[:cp] = ss[:ep] = ''
-        ss[:eo] = self.eo_by_oll(ss[:oll])
-        ss[:co] = self.co_by_oll(ss[:oll])
+      np[:co] = np[:eo] = np[:cop] = ''
+      if np[:oll].present?
+        np[:cp] = np[:ep] = ''
+        np[:eo] = PosSubsets.eo_by_oll(np[:oll])
+        np[:co] = PosSubsets.co_by_oll(np[:oll])
       end
     end
 
     # Compute new COP
     if clicked == '#co' || clicked == '#cp'
-      has_value = ss[:co].present? && ss[:cp].present?
-      ss[:cop] =  has_value ? "#{ss[:co]}#{ss[:cp]}" : ""
+      has_value = np[:co].present? && np[:cp].present?
+      np[:cop] =  has_value ? "#{np[:co]}#{np[:cp]}" : ""
     end
 
     # Compute new OLL
     if clicked == '#co' || clicked == '#eo'
-      ss[:oll] = self.oll_by_co_eo(ss[:co], ss[:eo]) || ''
+      np[:oll] = PosSubsets.oll_by_co_eo(np[:co], np[:eo]) || ''
     end
 
     # Did EP become incompatible?
-    if clicked == '#cp' && ss[:cp].present? && ss[:ep].present?
-      ep_case = (ss[:ep] == ss[:ep].upcase()) ? :upper : :lower
-      if self.ep_type_by_cp(ss[:cp]) != ep_case
-        ss[:ep] = ''
+    if clicked == '#cp' && np[:cp].present? && np[:ep].present?
+      ep_case = (np[:ep] == np[:ep].upcase()) ? :upper : :lower
+      if PosSubsets.ep_type_by_cp(np[:cp]) != ep_case
+        np[:ep] = ''
       end
     end
 
-    ss
+    @as_params = np
+    @where = @as_params.dup.select{|k,v| v.present? && (not [:cop, :oll].include?(k))}
+  end
+
+  def fully_defined
+    @where.keys.sort == [:co, :cp, :eo, :ep]
   end
 
   def self.random_code(subset, contraints)

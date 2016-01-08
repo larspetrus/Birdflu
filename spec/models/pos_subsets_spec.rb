@@ -46,7 +46,7 @@ describe PosSubsets do
   end
 
   it 'reload' do
-    expect(PosSubsets.new({cop:'Ao',oll:'',co:'A',cp:'o',eo:'',ep:''}).reload).to eq(nil)
+    expect(PosSubsets.new({cop:'Ao',oll:'',co:'A',cp:'o',eo:'',ep:''}).reload).to eq(false)
     expect(PosSubsets.new({cop:'random',oll:'',co:'A',cp:'o',eo:'',ep:''}).reload).to eq(true)
   end
 
