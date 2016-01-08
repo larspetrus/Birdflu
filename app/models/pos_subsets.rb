@@ -32,14 +32,14 @@ class PosSubsets
       end
     end
 
-    # Compute new COP
-    if clicked == '#co' || clicked == '#cp'
+    # Compute COP
+    if clicked == '#co' || clicked == '#cp' || np[:cop].blank?
       has_value = np[:co].present? && np[:cp].present?
       np[:cop] =  has_value ? "#{np[:co]}#{np[:cp]}" : ""
     end
 
-    # Compute new OLL
-    if clicked == '#co' || clicked == '#eo'
+    # Compute OLL
+    if clicked == '#co' || clicked == '#eo' || np[:oll].blank?
       np[:oll] = PosSubsets.oll_by_co_eo(np[:co], np[:eo]) || ''
     end
 

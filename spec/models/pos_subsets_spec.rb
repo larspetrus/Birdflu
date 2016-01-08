@@ -22,6 +22,9 @@ describe PosSubsets do
                                            {cop:'',oll:'m22',co:'G',cp:'',eo:'4',ep:''})
       expect(PosSubsets.new({clicked:'#co', cop:''  ,oll:''   ,co:'G',cp:'o',eo:'8',ep:''}).as_params).to eq(
                                            {cop:'Go',oll:'m47',co:'G',cp:'o',eo:'8',ep:''})
+
+      expect(PosSubsets.new({cop:''  ,oll:''   ,co:'b',cp:'f',eo:'4',ep:'j'}).as_params).to eq(
+                            {cop:'bf',oll:'m26',co:'b',cp:'f',eo:'4',ep:'j'})
     end
 
     it 'removes incompatible ep (when needed)' do
@@ -32,7 +35,7 @@ describe PosSubsets do
     end
 
     it "misc" do
-      expect(PosSubsets.new({}).as_params).to eq({})
+      expect(PosSubsets.new({}).as_params).to eq({:cop=>"", :oll=>""})
 
       no_click_params = {cop: '', oll: 'm3', co: 'B', cp: '', eo: '0', ep: ''}
       expect(PosSubsets.new(no_click_params).as_params).to eq(no_click_params)
