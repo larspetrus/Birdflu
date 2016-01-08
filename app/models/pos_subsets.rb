@@ -4,7 +4,7 @@ class PosSubsets
     @new_params = PosSubsets.compute_filters(params)
     @reload = @new_params.delete(:_reload)
 
-    @where = @new_params.dup.select{|k,v| v.present?}
+    @where = @new_params.dup.select{|k,v| v.present? && (not [:cop, :oll].include?(k))}
   end
 
   def as_params
@@ -16,7 +16,7 @@ class PosSubsets
   end
 
   def fully_defined
-    @where.size == Fields::FILTER_NAMES.size
+    @where.keys.sort == [:co, :cp, :eo, :ep]
   end
 
   def reload

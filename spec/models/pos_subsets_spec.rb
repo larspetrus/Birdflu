@@ -40,7 +40,8 @@ describe PosSubsets do
   end
 
   it '.where' do
-    expect(PosSubsets.new({cop: '', oll: 'm3', co: 'B', cp: '', eo: '0', ep: ''}).where).to eq({oll: 'm3', co: 'B', eo: '0'})
+    expect(PosSubsets.new({cop:'Bf', oll:'m13',co:'B', cp:'f', eo:'4',ep:'h'}).where).to eq({:co=>"B", :cp=>"f", :eo=>"4", :ep=>"h"})
+    expect(PosSubsets.new({cop: '', oll: 'm3', co: 'B', cp: '', eo: '0', ep: ''}).where).to eq({co: 'B', eo: '0'})
     expect(PosSubsets.new({cop: '', oll: '', co: '', cp: '', eo: '', ep: ''}).where).to eq({})
   end
 
