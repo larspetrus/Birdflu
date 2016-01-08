@@ -123,15 +123,24 @@
 
   var u_rotation = 0; // Global state
   function rotate_everything(diff) {
+  var algs_rotated = false;
     $('body').animate({ dummyAttr: '20px' },
       {
         duration:300,
         progress: function(animation, progress) {
           $('svg g').attr("transform", "rotate(" + (u_rotation*90 + diff*90*progress) + ", 50, 50)");
+
+          var gray = Math.floor(400.0 * (0.5 - Math.abs(progress - 0.5)));
+          $('.alg').attr("style", "color: rgb("+gray+","+gray+","+gray+");");
+
+          if (progress > 0.5 && !algs_rotated) {
+            $('.alg').text(function(i, current_text){ return rotate_alg(diff, current_text) });
+            algs_rotated = true;
+          }
         },
         complete: function() {
-          $('.alg').text(function(i, current_text){ return rotate_alg(diff, current_text) });
           u_rotation = (u_rotation + diff + 4) % 4
+          $('.alg').removeAttr("style");
         }
       }
     );
