@@ -5,7 +5,13 @@ RSpec.describe PositionsController do
     it "finds the ll_code by alg" do
       xhr :post, :find_by_alg, alg: "R' F' L F' L D' L' D L' F2 R", format: :json
       expect(response.code).to eq("200")
-      expect(JSON.parse(response.body)).to eq({"ll_code" => "a7j7b8j8"})
+      expect(JSON.parse(response.body)).to eq({"ll_code" => "a7j7b8j8", "urot" => 0})
+    end
+
+    it "computes the U rotation" do
+      xhr :post, :find_by_alg, alg: "F' L' B L' B D' B' D B' L2 F", format: :json
+      expect(response.code).to eq("200")
+      expect(JSON.parse(response.body)).to eq({"ll_code" => "a7j7b8j8", "urot" => 1})
     end
 
     it "finds the ll_code by alg name" do
@@ -13,12 +19,12 @@ RSpec.describe PositionsController do
 
       xhr :post, :find_by_alg, alg: "H25", format: :json
       expect(response.code).to eq("200")
-      expect(JSON.parse(response.body)).to eq({"ll_code" => "a1i2c3j8"})
+      expect(JSON.parse(response.body)).to eq({"ll_code" => "a1i2c3j8", "urot" => 0})
     end
 
     it "is case independent" do
       xhr :post, :find_by_alg, alg: "B2 r2 f r f' r b2 u' L U' L'", format: :json
-      expect(JSON.parse(response.body)).to eq({"ll_code" => "a5c6g8q3"})
+      expect(JSON.parse(response.body)).to eq({"ll_code" => "a5c6g8q3", "urot" => 0})
     end
 
     it "Errors invalid moves" do

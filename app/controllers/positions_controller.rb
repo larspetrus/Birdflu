@@ -1,5 +1,6 @@
 class PositionsController < ApplicationController
 
+  # === Routed action ===
   def index
     @filters = PosSubsets.new(params)
     return redirect_to "/?" + Fields::FILTER_NAMES.map{|k| "#{k}=#{@filters.as_params[k]}"}.join('&') if @filters.reload
@@ -89,21 +90,24 @@ class PositionsController < ApplicationController
     vc.link_to(pos.display_name,  "positions/#{pos.id}")
   end
 
+  # === Routed action ===
   def show
     pos = Position.find_by_id(params[:id]) || Position.by_ll_code(params[:id]) || RawAlg.find_by_alg_id(params[:id]).position # Try DB id LL code, or alg name
-    redirect_to "/?" + Fields::FILTER_NAMES.map{|k| "#{k}=#{pos[k]}"}.join('&')
+    urot_param = ['1', '2', '3'].include?(params[:urot]) ? '&urot=' + params[:urot] : ''
+    redirect_to "/?" + Fields::FILTER_NAMES.map{|k| "#{k}=#{pos[k]}"}.join('&') + urot_param
   end
 
+  # === Routed action ===
   def find_by_alg
-    alg_from_user = params[:alg].upcase
+    moves_from_user = params[:alg].upcase
 
-    if alg_from_user.include? ' '
-      actual_alg = alg_from_user
+    if moves_from_user.include? ' '
+      actual_moves = moves_from_user
     else
-      actual_alg = RawAlg.find_by_alg_id(alg_from_user).try(:moves)
-      raise "There is no alg named '#{alg_from_user}'" unless actual_alg
+      actual_moves = RawAlg.find_by_alg_id(moves_from_user).try(:moves)
+      raise "There is no alg named '#{moves_from_user}'" unless actual_moves
     end
-    render json: { ll_code: Cube.new(actual_alg).standard_ll_code}
+    render json: { ll_code: Cube.new(actual_moves).standard_ll_code, urot: Cube.new(actual_moves).standard_ll_code_offset}
   rescue Exception => e
     render json: { error: e.message }
   end

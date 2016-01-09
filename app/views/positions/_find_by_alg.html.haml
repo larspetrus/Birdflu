@@ -8,9 +8,9 @@
   $('#find_by_alg').on('ajax:success', function(e, data, status, xhr) {
     var result = JSON.parse(xhr.responseText);
     if (result.ll_code) {
-      window.location.href = '/positions/' + result.ll_code;
+      window.location.href = '/positions/' + result.ll_code + '?urot=' + result.urot;
     } else {
-      bad_alg_dialog(result.error || "We didn't even get an error!");
+      bad_alg_dialog(result.error || "We didn't even get an error...");
     }
   });
 
