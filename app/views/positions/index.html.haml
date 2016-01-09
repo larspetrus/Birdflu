@@ -107,39 +107,63 @@
     $('form#main-form').submit();
   });
 
+  // --- SVG ROTATION SECTION ---
+
   var u_transpositions = {
      1:   { R: 'F', F: 'L', L: 'B', B: 'R' },
     '-1': { R: 'B', F: 'R', L: 'F', B: 'L' },
      2:   { R: 'L', F: 'B', L: 'R', B: 'F' },
   }
-
-  function rotate_alg(turns, alg) {
-    result = ''
-    for (var i = 0, len = alg.length; i < len; i++) {
-      result += u_transpositions[turns][alg[i]] || alg[i]
-    }
-    return result
+  function rotate_all_algs(diff) {
+    $('.alg').text(function(i, current_text){
+      result = ''
+      for (var i = 0, len = current_text.length; i < len; i++) {
+        result += u_transpositions[diff][current_text[i]] || current_text[i]
+      }
+      return result
+    });
   }
 
-  var u_rotation = 0; // Global state
+  function spin_svgs(diff, progress) {
+    $('svg g').attr("transform", "rotate(" + (u_rotation*90 + diff*90*progress) + ", 50, 50)");
+  }
+
+  var u_rotation = #{@u_rotation}; // Global state
+  if (u_rotation > 0) {
+    spin_svgs(0, 0);
+    rotate_all_algs(u_rotation);
+  };
+
+  function adjust_url() {
+    var old_url = window.location.search;
+    var new_urot = 'urot=' + u_rotation;
+    if (old_url.indexOf('urot') != -1) {
+      history.replaceState('', '', old_url.replace(/urot=./, new_urot));
+    } else {
+      var sep = old_url.indexOf('?') == -1 ? '?' : '&';
+      history.replaceState('', '', old_url + sep + new_urot)
+    }
+  }
+
   function rotate_everything(diff) {
   var algs_rotated = false;
     $('body').animate({ dummyAttr: '20px' },
       {
         duration:300,
         progress: function(animation, progress) {
-          $('svg g').attr("transform", "rotate(" + (u_rotation*90 + diff*90*progress) + ", 50, 50)");
+          spin_svgs(diff, progress);
 
           var gray = Math.floor(400.0 * (0.5 - Math.abs(progress - 0.5)));
           $('.alg').attr("style", "color: rgb("+gray+","+gray+","+gray+");");
 
           if (progress > 0.5 && !algs_rotated) {
-            $('.alg').text(function(i, current_text){ return rotate_alg(diff, current_text) });
+            rotate_all_algs(diff);
             algs_rotated = true;
           }
         },
         complete: function() {
           u_rotation = (u_rotation + diff + 4) % 4
+          adjust_url();
           $('.alg').removeAttr("style");
         }
       }

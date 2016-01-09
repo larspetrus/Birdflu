@@ -33,6 +33,7 @@ class PositionsController < ApplicationController
 
     @svg_ids = Set.new
     @columns = @list_algs ? make_alg_columns : make_pos_columns
+    @u_rotation = params[:urot] || 0
   end
 
   def make_alg_columns
