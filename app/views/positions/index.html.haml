@@ -8,7 +8,8 @@
 
 .left_side_stats{class: @single_position ? '' : 'positions-stats'}
   %span#headline= @stats.headline
-  %span#headline_urot
+  - if @single_position
+    %span#headline_urot
   %table
     - @stats.sections[0].each do |line|
       %tr
