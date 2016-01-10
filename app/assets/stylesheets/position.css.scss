@@ -65,6 +65,11 @@ $optimal_color: #69f;
   td { padding: 0 2px; }
   td:nth-child(-n+2) { text-align: right; } // first two columns
   th:nth-last-child(2), td:nth-last-child(2) { border-left: none; }
+  .hilite td {
+    background-color: #ff0;
+    border-top: solid red 1px;
+    border-bottom: solid red 1px;
+  }
 }
 .positions-list {
   th { background-color: #484; color: #fff; }

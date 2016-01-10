@@ -156,6 +156,9 @@ class Position < ActiveRecord::Base
     }
   end
 
+  def matches(search_term)
+    false
+  end
 
   def to_s
     "Position #{id} - #{display_name}"

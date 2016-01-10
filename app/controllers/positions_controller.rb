@@ -35,6 +35,7 @@ class PositionsController < ApplicationController
     @svg_ids = Set.new
     @columns = @list_algs ? make_alg_columns : make_pos_columns
     @u_rotation = (params[:urot] || 0).to_i
+    @hi_lite = params[:hl]
   end
 
   def make_alg_columns
@@ -90,29 +91,6 @@ class PositionsController < ApplicationController
     vc.link_to(pos.display_name,  "positions/#{pos.id}")
   end
 
-  # === Routed action ===
-  def show
-    pos = Position.find_by_id(params[:id]) || Position.by_ll_code(params[:id]) || RawAlg.find_by_alg_id(params[:id]).position # Try DB id LL code, or alg name
-    urot_param = ['1', '2', '3'].include?(params[:urot]) ? '&urot=' + params[:urot] : ''
-    redirect_to "/?" + Fields::FILTER_NAMES.map{|k| "#{k}=#{pos[k]}"}.join('&') + urot_param
-  end
-
-  # === Routed action ===
-  def find_by_alg
-    moves_from_user = params[:alg].upcase
-
-    if moves_from_user.include? ' '
-      actual_moves = moves_from_user
-    else
-      actual_moves = RawAlg.find_by_alg_id(moves_from_user).try(:moves)
-      raise "There is no alg named '#{moves_from_user}'" unless actual_moves
-    end
-    render json: { ll_code: Cube.new(actual_moves).standard_ll_code, urot: Cube.new(actual_moves).standard_ll_code_offset}
-  rescue Exception => e
-    render json: { error: e.message }
-  end
-
-
   def store_parameters(cookie_name, defaults, new_data = params)
     stored_parameters = defaults.keys
     if new_data.has_key?(stored_parameters.first)
@@ -127,5 +105,28 @@ class PositionsController < ApplicationController
 
   def vc
     view_context
+  end
+
+  # === Routed action ===
+  def show
+    pos = Position.find_by_id(params[:id]) || Position.by_ll_code(params[:id]) || RawAlg.find_by_alg_id(params[:id]).position # Try DB id LL code, or alg name
+    urot_param = ['1', '2', '3'].include?(params[:urot]) ? '&urot=' + params[:urot] : ''
+    hilite_param = params[:hl] ? '&hl=' + params[:hl] : ''
+    redirect_to "/?" + Fields::FILTER_NAMES.map{|k| "#{k}=#{pos[k]}"}.join('&') + urot_param + hilite_param
+  end
+
+  # === Routed action ===
+  def find_by_alg
+    user_input = params[:alg].upcase.strip
+
+    if user_input.include? ' '
+      actual_moves = user_input
+    else
+      actual_moves = RawAlg.find_by_alg_id(user_input).try(:moves)
+      raise "There is no alg named '#{user_input}'" unless actual_moves
+    end
+    render json: { ll_code: Cube.new(actual_moves).standard_ll_code, urot: Cube.new(actual_moves).standard_ll_code_offset, found_by: user_input}
+  rescue Exception => e
+    render json: { error: e.message }
   end
 end

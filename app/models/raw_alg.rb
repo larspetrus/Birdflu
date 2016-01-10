@@ -81,6 +81,10 @@ class RawAlg < ActiveRecord::Base
     true
   end
 
+  def matches(search_term)
+    search_term == moves || search_term == alg_id
+  end
+
   # Set up a "premove" so the Roofpig colors look like the Position illustration
   def setup_moves(pov_adjustment = 0)
     net_setup = (u_setup + pov_adjustment) % 4

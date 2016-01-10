@@ -83,7 +83,7 @@
   - @columns.each do |column|
     %th= column.header
   - @list_items.each do |item|
-    %tr
+    %tr{class: item.matches(@hi_lite) ? 'hilite' : ''}
       - @columns.each do |column|
         - if column.is_svg
           %td= render 'cube_icon', column.svg_config.call(item, flags)
