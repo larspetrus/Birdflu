@@ -11,11 +11,8 @@ class RawAlg < ActiveRecord::Base
   end
 
   def self.make(alg, name, length = 1)
-    alg_b = Algs.as_variant_b(alg)
-    needed_variant = %w(B R F L)[-Cube.new(alg_b).standard_ll_code_offset % 4]
-
-    moves = Algs.rotate_by_U(alg_b, 'BRFL'.index(needed_variant))
-    RawAlg.create(moves: moves, u_setup: Algs.standard_u_setup(moves), alg_id: name, length: length)
+    std_alg = Algs.standard_rotation(alg)
+    RawAlg.create(moves: std_alg, u_setup: Algs.standard_u_setup(std_alg), alg_id: name, length: length)
   end
 
   def algs(u_shift)
@@ -55,6 +52,11 @@ class RawAlg < ActiveRecord::Base
       alg.save
     end
     puts "Update #{description} done in #{'%.2f' % (Time.now - t1)}"
+  end
+
+  def self.find_from_moves(moves, position_id)
+    std_alg = Algs.standard_rotation(moves)
+    RawAlg.where(moves: std_alg, length: std_alg.split(' ').count, position_id: position_id).first
   end
 
   def variant(side)
@@ -100,13 +102,11 @@ class RawAlg < ActiveRecord::Base
   def self.sanity_check
     result = []
     RawAlg.where('id > 1').find_each do |alg|
-      alg = RawAlg.find(start+i)
-      needed_variant = %w(B R F L)[-Cube.new(alg.variant(:B)).standard_ll_code_offset % 4]
-      moves = Algs.rotate_by_U(alg.variant(:B), 'BRFL'.index(needed_variant))
-      u_setup = Algs.standard_u_setup(moves)
+      expected_moves = Algs.standard_rotation(alg.moves)
+      expected_u_setup = Algs.standard_u_setup(expected_moves)
 
-      if alg.u_setup != u_setup || alg.moves != moves
-        result << ".moves and/or .u_setup is wrong: #{alg.id}: #{alg.moves} - #{alg.u_setup} Should be:!= #{moves} - #{u_setup})"
+      if alg.u_setup != expected_u_setup || alg.moves != expected_moves
+        result << ".moves and/or .u_setup is wrong: #{alg.id}: #{alg.moves} - #{alg.u_setup} Should be:!= #{expected_moves} - #{expected_u_setup})"
       end
     end
     result

@@ -21,6 +21,20 @@ RSpec.describe Algs do
     expect(Algs.rotate_by_U("B F", 2)).to eq("B F")    # normalize
   end
 
+  it 'standard_rotation' do
+    std_G1 = "B L F' L F L2 B'"
+    expect(Algs.standard_rotation(std_G1)).to eq(std_G1)
+    expect(Algs.standard_rotation(Algs.rotate_by_U(std_G1, 1))).to eq(std_G1)
+    expect(Algs.standard_rotation(Algs.rotate_by_U(std_G1, 2))).to eq(std_G1)
+    expect(Algs.standard_rotation(Algs.rotate_by_U(std_G1, 3))).to eq(std_G1)
+
+    std_I143 = "F2 U L R' F2 L' R U F2"
+    expect(Algs.standard_rotation(std_I143)).to eq(std_I143)
+    expect(Algs.standard_rotation(Algs.rotate_by_U(std_I143, 1))).to eq(std_I143)
+    expect(Algs.standard_rotation(Algs.rotate_by_U(std_I143, 2))).to eq(std_I143)
+    expect(Algs.standard_rotation(Algs.rotate_by_U(std_I143, 3))).to eq(std_I143)
+  end
+
   it 'normalize' do
     expect(Algs.normalize("F R2 L2 U D' B F2")).to eq("F L2 R2 D' U B F2")
     expect(Algs.normalize("B L' R F D2 U F B' R")).to eq("B L' R F D2 U B' F R")

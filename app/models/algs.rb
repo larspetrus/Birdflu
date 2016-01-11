@@ -21,6 +21,12 @@ module Algs
     normalize(rotated)
   end
 
+  # The alg version that produces the standard LL code
+  def self.standard_rotation(alg)
+    rotation = -Cube.new(Algs.as_variant_b(alg)).standard_ll_code_offset % 4
+    Algs.rotate_by_U(Algs.as_variant_b(alg), rotation)
+  end
+
   def self.normalize(alg)
     _normalize(alg, %w(RL UD FB))
   end
