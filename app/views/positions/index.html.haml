@@ -112,18 +112,22 @@
   // --- SVG ROTATION SECTION ---
 
   var u_transpositions = {
-     1:   { R: 'F', F: 'L', L: 'B', B: 'R' },
-    '-1': { R: 'B', F: 'R', L: 'F', B: 'L' },
-     2:   { R: 'L', F: 'B', L: 'R', B: 'F' },
+     1: { R: 'F', F: 'L', L: 'B', B: 'R' },
+     2: { R: 'L', F: 'B', L: 'R', B: 'F' },
+     3: { R: 'B', F: 'R', L: 'F', B: 'L' },
   }
   function rotate_all_algs(diff) {
-    $('.alg').text(function(i, current_text){
-      result = ''
-      for (var i = 0, len = current_text.length; i < len; i++) {
-        result += u_transpositions[diff][current_text[i]] || current_text[i]
-      }
-      return result
-    });
+    var d0123 = (diff + 4) % 4
+    if (d0123 > 0) {
+      var u_transposition = u_transpositions[d0123]
+      $('.alg').text(function(i, current_text){
+        result = ''
+        for (var i = 0, len = current_text.length; i < len; i++) {
+          result += u_transposition[current_text[i]] || current_text[i]
+        }
+        return result
+      });
+    }
   }
 
   function spin_svgs(diff, progress) {
@@ -153,7 +157,7 @@
   }
 
   function rotate_everything(diff) {
-  var algs_rotated = false;
+    var algs_rotated = false;
     $('body').animate({ dummyAttr: '20px' },
       {
         duration:300,

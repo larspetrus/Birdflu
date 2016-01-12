@@ -56,4 +56,12 @@ describe RawAlg do
       expect(u_setup_3.setup_moves(2)).to eq("| setupmoves=U")
     end
   end
+
+  it 'find_from_moves' do
+    db_alg = RawAlg.make("F2 U L R' F2 L' R U F2", 'I143', 9)
+
+    expect(RawAlg.find_from_moves(db_alg.moves, db_alg.position).alg_id).to eq('I143')
+    expect(RawAlg.find_from_moves(Algs.anti_normalize(db_alg.moves), db_alg.position).alg_id).to eq('I143')
+    expect(RawAlg.find_from_moves("B D U' F U L F' D' B' U' L'", db_alg.position)).to eq(nil)
+  end
 end

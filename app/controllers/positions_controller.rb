@@ -35,7 +35,15 @@ class PositionsController < ApplicationController
     @svg_ids = Set.new
     @columns = @list_algs ? make_alg_columns : make_pos_columns
     @u_rotation = (params[:urot] || 0).to_i
-    @hi_lite = params[:hl]
+
+    if params[:hl_alg]
+      @hi_lite = params[:hl_alg]
+      @list_items += [DuckRawAlg.new(Algs.rotate_by_U(@hi_lite, -@u_rotation))]
+    end
+    if params[:hl_id]
+      @hi_lite = params[:hl_id].to_i
+      @list_items += [RawAlg.find(params[:hl_id].to_i)] unless @list_items.map(&:id).include?(@hi_lite)
+    end
   end
 
   def make_alg_columns
@@ -110,23 +118,64 @@ class PositionsController < ApplicationController
   # === Routed action ===
   def show
     pos = Position.find_by_id(params[:id]) || Position.by_ll_code(params[:id]) || RawAlg.find_by_alg_id(params[:id]).position # Try DB id LL code, or alg name
-    urot_param = ['1', '2', '3'].include?(params[:urot]) ? '&urot=' + params[:urot] : ''
-    hilite_param = params[:hl] ? '&hl=' + params[:hl] : ''
-    redirect_to "/?" + Fields::FILTER_NAMES.map{|k| "#{k}=#{pos[k]}"}.join('&') + urot_param + hilite_param
+
+    new_params = {}
+    Fields::FILTER_NAMES.each { |k| new_params[k] = pos[k] }
+    new_params[:urot] = params[:urot] if ['1', '2', '3'].include?(params[:urot])
+    new_params[:hl_id] = params[:hl_id] if params[:hl_id]
+    new_params[:hl_alg] = params[:hl_alg] if params[:hl_alg]
+
+    redirect_to "/?" + new_params.to_query
   end
 
   # === Routed action ===
   def find_by_alg
     user_input = params[:alg].upcase.strip
 
-    if user_input.include? ' '
+    if user_input.include? ' ' # interpret as moves
       actual_moves = user_input
-    else
-      actual_moves = RawAlg.find_by_alg_id(user_input).try(:moves)
-      raise "There is no alg named '#{user_input}'" unless actual_moves
+      ll_code = Cube.new(actual_moves).standard_ll_code # raises exception unless alg is good
+
+      db_alg = RawAlg.find_from_moves(user_input, Position.find_by!(ll_code: ll_code))
+    else # interpret as alg name
+      db_alg = RawAlg.find_by_alg_id(user_input)
+      raise "There is no alg named '#{user_input}'" unless db_alg
+      actual_moves = db_alg.moves
     end
-    render json: { ll_code: Cube.new(actual_moves).standard_ll_code, urot: Cube.new(actual_moves).standard_ll_code_offset, found_by: user_input}
+
+    result = { ll_code: Cube.new(actual_moves).standard_ll_code, urot: Cube.new(actual_moves).standard_ll_code_offset}
+    if db_alg
+      result[:alg_id] = db_alg.id
+    else
+      result[:found_by] = user_input
+    end
+    render json: result
   rescue Exception => e
     render json: { error: e.message }
+  end
+end
+
+class DuckRawAlg
+  attr_reader :moves, :length, :speed, :name, :css_kind, :pov_offset, :pov_adjust_u_setup, :u_setup, :specialness
+
+  def initialize(moves)
+    @moves = moves
+    @length  = Algs.length(moves)
+    @speed   = Algs.speed_score(moves)
+    @u_setup = Algs.standard_u_setup(moves)
+
+    @name = '-'
+    @css_kind = ''
+    @pov_offset = 0
+    @pov_adjust_u_setup = 0
+    @specialness = 'Not in DB'
+  end
+
+  def matches(search_term)
+    true
+  end
+
+  def single?
+    true
   end
 end

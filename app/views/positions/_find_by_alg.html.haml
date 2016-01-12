@@ -8,7 +8,11 @@
   $('#find_by_alg').on('ajax:success', function(e, data, status, xhr) {
     var result = JSON.parse(xhr.responseText);
     if (result.ll_code) {
-      window.location.href = '/positions/' + result.ll_code + '?urot=' + result.urot + '&hl=' + result.found_by;
+      var new_url = '/positions/' + result.ll_code + '?urot=' + result.urot;
+      new_url += (result.found_by ? '&hl_alg=' + result.found_by : '')
+      new_url += (result.alg_id   ? '&hl_id='  + result.alg_id   : '')
+
+      window.location.href = new_url;
     } else {
       bad_alg_dialog(result.error || "We didn't even get an error...");
     }

@@ -84,6 +84,13 @@ RSpec.describe Algs do
     expect(Algs.speed_score(b)).to eq(Algs.speed_score(l))
   end
 
+  it 'length' do
+    expect(Algs.length("R' F2 L F L' F R")).to eq(7)
+    expect(Algs.length("F R' F R F2 L' U2 L")).to eq(8)
+    expect(Algs.length("B2 U2 B' U2 B2 U2 B2 U2 B' U2 B2")).to eq(11)
+    expect(Algs.length("B' U2 B U B U B2 U' B2 U2 B2 U2 B2 U2 B'")).to eq(15)
+  end
+
   it 'as_b_alg' do
     expect(Algs.as_variant_b("L' B2 R B R' B L")).to eq("B' R2 F R F' R B")
     expect(Algs.as_variant_b("F' L' U' L U L2 D' L' D L' F2 U' F'")).to eq("B' R' U' R U R2 D' R' D R' B2 U' B'")

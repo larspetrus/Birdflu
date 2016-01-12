@@ -56,7 +56,7 @@ class RawAlg < ActiveRecord::Base
 
   def self.find_from_moves(moves, position_id)
     std_alg = Algs.standard_rotation(moves)
-    RawAlg.where(moves: std_alg, length: std_alg.split(' ').count, position_id: position_id).first
+    RawAlg.where(moves: std_alg, length: Algs.length(std_alg), position_id: position_id).first
   end
 
   def variant(side)
@@ -84,7 +84,7 @@ class RawAlg < ActiveRecord::Base
   end
 
   def matches(search_term)
-    search_term == moves || search_term == alg_id
+    search_term == id
   end
 
   # Set up a "premove" so the Roofpig colors look like the Position illustration
@@ -107,6 +107,11 @@ class RawAlg < ActiveRecord::Base
 
       if alg.u_setup != expected_u_setup || alg.moves != expected_moves
         result << ".moves and/or .u_setup is wrong: #{alg.id}: #{alg.moves} - #{alg.u_setup} Should be:!= #{expected_moves} - #{expected_u_setup})"
+      end
+
+      expected_speed = Algs.speed_score(alg.moves)
+      if alg.speed != expected_speed
+        result << ".speed is wrong: #{alg.id}: #{alg.speed} Should be:!= #{expected_speed}.  Error: #{alg.speed - expected_speed})"
       end
     end
     result

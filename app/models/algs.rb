@@ -114,6 +114,10 @@ module Algs
     end
   end
 
+  def self.length(alg)
+    alg.split(' ').length
+  end
+
   def self.variant(alg)
     alg.gsub(/[ '2DU]/, '').first
   end
