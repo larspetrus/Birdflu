@@ -129,13 +129,13 @@ $optimal_color: #69f;
   padding: 6px;
   margin: 4px;
 
-  #headline, #headline_urot {
+  #headline, #headline_prot {
     font-size: 16px;
     font-weight: bold;
     display: inline-block;
     margin-bottom: 4px;
   }
-  #headline_urot {
+  #headline_prot {
     margin-left: -4px; // https://css-tricks.com/fighting-the-space-between-inline-block-elements/
     font-size: 12px;
   }

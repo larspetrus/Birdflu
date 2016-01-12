@@ -8,7 +8,7 @@ var rp_setups = {
 };
 
 function rp_setup(u_setup) {
-  net_setup = (u_setup + u_rotation + 4) % 4
+  net_setup = (u_setup + page_rotation + 4) % 4
   return rp_setups[net_setup]
 }
 

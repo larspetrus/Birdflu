@@ -8,7 +8,7 @@
   $('#find_by_alg').on('ajax:success', function(e, data, status, xhr) {
     var result = JSON.parse(xhr.responseText);
     if (result.ll_code) {
-      var new_url = '/positions/' + result.ll_code + '?urot=' + result.urot;
+      var new_url = '/positions/' + result.ll_code + '?prot=' + result.prot;
       new_url += (result.found_by ? '&hl_alg=' + result.found_by : '')
       new_url += (result.alg_id   ? '&hl_id='  + result.alg_id   : '')
 

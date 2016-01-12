@@ -34,11 +34,11 @@ class PositionsController < ApplicationController
 
     @svg_ids = Set.new
     @columns = @list_algs ? make_alg_columns : make_pos_columns
-    @u_rotation = (params[:urot] || 0).to_i
+    @page_rotation = (params[:prot] || 0).to_i
 
     if params[:hl_alg]
       @hi_lite = params[:hl_alg]
-      @list_items += [DuckRawAlg.new(Algs.rotate_by_U(@hi_lite, -@u_rotation))]
+      @list_items += [DuckRawAlg.new(Algs.rotate_by_U(@hi_lite, -@page_rotation))]
     end
     if params[:hl_id]
       @hi_lite = params[:hl_id].to_i
@@ -121,7 +121,7 @@ class PositionsController < ApplicationController
 
     new_params = {}
     Fields::FILTER_NAMES.each { |k| new_params[k] = pos[k] }
-    new_params[:urot] = params[:urot] if ['1', '2', '3'].include?(params[:urot])
+    new_params[:prot] = params[:prot] if ['1', '2', '3'].include?(params[:prot])
     new_params[:hl_id] = params[:hl_id] if params[:hl_id]
     new_params[:hl_alg] = params[:hl_alg] if params[:hl_alg]
 
@@ -143,7 +143,7 @@ class PositionsController < ApplicationController
       actual_moves = db_alg.moves
     end
 
-    result = { ll_code: Cube.new(actual_moves).standard_ll_code, urot: Cube.new(actual_moves).standard_ll_code_offset}
+    result = { ll_code: Cube.new(actual_moves).standard_ll_code, prot: Cube.new(actual_moves).standard_ll_code_offset}
     if db_alg
       result[:alg_id] = db_alg.id
     else
