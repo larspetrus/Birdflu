@@ -77,7 +77,7 @@ RSpec.describe Position, :type => :model do
                                  "weight"     => 1,
                                  "pov_offset" => 0,
                                  })
-    expect(pos.is_pov).to eq(false)
+    expect(pos.is_main).to eq(true)
 
 
     pov_pos = Position.find_by!(ll_code: "b5k5p5q5")
@@ -99,7 +99,7 @@ RSpec.describe Position, :type => :model do
                                  "weight"     => nil,
                                  "pov_offset" => 2,
                                 })
-    expect(pov_pos.is_pov).to eq(true)
+    expect(pov_pos.is_main).to eq(false)
   end
 
 end

@@ -98,23 +98,4 @@ class RawAlg < ActiveRecord::Base
   def to_s
     "#{alg_id}: #{moves}  (id: #{id})"
   end
-
-  def self.sanity_check
-    result = []
-    RawAlg.where('id > 1').find_each do |alg|
-      expected_moves = Algs.standard_rotation(alg.moves)
-      expected_u_setup = Algs.standard_u_setup(expected_moves)
-
-      if alg.u_setup != expected_u_setup || alg.moves != expected_moves
-        result << ".moves and/or .u_setup is wrong: #{alg.id}: #{alg.moves} - #{alg.u_setup} Should be:!= #{expected_moves} - #{expected_u_setup})"
-      end
-
-      expected_speed = Algs.speed_score(alg.moves)
-      if alg.speed != expected_speed
-        result << ".speed: #{alg.id}: #{alg.speed} Should be: #{expected_speed}. Diff: #{alg.speed - expected_speed}"
-      end
-    end
-    result
-  end
-
 end

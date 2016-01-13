@@ -1,10 +1,11 @@
-# The Positions table contains a static data set of 3916 LL positions. Once initialized, it will never
+# The Positions table contains a static data set of 4608 LL positions. Once initialized, it will never
 # change. It could live in memory instead of (or in addition to) the DB, and maybe that's a future feature.
 class Position < ActiveRecord::Base
   has_many :combo_algs, -> { order "length, moves, base_alg2_id DESC" }
 
   belongs_to :best_alg, class_name: 'RawAlg'
   belongs_to :best_combo_alg, class_name: 'ComboAlg'
+  belongs_to :pov_position, class_name: 'Position'
 
   has_one :stats, class_name: 'PositionStats'
 
@@ -58,8 +59,8 @@ class Position < ActiveRecord::Base
     Position.find(inverse_id)
   end
 
-  def is_pov
-    pov_position_id != id
+  def is_main
+    pov_position_id == id
   end
 
   POV_IDS_CACHE = Hash.new{|hash, key| hash[key] = Position.where(pov_position_id: key).pluck(:id).freeze }
@@ -174,29 +175,6 @@ class Position < ActiveRecord::Base
   def self.random_id
     @main_pos_ids ||= Position.where("pov_position_id = id").pluck(:id)
     @main_pos_ids.sample
-  end
-
-  def self.sanity_check
-    errors = []
-    correct_CL_mirror = {"Ao"=>"Ao", "Ad"=>"Ad", "Af"=>"Af", "bo"=>"Bo", "Bo"=>"bo", "bd"=>"Bd", "Bd"=>"bd", "bb"=>"Bl", "Bl"=>"bb", "bl"=>"Bb", "Bb"=>"bl", "bf"=>"Br", "Br"=>"bf", "br"=>"Bf", "Bf"=>"br", "Co"=>"Co", "Cd"=>"Cd", "Cr"=>"Cl", "Cl"=>"Cr", "Cf"=>"Cf", "Cb"=>"Cb", "Do"=>"Do", "Dd"=>"Dd", "Dr"=>"Dl", "Dl"=>"Dr", "Df"=>"Df", "Db"=>"Db", "Eo"=>"Eo", "Ed"=>"Ed", "Ef"=>"Er", "Er"=>"Ef", "Eb"=>"El", "El"=>"Eb", "Fo"=>"Fo", "Fd"=>"Fd", "Ff"=>"Ff", "Fl"=>"Fl", "Go"=>"Go", "Gd"=>"Gd", "Gf"=>"Gb", "Gb"=>"Gf", "Gl"=>"Gl", "Gr"=>"Gr"}
-
-    Position.all.each do |pos|
-      pos_id = "Position id: #{pos.id}, ll_code: #{pos.ll_code}"
-      mirror_pos = pos.mirror
-
-      # Do mirrors match?
-      if pos.id != mirror_pos.mirror_id
-        errors << "Unmatched mirrors: #{pos_id}"
-      end
-
-      # Do the corner looks match?
-      if correct_CL_mirror[pos.cop] != mirror_pos.cop
-        errors << "Unmatched corner looks '#{pos.cop}' <=> '#{mirror_pos.cop}': #{pos_id}"
-      end
-    end
-
-    puts "-"*88, errors
-    puts "Error count: #{errors.size}"
   end
 
   COP_NAMES = {

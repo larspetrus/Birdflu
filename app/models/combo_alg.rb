@@ -87,15 +87,4 @@ class ComboAlg < ActiveRecord::Base
   def to_s
     "#{name}: #{moves}  (id: #{id})"
   end
-
-  def self.sanity_check
-    errors = []
-
-    ComboAlg.all.each do |ca|
-      unless ca.is_aligned_with_ll_code
-        errors << ca.to_s
-      end
-    end
-    errors
-  end
 end
