@@ -47,6 +47,24 @@ module Algs
     alg
   end
 
+  def self.equivalent_versions(alg)
+    normalg = Algs.normalize(alg)
+    moves = normalg.split(' ')
+    swap_starts = (0..moves.length-2).select{|i| %w(LR DU BF).include? moves[i][0]+moves[i+1][0] }
+
+    result = [normalg]
+    swap_starts.each do |swap_start|
+      result.dup.each {|alg| result << Algs.swap_moves(alg, swap_start)}
+    end
+    result
+  end
+
+  def self.swap_moves(alg, swap_start)
+    moves = alg.split(' ')
+    moves[swap_start], moves[swap_start+1] = moves[swap_start+1], moves[swap_start]
+    moves.join(' ')
+  end
+
   def self.standard_u_setup(alg)
     cube = Cube.new(alg)
     ('BRFL'.index(cube.piece_at('UB').name[1]) - LL.edge_data(cube.standard_ll_code[1]).distance) % 4
@@ -86,6 +104,10 @@ module Algs
   end
 
   def self.speed_score(alg)
+    Algs.equivalent_versions(alg).map{|a| Algs.single_speed_score(a)}.min
+  end
+
+  def self.single_speed_score(alg)
     side_base = {'D' => 1.2, 'U' => 0.8}
 
     as_moves = alg.split(' ')

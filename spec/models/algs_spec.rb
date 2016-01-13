@@ -44,6 +44,11 @@ RSpec.describe Algs do
     expect(Algs.anti_normalize("F R2 L2 U D' B F2")).to eq("F R2 L2 U D' F2 B")
     expect(Algs.anti_normalize("B L' R F D2 U F B' R")).to eq("B R L' F U D2 F B' R")
   end
+  
+  it 'equivalent_versions' do
+    expect(Algs.equivalent_versions("F B' U").sort).to eq(["B' F U", "F B' U"])
+    expect(Algs.equivalent_versions("D L2 R F B'").sort).to eq([ "D L2 R B' F", "D L2 R F B'", "D R L2 B' F", "D R L2 F B'"])
+  end
 
   it 'compress' do
     expect(Algs.compress("F R2 L2 U D' B F2")).to eq('FrlUpBf')
@@ -77,11 +82,12 @@ RSpec.describe Algs do
   end
 
   it 'speed_score is symmetrical' do
-    b, r, f, l = "B L F U' F' U L' B'", "R B L U' L' U B' R'", "F R B U' B' U R' F'", "L F R U' R' U F' L'"
+    alg = "D2 F' U2 B' D2 B2 F' L2 F L2 R2 B' F' R2 F2"
+    a0, a1, a2, a3  = [0,1,2,3].map{|i| Algs.rotate_by_U(alg, i) }
 
-    expect(Algs.speed_score(b)).to eq(Algs.speed_score(r))
-    expect(Algs.speed_score(b)).to eq(Algs.speed_score(f))
-    expect(Algs.speed_score(b)).to eq(Algs.speed_score(l))
+    expect(Algs.speed_score(a0)).to eq(Algs.speed_score(a1))
+    expect(Algs.speed_score(a0)).to eq(Algs.speed_score(a2))
+    expect(Algs.speed_score(a0)).to eq(Algs.speed_score(a3))
   end
 
   it 'length' do

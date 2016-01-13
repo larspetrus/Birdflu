@@ -111,7 +111,7 @@ class RawAlg < ActiveRecord::Base
 
       expected_speed = Algs.speed_score(alg.moves)
       if alg.speed != expected_speed
-        result << ".speed is wrong: #{alg.id}: #{alg.speed} Should be:!= #{expected_speed}.  Error: #{alg.speed - expected_speed})"
+        result << ".speed: #{alg.id}: #{alg.speed} Should be: #{expected_speed}. Diff: #{alg.speed - expected_speed}"
       end
     end
     result
