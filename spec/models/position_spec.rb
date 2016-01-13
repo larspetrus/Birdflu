@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe Position, :type => :model do
   it "generated everything" do
     expect(Position.count).to eq(4608)
-    expect(Position.where('pov_position_id = id').count).to eq(3916)
+    expect(Position.where('main_position_id = id').count).to eq(3916)
   end
 
   it "ll_code uniqueness" do
@@ -12,7 +12,7 @@ RSpec.describe Position, :type => :model do
 
   it "pov_variant_in" do
     main_pos = Position.find_by!(ll_code: "a3a6e6o7")
-    variants = Position.where(pov_position_id: main_pos.id)
+    variants = Position.where(main_position_id: main_pos.id)
 
     expect(main_pos.pov_variant_in([1, 2, main_pos.id, 8])).to eq(main_pos)
     expect(main_pos.pov_variant_in([1, 2, variants[1].id, 8])).to eq(variants[1])
@@ -27,7 +27,7 @@ RSpec.describe Position, :type => :model do
 
     main_pov = Position.find_by!(ll_code: 'a7a7e7o7')
     alt_pov  = Position.find_by!(ll_code: 'a1e1e1i1')
-    pov_ids = Position.where(pov_position_id: main_pov.id).pluck(:id)
+    pov_ids = Position.where(main_position_id: main_pov.id).pluck(:id)
 
     expect(main_pov.pov_rotations).to eq(pov_ids - [main_pov.id])
     expect(alt_pov.pov_rotations).to  eq(pov_ids - [alt_pov.id])
@@ -65,7 +65,7 @@ RSpec.describe Position, :type => :model do
                                  "optimal_alg_length"=> pos.optimal_alg_length,
                                  "best_combo_alg_id" => pos.best_combo_alg_id,
                                  "mirror_id"         => pos.mirror_id,
-                                 "pov_position_id"   => pos.id,
+                                 "main_position_id"  => pos.id,
                                  "ll_code"    => "b7c7f7q7",
                                  "cop"        => "Ff",
                                  "oll"        => "m21",
@@ -87,7 +87,7 @@ RSpec.describe Position, :type => :model do
                                  "optimal_alg_length"=> pov_pos.optimal_alg_length,
                                  "best_combo_alg_id" => pov_pos.best_combo_alg_id,
                                  "mirror_id"         => pov_pos.mirror_id,
-                                 "pov_position_id"   => pos.id,
+                                 "main_position_id"  => pos.id,
                                  "ll_code"    => "b5k5p5q5",
                                  "cop"        => "Fb",
                                  "oll"        => "m21",

@@ -19,9 +19,9 @@ RSpec.configure do |config|
     config.before(:suite) do
       # -- uncomment to regenerate --
       # Position.delete_all
-      # ActiveRecord::Base.connection.reset_pk_sequence!('positions')
 
       if Position.count == 0
+        ActiveRecord::Base.connection.reset_pk_sequence!('positions')
         ActiveRecord::Base.transaction { BigThought.generate_positions }
       end
     end

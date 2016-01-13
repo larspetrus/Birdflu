@@ -29,7 +29,7 @@ class PositionsController < ApplicationController
 
     @list_items =
         @list_algs ?
-          RawAlg.where(position_id: @positions.map(&:pov_position_id)).includes(:position).order(@format.sortby).limit(@format.lines.to_i) :
+          RawAlg.where(position_id: @positions.map(&:main_position_id)).includes(:position).order(@format.sortby).limit(@format.lines.to_i) :
           @positions.first(100)
 
     @svg_ids = Set.new

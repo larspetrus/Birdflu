@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160103160009) do
+ActiveRecord::Schema.define(version: 20160113182332) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -63,7 +63,7 @@ ActiveRecord::Schema.define(version: 20160103160009) do
     t.string  "cp",                 limit: 255
     t.integer "mirror_id"
     t.integer "inverse_id"
-    t.integer "pov_position_id"
+    t.integer "main_position_id"
     t.integer "pov_offset"
   end
 

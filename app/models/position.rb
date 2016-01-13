@@ -5,7 +5,7 @@ class Position < ActiveRecord::Base
 
   belongs_to :best_alg, class_name: 'RawAlg'
   belongs_to :best_combo_alg, class_name: 'ComboAlg'
-  belongs_to :pov_position, class_name: 'Position'
+  belongs_to :main_position, class_name: 'Position'
 
   has_one :stats, class_name: 'PositionStats'
 
@@ -44,7 +44,7 @@ class Position < ActiveRecord::Base
   end
 
   def has_mirror
-    pov_position_id != mirror_id
+    main_position_id != mirror_id
   end
 
   def mirror
@@ -52,7 +52,7 @@ class Position < ActiveRecord::Base
   end
 
   def has_inverse
-    pov_position_id != inverse_id
+    main_position_id != inverse_id
   end
 
   def inverse
@@ -60,10 +60,10 @@ class Position < ActiveRecord::Base
   end
 
   def is_main
-    pov_position_id == id
+    main_position_id == id
   end
 
-  POV_IDS_CACHE = Hash.new{|hash, key| hash[key] = Position.where(pov_position_id: key).pluck(:id).freeze }
+  POV_IDS_CACHE = Hash.new{|hash, key| hash[key] = Position.where(main_position_id: key).pluck(:id).freeze }
   def pov_variant_in(selected_ids)
     return self if selected_ids.include?(id)
 
@@ -71,7 +71,7 @@ class Position < ActiveRecord::Base
   end
 
   def pov_rotations
-    POV_IDS_CACHE[pov_position_id].select{|pov_id| pov_id != id}
+    POV_IDS_CACHE[main_position_id].select{|pov_id| pov_id != id}
   end
 
   def display_name
@@ -109,15 +109,15 @@ class Position < ActiveRecord::Base
   end
 
   def pov_setup
-    if self.pov_position_id
-      source_pos = Position.find(self.pov_position_id)
+    if self.main_position_id
+      source_pos = Position.find(self.main_position_id)
 
       self.best_alg_id       = source_pos.best_alg_id
       self.best_combo_alg_id = source_pos.best_combo_alg_id
       self.optimal_alg_length= source_pos.optimal_alg_length
       self.alg_count         = source_pos.alg_count
     else
-      self.pov_position_id = self.id
+      self.main_position_id = self.id
       self.pov_offset = 0
     end
 
@@ -148,12 +148,12 @@ class Position < ActiveRecord::Base
 
   def compute_stats
     {
-      raw_counts: RawAlg.where(position_id: pov_position_id).group(:length).order(:length).count(),
-      shortest: RawAlg.where(position_id: pov_position_id).order(:length, :speed, :alg_id).first().try(:length),
-      fastest: RawAlg.where(position_id: pov_position_id).order(:speed, :length, :alg_id).first().try(:speed),
-      combo_count: ComboAlg.where(position_id: pov_position_id).count(),
-      shortest_combo: ComboAlg.where(position_id: pov_position_id).order(:length, :speed, :name).first().try(:length),
-      fastest_combo: ComboAlg.where(position_id: pov_position_id).order(:speed, :length, :name).first().try(:speed),
+      raw_counts: RawAlg.where(position_id: main_position_id).group(:length).order(:length).count(),
+      shortest:   RawAlg.where(position_id: main_position_id).order(:length, :speed, :alg_id).first().try(:length),
+      fastest:    RawAlg.where(position_id: main_position_id).order(:speed, :length, :alg_id).first().try(:speed),
+      combo_count:    ComboAlg.where(position_id: main_position_id).count(),
+      shortest_combo: ComboAlg.where(position_id: main_position_id).order(:length, :speed, :name).first().try(:length),
+      fastest_combo:  ComboAlg.where(position_id: main_position_id).order(:speed, :length, :name).first().try(:speed),
     }
   end
 
@@ -173,7 +173,7 @@ class Position < ActiveRecord::Base
   end
 
   def self.random_id
-    @main_pos_ids ||= Position.where("pov_position_id = id").pluck(:id)
+    @main_pos_ids ||= Position.where("main_position_id = id").pluck(:id)
     @main_pos_ids.sample
   end
 

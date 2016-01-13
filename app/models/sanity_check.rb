@@ -8,7 +8,7 @@ module SanityCheck
 
     Position.all.each do |pos|
       pos_id = "Position id: #{pos.id}, ll_code: #{pos.ll_code}"
-      main_pos = pos.pov_position # Ideally mirrors and inverses for ghosts would be the correct ghost
+      main_pos = pos.main_position # Ideally mirrors and inverses for ghosts would be the correct ghost
 
       errors << "Unmatched mirrors: #{pos_id}" if main_pos.id != pos.inverse.inverse_id
       errors << "Unmatched inverse: #{pos_id}" if main_pos.id != pos.mirror.mirror_id

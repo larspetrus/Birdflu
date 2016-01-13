@@ -39,7 +39,7 @@ class BigThought
     puts "Initializing Position: best_alg_id, optimal_alg_length, inverse_id"
     timed_transaction do
       Position.find_each do |pos|
-        optimal_alg = RawAlg.where(position_id: pos.pov_position_id).order([:length, :speed, :alg_id]).limit(1).first
+        optimal_alg = RawAlg.where(position_id: pos.main_position_id).order([:length, :speed, :alg_id]).limit(1).first
         inverse_ll_code = Cube.new(Algs.reverse(optimal_alg.moves)).standard_ll_code
         inverse_id = Position.find_by_ll_code(inverse_ll_code).id
         pos.update(best_alg_id: optimal_alg.id, optimal_alg_length: optimal_alg.length, inverse_id: inverse_id)
@@ -113,7 +113,7 @@ class BigThought
         ms = Position.get_filter_names(llc)
         missing_pos = !(ms[:cop] == 'xx' || Position.exists?(cop: ms[:cop], eo: ms[:eo], ep: ms[:ep]))
         if missing_pos
-          Position.create(ll_code: llc, pov_position_id: pos.id, pov_offset: 4-i)
+          Position.create(ll_code: llc, main_position_id: pos.id, pov_offset: 4-i)
         end
       end
     end
