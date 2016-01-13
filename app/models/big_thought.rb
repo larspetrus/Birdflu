@@ -110,8 +110,8 @@ class BigThought
   def BigThought.create_pov_positions
     Position.find_each do |pos|
       pos.as_cube.ll_codes.each_with_index do |llc, i|
-        ms = Position.get_filter_names(llc)
-        missing_pos = !(ms[:cop] == 'xx' || Position.exists?(cop: ms[:cop], eo: ms[:eo], ep: ms[:ep]))
+        ms = LlCode.filter_names(llc)
+        missing_pos = !(ms[:cop] == LlCode::NON_STANDARD_COP || Position.exists?(cop: ms[:cop], eo: ms[:eo], ep: ms[:ep]))
         if missing_pos
           Position.create(ll_code: llc, main_position_id: pos.id, pov_offset: 4-i)
         end

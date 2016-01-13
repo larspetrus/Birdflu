@@ -1,6 +1,6 @@
 class Icons::Ep < Icons::Base
 
-  EP_CODES = Position::EP_NAMES.invert
+  EP_CODES = LlCode::EP_NAMES.invert
 
   def initialize(name)
     super(:ep, name.to_sym)
