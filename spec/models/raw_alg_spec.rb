@@ -33,7 +33,7 @@ describe RawAlg do
       expect(alg.u_setup).to eq(0)
       expect(alg.moves).to eq("B F' U B D L2 D' B' U' B' U2 F")
       expect(alg.specialness).to eq(nil)
-      expect(alg.speed).to eq(11.14)
+      expect(alg.speed).to eq(10.74)
     end
 
     it 'picks right variant for moves' do

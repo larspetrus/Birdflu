@@ -22,7 +22,7 @@ RSpec.configure do |config|
       # ActiveRecord::Base.connection.reset_pk_sequence!('positions')
 
       if Position.count == 0
-        ActiveRecord::Base.transaction { Position.generate_all }
+        ActiveRecord::Base.transaction { BigThought.generate_positions }
       end
     end
 
