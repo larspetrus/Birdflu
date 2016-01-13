@@ -46,8 +46,8 @@
     = render 'picker_td', prop: :ep,  add_class: 'relative', ubl_text: true
 
 -if @single_position
-  .right{style: "width: 180px; position: absolute; top:40px; right:0px;"}
-    = render 'cube_icon', icon: Icons::Big.new(@single_position), size: 160, label: '', add_class: 'illustration-llicon'
+  %div{style: "width: 216px; position: absolute; top:24px; right:-24px;"}
+    = render 'cube_icon', icon: Icons::Big.new(@single_position), size: 192, pad: true, label: '', add_class: 'illustration-llicon'
 
 
 =form_tag url_for(controller: "positions", action: "index"), method: 'get', id: 'main-form' do
@@ -160,7 +160,7 @@
     var algs_rotated = false;
     $('body').animate({ dummyAttr: '20px' },
       {
-        duration:300,
+        duration:400,
         progress: function(animation, progress) {
           spin_svgs(diff, progress);
 

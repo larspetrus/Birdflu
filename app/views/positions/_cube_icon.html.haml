@@ -1,4 +1,5 @@
 - size ||= 100
+- pad ||= false
 - label ||= icon.name
 - selected_icon ||= nil
 
@@ -7,7 +8,7 @@
     .name{style: "font-size: #{size*0.21}px;"}= label
   - unrendered = @svg_ids.add?(icon.id)
   - cache([icon.id, unrendered ? "T" : "F"], skip_digest: true) do
-    %svg{Icons::Geometry.box_dimension}
+    %svg{Icons::Geometry.box_dimension(pad)}
       - if icon.is_illustration?
         %defs
           %linearGradient{id: "shade_L", x1: "0%", y1: "0%", x2: "100%", y2:"0%"}

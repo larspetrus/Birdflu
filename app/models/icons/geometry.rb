@@ -115,8 +115,10 @@ class Icons::Geometry
   ICON_STICKERS  = U_STICKERS.merge(PLAIN_SIDE_STICKERS)
   FANCY_STICKERS = U_STICKERS.merge(FANCY_SIDE_STICKERS)
 
-  def self.box_dimension
-    {viewBox: "0 0 #{VIEWBOX_SIZE} #{VIEWBOX_SIZE}"}
+  def self.box_dimension(pad)
+    start = pad ? -10 : 0
+    width = pad ? VIEWBOX_SIZE + 20 : VIEWBOX_SIZE
+    {viewBox: "#{start} #{start} #{width} #{width}"}
   end
 
   def self.tags_for(icon)
