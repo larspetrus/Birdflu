@@ -44,6 +44,13 @@
     = render 'picker_td', prop: :cp
     = render 'picker_td', prop: :eo
     = render 'picker_td', prop: :ep,  add_class: 'relative', ubl_text: true
+.rotation-ui
+  %h1
+    %span rotate
+  .buttons
+    %a{class: 'show-pig', onclick: "rotate_page(1);"} U
+    %a{class: 'show-pig', onclick: "rotate_page(2);"} U2
+    %a{class: 'show-pig', onclick: "rotate_page(-1);"} U'
 
 -if @single_position
   %div{style: "width: 216px; position: absolute; top:24px; right:-24px;"}
@@ -56,11 +63,6 @@
   =hidden_field_tag(:clicked, 'none')
 
   .page-controls
-    .rotation-ui
-      %a{class: 'show-pig', onclick: "rotate_everything(1);"} U
-      %a{class: 'show-pig', onclick: "rotate_everything(2);"} U2
-      %a{class: 'show-pig', onclick: "rotate_everything(-1);"} U'
-      %div
     - unless @single_position
       .center.page-format-header
         Show as
@@ -156,7 +158,7 @@
     }
   }
 
-  function rotate_everything(diff) {
+  function rotate_page(diff) {
     var algs_rotated = false;
     $('body').animate({ dummyAttr: '20px' },
       {
@@ -183,9 +185,9 @@
   }
 
   $(document).on('keypress', function(e) {
-    if (e.keyCode === 44) { rotate_everything(-1); } // comma = 44
-    if (e.keyCode === 46) { rotate_everything(+1); } // period = 46
-    if (e.keyCode === 47) { rotate_everything(+2); } // slash = 47
+    if (e.keyCode === 44) { rotate_page(-1); } // comma = 44
+    if (e.keyCode === 46) { rotate_page(+1); } // period = 46
+    if (e.keyCode === 47) { rotate_page(+2); } // slash = 47
   });
 
 

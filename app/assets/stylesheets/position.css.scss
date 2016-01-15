@@ -236,17 +236,38 @@ $panel-width: 450px;
   align-items: center;
 
   width: $panel-width;
-  height: 20px;
   margin: auto;
 }
 
+
+%div{style: ""}
 .rotation-ui {
-  display: flex;
-  align-items: center;
-  font-size: 13px;
-  a {
-    margin: 0 2px;
-    height: 10px;
+  position:absolute;
+  top:46px;
+  left:50%;
+  margin-left:180px; // Start this far right of center
+  border: 1px solid #aaa;
+
+  h1 {
+    text-align: center;
+    margin: -8px 0 -2px 0;
+    font-size: 10px;
+  }
+
+  h1 span{
+    background-color: white;
+    padding: 0 2px;
+  }
+
+  .buttons {
+    display: flex;
+    padding: 8px;
+    align-items: center;
+    font-size: 13px;
+    a {
+      margin: 0 2px;
+      height: 10px;
+    }
   }
 }
 
