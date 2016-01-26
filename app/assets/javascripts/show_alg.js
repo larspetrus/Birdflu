@@ -31,7 +31,7 @@ function roofpig_dialog(title, alg, u_setup, below_element) {
   });
 }
 
-$(document).on('click', '.algs-list .show-pig', function(e) {
+$(document).on('click', '.algs-list .show-pig', function(event) {
   var td = $(event.target).parent();
   var alg = td.prev().text();
   var title = td.siblings().eq(2).text();
@@ -39,7 +39,7 @@ $(document).on('click', '.algs-list .show-pig', function(e) {
   roofpig_dialog(title, alg, td.data("uset"), td.parent())
 });
 
-$(document).on('click', '.positions-list .show-pig', function(e) {
+$(document).on('click', '.positions-list .show-pig', function(event) {
   var td = $(event.target).parent();
   var alg = td.prev().text();
   var title = td.siblings().eq(0).text() + ' shortest';

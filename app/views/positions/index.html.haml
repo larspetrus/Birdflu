@@ -184,10 +184,10 @@
     );
   }
 
-  $(document).on('keypress', function(e) {
-    if (e.keyCode === 44) { rotate_page(-1); } // comma = 44
-    if (e.keyCode === 46) { rotate_page(+1); } // period = 46
-    if (e.keyCode === 47) { rotate_page(+2); } // slash = 47
+  $(document).on('keypress', function(event) {
+    if (event.keyCode === 44) { rotate_page(-1); } // comma = 44
+    if (event.keyCode === 46) { rotate_page(+1); } // period = 46
+    if (event.keyCode === 47) { rotate_page(+2); } // slash = 47
   });
 
 
