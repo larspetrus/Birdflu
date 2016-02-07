@@ -8,4 +8,6 @@ Rails.application.routes.draw do
 
   post 'positions/find_by_alg'
 
+  get "wca_callback" => "oauth#wca"
+
 end

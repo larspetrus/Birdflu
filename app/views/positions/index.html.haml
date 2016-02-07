@@ -32,6 +32,11 @@
   Cache #{number_to_human_size Rails.cache.instance_variable_get('@cache_size')}
   | PID #{Process.pid}
 
+%div{style: 'position: fixed; bottom:4px; left:4px; font-size: 8px; color: #bbb;'}
+  %a{href: "https://www.worldcubeassociation.org/oauth/authorize?response_type=code&client_id=7f190fdb8393613d534e2429d49c2cb897a3fe525bd2837edb48148de66fcf68&redirect_uri=https://birdflu.lar5.com/wca_callback&scope="}
+    Ignore Me
+
+
 %table.center
   %tr
     - [:COP, :OLL, '', :CO, :CP, :EO, :EP].each do |header|
