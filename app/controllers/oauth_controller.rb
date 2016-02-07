@@ -22,6 +22,6 @@ class OauthController < ActionController::Base
     http.use_ssl = true
     me_data = JSON.parse(http.request(me_request).body)["me"]
 
-    redirect_to "/wca_id=#{me_data['wca_id']}"
+    redirect_to "/?wca_id=#{me_data['wca_id']}"
   end
 end
