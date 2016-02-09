@@ -15,7 +15,7 @@ class OauthController < ActionController::Base
     }
     token_response = Net::HTTP.post_form(TOKEN_URI, token_params)
 
-    puts "Token response: #{token_response.body}"
+    Rails.logger.info "Token response: #{token_response.body}"
     access_token = JSON.parse(token_response.body)["access_token"]
 
     unless access_token
@@ -27,9 +27,9 @@ class OauthController < ActionController::Base
 
       session[:wca_login] = {wca_id: me_data['wca_id'], name: me_data['name'], id: me_data['id']}
 
-      flash[:notice] = "WCA Logged in as #{ me_data['name']}."
+      Rails.logger.info "WCA Logged in as #{ me_data['name']}."
     else
-      flash[:notice] = "Login failed."
+      Rails.logger.info "Login failed."
     end
 
     redirect_to "/"
