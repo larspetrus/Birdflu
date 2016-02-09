@@ -14,14 +14,24 @@ class OauthController < ActionController::Base
         client_secret: CLIENT_SECRET,
     }
     token_response = Net::HTTP.post_form(TOKEN_URI, token_params)
+
+    puts "Token response: #{token_response.body}"
     access_token = JSON.parse(token_response.body)["access_token"]
 
-    me_request = Net::HTTP::Get.new(ME_URI.request_uri)
-    me_request["Authorization"] = "Bearer #{access_token}"
-    http = Net::HTTP.new(ME_URI.host, ME_URI.port)
-    http.use_ssl = true
-    me_data = JSON.parse(http.request(me_request).body)["me"]
+    unless access_token
+      me_request = Net::HTTP::Get.new(ME_URI.request_uri)
+      me_request["Authorization"] = "Bearer #{access_token}"
+      http = Net::HTTP.new(ME_URI.host, ME_URI.port)
+      http.use_ssl = true
+      me_data = JSON.parse(http.request(me_request).body)["me"]
 
-    redirect_to "/?wca_id=#{me_data['wca_id']}"
+      session[:wca_login] = {wca_id: me_data['wca_id'], name: me_data['name'], id: me_data['id']}
+
+      flash[:notice] = "WCA Logged in as #{ me_data['name']}."
+    else
+      flash[:notice] = "Login failed."
+    end
+
+    redirect_to "/"
   end
 end
