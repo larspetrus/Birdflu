@@ -18,7 +18,7 @@ class OauthController < ActionController::Base
     Rails.logger.info "Token response: #{token_response.body}"
     access_token = JSON.parse(token_response.body)["access_token"]
 
-    unless access_token
+    if access_token
       me_request = Net::HTTP::Get.new(ME_URI.request_uri)
       me_request["Authorization"] = "Bearer #{access_token}"
       http = Net::HTTP.new(ME_URI.host, ME_URI.port)
@@ -27,9 +27,9 @@ class OauthController < ActionController::Base
 
       session[:wca_login] = {wca_id: me_data['wca_id'], name: me_data['name'], id: me_data['id']}
 
-      Rails.logger.info "WCA Logged in as #{ me_data['name']}."
+      Rails.logger.info "WCA Logged in as '#{me_data['name']}'."
     else
-      Rails.logger.info "Login failed."
+      Rails.logger.info "WCA Login failed."
     end
 
     redirect_to "/"
