@@ -9,5 +9,6 @@ Rails.application.routes.draw do
   post 'positions/find_by_alg'
 
   get "wca_callback" => "oauth#wca"
+  get "wca_logout" => "oauth#wca_logout"
 
 end

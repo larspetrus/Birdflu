@@ -44,6 +44,8 @@ class PositionsController < ApplicationController
       @hi_lite = params[:hl_id].to_i
       @list_items += [RawAlg.find(params[:hl_id].to_i)] unless @list_items.map(&:id).include?(@hi_lite)
     end
+
+    @login_name = session[:wca_login] ? session[:wca_login]['name'] : nil
   end
 
   def make_alg_columns

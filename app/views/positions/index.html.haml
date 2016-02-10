@@ -32,12 +32,13 @@
   Cache #{number_to_human_size Rails.cache.instance_variable_get('@cache_size')}
   | PID #{Process.pid}
 
-%div{style: 'position: fixed; bottom:4px; left:4px; font-size: 8px; color: #bbb;'}
-  - if session[:wca_login]
-    WCA login: #{session[:wca_login][:name]}
+%div{style: 'position: fixed; bottom:4px; left:4px; font-size: 8px;'}
+  - if @login_name
+    #{@login_name}
+    = link_to 'Logout', wca_logout_path
   - else
-    %a{href: "https://www.worldcubeassociation.org/oauth/authorize?response_type=code&client_id=7f190fdb8393613d534e2429d49c2cb897a3fe525bd2837edb48148de66fcf68&redirect_uri=https://birdflu.lar5.com/wca_callback&scope="}
-      Ignore Me
+    %a{href: "https://www.worldcubeassociation.org/oauth/authorize?response_type=code&client_id=#{OauthController::CLIENT_ID}&redirect_uri=https://birdflu.lar5.com/wca_callback&scope="}
+      Login
 
 
 

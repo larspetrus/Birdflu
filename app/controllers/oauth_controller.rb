@@ -34,4 +34,10 @@ class OauthController < ActionController::Base
 
     redirect_to "/"
   end
+
+  def wca_logout
+    session.delete(:wca_login)
+
+    redirect_to "/"
+  end
 end
