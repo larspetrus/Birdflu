@@ -1,17 +1,17 @@
 class OauthController < ActionController::Base
-  CLIENT_ID = '7f190fdb8393613d534e2429d49c2cb897a3fe525bd2837edb48148de66fcf68'
-  CLIENT_SECRET = 'e77f5ac2a1389e49c7f66bfca0491b8896e3974f05265909d61d2cf483fa2cee'
+  CLIENT_ID = '964462829fdba20e9da105d61499d8ce53d2f74dc31edbcd8d9c519fb98595bf'
 
   TOKEN_URI = URI.parse("https://www.worldcubeassociation.org/oauth/token")
   ME_URI = URI.parse("https://www.worldcubeassociation.org/api/v0/me")
 
+  # The WCA.org OAuth code redirects to here after user logs in
   def wca
     token_params = {
         code: params[:code],
         grant_type: 'authorization_code',
         redirect_uri: 'https://birdflu.lar5.com/wca_callback',
         client_id: CLIENT_ID,
-        client_secret: CLIENT_SECRET,
+        client_secret: Rails.application.secrets.wca_oauth_client_secret,
     }
     token_response = Net::HTTP.post_form(TOKEN_URI, token_params)
 
