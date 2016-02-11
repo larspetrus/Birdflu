@@ -1,8 +1,21 @@
-.leftmenu= link_to 'Random Position', "positions/#{Position.random_id}"
-= render 'find_by_alg'
+.menurow{style: 'float: left;'}
+  .menuitem= link_to 'Random Position', "positions/#{Position.random_id}"
+  = render 'find_by_alg'
 
-.leftmenu{style: 'float: right;'}
-  #about-link About…
+
+.menurow{style: 'float: right;'}
+  .menuitem
+    #about-link About…
+
+  - if @login_name
+    .menuitem
+      #{@login_name}
+    .menuitem{style: 'font-size: 60%;'}
+      = link_to 'Logout', wca_logout_path
+  - else
+    .menuitem
+      %a{href: "https://www.worldcubeassociation.org/oauth/authorize?response_type=code&client_id=#{OauthController::CLIENT_ID}&redirect_uri=https://birdflu.lar5.com/wca_callback&scope="}
+        Login
 
 %hr{style: 'clear:both;'}
 
@@ -31,15 +44,6 @@
 %div{style: 'position: fixed; bottom:4px; right:4px; font-size: 8px; color: #bbb;'}
   Cache #{number_to_human_size Rails.cache.instance_variable_get('@cache_size')}
   | PID #{Process.pid}
-
-%div{style: 'position: fixed; bottom:4px; left:4px; font-size: 8px;'}
-  - if @login_name
-    #{@login_name}
-    = link_to 'Logout', wca_logout_path
-  - else
-    %a{href: "https://www.worldcubeassociation.org/oauth/authorize?response_type=code&client_id=#{OauthController::CLIENT_ID}&redirect_uri=https://birdflu.lar5.com/wca_callback&scope="}
-      Login
-
 
 
 %table.center
