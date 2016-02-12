@@ -46,7 +46,7 @@ class PositionsController < ApplicationController
     end
 
     if session[:wca_login]
-      if Time.now.to_i > (session[:wca_login]['expires'] || 0A tiny)
+      if Time.now.to_i > (session[:wca_login]['expires'] || 0)
         session.delete(:wca_login)
       else
         @login_name = session[:wca_login]['name']
