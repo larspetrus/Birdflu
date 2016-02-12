@@ -1,5 +1,6 @@
 class OauthController < ActionController::Base
   CLIENT_ID = '964462829fdba20e9da105d61499d8ce53d2f74dc31edbcd8d9c519fb98595bf'
+  WCA_LOGIN_URL = "https://www.worldcubeassociation.org/oauth/authorize?response_type=code&client_id=#{OauthController::CLIENT_ID}&redirect_uri=https://birdflu.lar5.com/wca_callback&scope="
 
   TOKEN_URI = URI.parse("https://www.worldcubeassociation.org/oauth/token")
   ME_URI = URI.parse("https://www.worldcubeassociation.org/api/v0/me")
@@ -35,9 +36,14 @@ class OauthController < ActionController::Base
     redirect_to "/"
   end
 
-  def wca_logout
-    session.delete(:wca_login)
+  def fake_wca_login
+    session[:wca_login] = {wca_id: '2016FRAU99', name: 'Fakey McFraud', id: 99099099}
+    redirect_to "/"
+  end
 
+  def wca_logout
+    Rails.logger.info "WCA Logged out '#{session[:wca_login]['name']}'."
+    session.delete(:wca_login)
     redirect_to "/"
   end
 end

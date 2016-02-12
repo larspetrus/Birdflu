@@ -10,5 +10,6 @@ Rails.application.routes.draw do
 
   get "wca_callback" => "oauth#wca"
   get "wca_logout" => "oauth#wca_logout"
+  get "fake_wca_login" => "oauth#fake_wca_login"
 
 end
