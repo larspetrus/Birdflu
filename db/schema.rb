@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160113182332) do
+ActiveRecord::Schema.define(version: 20160212023830) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -90,5 +90,13 @@ ActiveRecord::Schema.define(version: 20160113182332) do
   add_index "raw_algs", ["position_id", "length", "speed"], name: "index_raw_algs_on_position_id_and_length_and_speed", using: :btree
   add_index "raw_algs", ["position_id", "speed", "length"], name: "index_raw_algs_on_position_id_and_speed_and_length", using: :btree
   add_index "raw_algs", ["speed", "length"], name: "index_raw_algs_on_speed_and_length", using: :btree
+
+  create_table "wca_user_data", force: :cascade do |t|
+    t.integer "wca_db_id"
+    t.string  "wca_id"
+    t.string  "full_name"
+  end
+
+  add_index "wca_user_data", ["wca_db_id"], name: "index_wca_user_data_on_wca_db_id", using: :btree
 
 end

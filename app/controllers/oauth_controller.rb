@@ -26,12 +26,8 @@ class OauthController < ActionController::Base
       http.use_ssl = true
       me_data = JSON.parse(http.request(me_request).body)["me"]
 
-      session[:wca_login] = {
-          wca_id: me_data['wca_id'],
-          name: me_data['name'],
-          id: me_data['id'],
-          expires: 7.days.from_now.to_i
-      }
+      store_user_data(me_data['id'], me_data['wca_id'], me_data['name'], 7.days.from_now.to_i)
+
       Rails.logger.info "WCA Logged in as '#{me_data['name']}'."
     else
       Rails.logger.info "WCA Login failed."
@@ -41,7 +37,8 @@ class OauthController < ActionController::Base
   end
 
   def fake_wca_login
-    session[:wca_login] = {wca_id: '2016FRAU99', name: 'Fakey McFraud', id: 99099099, expires: 1.hour.from_now.to_i}
+    store_user_data(99099099, '2016FRAU99', 'Fakey McFraud', 1.hour.from_now.to_i)
+
     redirect_to "/"
   end
 
@@ -49,5 +46,10 @@ class OauthController < ActionController::Base
     Rails.logger.info "WCA Logged out '#{session[:wca_login]['name']}'."
     session.delete(:wca_login)
     redirect_to "/"
+  end
+
+  def store_user_data(id, wca_id, name, expires)
+    session[:wca_login] = { id: id, wca_id: wca_id, name: name, expires: expires }
+    WcaUserData.create_or_update(id, wca_id, name)
   end
 end
