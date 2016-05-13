@@ -11,7 +11,7 @@ class RawAlg < ActiveRecord::Base
   end
 
   def self.make(alg, name, length = 1)
-    std_alg = Algs.standard_rotation(alg)
+    std_alg = Algs.ll_code_variant(alg)
     RawAlg.create(moves: std_alg, u_setup: Algs.standard_u_setup(std_alg), alg_id: name, length: length)
   end
 
@@ -28,7 +28,12 @@ class RawAlg < ActiveRecord::Base
 
   def find_mirror
     mirror_variants = %w(B R F L).map{|side| Algs.mirror(variant(side)) }
-    RawAlg.where(position_id: position.mirror.id, length: length, moves: mirror_variants).first
+    RawAlg.where(position_id: position.mirror_id, length: length, moves: mirror_variants).first
+  end
+
+  def find_reverse
+    reverse_variants = %w(B R F L).map{|side| Algs.reverse(variant(side)) }
+    RawAlg.where(position_id: position.inverse_id, length: length, moves: reverse_variants).first
   end
 
   def set_position
@@ -55,7 +60,7 @@ class RawAlg < ActiveRecord::Base
   end
 
   def self.find_from_moves(moves, position_id)
-    std_alg = Algs.standard_rotation(moves)
+    std_alg = Algs.ll_code_variant(moves)
     RawAlg.where(moves: std_alg, length: Algs.length(std_alg), position_id: position_id).first
   end
 

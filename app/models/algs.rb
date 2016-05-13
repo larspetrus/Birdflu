@@ -22,9 +22,10 @@ module Algs
   end
 
   # The alg version that produces the standard LL code
-  def self.standard_rotation(alg)
-    rotation = -Cube.new(Algs.as_variant_b(alg)).standard_ll_code_offset % 4
-    Algs.rotate_by_U(Algs.as_variant_b(alg), rotation)
+  def self.ll_code_variant(alg)
+    official_alg = Algs.official_variant(alg)
+    rotation = -Cube.new(official_alg).standard_ll_code_offset % 4
+    Algs.rotate_by_U(official_alg, rotation)
   end
 
   def self.normalize(alg)
@@ -78,16 +79,19 @@ module Algs
     compressed_alg.chars.map{ |cc| Move[cc].name }.join(' ')
   end
 
+  def self.from_tr(tr_alg)
+    turn_codes = {'+' => 1, '1' => 2, '-' => 3 }
+    move_count = tr_alg.length/2
+    moves = (0...move_count).map {|i| Move.name_from(tr_alg[2*i], turn_codes[tr_alg[2*i+1]]) }
+    moves.join(' ')
+  end
+
   def self.sides(alg)
     alg.gsub(/[ '2]/,'').chars.uniq.sort.join
   end
 
-  GENS = {
-      "BU" => 'FU',
-
-  }
   def self.specialness(alg)
-    b_sides = Algs.sides(Algs.as_variant_b(alg))
+    b_sides = Algs.sides(Algs.official_variant(alg))
     
     case b_sides
       when 'BU'                then 'FU'
@@ -140,12 +144,13 @@ module Algs
     alg.split(' ').length
   end
 
-  def self.variant(alg)
+  def self.variant(alg) # TODO works with slices?
     alg.gsub(/[ '2DU]/, '').first
   end
 
-  def self.as_variant_b(alg)
-    self.rotate_by_U(alg, 'BLFR'.index(self.variant(alg)))
+  # The alphabetically first normalized variant. First non D move is always on B.
+  def self.official_variant(alg)
+    (0..3).map {|i| Algs.rotate_by_U(alg, i) }.sort.first
   end
 
 end

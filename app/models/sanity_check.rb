@@ -28,7 +28,7 @@ module SanityCheck
   def self.raw_algs
     result = []
     RawAlg.where('id > 1').find_each do |alg|
-      expected_moves = Algs.standard_rotation(alg.moves)
+      expected_moves = Algs.ll_code_variant(alg.moves)
       expected_u_setup = Algs.standard_u_setup(expected_moves)
 
       if alg.u_setup != expected_u_setup || alg.moves != expected_moves

@@ -21,18 +21,18 @@ RSpec.describe Algs do
     expect(Algs.rotate_by_U("B F", 2)).to eq("B F")    # normalize
   end
 
-  it 'standard_rotation' do
+  it 'll_code_variant' do
     std_G1 = "B L F' L F L2 B'"
-    expect(Algs.standard_rotation(std_G1)).to eq(std_G1)
-    expect(Algs.standard_rotation(Algs.rotate_by_U(std_G1, 1))).to eq(std_G1)
-    expect(Algs.standard_rotation(Algs.rotate_by_U(std_G1, 2))).to eq(std_G1)
-    expect(Algs.standard_rotation(Algs.rotate_by_U(std_G1, 3))).to eq(std_G1)
+    expect(Algs.ll_code_variant(std_G1)).to eq(std_G1)
+    expect(Algs.ll_code_variant(Algs.rotate_by_U(std_G1, 1))).to eq(std_G1)
+    expect(Algs.ll_code_variant(Algs.rotate_by_U(std_G1, 2))).to eq(std_G1)
+    expect(Algs.ll_code_variant(Algs.rotate_by_U(std_G1, 3))).to eq(std_G1)
 
     std_I143 = "F2 U L R' F2 L' R U F2"
-    expect(Algs.standard_rotation(std_I143)).to eq(std_I143)
-    expect(Algs.standard_rotation(Algs.rotate_by_U(std_I143, 1))).to eq(std_I143)
-    expect(Algs.standard_rotation(Algs.rotate_by_U(std_I143, 2))).to eq(std_I143)
-    expect(Algs.standard_rotation(Algs.rotate_by_U(std_I143, 3))).to eq(std_I143)
+    expect(Algs.ll_code_variant(std_I143)).to eq(std_I143)
+    expect(Algs.ll_code_variant(Algs.rotate_by_U(std_I143, 1))).to eq(std_I143)
+    expect(Algs.ll_code_variant(Algs.rotate_by_U(std_I143, 2))).to eq(std_I143)
+    expect(Algs.ll_code_variant(Algs.rotate_by_U(std_I143, 3))).to eq(std_I143)
   end
 
   it 'normalize' do
@@ -62,6 +62,11 @@ RSpec.describe Algs do
     expect(Algs.expand('BfnLf1RuPUqf')).to eq("B F2 U' L F2 L' R U2 R' U B' F2")
 
     expect{Algs.expand('incorrect')}.to raise_error(RuntimeError)
+  end
+
+  it 'from_tr' do
+    expect(Algs.from_tr('F+U+F1L+F+L1U+L+')).to eq("F U F2 L F L2 U L")
+    expect(Algs.from_tr('F+U-B-U+F-U-B+')).to eq("F U' B' U F' U' B")
   end
 
   it 'sides' do
@@ -97,12 +102,13 @@ RSpec.describe Algs do
     expect(Algs.length("B' U2 B U B U B2 U' B2 U2 B2 U2 B2 U2 B'")).to eq(15)
   end
 
-  it 'as_b_alg' do
-    expect(Algs.as_variant_b("L' B2 R B R' B L")).to eq("B' R2 F R F' R B")
-    expect(Algs.as_variant_b("F' L' U' L U L2 D' L' D L' F2 U' F'")).to eq("B' R' U' R U R2 D' R' D R' B2 U' B'")
-    expect(Algs.as_variant_b("R B U B' U' R'")).to eq("B L U L' U' B'")
-    expect(Algs.as_variant_b("B L U L' U' B'")).to eq("B L U L' U' B'")
-    expect(Algs.as_variant_b("D' F B2")).to eq("D' B F2")
+  it 'standard_variant' do
+    expect(Algs.official_variant("L' B2 R B R' B L")).to eq("B' R2 F R F' R B")
+    expect(Algs.official_variant("F' L' U' L U L2 D' L' D L' F2 U' F'")).to eq("B' R' U' R U R2 D' R' D R' B2 U' B'")
+    expect(Algs.official_variant("R B U B' U' R'")).to eq("B L U L' U' B'")
+    expect(Algs.official_variant("B L U L' U' B'")).to eq("B L U L' U' B'")
+    expect(Algs.official_variant("D' F B2")).to eq("D' B F2")
+    expect(Algs.official_variant("B' F U R U' R' F' U' B")).to eq("B F' U L U' L' B' U' F")
   end
 
   it 'standard_u_setup' do
