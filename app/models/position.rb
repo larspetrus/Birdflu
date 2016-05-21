@@ -151,4 +151,27 @@ class Position < ActiveRecord::Base
     @main_pos_ids ||= Position.where("main_position_id = id").pluck(:id)
     @main_pos_ids.sample
   end
+
+  # Update positions with optimal RawAlgs data. Expects algs to exist for all positions.
+  def self.set_best_algs
+    puts "Computing Position.best_alg_id, Position.optimal_alg_length"
+    BigThought.timed_transaction do
+      Position.find_each do |pos|
+        optimal_alg = RawAlg.where(position_id: pos.main_position_id).order([:length, :speed, :alg_id]).limit(1).first
+        pos.update(best_alg_id: optimal_alg.id, optimal_alg_length: optimal_alg.length)
+      end
+    end
+  end
+
+  # Update positions with optimal RawAlgs data. Expects algs to exist for all positions.
+  def self.initialize_positions_inverse
+    puts "Initializing Position: inverse_id"
+    BigThought.timed_transaction do
+      Position.find_each do |pos|
+        inverse_ll_code = Cube.new(Algs.reverse(pos.best_alg.moves)).standard_ll_code
+        pos.update(inverse_id: Position.find_by_ll_code(inverse_ll_code).id)
+      end
+    end
+  end
+
 end

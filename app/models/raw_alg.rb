@@ -20,10 +20,28 @@ class RawAlg < ActiveRecord::Base
   end
 
   # --- Populate DB columns ---
-  def self.populate_mirror_id
+  def self.populate_mirror_id(for_length)
+    alg_set = { mirror_id: nil, length: for_length }
+    total = RawAlg.where(alg_set).count
+    puts "Populating #{total.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse} mirror IDs"
+    ActiveRecord::Base.logger.level = 1
+
     t1 = Time.now
-    RawAlg.where(mirror_id: nil).find_each { |alg| alg.update(mirror_id: alg.find_mirror.id) }
-    puts "Update mirror_id done in #{'%.2f' % (Time.now - t1)}"
+    update_count = 0
+    ActiveRecord::Base.transaction do
+      RawAlg.where(alg_set).find_each do |alg|
+        alg.update(mirror_id: alg.find_mirror.id)
+
+        update_count += 1
+        if update_count % 50_000 == 0
+          puts "Set #{update_count} mirror IDs --- #{'%.2f' % (Time.now - t1)}"
+        end
+      end
+
+    end
+    ActiveRecord::Base.logger.level = 0
+    duration = (Time.now - t1)
+    puts "Update mirror_id done in #{'%.2f' % duration}, #{'%.2f' % (1000*duration/total)}ms / alg"
   end
 
   def find_mirror

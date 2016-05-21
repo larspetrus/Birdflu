@@ -34,19 +34,6 @@ class BigThought
     end
   end
 
-  # Update positions with optimal RawAlgs data. Expects algs to exist for all positions.
-  def self.initialize_positions
-    puts "Initializing Position: best_alg_id, optimal_alg_length, inverse_id"
-    timed_transaction do
-      Position.find_each do |pos|
-        optimal_alg = RawAlg.where(position_id: pos.main_position_id).order([:length, :speed, :alg_id]).limit(1).first
-        inverse_ll_code = Cube.new(Algs.reverse(optimal_alg.moves)).standard_ll_code
-        inverse_id = Position.find_by_ll_code(inverse_ll_code).id
-        pos.update(best_alg_id: optimal_alg.id, optimal_alg_length: optimal_alg.length, inverse_id: inverse_id)
-      end
-    end
-  end
-
   def self.generate_positions # All LL positions
     puts "-- (RE)GENERATING POSITIONS --"
 
