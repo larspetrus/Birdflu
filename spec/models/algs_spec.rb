@@ -86,13 +86,21 @@ RSpec.describe Algs do
     expect(Algs.specialness("")).to eq(nil)
   end
 
-  it 'speed_score is symmetrical' do
+  describe 'speed_score' do
     alg = "D2 F' U2 B' D2 B2 F' L2 F L2 R2 B' F' R2 F2"
-    a0, a1, a2, a3  = [0,1,2,3].map{|i| Algs.rotate_by_U(alg, i) }
 
-    expect(Algs.speed_score(a0)).to eq(Algs.speed_score(a1))
-    expect(Algs.speed_score(a0)).to eq(Algs.speed_score(a2))
-    expect(Algs.speed_score(a0)).to eq(Algs.speed_score(a3))
+    it 'is correct' do
+      expect(Algs.speed_score(alg)).to eq(16.90)
+      expect(Algs.speed_score(alg, for_db: true)).to eq(1690)
+    end
+
+    it 'is symmetrical' do
+      a0, a1, a2, a3  = [0,1,2,3].map{|i| Algs.rotate_by_U(alg, i) }
+
+      expect(Algs.speed_score(a0)).to eq(Algs.speed_score(a1))
+      expect(Algs.speed_score(a0)).to eq(Algs.speed_score(a2))
+      expect(Algs.speed_score(a0)).to eq(Algs.speed_score(a3))
+    end
   end
 
   it 'length' do

@@ -19,6 +19,10 @@ class RawAlg < ActiveRecord::Base
     [variant(:B), variant(:R), variant(:F), variant(:L)][u_shift]
   end
 
+  def speed
+    _speed/100.0
+  end
+
   # --- Populate DB columns ---
   def self.populate_mirror_id(for_length)
     alg_set = { mirror_id: nil, length: for_length }
@@ -64,7 +68,7 @@ class RawAlg < ActiveRecord::Base
   end
 
   def set_speed
-    self.speed = Algs.speed_score(moves)
+    self._speed = Algs.speed_score(moves, for_db: true)
   end
 
   def self.update_all(description = nil)

@@ -107,8 +107,9 @@ module Algs
     end
   end
 
-  def self.speed_score(alg)
-    Algs.equivalent_versions(alg).map{|a| Algs.single_speed_score(a)}.min
+  def self.speed_score(alg, for_db: false)
+    score = Algs.equivalent_versions(alg).map{|a| Algs.single_speed_score(a)}.min
+    for_db ? (100*score).round.to_i : score
   end
 
   def self.single_speed_score(alg)

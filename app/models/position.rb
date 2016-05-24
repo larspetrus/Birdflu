@@ -124,11 +124,11 @@ class Position < ActiveRecord::Base
   def compute_stats
     {
       raw_counts: RawAlg.where(position_id: main_position_id).group(:length).order(:length).count(),
-      shortest:   RawAlg.where(position_id: main_position_id).order(:length, :speed, :alg_id).first().try(:length),
-      fastest:    RawAlg.where(position_id: main_position_id).order(:speed, :length, :alg_id).first().try(:speed),
+      shortest:   RawAlg.where(position_id: main_position_id).order(:length, :_speed, :alg_id).first().try(:length),
+      fastest:    RawAlg.where(position_id: main_position_id).order(:_speed, :length, :alg_id).first().try(:speed),
       combo_count:    ComboAlg.where(position_id: main_position_id).count(),
-      shortest_combo: ComboAlg.where(position_id: main_position_id).order(:length, :speed, :name).first().try(:length),
-      fastest_combo:  ComboAlg.where(position_id: main_position_id).order(:speed, :length, :name).first().try(:speed),
+      shortest_combo: ComboAlg.where(position_id: main_position_id).order(:length, :_speed, :name).first().try(:length),
+      fastest_combo:  ComboAlg.where(position_id: main_position_id).order(:_speed, :length, :name).first().try(:speed),
     }
   end
 

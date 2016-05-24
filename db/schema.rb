@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160212023830) do
+ActiveRecord::Schema.define(version: 20160524152244) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,9 +19,9 @@ ActiveRecord::Schema.define(version: 20160212023830) do
   create_table "combo_algs", force: :cascade do |t|
     t.string  "name",         limit: 255
     t.string  "moves",        limit: 255
-    t.integer "length"
-    t.integer "position_id"
-    t.integer "u_setup"
+    t.integer "length",       limit: 2
+    t.integer "position_id",  limit: 2
+    t.integer "u_setup",      limit: 2
     t.integer "base_alg1_id"
     t.integer "base_alg2_id"
     t.integer "alg2_u_shift"
@@ -30,16 +30,16 @@ ActiveRecord::Schema.define(version: 20160212023830) do
     t.string  "mv_merged",    limit: 255
     t.string  "mv_cancel2",   limit: 255
     t.string  "mv_end",       limit: 255
-    t.float   "speed"
+    t.integer "_speed",       limit: 2
   end
 
+  add_index "combo_algs", ["_speed"], name: "index_combo_algs_on__speed", using: :btree
   add_index "combo_algs", ["base_alg1_id"], name: "index_combo_algs_on_base_alg1_id", using: :btree
   add_index "combo_algs", ["base_alg2_id"], name: "index_combo_algs_on_base_alg2_id", using: :btree
   add_index "combo_algs", ["length"], name: "index_combo_algs_on_length", using: :btree
+  add_index "combo_algs", ["position_id", "_speed"], name: "index_combo_algs_on_position_id_and__speed", using: :btree
   add_index "combo_algs", ["position_id", "length"], name: "index_combo_algs_on_position_id_and_length", using: :btree
-  add_index "combo_algs", ["position_id", "speed"], name: "index_combo_algs_on_position_id_and_speed", using: :btree
   add_index "combo_algs", ["position_id"], name: "index_combo_algs_on_position_id", using: :btree
-  add_index "combo_algs", ["speed"], name: "index_combo_algs_on_speed", using: :btree
 
   create_table "position_stats", force: :cascade do |t|
     t.integer "position_id"
@@ -75,21 +75,20 @@ ActiveRecord::Schema.define(version: 20160212023830) do
 
   create_table "raw_algs", force: :cascade do |t|
     t.string  "alg_id",      limit: 255
-    t.integer "length"
-    t.integer "position_id"
+    t.integer "length",      limit: 2
+    t.integer "position_id", limit: 2
     t.integer "mirror_id"
-    t.integer "u_setup"
-    t.boolean "combined",                default: false
+    t.integer "u_setup",     limit: 2
     t.string  "specialness", limit: 255
-    t.float   "speed"
+    t.integer "_speed",      limit: 2
     t.string  "moves",       limit: 255
   end
 
+  add_index "raw_algs", ["_speed", "length"], name: "index_raw_algs_on__speed_and_length", using: :btree
   add_index "raw_algs", ["alg_id"], name: "index_raw_algs_on_alg_id", using: :btree
-  add_index "raw_algs", ["length", "speed"], name: "index_raw_algs_on_length_and_speed", using: :btree
-  add_index "raw_algs", ["position_id", "length", "speed"], name: "index_raw_algs_on_position_id_and_length_and_speed", using: :btree
-  add_index "raw_algs", ["position_id", "speed", "length"], name: "index_raw_algs_on_position_id_and_speed_and_length", using: :btree
-  add_index "raw_algs", ["speed", "length"], name: "index_raw_algs_on_speed_and_length", using: :btree
+  add_index "raw_algs", ["length", "_speed"], name: "index_raw_algs_on_length_and__speed", using: :btree
+  add_index "raw_algs", ["position_id", "_speed", "length"], name: "index_raw_algs_on_position_id_and__speed_and_length", using: :btree
+  add_index "raw_algs", ["position_id", "length", "_speed"], name: "index_raw_algs_on_position_id_and_length_and__speed", using: :btree
 
   create_table "wca_user_data", force: :cascade do |t|
     t.integer "wca_db_id"
