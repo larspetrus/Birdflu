@@ -36,7 +36,7 @@ class AlgImport
             alg_m = Algs.mirror(alg)
             new_algs = [alg, alg_m, Algs.reverse(alg), Algs.reverse(alg_m)].map{|a| Algs.official_variant(a)}
             new_algs.each do |alg|
-              unsorted_file.write(alg + "\n") #TODO remember mirrors here?
+              unsorted_file.write(alg + "\n")
             end
           end
         end
@@ -47,7 +47,7 @@ class AlgImport
     end
   end
 
-  def self.import_algs_to_db(alg_length, do_mirrors)
+  def self.import_algs_to_db(alg_length)
     puts("Importing algs length #{alg_length}")
     t1 = Time.now
     id_count = 0
@@ -64,8 +64,6 @@ class AlgImport
         end
       end
     end
-
-    RawAlg.populate_mirror_id(alg_length) if do_mirrors
   end
 
 end

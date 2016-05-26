@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160526022130) do
+ActiveRecord::Schema.define(version: 20160526064704) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -75,7 +75,6 @@ ActiveRecord::Schema.define(version: 20160526022130) do
   create_table "raw_algs", force: :cascade do |t|
     t.integer "length",      limit: 2
     t.integer "position_id", limit: 2
-    t.integer "mirror_id"
     t.integer "u_setup",     limit: 2
     t.string  "specialness", limit: 255
     t.integer "_speed",      limit: 2
