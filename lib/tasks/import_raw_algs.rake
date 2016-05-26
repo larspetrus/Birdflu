@@ -1,7 +1,7 @@
 task import_raw_algs: :environment do
 
 
-  RawAlg.make("", 'Nothing', 0) # Debatable entry, but I want it in the DB
+  RawAlg.make("", 0) # Debatable entry, but I want it in the DB
   t1 = Time.now
   alg_count = 0
   length = nil
@@ -18,19 +18,18 @@ task import_raw_algs: :environment do
 
       if line.start_with?('B') || line.start_with?('D')
         id_count += 1
-        code = "#{(64+length).chr}#{id_count}"
 
         b_alg = line.chomp
 
         rotated_dupe = Algs.rotate_by_U(b_alg, 2)
         unless seen_algs.include? rotated_dupe
-          RawAlg.make(b_alg, code, length)
+          RawAlg.make(b_alg, length)
           seen_algs << b_alg
         end
 
         alg_count += 1
         if alg_count % 50_000 == 0
-          puts "Alg  #{alg_count}: Alg #{line.chomp}, length: #{length}, code: #{code} --- #{'%.2f' % (Time.now - t1)}"
+          puts "Alg  #{alg_count}: Alg #{line.chomp}, length: #{length} --- #{'%.2f' % (Time.now - t1)}"
         end
       end
     end

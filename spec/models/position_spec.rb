@@ -1,5 +1,9 @@
 require "rails_helper"
 
+def named_alg(alg, name)
+  RawAlg.make(alg).tap{|ra| allow(ra).to receive(:name) { name } }
+end
+
 RSpec.describe Position, :type => :model do
   it "generated everything" do
     expect(Position.count).to eq(4608)
@@ -39,10 +43,10 @@ RSpec.describe Position, :type => :model do
   end
 
   it "has algs" do
-    null_alg = double(algs: '', length: 88, alg_id: 'x', id: 99)
-    ComboAlg.make( RawAlg.make("F U F' U F U2 F'", 'a1'), null_alg, 0)
-    ComboAlg.make( RawAlg.make("F U2 F' U' F U' F'", 'a2'), null_alg, 0)
-    ComboAlg.make( RawAlg.make("B U B' U B U2 B'", 'a3'), null_alg, 0)
+    null_alg = double(algs: '', length: 88, name: 'x', id: 99)
+    ComboAlg.make( named_alg("F U F' U F U2 F'", 'a1'), null_alg, 0)
+    ComboAlg.make( named_alg("F U2 F' U' F U' F'", 'a2'), null_alg, 0)
+    ComboAlg.make( named_alg("B U B' U B U2 B'", 'a3'), null_alg, 0)
 
     expect(Position.find_by!(ll_code: "a1c3c3c5").combo_algs.map(&:name)).to contain_exactly("a1+x", "a3+x")
     expect(Position.find_by!(ll_code: "a1b5b7b7").combo_algs.map(&:name)).to contain_exactly("a2+x")

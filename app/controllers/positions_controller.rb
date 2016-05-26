@@ -125,7 +125,7 @@ class PositionsController < ApplicationController
 
   # === Routed action ===
   def show
-    pos = Position.find_by_id(params[:id]) || Position.by_ll_code(params[:id]) || RawAlg.find_by_alg_id(params[:id]).position # Try DB id LL code, or alg name
+    pos = Position.find_by_id(params[:id]) || Position.by_ll_code(params[:id]) || RawAlg.find_with_name(params[:id]).position # Try DB id LL code, or alg name
 
     new_params = {}
     Fields::FILTER_NAMES.each { |k| new_params[k] = pos[k] }
@@ -146,7 +146,7 @@ class PositionsController < ApplicationController
 
       db_alg = RawAlg.find_from_moves(user_input, Position.find_by!(ll_code: ll_code))
     else # interpret as alg name
-      db_alg = RawAlg.find_by_alg_id(user_input)
+      db_alg = RawAlg.find_with_name(user_input)
       raise "There is no alg named '#{user_input}'" unless db_alg
       actual_moves = db_alg.moves
     end

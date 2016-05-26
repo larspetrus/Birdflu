@@ -124,8 +124,8 @@ class Position < ActiveRecord::Base
   def compute_stats
     {
       raw_counts: RawAlg.where(position_id: main_position_id).group(:length).order(:length).count(),
-      shortest:   RawAlg.where(position_id: main_position_id).order(:length, :_speed, :alg_id).first().try(:length),
-      fastest:    RawAlg.where(position_id: main_position_id).order(:_speed, :length, :alg_id).first().try(:speed),
+      shortest:   RawAlg.where(position_id: main_position_id).order(:length, :_speed, :id).first().try(:length),
+      fastest:    RawAlg.where(position_id: main_position_id).order(:_speed, :length, :id).first().try(:speed),
       combo_count:    ComboAlg.where(position_id: main_position_id).count(),
       shortest_combo: ComboAlg.where(position_id: main_position_id).order(:length, :_speed, :name).first().try(:length),
       fastest_combo:  ComboAlg.where(position_id: main_position_id).order(:_speed, :length, :name).first().try(:speed),
@@ -157,7 +157,7 @@ class Position < ActiveRecord::Base
     puts "Computing Position.best_alg_id, Position.optimal_alg_length"
     BigThought.timed_transaction do
       Position.find_each do |pos|
-        optimal_alg = RawAlg.where(position_id: pos.main_position_id).order([:length, :speed, :alg_id]).limit(1).first
+        optimal_alg = RawAlg.where(position_id: pos.main_position_id).order([:length, :speed, :id]).limit(1).first
         pos.update(best_alg_id: optimal_alg.id, optimal_alg_length: optimal_alg.length)
       end
     end

@@ -3,9 +3,8 @@ require 'rails_helper'
 describe RawAlg do
   describe '#make()' do
     it 'all fields' do
-      alg = RawAlg.make("R' F2 L F L' F R", 'G7', 7)
+      alg = RawAlg.make("R' F2 L F L' F R", 7)
 
-      expect(alg.alg_id).to eq('G7')
       expect(alg.length).to eq(7)
       expect(alg.variant(:B)).to eq("B' R2 F R F' R B")
       expect(alg.variant(:R)).to eq("R' F2 L F L' F R")
@@ -21,9 +20,8 @@ describe RawAlg do
     end
 
     it 'all fields ' do
-      alg = RawAlg.make("B F' U B D L2 D' B' U' B' U2 F", 'L1172', 12)
+      alg = RawAlg.make("B F' U B D L2 D' B' U' B' U2 F", 12)
 
-      expect(alg.alg_id).to eq('L1172')
       expect(alg.length).to eq(12)
       expect(alg.variant(:B)).to eq("B F' U B D L2 D' B' U' B' U2 F")
       expect(alg.variant(:R)).to eq("L' R U R D B2 D' R' U' R' U2 L")
@@ -37,19 +35,19 @@ describe RawAlg do
     end
 
     it 'picks right variant for moves' do
-      expect(RawAlg.make("B L U L' U' B'", 'x', 6).moves).to eq("R B U B' U' R'")
-      expect(RawAlg.make("R B U B' U' R'", 'x', 6).moves).to eq("R B U B' U' R'")
-      expect(RawAlg.make("F R U R' U' F'", 'x', 6).moves).to eq("R B U B' U' R'")
-      expect(RawAlg.make("L F U F' U' L'", 'x', 6).moves).to eq("R B U B' U' R'")
+      expect(RawAlg.make("B L U L' U' B'", 6).moves).to eq("R B U B' U' R'")
+      expect(RawAlg.make("R B U B' U' R'", 6).moves).to eq("R B U B' U' R'")
+      expect(RawAlg.make("F R U R' U' F'", 6).moves).to eq("R B U B' U' R'")
+      expect(RawAlg.make("L F U F' U' L'", 6).moves).to eq("R B U B' U' R'")
 
-      expect(RawAlg.make("B U B' U B U2 B'", 'x', 6).moves).to eq("F U F' U F U2 F'")
-      expect(RawAlg.make("R U R' U R U2 R'", 'x', 6).moves).to eq("F U F' U F U2 F'")
+      expect(RawAlg.make("B U B' U B U2 B'", 6).moves).to eq("F U F' U F U2 F'")
+      expect(RawAlg.make("R U R' U R U2 R'", 6).moves).to eq("F U F' U F U2 F'")
 
-      expect(RawAlg.make("F' U2 F U F' U F", 'x', 6).moves).to eq("L' U2 L U L' U L")
+      expect(RawAlg.make("F' U2 F U F' U F", 6).moves).to eq("L' U2 L U L' U L")
     end
 
     it 'setup_moves' do
-      u_setup_3 = RawAlg.make("B L U L' U' B'", 'x', 6)
+      u_setup_3 = RawAlg.make("B L U L' U' B'", 6)
       expect(u_setup_3.u_setup).to eq(3)
       expect(u_setup_3.setup_moves).to eq("| setupmoves=U'")
       expect(u_setup_3.setup_moves(1)).to eq("")
@@ -58,10 +56,30 @@ describe RawAlg do
   end
 
   it 'find_from_moves' do
-    db_alg = RawAlg.make("F2 U L R' F2 L' R U F2", 'I143', 9)
+    db_alg = RawAlg.make("F2 U L R' F2 L' R U F2", 9)
 
-    expect(RawAlg.find_from_moves(db_alg.moves, db_alg.position).alg_id).to eq('I143')
-    expect(RawAlg.find_from_moves(Algs.anti_normalize(db_alg.moves), db_alg.position).alg_id).to eq('I143')
+    expect(RawAlg.find_from_moves(db_alg.moves, db_alg.position).id).to eq(db_alg.id)
+    expect(RawAlg.find_from_moves(Algs.anti_normalize(db_alg.moves), db_alg.position).id).to eq(db_alg.id)
     expect(RawAlg.find_from_moves("B D U' F U L F' D' B' U' L'", db_alg.position)).to eq(nil)
+  end
+
+  it 'computes name from id' do
+    id_mins = [2, 5, 12]
+
+    expect(RawAlg.name_for_id(2, id_mins)).to eq('F1')
+    expect(RawAlg.name_for_id(6, id_mins)).to eq('G2')
+    expect(RawAlg.name_for_id(25,id_mins)).to eq('H14')
+    expect(RawAlg.name_for_id(1, id_mins)).to eq('Nothing')
+    
+    expect(RawAlg.id_for_name('F1',  id_mins)).to eq(2)
+    expect(RawAlg.id_for_name('G2',  id_mins)).to eq(6)
+    expect(RawAlg.id_for_name('H14', id_mins)).to eq(25)
+    expect(RawAlg.id_for_name('Nothing', id_mins)).to eq(1)
+
+    expect(RawAlg.id_for_name('G200', id_mins)).to eq(nil) # G7 is the highest G name
+    expect(RawAlg.id_for_name('NotAnID', id_mins)).to eq(nil)
+    # known problem: There is no check for non existent ID with max length, like H9999999 in this test case
+
+    expect(RawAlg.instance_variable_get('@id_ranges')).to eq(nil) # Avoid test contamination. May be overkill
   end
 end
