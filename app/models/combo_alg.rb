@@ -21,7 +21,7 @@ class ComboAlg < ActiveRecord::Base
 
     self.align_moves(move_parms)
 
-    create_parms = {name: "#{a1.alg_id}+#{a2.alg_id}", base_alg1_id: a1.id, base_alg2_id: a2.id, alg2_u_shift: u_shift}
+    create_parms = {name: "#{a1.name}+#{a2.name}", base_alg1_id: a1.id, base_alg2_id: a2.id, alg2_u_shift: u_shift}
     ComboAlg.create(create_parms.merge(move_parms))
   end
 

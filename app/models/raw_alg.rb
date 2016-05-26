@@ -2,7 +2,7 @@ class RawAlg < ActiveRecord::Base
   belongs_to :position
   belongs_to :mirror, class_name: 'RawAlg'
 
-  validates :alg_id, :length, presence: true
+  validates :length, presence: true
 
   before_create do
     set_position
@@ -10,9 +10,9 @@ class RawAlg < ActiveRecord::Base
     set_speed
   end
 
-  def self.make(alg, name, length = 1)
+  def self.make(alg, length = 1)
     std_alg = Algs.ll_code_variant(alg)
-    RawAlg.create(moves: std_alg, u_setup: Algs.standard_u_setup(std_alg), alg_id: name, length: length)
+    RawAlg.create(moves: std_alg, u_setup: Algs.standard_u_setup(std_alg), length: length)
   end
 
   def algs(u_shift)
@@ -103,7 +103,7 @@ class RawAlg < ActiveRecord::Base
   end
 
   def name
-    alg_id
+    RawAlg.name_for_id(id)
   end
 
   def single?
@@ -122,7 +122,29 @@ class RawAlg < ActiveRecord::Base
     "| setupmoves=#{Move.name_from('U', net_setup)}"
   end
 
+  def self.id_ranges
+    @id_ranges ||= (6..RawAlg.maximum(:length)).map{ |l| RawAlg.where(length: l).minimum(:id) }
+  end
+
+  def self.name_for_id(db_id, ranges = self.id_ranges)
+    lower = ranges.select{|r| r <= db_id }
+    lower.present? ? "#{(69 + lower.count).chr}#{db_id + 1 - lower.last}" : 'Nothing'
+  end
+
+  def self.id_for_name(name, ranges = self.id_ranges)
+    return 1 if name == 'Nothing'
+
+    computed_id = ranges[name.bytes[0] - 70] + name[1..-1].to_i - 1
+    self.name_for_id(computed_id, ranges) == name ? computed_id : nil
+  rescue
+    nil
+  end
+
+  def self.find_with_name(name)
+    self.find_by_id(self.id_for_name(name))
+  end
+
   def to_s
-    "#{alg_id}: #{moves}  (id: #{id})"
+    "#{name}: #{moves}  (id: #{id})"
   end
 end

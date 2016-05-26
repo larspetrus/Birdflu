@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160524152244) do
+ActiveRecord::Schema.define(version: 20160526020648) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -74,7 +74,6 @@ ActiveRecord::Schema.define(version: 20160524152244) do
   add_index "positions", ["oll"], name: "index_positions_on_oll", using: :btree
 
   create_table "raw_algs", force: :cascade do |t|
-    t.string  "alg_id",      limit: 255
     t.integer "length",      limit: 2
     t.integer "position_id", limit: 2
     t.integer "mirror_id"
@@ -85,7 +84,6 @@ ActiveRecord::Schema.define(version: 20160524152244) do
   end
 
   add_index "raw_algs", ["_speed", "length"], name: "index_raw_algs_on__speed_and_length", using: :btree
-  add_index "raw_algs", ["alg_id"], name: "index_raw_algs_on_alg_id", using: :btree
   add_index "raw_algs", ["length", "_speed"], name: "index_raw_algs_on_length_and__speed", using: :btree
   add_index "raw_algs", ["position_id", "_speed", "length"], name: "index_raw_algs_on_position_id_and__speed_and_length", using: :btree
   add_index "raw_algs", ["position_id", "length", "_speed"], name: "index_raw_algs_on_position_id_and_length_and__speed", using: :btree

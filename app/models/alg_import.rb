@@ -56,11 +56,10 @@ class AlgImport
         import_file.each_line do |line|
           id_count += 1
 
-          code = "#{(64+alg_length).chr}#{id_count}"
-          RawAlg.make(line.chomp, code, alg_length)
+          RawAlg.make(line.chomp, alg_length)
 
           if id_count % 50_000 == 0
-            puts "Alg  #{id_count}: Alg #{line.chomp}, length: #{alg_length}, code: #{code} --- #{'%.2f' % (Time.now - t1)}"
+            puts "Alg  #{id_count}: Alg #{line.chomp}, length: #{alg_length} --- #{'%.2f' % (Time.now - t1)}"
           end
         end
       end

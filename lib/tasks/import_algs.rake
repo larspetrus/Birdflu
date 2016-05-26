@@ -24,7 +24,7 @@ def import(alg_length)
   else
     puts "\nImporting algs for length #{alg_length}"
     if alg_length == 0
-      nil_alg = RawAlg.make("", 'Nothing', 0) # Debatable entry, but I want it in the DB
+      nil_alg = RawAlg.make("", 0) # Debatable entry, but I want it in the DB
       nil_alg.update(mirror_id: nil_alg.id)
     else
       AlgImport.import_algs_to_db(alg_length, alg_length <= 14)
