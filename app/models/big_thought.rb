@@ -30,7 +30,7 @@ class BigThought
   def self.update_positions
     alg_counts = RawAlg.group(:position_id).count
     Position.find_each do |pos|
-      pos.update(alg_count: alg_counts[pos.id], best_combo_alg_id: nil)
+      pos.update(alg_count: alg_counts[pos.id])
     end
   end
 

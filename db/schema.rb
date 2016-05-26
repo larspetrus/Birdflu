@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160526020648) do
+ActiveRecord::Schema.define(version: 20160526022130) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -58,7 +58,6 @@ ActiveRecord::Schema.define(version: 20160526020648) do
     t.string  "eo",                 limit: 255
     t.string  "ep",                 limit: 255
     t.integer "optimal_alg_length"
-    t.integer "best_combo_alg_id"
     t.string  "co",                 limit: 255
     t.string  "cp",                 limit: 255
     t.integer "mirror_id"

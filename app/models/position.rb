@@ -4,7 +4,6 @@ class Position < ActiveRecord::Base
   has_many :combo_algs, -> { order "length, moves, base_alg2_id DESC" }
 
   belongs_to :best_alg, class_name: 'RawAlg'
-  belongs_to :best_combo_alg, class_name: 'ComboAlg'
   belongs_to :main_position, class_name: 'Position'
 
   has_one :stats, class_name: 'PositionStats'
@@ -78,10 +77,6 @@ class Position < ActiveRecord::Base
     cop + eo + ep
   end
 
-  def best_combo_alg_length
-    best_combo_alg ? best_combo_alg.length : 99
-  end
-
   def best_alg_set_length
     AlgSet.active.shortest(self)
   end
@@ -104,7 +99,6 @@ class Position < ActiveRecord::Base
       source_pos = Position.find(self.main_position_id)
 
       self.best_alg_id       = source_pos.best_alg_id
-      self.best_combo_alg_id = source_pos.best_combo_alg_id
       self.optimal_alg_length= source_pos.optimal_alg_length
       self.alg_count         = source_pos.alg_count
     else
