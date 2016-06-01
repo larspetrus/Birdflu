@@ -114,7 +114,7 @@ class PositionsController < ApplicationController
       stored_parameters.each { |k| values[k] = new_data[k] || defaults[k] }
       cookies[cookie_name] = JSON.generate(values)
     else
-      values = cookies[cookie_name] ? JSON.parse(cookies[cookie_name], symbolize_names: true) : defaults # TODO handle bad cookie
+      values = cookies[cookie_name] ? JSON.parse(cookies[cookie_name], symbolize_names: true) : defaults
     end
     values
   end

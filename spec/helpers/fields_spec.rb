@@ -8,6 +8,7 @@ RSpec.describe Fields, :type => :model do
     it 'value()' do
       expect(size.value(size: 'M')).to eq('M')
       expect(size.value(fall_back: 'on default')).to eq('S')
+      expect(size.value(size: 'ALSO DEFAULT ->')).to eq('S')
     end
 
     it 'default' do

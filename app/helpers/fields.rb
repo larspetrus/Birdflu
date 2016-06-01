@@ -11,7 +11,7 @@ class Fields
     end
 
     def value(parameters)
-      parameters[@name] || @default
+      @values.include?(parameters[@name]) ? parameters[@name] : @default
     end
 
     def as_tag(parameters)
