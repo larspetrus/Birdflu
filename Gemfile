@@ -41,9 +41,9 @@ group :development, :test do
   gem 'quiet_assets'
 end
 
-
-# Use ActiveModel has_secure_password
-# gem 'bcrypt', '~> 3.1.7'
+group :test do
+  gem 'database_cleaner'
+end
 
 # Use unicorn as the app server
 # gem 'unicorn'

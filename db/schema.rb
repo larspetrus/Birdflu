@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160526064704) do
+ActiveRecord::Schema.define(version: 20160528071816) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -78,7 +78,7 @@ ActiveRecord::Schema.define(version: 20160526064704) do
     t.integer "u_setup",     limit: 2
     t.string  "specialness", limit: 255
     t.integer "_speed",      limit: 2
-    t.string  "moves",       limit: 255
+    t.string  "_moves"
   end
 
   add_index "raw_algs", ["_speed", "length"], name: "index_raw_algs_on__speed_and_length", using: :btree

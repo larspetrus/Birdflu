@@ -53,6 +53,32 @@ describe RawAlg do
     end
   end
 
+  describe 'find_x' do
+    alg = "L' B' R' U2 R2 B L B' R' B F U2 F'"
+    alg_m = Algs.mirror(alg)
+    algs = [alg, alg_m, Algs.reverse(alg), Algs.reverse(alg_m)].map{|a| Algs.official_variant(a)}
+
+    it 'mirror' do
+      a1, a2, a3, a4 = algs.map{ |alg| RawAlg.make(alg, 13) }
+
+      expect(a1.find_mirror).to eq(a2)
+      expect(a2.find_mirror).to eq(a1)
+      expect(a3.find_mirror).to eq(a4)
+      expect(a4.find_mirror).to eq(a3)
+    end
+
+    it 'reverse' do
+      a1, a2, a3, a4 = algs.map{ |alg| RawAlg.make(alg, 13) }
+      puts "#{a1._moves} - #{a2._moves} - #{a3._moves} - #{a4._moves} "
+
+      expect(a1.find_reverse).to eq(a3)
+      expect(a3.find_reverse).to eq(a1)
+      expect(a2.find_reverse).to eq(a4)
+      expect(a4.find_reverse).to eq(a2)
+    end
+  end
+
+
   it 'find_from_moves' do
     db_alg = RawAlg.make("F2 U L R' F2 L' R U F2", 9)
 

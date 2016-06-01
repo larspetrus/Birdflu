@@ -12,7 +12,7 @@ class RawAlg < ActiveRecord::Base
 
   def self.make(alg, length = 1)
     std_alg = Algs.ll_code_variant(alg)
-    RawAlg.create(moves: std_alg, u_setup: Algs.standard_u_setup(std_alg), length: length)
+    RawAlg.create(_moves: Algs.compress(std_alg), u_setup: Algs.standard_u_setup(std_alg), length: length)
   end
 
   def algs(u_shift)
@@ -23,15 +23,19 @@ class RawAlg < ActiveRecord::Base
     _speed/100.0
   end
 
+  def moves
+    Algs.expand(_moves)
+  end
+
   # --- Populate DB columns ---
   def find_mirror
-    mirror_variants = %w(B R F L).map{|side| Algs.mirror(variant(side)) }
-    RawAlg.where(position_id: position.mirror_id, length: length, moves: mirror_variants).first
+    mirror_variants = %w(B R F L).map{|side| Algs.compress(Algs.mirror(variant(side))) }
+    RawAlg.where(position_id: position.mirror_id, length: length, _moves: mirror_variants).first
   end
 
   def find_reverse
-    reverse_variants = %w(B R F L).map{|side| Algs.reverse(variant(side)) }
-    RawAlg.where(position_id: position.inverse_id, length: length, moves: reverse_variants).first
+    reverse_variants = %w(B R F L).map{|side| Algs.compress(Algs.reverse(variant(side))) }
+    RawAlg.where(position_id: position.inverse_id, length: length, _moves: reverse_variants).first
   end
 
   def set_position
@@ -59,7 +63,7 @@ class RawAlg < ActiveRecord::Base
 
   def self.find_from_moves(moves, position_id)
     std_alg = Algs.ll_code_variant(moves)
-    RawAlg.where(moves: std_alg, length: Algs.length(std_alg), position_id: position_id).first
+    RawAlg.where(_moves: Algs.compress(std_alg), length: Algs.length(std_alg), position_id: position_id).first
   end
 
   def variant(side)

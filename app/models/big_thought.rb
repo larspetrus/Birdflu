@@ -34,7 +34,7 @@ class BigThought
     end
   end
 
-  def self.generate_positions # All LL positions
+  def self.generate_positions(inverses = {}) # All LL positions
     puts "-- (RE)GENERATING POSITIONS --"
 
     corner_positioning_algs = [
@@ -89,7 +89,10 @@ class BigThought
     found_positions.each { |code, weight| Position.create(ll_code: code, weight: weight) }
 
     BigThought.create_pov_positions
-    Position.update_each { |pos| pos.set_mirror_id }
+    Position.update_each do |pos|
+      pos.set_mirror_id
+      pos.inverse_id = Position.find_by_ll_code(inverses[pos.ll_code.to_sym]).id
+    end
 
     PositionStats.generate_all
   end

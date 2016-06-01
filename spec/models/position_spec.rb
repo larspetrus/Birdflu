@@ -76,7 +76,7 @@ RSpec.describe Position, :type => :model do
                                  "ep"         => "a",
                                  "co"         => "F",
                                  "cp"         => "f",
-                                 "inverse_id" => nil,
+                                 "inverse_id" => pos.inverse_id,
                                  "weight"     => 1,
                                  "pov_offset" => 0,
                                  })
@@ -97,7 +97,7 @@ RSpec.describe Position, :type => :model do
                                  "ep"         => "B",
                                  "co"         => "F",
                                  "cp"         => "b",
-                                 "inverse_id" => nil,
+                                 "inverse_id" => pov_pos.inverse_id,
                                  "weight"     => nil,
                                  "pov_offset" => 2,
                                 })
