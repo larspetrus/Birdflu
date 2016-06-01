@@ -27,17 +27,25 @@ class RawAlg < ActiveRecord::Base
     Algs.expand(_moves)
   end
 
-  # --- Populate DB columns ---
+  # --- Finders ---
   def find_mirror
     mirror_variants = %w(B R F L).map{|side| Algs.compress(Algs.mirror(variant(side))) }
-    RawAlg.where(position_id: position.mirror_id, length: length, _moves: mirror_variants).first
+    RawAlg.where(position_id: position.mirror_id, _speed: _speed, length: length, _moves: mirror_variants).first
   end
 
   def find_reverse
     reverse_variants = %w(B R F L).map{|side| Algs.compress(Algs.reverse(variant(side))) }
-    RawAlg.where(position_id: position.inverse_id, length: length, _moves: reverse_variants).first
+    reverse_speed = Algs.speed_score(Algs.reverse(moves), for_db: true)
+    RawAlg.where(position_id: position.inverse_id, _speed: reverse_speed, length: length, _moves: reverse_variants).first
   end
 
+  def self.find_from_moves(moves, position_id)
+    std_alg = Algs.ll_code_variant(moves)
+    db_speed = Algs.speed_score(moves, for_db: true)
+    RawAlg.where(position_id: position_id, _speed: db_speed, length: Algs.length(std_alg), _moves: Algs.compress(std_alg)).first
+  end
+
+  # --- Populate DB columns ---
   def set_position
     ll_code = Cube.new(moves).standard_ll_code # validates
     self.position = Position.by_ll_code(ll_code)
@@ -59,11 +67,6 @@ class RawAlg < ActiveRecord::Base
       alg.save
     end
     puts "Update #{description} done in #{'%.2f' % (Time.now - t1)}"
-  end
-
-  def self.find_from_moves(moves, position_id)
-    std_alg = Algs.ll_code_variant(moves)
-    RawAlg.where(_moves: Algs.compress(std_alg), length: Algs.length(std_alg), position_id: position_id).first
   end
 
   def variant(side)
