@@ -69,7 +69,6 @@ describe RawAlg do
 
     it 'reverse' do
       a1, a2, a3, a4 = algs.map{ |alg| RawAlg.make(alg, 13) }
-      puts "#{a1._moves} - #{a2._moves} - #{a3._moves} - #{a4._moves} "
 
       expect(a1.find_reverse).to eq(a3)
       expect(a3.find_reverse).to eq(a1)
