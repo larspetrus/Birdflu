@@ -57,7 +57,7 @@ class PositionsController < ApplicationController
   end
 
   def make_alg_columns
-    columns = [Cols::SPEED, Cols::MOVES].rotate(@format.sortby == 'speed' ? 0 : 1)
+    columns = [Cols::SPEED, Cols::MOVES].rotate(@format.sortby == '_speed' ? 0 : 1)
     columns << Cols::NAME
     columns << Cols::POSITION unless @single_position
     columns << Cols::COP if @selected_icons[:cop].is_none

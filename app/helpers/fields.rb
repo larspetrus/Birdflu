@@ -29,7 +29,7 @@ class Fields
   FILTER_NAMES = [:cop, :oll, :co, :cp, :eo, :ep]
 
   LIST   = Select.new(:list,  ['positions', 'algs'])
-  LINES  = Select.new(:lines, [25, 50, 100, 200, 500])
+  LINES  = Select.new(:lines, ['25', '50', '100', '200', '500'])
   SORTBY = Select.new(:sortby,[['speed', '_speed'], ['moves', 'length']])
 
   FORMATS = [LIST, LINES, SORTBY]
