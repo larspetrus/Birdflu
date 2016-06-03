@@ -44,11 +44,6 @@
         - link_line[:links].each do |one_link|
           .link= one_link
 
-%div{style: 'position: fixed; bottom:4px; right:4px; font-size: 8px; color: #bbb;'}
-  Cache #{number_to_human_size Rails.cache.instance_variable_get('@cache_size')}
-  | PID #{Process.pid}
-
-
 %table.center
   %tr
     - [:COP, :OLL, '', :CO, :CP, :EO, :EP].each do |header|

@@ -1,5 +1,9 @@
-%h1 Status diagnostics
+%h2 Various application stats/diagnostix
 
-.line Ruby version: #{@ruby_version}
+.stat Ruby version: #{@ruby_version}
 
-.line Rails version: #{Rails.version}
+.stat Rails version: #{Rails.version}
+
+.stat Cache #{number_to_human_size Rails.cache.instance_variable_get('@cache_size')}
+
+.stat PID #{Process.pid}
