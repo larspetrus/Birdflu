@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Maybe these should really be Rake tasks
 
 module SanityCheck

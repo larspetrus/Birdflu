@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Icons::Big
   attr_reader :name, :arrows, :id
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Cube
   def initialize(state = nil)
     @pieces = { }

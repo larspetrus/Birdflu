@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PositionStats < ActiveRecord::Base
   belongs_to :position
 

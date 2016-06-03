@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # As a "view presenter" class, it makes sense to me to put this in the View helpers directory. DHH may disagree.
 
 class Cols

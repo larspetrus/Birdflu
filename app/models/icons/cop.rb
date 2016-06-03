@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Icons::Cop < Icons::Base
 
   def initialize(code, stickers, *arrows)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class BigThought
 
   def self.populate_db()

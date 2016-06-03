@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class WcaUserData < ActiveRecord::Base
 
   def self.create_or_update(wca_db_id, wca_id, full_name)

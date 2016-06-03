@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AlgMiner
   # Currently set to store data in memory.
   # To use a file instead uncomment the %%% lines and comment the @@@ lines. (Not tested. I might have missed something)

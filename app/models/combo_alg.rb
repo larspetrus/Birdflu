@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ComboAlg < ActiveRecord::Base
   belongs_to :position
   belongs_to :base_alg1, class_name: 'RawAlg'

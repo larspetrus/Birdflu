@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Functions for manipulating alg/moves strings
 
 module Algs

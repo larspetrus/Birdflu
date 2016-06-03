@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 
 module LL
   U_CORNERS = %w[ULB UBR URF UFL]

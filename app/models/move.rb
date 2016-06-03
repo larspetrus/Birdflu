@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Move
   attr_reader :side, :turns, :name, :compressed_code
 

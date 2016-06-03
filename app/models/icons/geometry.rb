@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Makes SVG cube icons
 
 class Icons::Geometry

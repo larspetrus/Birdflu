@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # The Positions table contains a static data set of 4608 LL positions. Once initialized, it will never
 # change. It could live in memory instead of (or in addition to) the DB, and maybe that's a future feature.
 class Position < ActiveRecord::Base

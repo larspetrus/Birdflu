@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class OauthController < ActionController::Base
   CLIENT_ID = '964462829fdba20e9da105d61499d8ce53d2f74dc31edbcd8d9c519fb98595bf'
   WCA_LOGIN_URL = "https://www.worldcubeassociation.org/oauth/authorize?response_type=code&client_id=#{OauthController::CLIENT_ID}&redirect_uri=https://birdflu.lar5.com/wca_callback&scope="

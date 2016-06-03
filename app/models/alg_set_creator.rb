@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #Toolbox for making AlgSets
 
 class AlgSetCreator

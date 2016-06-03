@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Svg
   def self.tag(tag_data)
     h = ActionController::Base.helpers

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AlgImport
 
   WORKING_DIR = "/Volumes/Terry/Birdflu"

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Icons::Base
   attr_reader :code, :name, :arrows, :field, :colors, :is_none, :id
 

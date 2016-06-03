@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Icons::Ep < Icons::Base
 
   EP_CODES = LlCode::EP_NAMES.invert

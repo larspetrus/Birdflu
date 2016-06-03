@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PosSubsets
 
   attr_reader :as_params, :where, :reload

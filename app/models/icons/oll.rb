@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Icons::Oll < Icons::Base
 
   def initialize(code, name, stickers)

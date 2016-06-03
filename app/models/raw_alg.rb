@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RawAlg < ActiveRecord::Base
   belongs_to :position
   belongs_to :mirror, class_name: 'RawAlg'
