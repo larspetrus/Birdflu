@@ -1,0 +1,39 @@
+// Place all the styles related to the fmc controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+.rpniss {
+  width:200px;
+  height:270px;
+  float: left;
+}
+
+.sanity {
+  width:140px;
+  height:160px;
+  float: right;
+  font-size: 9px;
+}
+
+.nissolutions {
+  font-size: 13px;
+  margin: 16px;
+}
+
+form#niss {
+  background-color: #dfd;
+  padding: 4px;
+  font-size: 10px;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  border-bottom: thin solid #aaa;
+
+  input[type="text"] {
+    font-size:9px;
+  }
+}
+

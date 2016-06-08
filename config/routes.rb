@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get 'fmc/index'
   get 'status/index'
 
   # The priority is based upon order of creation: first created -> highest priority.
@@ -9,6 +10,7 @@ Rails.application.routes.draw do
   post 'positions/find_by_alg'
 
   get 'status', to: 'status#index'
+  get 'fmc', to: 'fmc#index'
 
   get "wca_callback" => "oauth#wca"
   get "wca_logout" => "oauth#wca_logout"

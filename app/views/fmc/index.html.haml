@@ -1,0 +1,48 @@
+
+= form_tag('/fmc', method: 'get', id: 'niss') do
+  = label_tag(:scramble, "Scramble: ")
+  = text_field_tag(:scramble, @scramble, size: 52)
+  = label_tag(:niss, "Solution: ")
+  = text_field_tag(:niss, @niss_code, size: 72)
+  = submit_tag("Show")
+
+%div{style: "height: 22px;"}
+
+- if @scramble.present?
+  .roofpig.sanity{data: {config: "base=NS | setupmoves=#{@scramble} #{@solution}"} }
+    scramble + solution check
+
+
+%h1 Nissualizer
+
+- if @niss_code.present?
+  %table.nissolutions
+    %tr
+      %td Scramble:
+      %td #{@scramble.present? ? @scramble : '(not given)'}
+    %tr
+      %td Solution steps:
+      %td #{@niss_code}
+    %tr
+      %td Which means:
+      %td #{@solution_segments.join(' + ')}  (#{Algs.length(@solution_segments.join(' '))} HTM)
+    %tr
+      %td Cancels to:
+      %td #{@solution}  (#{Algs.length(@solution)} HTM)
+
+  .roofpig.rpniss{data: {config: "base=NS | alg=#{@solution}"} }
+    Full solution
+
+  %div{style: "clear: both"}
+
+  - @steps.each_with_index do |step, i|
+    .step
+      .roofpig.rpniss{data: {config: "base=NS | alg=#{step.moves} | setupmoves=#{step.setup} | colors=cube:#{step.reversed ? '#bbb' : 'black'}"} }
+        Step #{i+1}#{step.reversed ? ' (reversed)' : ''}
+
+:javascript
+  var ROOFPIG_CONF_NS = "hover=far | flags=showalg";
+
+  $('input').keydown(function() {
+    event.stopPropagation();
+  });
