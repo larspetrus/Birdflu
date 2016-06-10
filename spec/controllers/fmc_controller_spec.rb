@@ -14,6 +14,8 @@ RSpec.describe FmcController, :type => :controller do
     it 'decode' do
       cc = "L2 D' L2 (R2 F2) R B R' (R2 F R) R L F' L' F R' U2 F' U F U2 F U F' U' R' F' L F L' R"
       expect(FmcController.niss_decode(cc)).to eq(["L2 D' L2","nR2 F2","R B R'","nR2 F R","R L F' L' F R' U2 F' U F U2 F U F' U' R' F' L F L' R"])
+
+      expect(FmcController.niss_decode("(F R) (U L) U2")).to eq(["nF R", "nU L", "U2"])
     end
 
     it 'to_alg' do

@@ -30,7 +30,7 @@ class FmcController < ApplicationController
   end
 
   def self.niss_decode(coded)
-    coded.gsub('(', '(n').split(/[\(\)]/).map(&:strip)
+    coded.gsub('(', '(n').split(/[\(\)]/).map(&:strip).reject{ |s| s.blank? }
   end
 
   def self.niss_to_alg(coded)
