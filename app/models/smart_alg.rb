@@ -1,5 +1,6 @@
 class SmartAlg
   def initialize(alg)
+    alg ||= ''
     if SmartAlg.notation(alg) == :standard
       @standard = alg
     else
