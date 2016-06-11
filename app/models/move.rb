@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Move
-  attr_reader :side, :turns, :name, :compressed_code
+  attr_reader :side, :turns, :name, :pack_code
 
   TURN_CODES = [nil, "", "2", "'"]
   def self.name_from(side, turns)
@@ -14,12 +14,12 @@ class Move
     @side = side
     @turns = turns
     @name = Move.name_from(side, turns)
-    compression_codes = {F: %w[- F f E], B: %w[- B b q], R: %w[- R r P], L: %w[- L l 1], U: %w[- U u n], D: %w[- D d p]}
-    @compressed_code = compression_codes[side][turns]
+    pack_codes = {F: %w[- F f E], B: %w[- B b q], R: %w[- R r P], L: %w[- L l 1], U: %w[- U u n], D: %w[- D d p]}
+    @pack_code = pack_codes[side][turns]
 
     @@move_lookup[name] = self
     @@move_lookup[[side, turns]] = self
-    @@move_lookup[@compressed_code] = self
+    @@move_lookup[@pack_code] = self
 
     @@all_moves << self
   end

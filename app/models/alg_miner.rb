@@ -109,8 +109,8 @@ class AlgMiner
     move_array.map{ |move| move.name }.join(' ')
   end
 
-  def self.compress_alg(move_array)
-    move_array.map{ |move| move.compressed_code }.join('')
+  def self.pack_alg(move_array)
+    move_array.map{ |move| move.pack_code }.join('')
   end
 
 
@@ -146,12 +146,12 @@ class GoalFinder
     line_count = 0
     open("depth_7_goals.big") do |big_file|
       big_file.each_line do |line|
-        f2l_state, compressed_moves = line.chomp.split(',')
+        f2l_state, packed_moves = line.chomp.split(',')
 
         if @solved_states[f2l_state]
-          @solved_states[f2l_state] += "|#{compressed_moves}"
+          @solved_states[f2l_state] += "|#{packed_moves}"
         else
-          @solved_states[f2l_state] = compressed_moves
+          @solved_states[f2l_state] = packed_moves
         end
 
         if line_count % 500_000 == 0
@@ -174,12 +174,12 @@ class GoalFinder
 
       current_moves = [move] + moves_so_far
       if moves_so_far.count + 1 == @stop_depth
-        # @data_file.puts "#{@cube.f2l_state_string},#{AlgMiner.compress_alg(current_moves)}\n" # %%%
+        # @data_file.puts "#{@cube.f2l_state_string},#{AlgMiner.pack_alg(current_moves)}\n" # %%%
 
         if @solved_states[@cube.f2l_state_string] # @@@
-          @solved_states[@cube.f2l_state_string] += "|#{AlgMiner.compress_alg(current_moves)}" # @@@
+          @solved_states[@cube.f2l_state_string] += "|#{AlgMiner.pack_alg(current_moves)}" # @@@
         else # @@@
-          @solved_states[@cube.f2l_state_string] = AlgMiner.compress_alg(current_moves) # @@@
+          @solved_states[@cube.f2l_state_string] = AlgMiner.pack_alg(current_moves) # @@@
         end # @@@
       else
         dont_end_in_U_D = moves_so_far.empty? && (move.side == :D)
@@ -194,11 +194,11 @@ class GoalFinder
   def solutions_for(cube)
     return [] unless @solved_states.has_key?(cube.f2l_state_string)
 
-    @solved_states[cube.f2l_state_string].split('|').map{|cmprsd| Algs.expand(cmprsd) }
+    @solved_states[cube.f2l_state_string].split('|').map{|cmprsd| Algs.unpack(cmprsd) }
   end
 
   def finishes # for test
-    @solved_states.values.map {|x| Algs.expand(x) }
+    @solved_states.values.map {|x| Algs.unpack(x) }
   end
 end
 

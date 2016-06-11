@@ -4,16 +4,16 @@ class SmartAlg
     if SmartAlg.notation(alg) == :standard
       @standard = alg
     else
-      @compressed = alg
+      @packed = alg
     end
   end
 
   def standard
-    @standard ||= Algs.expand(@compressed)
+    @standard ||= Algs.unpack(@packed)
   end
 
-  def compressed
-    @compressed ||= Algs.compress(@standard)
+  def packed
+    @packed ||= Algs.pack(@standard)
   end
 
   def to_s
@@ -24,7 +24,7 @@ class SmartAlg
     if alg.include?(' ') || (alg.length == 2 && "2'".include?(alg[1]))
       :standard
     else
-      :compressed
+      :packed
     end
   end
 

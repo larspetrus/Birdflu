@@ -56,8 +56,8 @@ describe AlgMiner do
     end
   end
 
-  it 'compress_alg' do
-    expect(AlgMiner.compress_alg([Move::F, Move::R2, Move::Up])).to eq('Frn')
+  it 'pack_alg' do
+    expect(AlgMiner.pack_alg([Move::F, Move::R2, Move::Up])).to eq('Frn')
   end
 
 end

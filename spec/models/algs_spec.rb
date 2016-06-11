@@ -50,18 +50,18 @@ RSpec.describe Algs do
     expect(Algs.equivalent_versions("D L2 R F B'").sort).to eq([ "D L2 R B' F", "D L2 R F B'", "D R L2 B' F", "D R L2 F B'"])
   end
 
-  it 'compress' do
-    expect(Algs.compress("F R2 L2 U D' B F2")).to eq('FrlUpBf')
-    expect(Algs.compress("B F2 U' L F2 L' R U2 R' U B' F2")).to eq('BfnLf1RuPUqf')
+  it 'pack' do
+    expect(Algs.pack("F R2 L2 U D' B F2")).to eq('FrlUpBf')
+    expect(Algs.pack("B F2 U' L F2 L' R U2 R' U B' F2")).to eq('BfnLf1RuPUqf')
 
-    expect{Algs.compress('incorrect')}.to raise_error(RuntimeError)
+    expect{Algs.pack('incorrect')}.to raise_error(RuntimeError)
   end
 
-  it 'expand' do
-    expect(Algs.expand('FrlUpBf')).to eq("F R2 L2 U D' B F2")
-    expect(Algs.expand('BfnLf1RuPUqf')).to eq("B F2 U' L F2 L' R U2 R' U B' F2")
+  it 'unpack' do
+    expect(Algs.unpack('FrlUpBf')).to eq("F R2 L2 U D' B F2")
+    expect(Algs.unpack('BfnLf1RuPUqf')).to eq("B F2 U' L F2 L' R U2 R' U B' F2")
 
-    expect{Algs.expand('incorrect')}.to raise_error(RuntimeError)
+    expect{Algs.unpack('incorrect')}.to raise_error(RuntimeError)
   end
 
   it 'from_tr' do

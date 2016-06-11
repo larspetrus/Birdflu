@@ -73,12 +73,12 @@ module Algs
     ('BRFL'.index(cube.piece_at('UB').name[1]) - LL.edge_data(cube.standard_ll_code[1]).distance) % 4
   end
 
-  def self.compress(human_alg)
-    human_alg.split(' ').map { |m| Move[m].compressed_code }.join
+  def self.pack(human_alg)
+    human_alg.split(' ').map { |m| Move[m].pack_code }.join
   end
 
-  def self.expand(compressed_alg)
-    compressed_alg.chars.map{ |cc| Move[cc].name }.join(' ')
+  def self.unpack(packed_alg)
+    packed_alg.chars.map{ |cc| Move[cc].name }.join(' ')
   end
 
   def self.from_tr(tr_alg)
