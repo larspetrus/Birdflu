@@ -32,8 +32,23 @@ class ComboAlg < ActiveRecord::Base
   end
 
   def self.align_moves(move_parms) # Make the alg make the STANDARD ll_code, so the Roofpig matches the position page image
-    alg_adjustment = 4 - Cube.new(move_parms[:moves]).standard_ll_code_offset
+    alg_adjustment = Algs.display_offset(move_parms[:moves])
     move_parms.keys.each { | key | move_parms[key] = Algs.rotate_by_U(move_parms[key], alg_adjustment) }
+  end
+
+  def self.reconstruct_merge(alg1, alg2, alg2_shift, cancel_count, merge_count)
+    m1 = Algs.pack(Algs.official_variant(alg1.moves))
+    m2 = Algs.pack(Algs.rotate_by_U(alg2.moves, alg2_shift))
+
+    untouched1, cancel1 = m1[0...-cancel_count], m1[-cancel_count..-1]
+    cancel2, untouched2 = m2[0...cancel_count], m2[cancel_count..-1]
+
+    to_merge = Algs.unpack(cancel1.first(merge_count)+cancel2.last(merge_count)).split(' ').sort
+    merged =  Algs.pack (0...merge_count).map{|i| Algs.pack(Move.merge(to_merge[2*i], to_merge[2*i+1])) }.join(' ')
+
+    packed_result = [untouched1, cancel1, merged, cancel2, untouched2]
+    display_offset = Algs.display_offset(Algs.unpack(m1+m2))
+    packed_result.map{|p| Algs.unpack(p) }.map{|up| Algs.rotate_by_U(up, display_offset) }
   end
 
   def self.merge_moves(alg1, alg2)

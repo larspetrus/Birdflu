@@ -21,18 +21,18 @@ RSpec.describe Algs do
     expect(Algs.rotate_by_U("B F", 2)).to eq("B F")    # normalize
   end
 
-  it 'll_code_variant' do
-    std_G1 = "B L F' L F L2 B'"
-    expect(Algs.ll_code_variant(std_G1)).to eq(std_G1)
-    expect(Algs.ll_code_variant(Algs.rotate_by_U(std_G1, 1))).to eq(std_G1)
-    expect(Algs.ll_code_variant(Algs.rotate_by_U(std_G1, 2))).to eq(std_G1)
-    expect(Algs.ll_code_variant(Algs.rotate_by_U(std_G1, 3))).to eq(std_G1)
+  it 'display_variant' do
+    dsp_G1 = "B L F' L F L2 B'"
+    expect(Algs.display_variant(dsp_G1)).to eq(dsp_G1)
+    expect(Algs.display_variant(Algs.rotate_by_U(dsp_G1, 1))).to eq(dsp_G1)
+    expect(Algs.display_variant(Algs.rotate_by_U(dsp_G1, 2))).to eq(dsp_G1)
+    expect(Algs.display_variant(Algs.rotate_by_U(dsp_G1, 3))).to eq(dsp_G1)
 
-    std_I143 = "F2 U L R' F2 L' R U F2"
-    expect(Algs.ll_code_variant(std_I143)).to eq(std_I143)
-    expect(Algs.ll_code_variant(Algs.rotate_by_U(std_I143, 1))).to eq(std_I143)
-    expect(Algs.ll_code_variant(Algs.rotate_by_U(std_I143, 2))).to eq(std_I143)
-    expect(Algs.ll_code_variant(Algs.rotate_by_U(std_I143, 3))).to eq(std_I143)
+    dsp_I143 = "F2 U L R' F2 L' R U F2"
+    expect(Algs.display_variant(dsp_I143)).to eq(dsp_I143)
+    expect(Algs.display_variant(Algs.rotate_by_U(dsp_I143, 1))).to eq(dsp_I143)
+    expect(Algs.display_variant(Algs.rotate_by_U(dsp_I143, 2))).to eq(dsp_I143)
+    expect(Algs.display_variant(Algs.rotate_by_U(dsp_I143, 3))).to eq(dsp_I143)
   end
 
   it 'normalize' do

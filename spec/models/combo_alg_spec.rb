@@ -15,6 +15,16 @@ RSpec.describe ComboAlg, :type => :model do
     expect(ComboAlg.create(moves: "F U F' U F U2 F'", length: 99).length).to eq(7)
   end
 
+  it 'reconstruct_merge' do
+    alg1 = OpenStruct.new(moves: "F R U' B U B' R' F'")
+    alg2 = OpenStruct.new(moves: "B L F' L F L2 B'")
+    expect(ComboAlg.reconstruct_merge(alg1, alg2, 0, 3, 1)).to eq(["R B U' L U", "L' B' R'", "L2", "R B L'", "B L B2 R'"])
+
+    alg1 = OpenStruct.new(moves: "F U' B' R' U' R U B F'")
+    alg2 = OpenStruct.new(moves: "B' F U R U' R' F' U' B")
+    expect(ComboAlg.reconstruct_merge(alg1, alg2, 0, 2, 2)).to eq(["B U' F' L' U' L U", "B' F", "B2 F2", "B' F", "U R U' R' F' U' B"])
+  end
+
   describe "#make" do
     it 'combines the algs' do
       sune2 = named_alg("F' U' F U' F' U2 F", 'SuneM')

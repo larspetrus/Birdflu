@@ -13,7 +13,7 @@ class RawAlg < ActiveRecord::Base
   end
 
   def self.make(alg, length = 1)
-    std_alg = Algs.ll_code_variant(alg)
+    std_alg = Algs.display_variant(alg)
     RawAlg.create(_moves: Algs.pack(std_alg), u_setup: Algs.standard_u_setup(std_alg), length: length)
   end
 
@@ -31,20 +31,20 @@ class RawAlg < ActiveRecord::Base
 
   # --- Finders ---
   def find_mirror
-    mirror_variants = %w(B R F L).map{|side| Algs.pack(Algs.mirror(variant(side))) }
-    RawAlg.where(position_id: position.mirror_id, _speed: _speed, length: length, _moves: mirror_variants).first
+    db_alg = Algs.pack(Algs.display_variant(Algs.mirror(moves)))
+    RawAlg.where(position_id: position.mirror_id, _speed: _speed, length: length, _moves: db_alg).first
   end
 
   def find_reverse
-    reverse_variants = %w(B R F L).map{|side| Algs.pack(Algs.reverse(variant(side))) }
+    db_alg = Algs.pack(Algs.display_variant(Algs.reverse(moves)))
     reverse_speed = Algs.speed_score(Algs.reverse(moves), for_db: true)
-    RawAlg.where(position_id: position.inverse_id, _speed: reverse_speed, length: length, _moves: reverse_variants).first
+    RawAlg.where(position_id: position.inverse_id, _speed: reverse_speed, length: length, _moves: db_alg).first
   end
 
   def self.find_from_moves(moves, position_id)
-    std_alg = Algs.ll_code_variant(moves)
     db_speed = Algs.speed_score(moves, for_db: true)
-    RawAlg.where(position_id: position_id, _speed: db_speed, length: Algs.length(std_alg), _moves: Algs.pack(std_alg)).first
+    db_alg = Algs.pack(Algs.display_variant(moves))
+    RawAlg.where(position_id: position_id, _speed: db_speed, length: db_alg.length, _moves: db_alg).first
   end
 
   # --- Populate DB columns ---
@@ -117,6 +117,7 @@ class RawAlg < ActiveRecord::Base
   end
 
   def self.id_for_name(name, ranges = self.id_ranges)
+    name = name.to_s
     return 1 if name == 'Nothing'
 
     computed_id = ranges[name.bytes[0] - 70] + name[1..-1].to_i - 1
