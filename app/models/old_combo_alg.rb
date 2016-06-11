@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ComboAlg < ActiveRecord::Base
+class OldComboAlg < ActiveRecord::Base
   belongs_to :position
   belongs_to :base_alg1, class_name: 'RawAlg'
   belongs_to :base_alg2, class_name: 'RawAlg'
@@ -18,13 +18,13 @@ class ComboAlg < ActiveRecord::Base
   def self.make(a1, a2, u_shift = 0)
     return if a1.length == 0 || a2.length == 0
 
-    move_parms = merge_moves(Algs.official_variant(alg1.moves), a2.algs(u_shift))
+    move_parms = merge_moves(Algs.official_variant(a1.moves), a2.algs(u_shift))
     return if move_parms[:moves].empty? # algs cancelled
 
     self.align_moves(move_parms)
 
     create_parms = {name: "#{a1.name}+#{a2.name}", base_alg1_id: a1.id, base_alg2_id: a2.id, alg2_u_shift: u_shift}
-    ComboAlg.create(create_parms.merge(move_parms))
+    OldComboAlg.create(create_parms.merge(move_parms))
   end
 
   def self.make_4(a1, a2)

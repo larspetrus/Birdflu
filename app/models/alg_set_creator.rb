@@ -5,7 +5,7 @@
 class AlgSetCreator
   def self.coverage(human_algs)
     ids = HumanAlg.set_to_ids(human_algs)
-    ComboAlg.where(base_alg1_id: ids, base_alg2_id: ids).pluck(:position_id).uniq.count
+    OldComboAlg.where(base_alg1_id: ids, base_alg2_id: ids).pluck(:position_id).uniq.count
   end
 
   def self.make_minimal_set()

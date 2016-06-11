@@ -38,8 +38,8 @@ describe BigThought do
 
     def counts(base_id)
       counts = {}
-      [:base_alg1, :base_alg2].each { |column| counts[column] = ComboAlg.where(column => base_id).count }
-      counts[:total] = ComboAlg.count
+      [:base_alg1, :base_alg2].each { |column| counts[column] = OldComboAlg.where(column => base_id).count }
+      counts[:total] = OldComboAlg.count
       counts
     end
   end

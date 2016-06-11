@@ -3,7 +3,7 @@
 # The Positions table contains a static data set of 4608 LL positions. Once initialized, it will never
 # change. It could live in memory instead of (or in addition to) the DB, and maybe that's a future feature.
 class Position < ActiveRecord::Base
-  has_many :combo_algs, -> { order "length, moves, base_alg2_id DESC" }
+  has_many :old_combo_algs, -> { order "length, moves, base_alg2_id DESC" }
 
   belongs_to :best_alg, class_name: 'RawAlg'
   belongs_to :main_position, class_name: 'Position'
@@ -19,7 +19,7 @@ class Position < ActiveRecord::Base
   end
 
   def algs_in_set(alg_set = AlgSet.active)
-    self.combo_algs.where(alg_set.where_clause)
+    self.old_combo_algs.where(alg_set.where_clause)
   end
 
   def self.by_ll_code(ll_code)
@@ -122,9 +122,9 @@ class Position < ActiveRecord::Base
       raw_counts: RawAlg.where(position_id: main_position_id).group(:length).order(:length).count(),
       shortest:   RawAlg.where(position_id: main_position_id).order(:length, :_speed, :id).first().try(:length),
       fastest:    RawAlg.where(position_id: main_position_id).order(:_speed, :length, :id).first().try(:speed),
-      combo_count:    ComboAlg.where(position_id: main_position_id).count(),
-      shortest_combo: ComboAlg.where(position_id: main_position_id).order(:length, :_speed, :name).first().try(:length),
-      fastest_combo:  ComboAlg.where(position_id: main_position_id).order(:_speed, :length, :name).first().try(:speed),
+      combo_count:    OldComboAlg.where(position_id: main_position_id).count(),
+      shortest_combo: OldComboAlg.where(position_id: main_position_id).order(:length, :_speed, :name).first().try(:length),
+      fastest_combo:  OldComboAlg.where(position_id: main_position_id).order(:_speed, :length, :name).first().try(:speed),
     }
   end
 

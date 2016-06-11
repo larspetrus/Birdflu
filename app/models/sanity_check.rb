@@ -45,10 +45,10 @@ module SanityCheck
     result
   end
 
-  def self.combo_algs
+  def self.old_combo_algs
     errors = []
 
-    ComboAlg.all.each do |ca|
+    OldComboAlg.all.each do |ca|
       unless ca.is_aligned_with_ll_code
         errors << ca.to_s
       end

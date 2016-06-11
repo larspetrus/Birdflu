@@ -36,7 +36,7 @@ class FmcController < ApplicationController
   def self.niss_to_alg(coded)
     niss, regular  = self.niss_decode(coded).partition { |segment| segment.start_with?('n') }
     result_segments = (regular + niss.reverse.map{|moves| Algs.reverse(moves[1..-1])})
-    result_segments.reduce('') {|alg, addon| ComboAlg.merge_moves(alg, addon)[:moves] }
+    result_segments.reduce('') {|alg, addon| OldComboAlg.merge_moves(alg, addon)[:moves] }
   end
 
 end

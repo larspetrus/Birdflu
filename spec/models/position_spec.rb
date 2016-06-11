@@ -44,12 +44,12 @@ RSpec.describe Position, :type => :model do
 
   it "has algs" do
     null_alg = double(algs: '', length: 88, name: 'x', id: 99)
-    ComboAlg.make( named_alg("F U F' U F U2 F'", 'a1'), null_alg, 0)
-    ComboAlg.make( named_alg("F U2 F' U' F U' F'", 'a2'), null_alg, 0)
-    ComboAlg.make( named_alg("B U B' U B U2 B'", 'a3'), null_alg, 0)
+    OldComboAlg.make( named_alg("F U F' U F U2 F'", 'a1'), null_alg, 0)
+    OldComboAlg.make( named_alg("F U2 F' U' F U' F'", 'a2'), null_alg, 0)
+    OldComboAlg.make( named_alg("B U B' U B U2 B'", 'a3'), null_alg, 0)
 
-    expect(Position.find_by!(ll_code: "a1c3c3c5").combo_algs.map(&:name)).to contain_exactly("a1+x", "a3+x")
-    expect(Position.find_by!(ll_code: "a1b5b7b7").combo_algs.map(&:name)).to contain_exactly("a2+x")
+    expect(Position.find_by!(ll_code: "a1c3c3c5").old_combo_algs.map(&:name)).to contain_exactly("a1+x", "a3+x")
+    expect(Position.find_by!(ll_code: "a1b5b7b7").old_combo_algs.map(&:name)).to contain_exactly("a2+x")
   end
 
   it '#set_x_name' do

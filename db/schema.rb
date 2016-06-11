@@ -11,12 +11,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160528071816) do
+ActiveRecord::Schema.define(version: 20160611232351) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "combo_algs", force: :cascade do |t|
+  create_table "old_combo_algs", force: :cascade do |t|
     t.string  "name",         limit: 255
     t.string  "moves",        limit: 255
     t.integer "length",       limit: 2
@@ -33,13 +33,13 @@ ActiveRecord::Schema.define(version: 20160528071816) do
     t.integer "_speed",       limit: 2
   end
 
-  add_index "combo_algs", ["_speed"], name: "index_combo_algs_on__speed", using: :btree
-  add_index "combo_algs", ["base_alg1_id"], name: "index_combo_algs_on_base_alg1_id", using: :btree
-  add_index "combo_algs", ["base_alg2_id"], name: "index_combo_algs_on_base_alg2_id", using: :btree
-  add_index "combo_algs", ["length"], name: "index_combo_algs_on_length", using: :btree
-  add_index "combo_algs", ["position_id", "_speed"], name: "index_combo_algs_on_position_id_and__speed", using: :btree
-  add_index "combo_algs", ["position_id", "length"], name: "index_combo_algs_on_position_id_and_length", using: :btree
-  add_index "combo_algs", ["position_id"], name: "index_combo_algs_on_position_id", using: :btree
+  add_index "old_combo_algs", ["_speed"], name: "index_old_combo_algs_on__speed", using: :btree
+  add_index "old_combo_algs", ["base_alg1_id"], name: "index_old_combo_algs_on_base_alg1_id", using: :btree
+  add_index "old_combo_algs", ["base_alg2_id"], name: "index_old_combo_algs_on_base_alg2_id", using: :btree
+  add_index "old_combo_algs", ["length"], name: "index_old_combo_algs_on_length", using: :btree
+  add_index "old_combo_algs", ["position_id", "_speed"], name: "index_old_combo_algs_on_position_id_and__speed", using: :btree
+  add_index "old_combo_algs", ["position_id", "length"], name: "index_old_combo_algs_on_position_id_and_length", using: :btree
+  add_index "old_combo_algs", ["position_id"], name: "index_old_combo_algs_on_position_id", using: :btree
 
   create_table "position_stats", force: :cascade do |t|
     t.integer "position_id"

@@ -12,10 +12,10 @@ class BigThought
 
   def self.combine(new_alg)
     RawAlg.where(combined: true).each do |old|
-      ComboAlg.make_4(old, new_alg)
-      ComboAlg.make_4(new_alg, old)
+      OldComboAlg.make_4(old, new_alg)
+      OldComboAlg.make_4(new_alg, old)
     end
-    ComboAlg.make_4(new_alg, new_alg)
+    OldComboAlg.make_4(new_alg, new_alg)
     new_alg.update(combined: true)
   end
 
@@ -75,7 +75,7 @@ class BigThought
                 (0..1).each do |e2|
                   (0..1).each do |e3|
                     twists = [c1, e1, c2, e2, c3, e3, (-c1-c2-c3) % 3, (e1+e2+e3) % 2]
-                    twisted_code = (0..7).inject('') { |code, i| code.concat(untwisted_ll_code[i]+twists[i]) }
+                    twisted_code = (0..7).inject(String.new('')) { |code, i| code.concat(untwisted_ll_code[i]+twists[i]) }
 
                     found_positions[Cube.new(twisted_code).standard_ll_code] += 1
                   end
