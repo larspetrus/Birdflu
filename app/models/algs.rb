@@ -95,7 +95,7 @@ module Algs
   end
 
   def self.specialness(alg)
-    b_sides = Algs.sides(Algs.official_variant(alg))
+    b_sides = Algs.sides(Algs.official_variant(alg)) # Always includes B
     
     case b_sides
       when 'BU'                then 'FU'

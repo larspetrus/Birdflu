@@ -18,7 +18,7 @@ class ComboAlg < ActiveRecord::Base
   def self.make(a1, a2, u_shift = 0)
     return if a1.length == 0 || a2.length == 0
 
-    move_parms = merge_moves(a1.variant(:B), a2.algs(u_shift))
+    move_parms = merge_moves(Algs.official_variant(alg1.moves), a2.algs(u_shift))
     return if move_parms[:moves].empty? # algs cancelled
 
     self.align_moves(move_parms)
