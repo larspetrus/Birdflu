@@ -121,4 +121,11 @@ describe RawAlg do
 
     expect(RawAlg.instance_variable_get('@id_ranges')).to eq(nil) # Avoid test contamination. May be overkill
   end
+
+  it 'as alg objects' do
+    raw_alg = RawAlg.make("F2 U L R' F2 L' R U F2", 9)
+
+    expect(raw_alg.ui_alg.to_s).to eq(raw_alg.moves)
+    expect(raw_alg.db_alg.to_s).to eq(raw_alg._moves)
+  end
 end

@@ -131,6 +131,14 @@ class RawAlg < ActiveRecord::Base
     self.find_by_id(self.id_for_name(name))
   end
 
+  def ui_alg
+    UiAlg.new(moves)
+  end
+
+  def db_alg
+    DbAlg.new(_moves)
+  end
+
   def to_s
     "#{name}: #{moves}  (id: #{id})"
   end
