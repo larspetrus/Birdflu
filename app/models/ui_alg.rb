@@ -5,6 +5,10 @@ class UiAlg
     @alg = (alg || '').freeze
   end
 
+  def +(alg)
+    UiAlg.new(@alg + ' ' + alg.to_s)
+  end
+
   def move_count
     @alg.split(' ').length
   end

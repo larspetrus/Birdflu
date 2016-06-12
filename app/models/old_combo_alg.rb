@@ -37,18 +37,18 @@ class OldComboAlg < ActiveRecord::Base
   end
 
   def self.reconstruct_merge(alg1, alg2, alg2_shift, cancel_count, merge_count)
-    m1 = Algs.pack(Algs.official_variant(alg1.moves))
-    m2 = Algs.pack(Algs.rotate_by_U(alg2.moves, alg2_shift))
+    ua1 = UiAlg.new(Algs.official_variant(alg1.moves))
+    ua2 = UiAlg.new(Algs.rotate_by_U(alg2.moves, alg2_shift))
+    da1, da2 = ua1.db_alg, ua2.db_alg
 
-    untouched1, cancel1 = m1[0...-cancel_count], m1[-cancel_count..-1]
-    cancel2, untouched2 = m2[0...cancel_count], m2[cancel_count..-1]
+    untouched1, cancel1 = da1[0...-cancel_count], da1[-cancel_count..-1]
+    cancel2, untouched2 = da2[0...cancel_count], da2[cancel_count..-1]
 
-    to_merge = Algs.unpack(cancel1.first(merge_count)+cancel2.last(merge_count)).split(' ').sort
-    merged =  Algs.pack (0...merge_count).map{|i| Algs.pack(Move.merge(to_merge[2*i], to_merge[2*i+1])) }.join(' ')
+    to_merge = Algs.unpack(cancel1.to_s.first(merge_count)+cancel2.to_s.last(merge_count)).split(' ').sort
+    merged = UiAlg.new((0...merge_count).map { |i| Move.merge(to_merge[2*i], to_merge[2*i+1]) }.join(' ')).db_alg
 
-    packed_result = [untouched1, cancel1, merged, cancel2, untouched2]
-    display_offset = Algs.display_offset(Algs.unpack(m1+m2))
-    packed_result.map{|p| Algs.unpack(p) }.map{|up| Algs.rotate_by_U(up, display_offset) }
+    display_offset = Algs.display_offset(ua1 + ua2)
+    [untouched1, cancel1, merged, cancel2, untouched2].map{|da| Algs.rotate_by_U(da.ui_alg, display_offset) }
   end
 
   def self.merge_moves(alg1, alg2)

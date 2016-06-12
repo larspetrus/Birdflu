@@ -19,7 +19,7 @@ module Algs
   end
 
   def self.rotate_by_U(alg, turns = 1)
-    rotated = alg.chars.map { |char| (place = 'RFLB'.index(char)) ? 'RFLB'[(place + turns) % 4] : char }.join
+    rotated = alg.to_s.chars.map { |char| (place = 'RFLB'.index(char)) ? 'RFLB'[(place + turns) % 4] : char }.join
     normalize(rotated)
   end
 
@@ -29,7 +29,7 @@ module Algs
   end
 
   def self.display_offset(alg)
-    -Cube.new(alg).standard_ll_code_offset % 4
+    -Cube.new(alg.to_s).standard_ll_code_offset % 4
   end
 
   def self.normalize(alg)

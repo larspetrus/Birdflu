@@ -5,6 +5,14 @@ class DbAlg
     @alg = (alg || '').freeze
   end
 
+  def +(alg)
+    DbAlg.new(@alg + alg.to_s)
+  end
+
+  def [](*args)
+    DbAlg.new(@alg[*args])
+  end
+
   def move_count
     @alg.length
   end
