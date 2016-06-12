@@ -17,7 +17,7 @@ describe RawAlg do
       expect(alg.speed).to eq(6.3)
     end
 
-    it 'all fields ' do
+    it 'all fields 2' do
       alg = RawAlg.make("B F' U B D L2 D' B' U' B' U2 F", 12)
 
       expect(alg.length).to eq(12)
@@ -30,6 +30,21 @@ describe RawAlg do
       expect(alg.moves).to eq("B F' U B D L2 D' B' U' B' U2 F")
       expect(alg.specialness).to eq(nil)
       expect(alg.speed).to eq(10.74)
+    end
+
+    it 'all fields about Nothing' do
+      alg = RawAlg.make("", 0)
+
+      expect(alg.length).to eq(0)
+      expect(alg.variant(:B)).to eq("")
+      expect(alg.variant(:R)).to eq("")
+      expect(alg.variant(:F)).to eq("")
+      expect(alg.variant(:L)).to eq("")
+      expect(alg.position.ll_code).to eq('a1a1a1a1')
+      expect(alg.u_setup).to eq(0)
+      expect(alg.moves).to eq("")
+      expect(alg.specialness).to eq(nil)
+      expect(alg.speed).to eq(0.0)
     end
 
     it 'picks right variant for moves' do

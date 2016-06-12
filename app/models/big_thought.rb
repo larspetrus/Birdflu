@@ -11,22 +11,28 @@ class BigThought
   end
 
   def self.combine(new_alg)
-    RawAlg.where(combined: true).each do |old|
-      OldComboAlg.make_4(old, new_alg)
-      OldComboAlg.make_4(new_alg, old)
+    already_combined_ids = ComboAlg.combined_ids
+    raise "This alg is already combined: #{new_alg}" if already_combined_ids.include?(new_alg.id)
+    raise "Can't combine the empty alg (like this) " if new_alg.id == self.empty_alg.id
+
+    ComboAlg.make(new_alg, self.empty_alg, 0)
+    RawAlg.where(id: already_combined_ids).each do |old|
+      ComboAlg.make_4(old, new_alg)
+      ComboAlg.make_4(new_alg, old)
     end
-    OldComboAlg.make_4(new_alg, new_alg)
-    new_alg.update(combined: true)
+    ComboAlg.make_4(new_alg, new_alg)
   end
 
   def self.combine_many(raw_algs)
     timed_transaction do
-      raw_algs.each do |alg|
-        combine(alg) unless alg.combined
-      end
+      raw_algs.each{ |alg| combine(alg) }
     end
-    update_positions
   end
+
+  def self.empty_alg
+    @empty_alg ||= RawAlg.where(length: 0).first
+  end
+
 
   # Update Positions table after adding RawAlgs #TODO: make automatic
   def self.update_positions

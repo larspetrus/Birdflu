@@ -38,11 +38,13 @@ RSpec.describe Algs do
   it 'normalize' do
     expect(Algs.normalize("F R2 L2 U D' B F2")).to eq("F L2 R2 D' U B F2")
     expect(Algs.normalize("B L' R F D2 U F B' R")).to eq("B L' R F D2 U B' F R")
+    expect(Algs.normalize("")).to eq("")
   end
 
   it 'anti_normalize' do
     expect(Algs.anti_normalize("F R2 L2 U D' B F2")).to eq("F R2 L2 U D' F2 B")
     expect(Algs.anti_normalize("B L' R F D2 U F B' R")).to eq("B R L' F U D2 F B' R")
+    expect(Algs.anti_normalize("")).to eq("")
   end
   
   it 'equivalent_versions' do
@@ -124,6 +126,23 @@ RSpec.describe Algs do
     expect(Algs.standard_u_setup("R B2 U' L' B2 R D B2 D' L B2 R' U R'")).to eq(1)
     expect(Algs.standard_u_setup("F U F' U F U2 F'")).to eq(2)
     expect(Algs.standard_u_setup("B' D' F D R2 B2 R2 D' F' D B' U' B2 U' B2")).to eq(3)
+  end
+
+
+  it '#merge_moves' do
+    expect(Algs.merge_moves("F U2 R'", "B F")).to eq(start: "F U2 R'", cancel1: "", merged: "", cancel2: "", end: "B F", moves: "F U2 R' B F")
+    expect(Algs.merge_moves("F U2 R'", "R F")).to eq(start: "F U2", cancel1: "R'", merged: "", cancel2: "R", end: "F", moves: 'F U2 F')
+    expect(Algs.merge_moves("F U2 R'", "R2 F")).to eq(start: "F U2", cancel1: "R'", merged: "R", cancel2: "R2", end: "F", moves: "F U2 R F")
+    expect(Algs.merge_moves("F U2 R2", "R2 U F")).to eq(start: "F", cancel1: "U2 R2", merged: "U'", cancel2: "R2 U", end: "F", moves: "F U' F")
+    expect(Algs.merge_moves("F U2 R2", "R2 U2 F'")).to eq(start: "", cancel1: "F U2 R2", merged: "", cancel2: "R2 U2 F'", end: "", moves: "")
+
+    expect(Algs.merge_moves("L R", "L")).to eq(start: "R", cancel1: "L", merged: "L2", cancel2: "L", end: "", moves: "L2 R")
+    expect(Algs.merge_moves("L", "R L")).to eq(start: "", cancel1: "L", merged: "L2", cancel2: "L", end: "R", moves: "L2 R")
+    expect(Algs.merge_moves("D L R", "L' R' D")).to eq(start: "", cancel1: "D L R", merged: "D2", cancel2: "L' R' D", end: "", moves: "D2")
+    expect(Algs.merge_moves("D L R", "L R F")).to eq(start: "D", cancel1: "L R", merged: "L2 R2", cancel2: "L R", end: "F", moves: "D L2 R2 F")
+    expect(Algs.merge_moves("L F B2", "F B2 D")).to eq(start: "L", cancel1: "B2 F", merged: "F2", cancel2: "B2 F", end: "D", moves: "L F2 D")
+
+    expect(Algs.merge_moves("B F' U'", "U B' F")).to eq(start: "", cancel1: "B F' U'", merged: "", cancel2: "U B' F", end: "", moves: "")
   end
 
 

@@ -158,4 +158,38 @@ module Algs
     (0..3).map {|i| Algs.rotate_by_U(alg, i) }.sort.first
   end
 
+  def self.merge_moves(alg1, alg2)
+    start, finish = Algs.normalize(alg1).split(' '), Algs.anti_normalize(alg2).split(' ')
+    cancels1, remains, cancels2 = [], [], []
+
+    begin
+      if Move.same_side(start.last, finish.first)
+        merged_move = Move.merge(start.last, finish.first)
+        remains << merged_move if merged_move
+
+        cancels1.insert(0, start.pop)
+        cancels2 << finish.shift
+      else
+        # For cases like "R L + R", flip to "L R + R", and run through again.
+        if Move.opposite_sides(start.last, finish.first)
+          if Move.opposite_sides(start[-1], start[-2])
+            start[-1], start[-2] = start[-2], start[-1]
+          elsif Move.opposite_sides(finish[0], finish[1])
+            finish[0], finish[1] = finish[1], finish[0]
+          end
+        end
+      end
+    end while Move.same_side(start.last, finish.first) && (remains.empty? || Move.opposite_sides(start.last, remains[0]))
+
+    {
+        start:   Algs.normalize(start.join(' ')),
+        cancel1: Algs.normalize(cancels1.join(' ')),
+        merged:  Algs.normalize(remains.join(' ')),
+        cancel2: Algs.normalize(cancels2.join(' ')),
+        end:     Algs.normalize(finish.join(' ')),
+        moves:   Algs.normalize((start + remains + finish).join(' '))
+    }
+  end
+
+
 end

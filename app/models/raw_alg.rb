@@ -41,7 +41,8 @@ class RawAlg < ActiveRecord::Base
     RawAlg.where(position_id: position.inverse_id, _speed: reverse_speed, length: length, _moves: db_alg).first
   end
 
-  def self.find_from_moves(moves, position_id)
+  def self.find_from_moves(moves, position_id = nil)
+    position_id ||= Position.by_ll_code(Cube.new(moves).standard_ll_code).id
     db_speed = Algs.speed_score(moves, for_db: true)
     db_alg = Algs.pack(Algs.display_variant(moves))
     RawAlg.where(position_id: position_id, _speed: db_speed, length: db_alg.length, _moves: db_alg).first
@@ -79,7 +80,7 @@ class RawAlg < ActiveRecord::Base
       end
     end
 
-    @variants[side.to_sym]
+    @variants[side.to_sym] || ''
   end
 
   # View API
