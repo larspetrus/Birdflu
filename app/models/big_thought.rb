@@ -13,9 +13,9 @@ class BigThought
   def self.combine(new_alg)
     already_combined_ids = ComboAlg.combined_ids
     raise "This alg is already combined: #{new_alg}" if already_combined_ids.include?(new_alg.id)
-    raise "Can't combine the empty alg (like this) " if new_alg.id == self.empty_alg.id
+    raise "Can't combine the empty alg (like this) " if new_alg.id == self.empty_alg&.id
 
-    ComboAlg.make(new_alg, self.empty_alg, 0)
+    ComboAlg.make(new_alg, self.empty_alg, 0) if self.empty_alg
     RawAlg.where(id: already_combined_ids).each do |old|
       ComboAlg.make_4(old, new_alg)
       ComboAlg.make_4(new_alg, old)

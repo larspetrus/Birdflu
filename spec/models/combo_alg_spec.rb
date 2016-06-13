@@ -14,7 +14,5 @@ describe 'construct' do
     expect(ca.alg2_shift).to eq(3)
     expect(ca.cancel_count).to eq(2)
     expect(ca.merge_count).to eq(1)
-
-    expect(ca.name).to eq("#{alg1.name}+#{alg2.name}")
   end
 end
