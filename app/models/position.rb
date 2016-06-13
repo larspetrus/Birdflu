@@ -5,10 +5,10 @@
 class Position < ActiveRecord::Base
   has_many :old_combo_algs, -> { order "length, moves, base_alg2_id DESC" }
 
-  belongs_to :best_alg, class_name: 'RawAlg'
-  belongs_to :main_position, class_name: 'Position'
+  belongs_to :best_alg, class_name: RawAlg.name
+  belongs_to :main_position, class_name: Position.name
 
-  has_one :stats, class_name: 'PositionStats'
+  has_one :stats, class_name: PositionStats.name
 
   validates :ll_code, uniqueness: true # TODO Validate that it's the standard ll_code?
 

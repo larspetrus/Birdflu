@@ -2,7 +2,8 @@
 
 class RawAlg < ActiveRecord::Base
   belongs_to :position
-  belongs_to :mirror, class_name: 'RawAlg'
+  belongs_to :mirror, class_name: RawAlg.name
+  has_many :combo_algs, foreign_key: :combined_alg
 
   validates :length, presence: true
 
