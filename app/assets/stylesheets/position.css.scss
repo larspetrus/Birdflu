@@ -279,12 +279,16 @@ $panel-width: 450px;
 }
 
 // ------------ Alg sections
+.combo-name {
+  font-weight: 700;
+}
+
 .cancel1 {
   color: #aaa;
   text-decoration: line-through;
 }
 .merged {
-  color: blue;
+  color: #08f;
 }
 .cancel2 {
   color: #daa;

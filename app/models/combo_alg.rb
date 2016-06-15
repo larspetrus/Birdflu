@@ -48,6 +48,37 @@ class ComboAlg < ActiveRecord::Base
     "#{alg1.name}+#{alg2.name}"
   end
 
+  def recon
+    ComboAlg.display_merge(alg1, alg2, alg2_shift, cancel_count, merge_count)
+  end
+
+  def self.display_merge(alg1, alg2, alg2_shift, cancel_count, merge_count)
+    ua1 = UiAlg.new(Algs.official_variant(alg1.moves))
+    ua2 = UiAlg.new(Algs.rotate_by_U(Algs.official_variant(alg2.moves), alg2_shift))
+    display_offset = Algs.display_offset(ua1 + ua2)
+    ua1 = UiAlg.new(Algs.rotate_by_U(ua1, display_offset))
+    ua2 = UiAlg.new(Algs.rotate_by_U(ua2, display_offset))
+
+    da1, da2 = ua1.db_alg, ua2.db_alg
+
+    untouched1, cancel1 = da1.not_last(cancel_count), da1.last(cancel_count)
+    cancel2, untouched2 = da2.first(cancel_count), da2.not_first(cancel_count)
+
+    net_cancel = cancel_count - merge_count
+    nbsp = "\u00A0"
+    _nc_ = net_cancel > 0 ? nbsp : ''
+    [].tap do |result|
+      result << [untouched1.ui_alg.to_s + nbsp]
+      result << [cancel1.first(merge_count).ui_alg.to_s + _nc_, :merged] if merge_count > 0
+      result << [cancel1.last(net_cancel).ui_alg.to_s, :cancel1] if net_cancel > 0
+      result << [_nc_ + '+' + _nc_]
+      result << [cancel2.first(net_cancel).ui_alg.to_s, :cancel2] if net_cancel > 0
+      result << [_nc_ + cancel2.last(merge_count).ui_alg.to_s, :merged] if merge_count > 0
+      result << [nbsp + untouched2.ui_alg.to_s, :alg2]
+    end
+  end
+
+
   def to_s
     "ComboAlg id: #{id}, name: #{name}, length: #{combined_alg.length}, alg1: #{alg1.moves}, alg2: #{alg2.moves} combined: #{combined_alg.moves}, cancel: #{cancel_count}, merged: #{merge_count}"
   end

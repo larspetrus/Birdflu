@@ -36,21 +36,6 @@ class OldComboAlg < ActiveRecord::Base
     move_parms.keys.each { | key | move_parms[key] = Algs.rotate_by_U(move_parms[key], alg_adjustment) }
   end
 
-  def self.reconstruct_merge(alg1, alg2, alg2_shift, cancel_count, merge_count)
-    ua1 = UiAlg.new(Algs.official_variant(alg1.moves))
-    ua2 = UiAlg.new(Algs.rotate_by_U(alg2.moves, alg2_shift))
-    da1, da2 = ua1.db_alg, ua2.db_alg
-
-    untouched1, cancel1 = da1[0...-cancel_count], da1[-cancel_count..-1]
-    cancel2, untouched2 = da2[0...cancel_count], da2[cancel_count..-1]
-
-    to_merge = Algs.unpack(cancel1.to_s.first(merge_count)+cancel2.to_s.last(merge_count)).split(' ').sort
-    merged = UiAlg.new((0...merge_count).map { |i| Move.merge(to_merge[2*i], to_merge[2*i+1]) }.join(' ')).db_alg
-
-    display_offset = Algs.display_offset(ua1 + ua2)
-    [untouched1, cancel1, merged, cancel2, untouched2].map{|da| Algs.rotate_by_U(da.ui_alg, display_offset) }
-  end
-
   def self.merge_moves(alg1, alg2)
     start, finish = Algs.normalize(alg1).split(' '), Algs.anti_normalize(alg2).split(' ')
     cancels1, remains, cancels2 = [], [], []
@@ -91,10 +76,6 @@ class OldComboAlg < ActiveRecord::Base
 
   def single?
     false
-  end
-
-  def css_kind
-    'combo'
   end
 
   def is_aligned_with_ll_code

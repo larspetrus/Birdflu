@@ -90,14 +90,10 @@ module Algs
     moves.join(' ')
   end
 
-  def self.sides(alg)
-    alg.gsub(/[ '2]/,'').chars.uniq.sort.join
-  end
-
   def self.specialness(alg)
-    b_sides = Algs.sides(Algs.official_variant(alg)) # Always includes B
+    used_sides = Algs.official_variant(alg).gsub(/[ '2]/,'').chars.uniq.sort.join # official_variant always includes B
     
-    case b_sides
+    case used_sides
       when 'BU'                then 'FU'
       when 'BFU'               then 'FUB'
       when 'BFR', 'BFL', 'BLR' then 'LFR'
@@ -106,7 +102,7 @@ module Algs
       when 'BLU', 'BRU'        then 'RFU'
       when 'BDL', 'BDR'        then 'RFD'
       else
-        raise "Missed Gen code '#{b_sides}' for alg #{alg}" if b_sides.length == 3
+        raise "Missed Gen code '#{used_sides}' for alg #{alg}" if used_sides.length == 3
         nil
     end
   end

@@ -71,11 +71,6 @@ RSpec.describe Algs do
     expect(Algs.from_tr('F+U-B-U+F-U-B+')).to eq("F U' B' U F' U' B")
   end
 
-  it 'sides' do
-    expect(Algs.sides("F U2 F'")).to eq('FU')
-    expect(Algs.sides("F U' B' U F' U' B")).to eq('BFU')
-  end
-
   it 'specialness' do
     expect(Algs.specialness("F U F' U F U2 F'")).to eq('FU')
     expect(Algs.specialness("B U2 B' U' B U' B'")).to eq('FU')
@@ -112,7 +107,7 @@ RSpec.describe Algs do
     expect(Algs.length("B' U2 B U B U B2 U' B2 U2 B2 U2 B2 U2 B'")).to eq(15)
   end
 
-  it 'standard_variant' do
+  it 'official_variant' do
     expect(Algs.official_variant("L' B2 R B R' B L")).to eq("B' R2 F R F' R B")
     expect(Algs.official_variant("F' L' U' L U L2 D' L' D L' F2 U' F'")).to eq("B' R' U' R U R2 D' R' D R' B2 U' B'")
     expect(Algs.official_variant("R B U B' U' R'")).to eq("B L U L' U' B'")

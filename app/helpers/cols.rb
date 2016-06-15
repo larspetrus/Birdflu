@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# The
+#
 # As a "view presenter" class, it makes sense to me to put this in the View helpers directory. DHH may disagree.
 
 class Cols
@@ -17,12 +19,12 @@ class Cols
   end
 
   MOVES = Cols.new('Moves',
-      -> (alg, flags) { td_tag(as_alg(alg).length, highlight(flags[:shortest], flags[:copy])) }
+      -> (alg, flags) { tag(:td, as_alg(alg).length, highlight(flags[:shortest], flags[:copy])) }
   )
   MOVES_P = MOVES.with_header('')
 
   SPEED = Cols.new('Speed',
-    -> (alg, flags) { td_tag('%.2f' % as_alg(alg).speed, highlight(flags[:fastest], flags[:copy])) }
+    -> (alg, flags) { tag(:td, '%.2f' % as_alg(alg).speed, highlight(flags[:fastest], flags[:copy])) }
   )
   NAME = Cols.new('Name',
     -> (aop, flags) do
@@ -32,9 +34,9 @@ class Cols
             alg.name
           else
             names = alg.name.split('+')
-            h.content_tag(:span, names[0], class: 'goto-pos') + '+' + h.content_tag(:span, names[1], class: 'goto-pos')
+            tag(:span, names[0], 'goto-pos') + '+' + tag(:span, names[1], 'goto-pos')
           end
-      td_tag(content, class: alg.css_kind)
+      tag(:td, content, 'single')
     end
   )
   COP = Cols.new('COP', nil, -> (aop, flags) do {icon: Icons::Cop.for(as_pos(aop, flags.call(aop))), size: 22, label: ''} end)
@@ -44,25 +46,37 @@ class Cols
   POSITION = Cols.new('Position',
     -> (aop, flags) do
       pos = as_pos(aop, flags)
-      td_tag(h.link_to(pos.display_name, "/positions/#{pos.ll_code}"))
+      tag(:td, h.link_to(pos.display_name, "/positions/#{pos.ll_code}"))
     end
   )
   ALG = Cols.new('Alg',
-    -> (aop, flags) { td_tag(Algs.rotate_by_U(as_alg(aop).moves, as_pos(aop, flags).pov_offset), class: :alg) }
+    -> (aop, flags) { tag(:td, Algs.rotate_by_U(as_alg(aop).moves, as_pos(aop, flags).pov_offset), 'alg') }
   )
   ALG_P = ALG.with_header('Shortest Solution')
 
   SHOW = Cols.new('',
     -> (aop, flags) do
       pov_adjust = as_pos(aop, flags).pov_adjust_u_setup
-      td_tag(h.content_tag(:a, 'show', class: 'show-pig'), :'data-uset' => (as_alg(aop).u_setup + pov_adjust) % 4 )
+      td_tag(tag(:a, 'show', 'show-pig'), :'data-uset' => (as_alg(aop).u_setup + pov_adjust) % 4 )
     end
   )
   NOTES = Cols.new('Notes',
-      -> (alg, flags) { td_tag(as_alg(alg).specialness) }
+      -> (alg, flags) { tag(:td, alg.specialness) }
+  )
+  COMBOS = Cols.new('Combos',
+      -> (alg, flags) do
+        result = tag(:span, '·')
+        alg.combo_algs.each do |combo|
+          result += tag(:span, combo.alg1.name, 'goto-pos') + '+' + tag(:span, combo.alg2.name, 'goto-pos') + " ·· "
+          combo.recon.each do |part|
+            result += tag(:span, part[0], part[1])
+          end
+        end
+        tag(:td, result)
+      end
   )
   SOLUTIONS = Cols.new('Solutions',
-      -> (pos, flags) { td_tag(as_pos(pos, flags).alg_count) }
+      -> (pos, flags) { tag(:td, as_pos(pos, flags).alg_count) }
   )
 
   def td(alg, flags)
@@ -77,9 +91,13 @@ class Cols
     h.content_tag(:td, content, options)
   end
 
+  def self.tag(type, content, css_class = nil)
+    h.content_tag(type, content, class: css_class)
+  end
+
   def self.highlight(optimal, copy)
-    class_names = [optimal ? 'optimal' : nil, copy ? 'copy' : nil].join
-    class_names.present? ? {class: class_names} : {}
+    return nil unless optimal || copy
+    (optimal ? 'optimal' : '') + (copy ? 'copy' : '')
   end
 
   def self.as_pos(alg_or_pos, flags)

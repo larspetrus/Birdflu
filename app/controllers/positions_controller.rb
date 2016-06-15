@@ -64,6 +64,7 @@ class PositionsController < ApplicationController
     columns << Cols::EO  if @selected_icons[:eo].is_none
     columns << Cols::EP  if @selected_icons[:ep].is_none
     columns << Cols::ALG << Cols::SHOW << Cols::NOTES
+    # columns << Cols::COMBOS
   end
 
   def make_pos_columns
@@ -92,7 +93,7 @@ class PositionsController < ApplicationController
 
       result.headline = "Position #{single_pos.display_name}"
       result.link_section = [
-          { label: 'Mirror', links: single_pos.has_mirror ? [pos_link(single_pos.mirror)]  : ['None'] },
+          { label: 'Mirror',  links: single_pos.has_mirror  ? [pos_link(single_pos.mirror)]   : ['None'] },
           { label: 'Inverse', links: single_pos.has_inverse ? [pos_link(single_pos.inverse)]  : ['None'] },
           rot_count > 0 ? { label: 'Rotation'+rot_s, links: single_pos.pov_rotations.map{|id| pos_link(Position.find(id)) } } : nil
       ].compact
@@ -127,7 +128,7 @@ class PositionsController < ApplicationController
 
   # === Routed action ===
   def show
-    pos = Position.find_by_id(params[:id]) || Position.by_ll_code(params[:id]) || RawAlg.find_with_name(params[:id]).position # Try DB id LL code, or alg name
+    pos = Position.find_by_id(params[:id]) || Position.by_ll_code(params[:id]) || RawAlg.by_name(params[:id]).position # Try DB id LL code, or alg name
 
     new_params = {}
     Fields::FILTER_NAMES.each { |k| new_params[k] = pos[k] }
@@ -148,7 +149,7 @@ class PositionsController < ApplicationController
 
       db_alg = RawAlg.find_from_moves(user_input, Position.find_by!(ll_code: ll_code))
     else # interpret as alg name
-      db_alg = RawAlg.find_with_name(user_input)
+      db_alg = RawAlg.by_name(user_input)
       raise "There is no alg named '#{user_input}'" unless db_alg
       actual_moves = db_alg.moves
     end
@@ -166,7 +167,7 @@ class PositionsController < ApplicationController
 end
 
 class DuckRawAlg
-  attr_reader :moves, :length, :speed, :name, :css_kind, :pov_offset, :pov_adjust_u_setup, :u_setup, :specialness
+  attr_reader :moves, :length, :speed, :name, :pov_offset, :pov_adjust_u_setup, :u_setup, :specialness
 
   def initialize(moves)
     @moves = moves
@@ -175,7 +176,6 @@ class DuckRawAlg
     @u_setup = Algs.standard_u_setup(moves)
 
     @name = '-'
-    @css_kind = ''
     @pov_offset = 0
     @pov_adjust_u_setup = 0
     @specialness = 'Not in DB'

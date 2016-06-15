@@ -105,18 +105,18 @@ describe RawAlg do
   it 'computes name from id' do
     id_mins = [2, 5, 12]
 
-    expect(RawAlg.name_for_id(2, id_mins)).to eq('F1')
-    expect(RawAlg.name_for_id(6, id_mins)).to eq('G2')
-    expect(RawAlg.name_for_id(25,id_mins)).to eq('H14')
-    expect(RawAlg.name_for_id(1, id_mins)).to eq('Nothing')
+    expect(RawAlg.name_for(2, id_mins)).to eq('F1')
+    expect(RawAlg.name_for(6, id_mins)).to eq('G2')
+    expect(RawAlg.name_for(25,id_mins)).to eq('H14')
+    expect(RawAlg.name_for(1, id_mins)).to eq('Nothing')
     
-    expect(RawAlg.id_for_name('F1',  id_mins)).to eq(2)
-    expect(RawAlg.id_for_name('G2',  id_mins)).to eq(6)
-    expect(RawAlg.id_for_name('H14', id_mins)).to eq(25)
-    expect(RawAlg.id_for_name('Nothing', id_mins)).to eq(1)
+    expect(RawAlg.id('F1',  id_mins)).to eq(2)
+    expect(RawAlg.id('G2',  id_mins)).to eq(6)
+    expect(RawAlg.id('H14', id_mins)).to eq(25)
+    expect(RawAlg.id('Nothing', id_mins)).to eq(1)
 
-    expect(RawAlg.id_for_name('G200', id_mins)).to eq(nil) # G7 is the highest G name
-    expect(RawAlg.id_for_name('NotAnID', id_mins)).to eq(nil)
+    expect(RawAlg.id('G200', id_mins)).to eq(nil) # G7 is the highest G name
+    expect(RawAlg.id('NotAnID', id_mins)).to eq(nil)
     # known problem: There is no check for non existent ID with max length, like H9999999 in this test case
 
     expect(RawAlg.instance_variable_get('@id_ranges')).to eq(nil) # Avoid test contamination. May be overkill

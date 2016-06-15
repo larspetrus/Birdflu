@@ -3,7 +3,7 @@
 class RawAlg < ActiveRecord::Base
   belongs_to :position
   belongs_to :mirror, class_name: RawAlg.name
-  has_many :combo_algs, foreign_key: :combined_alg
+  has_many :combo_algs, foreign_key: :combined_alg_id
 
   validates :length, presence: true
 
@@ -49,6 +49,10 @@ class RawAlg < ActiveRecord::Base
     RawAlg.where(position_id: position_id, _speed: db_speed, length: db_alg.length, _moves: db_alg).first
   end
 
+  def self.by_name(name)
+    self.find(self.id(name))
+  end
+
   # --- Populate DB columns ---
   def set_position
     ll_code = Cube.new(moves).standard_ll_code # validates
@@ -85,12 +89,8 @@ class RawAlg < ActiveRecord::Base
   end
 
   # View API
-  def css_kind
-    'single'
-  end
-
   def name
-    RawAlg.name_for_id(id)
+    RawAlg.name_for(id)
   end
 
   def single?
@@ -113,23 +113,19 @@ class RawAlg < ActiveRecord::Base
     @id_ranges ||= (6..RawAlg.maximum(:length)).map{ |l| RawAlg.where(length: l).minimum(:id) }
   end
 
-  def self.name_for_id(db_id, ranges = self.id_ranges)
+  def self.name_for(db_id, ranges = self.id_ranges)
     lower = ranges.select{|r| r <= db_id }
-    lower.present? ? "#{(69 + lower.count).chr}#{db_id + 1 - lower.last}" : 'Nothing'
+    lower.present? ? "#{('E'.ord + lower.count).chr}#{db_id + 1 - lower.last}" : 'Nothing'
   end
 
-  def self.id_for_name(name, ranges = self.id_ranges)
+  def self.id(name, ranges = self.id_ranges)
     name = name.to_s
     return 1 if name == 'Nothing'
 
-    computed_id = ranges[name.bytes[0] - 70] + name[1..-1].to_i - 1
-    self.name_for_id(computed_id, ranges) == name ? computed_id : nil
+    computed_id = ranges[name.bytes[0] - 'F'.ord] + name[1..-1].to_i - 1
+    self.name_for(computed_id, ranges) == name ? computed_id : nil
   rescue
     nil
-  end
-
-  def self.find_with_name(name)
-    self.find_by_id(self.id_for_name(name))
   end
 
   def ui_alg

@@ -15,7 +15,7 @@ RSpec.describe PositionsController do
 
     it "finds the ll_code and position id by alg name" do
       db_alg = RawAlg.make("R D U' L U B L' D' R' U' B'", 11)
-      allow(RawAlg).to receive(:find_with_name).with("K25") { db_alg }
+      allow(RawAlg).to receive(:by_name).with("K25") { db_alg }
 
       post_find_by_alg("K25")
       expect(JSON.parse(response.body)).to eq("ll_code" => "a1i2c3j8", "prot" => 0, "alg_id"=>db_alg.id)
@@ -41,7 +41,7 @@ RSpec.describe PositionsController do
       post_find_by_alg("F U R")
       expect(JSON.parse(response.body)).to eq("error" => 'Alg does not solve F2L')
 
-      allow(RawAlg).to receive(:find_with_name).with("Z99") { nil }
+      allow(RawAlg).to receive(:by_name).with("Z99") { nil }
 
       post_find_by_alg("Z99")
       expect(JSON.parse(response.body)).to eq("error" => "There is no alg named 'Z99'")
