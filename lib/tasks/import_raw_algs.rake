@@ -21,7 +21,7 @@ task import_raw_algs: :environment do
 
         b_alg = line.chomp
 
-        rotated_dupe = Algs.rotate_by_U(b_alg, 2)
+        rotated_dupe = Algs.shift(b_alg, 2)
         unless seen_algs.include? rotated_dupe
           RawAlg.make(b_alg, length)
           seen_algs << b_alg

@@ -18,14 +18,15 @@ module Algs
     normalize(reversed.join(' '))
   end
 
-  def self.rotate_by_U(alg, turns = 1)
+  # 'rotate' the alg around U. turns = 1 changes F to L, L to B, etc.
+  def self.shift(alg, turns = 1)
     rotated = alg.to_s.chars.map { |char| (place = 'RFLB'.index(char)) ? 'RFLB'[(place + turns) % 4] : char }.join
     normalize(rotated)
   end
 
   # Variant producing the standard LL code, which displays right in the UI
   def self.display_variant(alg)
-    Algs.rotate_by_U(alg, self.display_offset(alg))
+    Algs.shift(alg, self.display_offset(alg))
   end
 
   def self.display_offset(alg)
@@ -149,9 +150,9 @@ module Algs
     alg.gsub(/[ '2DU]/, '').first
   end
 
-  # The alphabetically first normalized variant. First non D move is always on B.
+  # The alphabetically first normalized variant. So first non D move is always on B.
   def self.official_variant(alg)
-    (0..3).map {|i| Algs.rotate_by_U(alg, i) }.sort.first
+    (0..3).map {|i| Algs.shift(alg, i) }.sort.first
   end
 
   def self.merge_moves(alg1, alg2)

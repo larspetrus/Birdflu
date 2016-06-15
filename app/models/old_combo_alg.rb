@@ -33,7 +33,7 @@ class OldComboAlg < ActiveRecord::Base
 
   def self.align_moves(move_parms) # Make the alg make the STANDARD ll_code, so the Roofpig matches the position page image
     alg_adjustment = Algs.display_offset(move_parms[:moves])
-    move_parms.keys.each { | key | move_parms[key] = Algs.rotate_by_U(move_parms[key], alg_adjustment) }
+    move_parms.keys.each { | key | move_parms[key] = Algs.shift(move_parms[key], alg_adjustment) }
   end
 
   def self.merge_moves(alg1, alg2)

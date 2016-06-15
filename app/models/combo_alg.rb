@@ -25,7 +25,7 @@ class ComboAlg < ActiveRecord::Base
 
   def self.align_moves(move_parms)
     display_offset = Algs.display_offset(move_parms[:moves])
-    move_parms.keys.each { | key | move_parms[key] = Algs.rotate_by_U(move_parms[key], display_offset) }
+    move_parms.keys.each { | key | move_parms[key] = Algs.shift(move_parms[key], display_offset) }
   end
 
   def self.combined_ids
@@ -54,10 +54,10 @@ class ComboAlg < ActiveRecord::Base
 
   def self.display_merge(alg1, alg2, alg2_shift, cancel_count, merge_count)
     ua1 = UiAlg.new(Algs.official_variant(alg1.moves))
-    ua2 = UiAlg.new(Algs.rotate_by_U(Algs.official_variant(alg2.moves), alg2_shift))
+    ua2 = UiAlg.new(Algs.shift(Algs.official_variant(alg2.moves), alg2_shift))
     display_offset = Algs.display_offset(ua1 + ua2)
-    ua1 = UiAlg.new(Algs.rotate_by_U(ua1, display_offset))
-    ua2 = UiAlg.new(Algs.rotate_by_U(ua2, display_offset))
+    ua1 = UiAlg.new(Algs.shift(ua1, display_offset))
+    ua2 = UiAlg.new(Algs.shift(ua2, display_offset))
 
     da1, da2 = ua1.db_alg, ua2.db_alg
 

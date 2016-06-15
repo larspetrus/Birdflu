@@ -81,7 +81,7 @@ class RawAlg < ActiveRecord::Base
     @variants ||= {}.tap do |vs|
       name = Algs.variant(moves)
       4.times do |i|
-        vs[Algs.rotate_by_U(name, i).to_sym] = Algs.rotate_by_U(moves, i)
+        vs[Algs.shift(name, i).to_sym] = Algs.shift(moves, i)
       end
     end
 

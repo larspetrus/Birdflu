@@ -50,7 +50,7 @@ class Cols
     end
   )
   ALG = Cols.new('Alg',
-    -> (aop, flags) { tag(:td, Algs.rotate_by_U(as_alg(aop).moves, as_pos(aop, flags).pov_offset), 'alg') }
+    -> (aop, flags) { tag(:td, Algs.shift(as_alg(aop).moves, as_pos(aop, flags).pov_offset), 'alg') }
   )
   ALG_P = ALG.with_header('Shortest Solution')
 

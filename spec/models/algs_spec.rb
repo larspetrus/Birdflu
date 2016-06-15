@@ -16,23 +16,23 @@ RSpec.describe Algs do
     expect(Algs.reverse("B F")).to eq("B' F'")    # normalize
   end
 
-  it '#rotate_by_U' do
-    expect(Algs.rotate_by_U("F U2 R' D B2 L'")).to eq("L U2 F' D R2 B'")
-    expect(Algs.rotate_by_U("B F", 2)).to eq("B F")    # normalize
+  it '#shift' do
+    expect(Algs.shift("F U2 R' D B2 L'")).to eq("L U2 F' D R2 B'")
+    expect(Algs.shift("B F", 2)).to eq("B F")    # normalize
   end
 
   it 'display_variant' do
     dsp_G1 = "B L F' L F L2 B'"
     expect(Algs.display_variant(dsp_G1)).to eq(dsp_G1)
-    expect(Algs.display_variant(Algs.rotate_by_U(dsp_G1, 1))).to eq(dsp_G1)
-    expect(Algs.display_variant(Algs.rotate_by_U(dsp_G1, 2))).to eq(dsp_G1)
-    expect(Algs.display_variant(Algs.rotate_by_U(dsp_G1, 3))).to eq(dsp_G1)
+    expect(Algs.display_variant(Algs.shift(dsp_G1, 1))).to eq(dsp_G1)
+    expect(Algs.display_variant(Algs.shift(dsp_G1, 2))).to eq(dsp_G1)
+    expect(Algs.display_variant(Algs.shift(dsp_G1, 3))).to eq(dsp_G1)
 
     dsp_I143 = "F2 U L R' F2 L' R U F2"
     expect(Algs.display_variant(dsp_I143)).to eq(dsp_I143)
-    expect(Algs.display_variant(Algs.rotate_by_U(dsp_I143, 1))).to eq(dsp_I143)
-    expect(Algs.display_variant(Algs.rotate_by_U(dsp_I143, 2))).to eq(dsp_I143)
-    expect(Algs.display_variant(Algs.rotate_by_U(dsp_I143, 3))).to eq(dsp_I143)
+    expect(Algs.display_variant(Algs.shift(dsp_I143, 1))).to eq(dsp_I143)
+    expect(Algs.display_variant(Algs.shift(dsp_I143, 2))).to eq(dsp_I143)
+    expect(Algs.display_variant(Algs.shift(dsp_I143, 3))).to eq(dsp_I143)
   end
 
   it 'normalize' do
@@ -92,7 +92,7 @@ RSpec.describe Algs do
     end
 
     it 'is symmetrical' do
-      a0, a1, a2, a3  = [0,1,2,3].map{|i| Algs.rotate_by_U(alg, i) }
+      a0, a1, a2, a3  = [0,1,2,3].map{|i| Algs.shift(alg, i) }
 
       expect(Algs.speed_score(a0)).to eq(Algs.speed_score(a1))
       expect(Algs.speed_score(a0)).to eq(Algs.speed_score(a2))

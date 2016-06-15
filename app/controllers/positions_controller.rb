@@ -40,7 +40,7 @@ class PositionsController < ApplicationController
 
     if params[:hl_alg]
       @hi_lite = params[:hl_alg]
-      @list_items += [DuckRawAlg.new(Algs.rotate_by_U(@hi_lite, -@page_rotation))]
+      @list_items += [DuckRawAlg.new(Algs.shift(@hi_lite, -@page_rotation))]
     end
     if params[:hl_id]
       @hi_lite = params[:hl_id].to_i
