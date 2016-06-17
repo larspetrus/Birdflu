@@ -123,6 +123,18 @@ RSpec.describe Algs do
     expect(Algs.standard_u_setup("B' D' F D R2 B2 R2 D' F' D B' U' B2 U' B2")).to eq(3)
   end
 
+  it 'is redundant' do
+    expect(Algs.redundant("B L' B L2 F' L F L2 L2 R2 F2 D F2 L2 R2 B2")).to eq(true) # L2 L2
+    expect(Algs.redundant("F U U' B")).to eq(true) # U U'
+
+    expect(Algs.redundant("F L R L' B")).to eq(true) # L R L'
+    expect(Algs.redundant("D U D2 L' B")).to eq(true) # D U D2
+    expect(Algs.redundant("L R B2 F2 B2 U")).to eq(true) # B2 F2 B2
+
+    expect(Algs.redundant("F R2 L2 U D' B F2")).to eq(false) # R2 L2 is OK
+    expect(Algs.redundant("L U' L' U' B L' B R2 D' R' D B2 L B2 R' B2")).to eq(false)
+  end
+
 
   it '#merge_moves' do
     expect(Algs.merge_moves("F U2 R'", "B F")).to eq(start: "F U2 R'", cancel1: "", merged: "", cancel2: "", end: "B F", moves: "F U2 R' B F")
@@ -138,6 +150,9 @@ RSpec.describe Algs do
     expect(Algs.merge_moves("L F B2", "F B2 D")).to eq(start: "L", cancel1: "B2 F", merged: "F2", cancel2: "B2 F", end: "D", moves: "L F2 D")
 
     expect(Algs.merge_moves("B F' U'", "U B' F")).to eq(start: "", cancel1: "B F' U'", merged: "", cancel2: "U B' F", end: "", moves: "")
+
+    expect(Algs.merge_moves("L F L2 B2", "B2 R2 L2 F2")).to eq(
+                            {start: "L F", cancel1: "L2 B2", merged: "", cancel2: "B2 L2", end: "R2 F2", moves: "L F R2 F2"})
   end
 
 

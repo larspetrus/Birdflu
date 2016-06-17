@@ -166,14 +166,14 @@ module Algs
 
         cancels1.insert(0, start.pop)
         cancels2 << finish.shift
-      else
-        # For cases like "R L + R", flip to "L R + R", and run through again.
-        if Move.opposite_sides(start.last, finish.first)
-          if Move.opposite_sides(start[-1], start[-2])
-            start[-1], start[-2] = start[-2], start[-1]
-          elsif Move.opposite_sides(finish[0], finish[1])
-            finish[0], finish[1] = finish[1], finish[0]
-          end
+      end
+
+      # For cases like "R L + R", flip to "L R + R", and run through again.
+      if Move.opposite_sides(start.last, finish.first)
+        if Move.opposite_sides(start[-1], start[-2])
+          start[-1], start[-2] = start[-2], start[-1]
+        elsif Move.opposite_sides(finish[0], finish[1])
+          finish[0], finish[1] = finish[1], finish[0]
         end
       end
     end while Move.same_side(start.last, finish.first) && (remains.empty? || Move.opposite_sides(start.last, remains[0]))
@@ -188,5 +188,10 @@ module Algs
     }
   end
 
+  def self.redundant(alg)
+    return true if alg.gsub(/[ '2]/, '').match(/(.)\1+/) # match 2 same chars
+    return true if alg.gsub(/[ '2]/, '').gsub('R','L').gsub('U','D').gsub('F','B').match(/(.)\1\1+/) # match 3 same chars
+    return false
+  end
 
 end

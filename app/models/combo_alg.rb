@@ -16,7 +16,17 @@ class ComboAlg < ActiveRecord::Base
     return if merge_result[:moves].empty? # algs cancelled
 
     self.align_moves(merge_result)
-    ComboAlg.construct(a1, a2, u_shift, RawAlg.find_from_moves(merge_result[:moves]), Algs.length(merge_result[:cancel1]), Algs.length(merge_result[:merged]))
+    total_alg = find_or_create_raw_alg(merge_result[:moves])
+    ComboAlg.construct(a1, a2, u_shift, total_alg, Algs.length(merge_result[:cancel1]), Algs.length(merge_result[:merged]))
+  end
+
+  def self.find_or_create_raw_alg(moves)
+    result = RawAlg.find_from_moves(moves)
+
+    unless result || Cube.new(moves).standard_ll_code == 'a1a1a1a1'
+      result = RawAlg.make(moves, Algs.length(moves))
+    end
+    result
   end
 
   def self.make_4(a1, a2)
@@ -80,6 +90,6 @@ class ComboAlg < ActiveRecord::Base
 
 
   def to_s
-    "ComboAlg id: #{id}, name: #{name}, length: #{combined_alg.length}, alg1: #{alg1.moves}, alg2: #{alg2.moves} combined: #{combined_alg.moves}, cancel: #{cancel_count}, merged: #{merge_count}"
+    "ComboAlg id: #{id}, name: #{name}, length: #{combined_alg.length}, alg1: #{alg1.moves}, alg2: #{alg2.moves} (#{alg2_shift}) combined: #{combined_alg.moves}, cancel: #{cancel_count}, merged: #{merge_count}"
   end
 end
