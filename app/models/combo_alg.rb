@@ -12,21 +12,18 @@ class ComboAlg < ActiveRecord::Base
   end
 
   def self.make(a1, a2, u_shift)
-    merge_result = Algs.merge_moves(Algs.official_variant(a1.moves), a2.algs(u_shift))
-    return if merge_result[:moves].empty? # algs cancelled
+    merge = Algs.merge_moves(Algs.official_variant(a1.moves), a2.algs(u_shift))
+    return if merge[:moves].empty? # algs cancelled
 
-    self.align_moves(merge_result)
-    total_alg = find_or_create_raw_alg(merge_result[:moves])
-    ComboAlg.construct(a1, a2, u_shift, total_alg, Algs.length(merge_result[:cancel1]), Algs.length(merge_result[:merged]))
+    self.align_moves(merge)
+    total_alg = RawAlg.find_from_moves(merge[:moves]) || self.maybe_create_alg(merge[:moves])
+    if total_alg
+      ComboAlg.construct(a1, a2, u_shift, total_alg, Algs.length(merge[:cancel1]), Algs.length(merge[:merged]))
+    end
   end
 
-  def self.find_or_create_raw_alg(moves)
-    result = RawAlg.find_from_moves(moves)
-
-    unless result || Cube.new(moves).standard_ll_code == 'a1a1a1a1'
-      result = RawAlg.make(moves, Algs.length(moves))
-    end
-    result
+  def self.maybe_create_alg(moves)
+    Cube.new(moves).standard_ll_code == 'a1a1a1a1' ? nil : RawAlg.make(moves, Algs.length(moves))
   end
 
   def self.make_4(a1, a2)
