@@ -110,6 +110,10 @@ class RawAlg < ActiveRecord::Base
   end
 
   def self.id_ranges
+    if @id_ranges.nil? && RawAlg.maximum(:id) == 46321380
+      puts "@id_ranges SHORTCUT"
+      @id_ranges = [2, 6, 16, 54, 198, 904, 3502, 15340, 70522, 347930, 1666938, 8569752, 43463107, 43524744, 43525777]
+    end
     @id_ranges ||= (6..RawAlg.maximum(:length)).map{ |l| RawAlg.where(length: l).minimum(:id) }
   end
 
