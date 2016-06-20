@@ -1,7 +1,30 @@
 class FmcController < ApplicationController
+
+  class Segment
+    attr_reader :reversed, :moves
+    attr_accessor :setup
+
+    def initialize(b_code)
+      nsplit = b_code.split('!')
+      @reversed =(nsplit.size == 2)
+      @moves = nsplit.last
+    end
+
+    def self.from_code(niss_code)
+      niss_code.gsub('(', '(!').split(SPLIT_REX).map(&:strip).reject{ |s| s.blank? }.map{|b_code| Segment.new(b_code)}
+    end
+
+    def packed
+      packed = Algs.pack(@moves)
+      @reversed ? "(#{packed})" : packed
+    end
+  end
+
+  SPLIT_REX = /[\(\)]/
+
   def index
-    @scramble  = params[:scramble]
-    @niss_code = params[:niss]
+    @scramble  = params[:scramble] || Algs.unpack(params[:s])
+    @niss_code = params[:niss] || FmcController.unpack(params[:n])
 
     return unless @niss_code.present?
 
@@ -9,34 +32,45 @@ class FmcController < ApplicationController
     setup = @scramble || @solution
     reverse_setup = Algs.reverse(setup)
 
-    segments = { normal: [], reverse: []}
-    @steps = []
-    FmcController.niss_decode(@niss_code).each do |segment|
-      moves = segment.gsub('n', '')
-      if segment.start_with?('n')
-        reverse_setup += ' ' + moves
+    parts = { forward: [], reverse: [] }
+    @steps = Segment.from_code(@niss_code)
+    @steps.each do |segment|
+      if segment.reversed
+        reverse_setup += ' ' + segment.moves
         setup = Algs.reverse(reverse_setup)
-        @steps << OpenStruct.new(reversed: true, moves: moves, setup: reverse_setup)
-        segments[:reverse].insert(0, Algs.reverse(moves))
+        segment.setup = reverse_setup
+        parts[:reverse].insert(0, Algs.reverse(segment.moves))
       else
-        setup += ' ' + moves
+        setup += ' ' + segment.moves
         reverse_setup = Algs.reverse(setup)
-        @steps << OpenStruct.new(reversed: false, moves: moves, setup: setup)
-        segments[:normal] << moves
+        segment.setup = setup
+        parts[:forward] << segment.moves
       end
     end
 
-    @solution_segments = segments[:normal] + segments[:reverse]
+    @solution_parts = parts[:forward] + parts[:reverse]
   end
 
-  def self.niss_decode(coded)
-    coded.gsub('(', '(n').split(/[\(\)]/).map(&:strip).reject{ |s| s.blank? }
+  def self.niss_to_alg(niss_code)
+    reversed, forward = Segment.from_code(niss_code).partition { |segment| segment.reversed }
+    result_segments = (forward.map{|seg| seg.moves} + reversed.reverse.map{|seg| Algs.reverse(seg.moves)})
+    result_segments.reduce('') {|alg, addon| Algs.merge_moves(alg, addon)[:moves] }
   end
 
-  def self.niss_to_alg(coded)
-    niss, regular  = self.niss_decode(coded).partition { |segment| segment.start_with?('n') }
-    result_segments = (regular + niss.reverse.map{|moves| Algs.reverse(moves[1..-1])})
-    result_segments.reduce('') {|alg, addon| OldComboAlg.merge_moves(alg, addon)[:moves] }
+  def self.unpack(packed_niss)
+    return '' if packed_niss.blank?
+    self.partitions(packed_niss).map{|p| p.match(SPLIT_REX) ? p : Algs.unpack(p) }.join.gsub('(', ' (').gsub(')', ') ').strip
+  end
+
+  def self.partitions(to_split)
+    [].tap do |result|
+      begin
+        parts = to_split.partition(/[\(\)]/)
+        result << parts[0] << parts[1]
+        to_split = parts[2]
+      end until to_split.blank?
+      result.reject{|s| s.blank?}
+    end
   end
 
 end

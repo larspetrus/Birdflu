@@ -2,6 +2,13 @@ require 'rails_helper'
 
 RSpec.describe Algs do
 
+  it 'to_ary' do
+    the_moves = ["B", "L'", "R", "F", "D2", "U", "F", "B'", "R"]
+    expect(Algs.to_ary("B L' R F D2 U F B' R")).to eq(the_moves)
+    expect(Algs.to_ary("BL'RFD2UFB'R")).to eq(the_moves)
+    expect(Algs.to_ary("B (L' R) blah F D2 U F B' R")).to eq(the_moves)
+  end
+  
   it 'mirror' do
     expect(Algs.mirror("F U' B2 D")).to eq("F' U B2 D'")
     expect(Algs.mirror("R L' U2")).to eq("L' R U2")
@@ -62,6 +69,8 @@ RSpec.describe Algs do
   it 'unpack' do
     expect(Algs.unpack('FrlUpBf')).to eq("F R2 L2 U D' B F2")
     expect(Algs.unpack('BfnLf1RuPUqf')).to eq("B F2 U' L F2 L' R U2 R' U B' F2")
+    expect(Algs.unpack('')).to eq('')
+    expect(Algs.unpack(nil)).to eq('')
 
     expect{Algs.unpack('incorrect')}.to raise_error(RuntimeError)
   end

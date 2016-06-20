@@ -4,6 +4,10 @@
 
 module Algs
 
+  def self.to_ary(alg)
+    alg.scan(/[BRDFLU][2\']?/)
+  end
+
   def self.mirror(alg)
     mirrored = alg.split(' ').map{ |move| MIRROR_MOVES[move] }
     normalize(mirrored.join(' '))
@@ -81,7 +85,7 @@ module Algs
   end
 
   def self.unpack(packed_alg)
-    packed_alg.chars.map{ |cc| Move[cc].name }.join(' ')
+    packed_alg.to_s.chars.map{ |cc| Move[cc].name }.join(' ')
   end
 
   def self.from_tr(tr_alg)

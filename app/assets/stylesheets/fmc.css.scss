@@ -4,8 +4,12 @@
 
 .rpniss {
   width:200px;
-  height:270px;
+  height:255px;
   float: left;
+
+  text-align: center;
+  font-size: 80%;
+  margin: 0 2px 6px 0;
 }
 
 .sanity {
@@ -13,6 +17,7 @@
   height:160px;
   float: right;
   font-size: 9px;
+  text-align: center;
 }
 
 .nissolutions {
@@ -20,7 +25,7 @@
   margin: 16px;
 }
 
-form#niss {
+form#niss-form {
   background-color: #dfd;
   padding: 4px;
   font-size: 10px;

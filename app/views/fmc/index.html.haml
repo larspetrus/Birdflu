@@ -1,10 +1,10 @@
 
-= form_tag('/fmc', method: 'get', id: 'niss') do
-  = label_tag(:scramble, "Scramble: ")
-  = text_field_tag(:scramble, @scramble, size: 52)
-  = label_tag(:niss, "Solution: ")
-  = text_field_tag(:niss, @niss_code, size: 72)
-  = submit_tag("Show")
+%form#niss-form{"accept-charset" => "UTF-8", action:"/fmc", method:"get"}
+  %label{for: "scramble"} Scramble:
+  %input#scramble{name:"scramble", size:52, type:"text", value: @scramble}/
+  %label{for: "niss"} Solution:
+  %input#niss{name:"niss", size:72, type:"text", value: @niss_code}/
+  %input#show-niss-btn{name:"commit", type:"submit", value:"Show"}/
 
 %div{style: "height: 22px;"}
 
@@ -13,7 +13,7 @@
     scramble + solution check
 
 
-%h1 Nissualizer
+%h1 The Nissualizer
 
 - if @niss_code.present?
   %table.nissolutions
@@ -25,20 +25,22 @@
       %td #{@niss_code}
     %tr
       %td Which means:
-      %td #{@solution_segments.join(' + ')}  (#{Algs.length(@solution_segments.join(' '))} HTM)
+      %td #{@solution_parts.join(' + ')}  (#{Algs.length(@solution_parts.join(' '))} HTM)
     %tr
       %td Cancels to:
       %td #{@solution}  (#{Algs.length(@solution)} HTM)
 
   .roofpig.rpniss{data: {config: "base=NS | alg=#{@solution}"} }
     Full solution
+  .roofpig.rpniss{data: {config: "base=NS | alg=#{Algs.reverse(@solution)} | colors=cube:#bbb"} }
+    Reverse solution
 
   %div{style: "clear: both"}
 
   - @steps.each_with_index do |step, i|
     .step
       .roofpig.rpniss{data: {config: "base=NS | alg=#{step.moves} | setupmoves=#{step.setup} | colors=cube:#{step.reversed ? '#bbb' : 'black'}"} }
-        Step #{i+1}#{step.reversed ? ' (reversed)' : ''}
+        Segment #{i+1}#{step.reversed ? ' (reversed)' : ''}
 
 :javascript
   var ROOFPIG_CONF_NS = "hover=far | flags=showalg";
@@ -47,6 +49,24 @@
     event.stopPropagation();
   });
 
+  function packify(alg) {
+    alg = alg.replace(/ /g, '');
+    alg = alg.replace(/R2/g, 'r').replace(/R'/g, 'P').replace(/R/g, 'R');
+    alg = alg.replace(/L2/g, 'l').replace(/L'/g, '1').replace(/L/g, 'L');
+    alg = alg.replace(/U2/g, 'u').replace(/U'/g, 'n').replace(/U/g, 'U');
+    alg = alg.replace(/D2/g, 'd').replace(/D'/g, 'p').replace(/D/g, 'D');
+    alg = alg.replace(/F2/g, 'f').replace(/F'/g, 'E').replace(/F/g, 'F');
+    alg = alg.replace(/B2/g, 'b').replace(/B'/g, 'q').replace(/B/g, 'B');
+    return alg;
+  }
+
+  $("#niss-form").submit(function(event) {
+    var s = $('#scramble').val();
+    var n = $('#niss').val();
+    window.location.href = '/fmc?s='+packify(s) + '&n='+packify(n);
+
+    event.preventDefault();
+  });
 
 - if Rails.env == 'production'
   :javascript
