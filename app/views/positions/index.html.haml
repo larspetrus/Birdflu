@@ -71,7 +71,7 @@
     = render 'cube_icon', icon: Icons::Big.new(@single_position), size: 192, pad: true, label: '', add_class: 'illustration-llicon'
 
 
-=form_tag url_for(controller: "positions", action: "index"), method: 'get', id: 'main-form' do
+=form_tag url_for(controller: "positions", action: "index"), method: 'get', id: 'main-form', enforce_utf8: false do
   - Fields::FILTER_NAMES.each do |f|
     =hidden_field_tag(f, @filters.as_params[f])
   =hidden_field_tag(:clicked, 'none')

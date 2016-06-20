@@ -1,5 +1,5 @@
 .menuitem
-  =form_tag url_for(controller: 'positions', action: 'find_by_alg'), method: 'post', id: 'find_by_alg', remote: true do
+  =form_tag url_for(controller: 'positions', action: 'find_by_alg'), method: 'post', id: 'find_by_alg', remote: true, enforce_utf8: false do
     Find by Alg:
     =text_field_tag "alg", nil, placeholder: 'BRDFLU or alg name', size: 35
     #find_by_alg_msg{style: "padding: 10px; display:none;"}
