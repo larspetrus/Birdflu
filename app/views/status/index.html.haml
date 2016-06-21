@@ -7,3 +7,7 @@
 .stat Cache #{number_to_human_size Rails.cache.instance_variable_get('@cache_size')}
 
 .stat PID #{Process.pid}
+
+.stat Git commit #{`git rev-parse HEAD`}
+
+.stat #{RawAlg.count} algs, #{ComboAlg.count} combos, #{WcaUserData.count} users
