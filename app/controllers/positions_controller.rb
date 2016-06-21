@@ -13,14 +13,14 @@ class PositionsController < ApplicationController
         lines:  Fields::LINES.value(format_params),
         sortby: Fields::SORTBY.value(format_params),
     )
-    @list_algs = (@format.list == 'algs') || @filters.fully_defined
+    @algs_mode = (@format.list == 'algs') || @filters.fully_defined
 
-    query_includes = @list_algs ? :stats : [:stats, :best_alg]
+    query_includes = @algs_mode ? :stats : [:stats, :best_alg]
     @positions = Position.where(@filters.where).order(:optimal_alg_length).includes(query_includes).to_a
     @position_ids = @positions.map(&:id)
-    @single_position = @positions.first if @filters.fully_defined
+    @only_position = @positions.first if @filters.fully_defined
 
-    @stats = stats_for_view(@single_position)
+    @stats = stats_for_view(@only_position)
 
     @selected_icons = {}
     Fields::FILTER_NAMES.each{ |f| @selected_icons[f] = Icons::Base.by_code(f, @filters.as_params[f]) }
@@ -30,12 +30,12 @@ class PositionsController < ApplicationController
     @icon_grids[:ep] = Icons::Ep.grid_for(@filters.as_params[:cp])
 
     @list_items =
-        @list_algs ?
+        @algs_mode ?
           RawAlg.where(position_id: @positions.map(&:main_position_id)).includes(:position).order(@format.sortby).limit(@format.lines.to_i) :
           @positions.first(100)
 
     @svg_ids = Set.new
-    @columns = @list_algs ? make_alg_columns : make_pos_columns
+    @columns = @algs_mode ? make_alg_columns : make_pos_columns
     @page_rotation = (params[:prot] || 0).to_i
 
     if params[:hl_alg]
@@ -59,7 +59,7 @@ class PositionsController < ApplicationController
   def make_alg_columns
     columns = [Cols::SPEED, Cols::MOVES].rotate(@format.sortby == '_speed' ? 0 : 1)
     columns << Cols::NAME
-    columns << Cols::POSITION unless @single_position
+    columns << Cols::POSITION unless @only_position
     columns << Cols::COP if @selected_icons[:cop].is_none
     columns << Cols::EO  if @selected_icons[:eo].is_none
     columns << Cols::EP  if @selected_icons[:ep].is_none

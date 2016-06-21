@@ -22,9 +22,9 @@
 
 %hr{style: 'clear:both;'}
 
-.left_side_stats{class: @single_position ? '' : 'positions-stats'}
+.left_side_stats{class: @only_position ? '' : 'positions-stats'}
   %span#headline= @stats.headline
-  - if @single_position
+  - if @only_position
     %span#headline_prot
   %table
     - @stats.sections[0].each do |line|
@@ -66,9 +66,9 @@
   .shortcuts
     shortcuts: , . /
 
--if @single_position
+-if @only_position
   %div{style: "width: 216px; position: absolute; top:24px; right:-24px;"}
-    = render 'cube_icon', icon: Icons::Big.new(@single_position), size: 192, pad: true, label: '', add_class: 'illustration-llicon'
+    = render 'cube_icon', icon: Icons::Big.new(@only_position), size: 192, pad: true, label: '', add_class: 'illustration-llicon'
 
 
 =form_tag url_for(controller: "positions", action: "index"), method: 'get', id: 'main-form', enforce_utf8: false do
@@ -77,14 +77,14 @@
   =hidden_field_tag(:clicked, 'none')
 
   .page-controls
-    - unless @single_position
+    - unless @only_position
       .center.page-format-header
         Show as
         =Fields::LIST.as_tag(@format)
     - else
       =hidden_field_tag(Fields::LIST.name, Fields::LIST.value(@format))
 
-  - if @list_algs
+  - if @algs_mode
     .center.algs-list-header
       Show first
       =Fields::LINES.as_tag(@format)
@@ -94,8 +94,8 @@
         Sort by
         =Fields::SORTBY.as_tag(@format)
 
-- flags = @list_algs ? -> (alg) do {shortest: alg.length == @stats.data.shortest, fastest: alg.speed == @stats.data.fastest, selected_pos_ids: @position_ids} end : -> (pos) do {} end
-%table{class: @list_algs ? 'algs-list' : 'positions-list'}
+- flags = @algs_mode ? -> (alg) do {shortest: alg.length == @stats.data.shortest, fastest: alg.speed == @stats.data.fastest, selected_pos_ids: @position_ids} end : -> (pos) do {} end
+%table{class: @algs_mode ? 'algs-list' : 'positions-list'}
   - @columns.each do |column|
     %th= column.header
   - @list_items.each do |item|
