@@ -36,8 +36,8 @@ class Icons::Base
     false
   end
 
-  def css_classes(selected_name)
-    highlight = selected_name == @name && !@is_none
+  def css_classes(selected_code)
+    highlight = (selected_code.to_sym == @code) && !@is_none
     highlight ? 'ui-llicon selected' : 'ui-llicon'
   end
 end
