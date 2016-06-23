@@ -17,8 +17,7 @@ class Fields
     end
 
     def as_tag(parameters)
-      h = ActionController::Base.helpers
-      h.select_tag(@name, h.options_for_select(@options, selected: value(parameters)))
+      hlp.select_tag(@name, hlp.options_for_select(@options, selected: value(parameters)))
     end
 
     def as_css_id

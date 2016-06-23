@@ -103,9 +103,9 @@
     %tr{class: item.matches(@hi_lite) ? 'hilite' : ''}
       - @columns.each do |column|
         - if column.is_svg
-          - svg_result = column.svg_config.call(line_presenter)
-          - if svg_result
-            %td= render 'cube_icon', svg_result
+          - svg_params = column.svg_params(line_presenter)
+          - if svg_params
+            %td= render 'cube_icon', svg_params
           - else
             %td
         -else

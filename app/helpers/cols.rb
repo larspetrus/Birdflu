@@ -1,52 +1,37 @@
 # frozen_string_literal: true
 
-# As a "view presenter" class, it makes sense to me to put this in the View helpers directory. DHH may disagree.
+# "View presenter" code for the alg/position list/table.
 
 class Cols
   attr_reader :is_svg, :svg_config, :header
 
-  def initialize(header, content, svg_config = nil)
+  def initialize(header, method, is_svg: false)
     @header = header
-    @content = content
-    @is_svg = svg_config.present?
-    @svg_config = svg_config
+    @method = method
+    @is_svg = is_svg
   end
 
-  def with_header(new_header)
-    Cols.new(new_header, @content, @svg_config)
+  MOVES    = Cols.new('Moves', :moves)
+  MOVES_P  = Cols.new('', :moves)
+  SPEED    = Cols.new('Speed', :speed)
+  NAME     = Cols.new('Name', :name)
+  POSITION = Cols.new('Position', :position)
+  ALG      = Cols.new('Alg', :alg)
+  ALG_P    = Cols.new('Shortest Solution', :alg)
+  SHOW     = Cols.new('', :show)
+  NOTES    = Cols.new('Notes', :notes)
+  SOLUTIONS= Cols.new('Solutions', :solutions)
+
+  COP = Cols.new('COP', :cop, is_svg: true )
+  EO  = Cols.new('EO',  :eo,  is_svg: true )
+  EP  = Cols.new('EP',  :ep,  is_svg: true )
+
+  def cell(presenter)
+    presenter.send(@method)
   end
 
-  MOVES = Cols.new('Moves', -> (presenter) { presenter.moves })
-  MOVES_P = MOVES.with_header('')
-
-  SPEED = Cols.new('Speed', -> (presenter) { presenter.speed })
-  NAME  = Cols.new('Name', -> (presenter) { presenter.name })
-  COP   = Cols.new('COP', nil, -> (presenter) { presenter.cop } )
-  EO    = Cols.new('EO',  nil, -> (presenter) { presenter.eo } )
-  EP    = Cols.new('EP',  nil, -> (presenter) { presenter.ep } )
-
-  POSITION = Cols.new('Position', -> (presenter) { presenter.position })
-  ALG      = Cols.new('Alg', -> (presenter) { presenter.alg })
-  ALG_P = ALG.with_header('Shortest Solution')
-
-  SHOW = Cols.new('', -> (presenter) { presenter.show })
-  NOTES = Cols.new('Notes', -> (presenter) { presenter.notes })
-  SOLUTIONS = Cols.new('Solutions', -> (presenter) { presenter.solutions })
-
-  def cell(alg)
-    @content.call(alg)
-  end
-
-  def self.h
-    ActionController::Base.helpers
-  end
-
-  def self.td_tag(content, options = nil)
-    h.content_tag(:td, content, options)
-  end
-
-  def self.tag(type, content, css_class = nil)
-    h.content_tag(type, content, class: css_class)
+  def svg_params(presenter)
+    presenter.send(@method)
   end
 
   def self.as_pos(alg_or_pos, flags)
@@ -58,6 +43,18 @@ class Cols
   end
 end
 
+
+def hlp
+  ActionController::Base.helpers
+end
+
+def td_tag(content, options = nil)
+  hlp.content_tag(:td, content, options)
+end
+
+def tag(type, content, css_class = nil)
+  hlp.content_tag(type, content, class: css_class)
+end
 
 
 class PositionColumns
@@ -74,7 +71,11 @@ class PositionColumns
   end
 
   def position
-    Cols.tag(:td, Cols.h.link_to(@position.display_name, "/positions/#{@position.ll_code}"))
+    tag(:td, hlp.link_to(@position.display_name, "/positions/#{@position.ll_code}"))
+  end
+
+  def solutions
+    tag(:td, @position.alg_count)
   end
 
   def cop
@@ -82,15 +83,11 @@ class PositionColumns
   end
 
   def eo
-    {icon: Icons::Eo.for(@position), size: 22, label: ''}
+    { icon: Icons::Eo.for(@position), size: 22, label: ''}
   end
 
   def ep
-    {icon: Icons::Ep.for(@position), size: 22, label: ''}
-  end
-
-  def solutions
-    Cols.tag(:td, @position.alg_count)
+    { icon: Icons::Ep.for(@position), size: 22, label: ''}
   end
 end
 
@@ -110,28 +107,28 @@ class RawAlgColumns
 
 
   def alg
-    Cols.tag(:td, Algs.shift(@raw_alg.moves, @raw_alg.position.pov_offset), 'alg')
+    tag(:td, Algs.shift(@raw_alg.moves, @raw_alg.position.pov_offset), 'alg')
   end
 
   def speed
-    Cols.tag(:td, '%.2f' % @raw_alg.speed, @raw_alg.speed == @context[:stats]&.fastest ? 'optimal' : '')
+    tag(:td, '%.2f' % @raw_alg.speed, @raw_alg.speed == @context[:stats]&.fastest ? 'optimal' : '')
   end
 
   def moves
-    Cols.tag(:td, @raw_alg.length, @raw_alg.length == @context[:stats]&.shortest ? 'optimal' : '')
+    tag(:td, @raw_alg.length, @raw_alg.length == @context[:stats]&.shortest ? 'optimal' : '')
   end
 
   def name
-    Cols.tag(:td, @raw_alg.name, 'single')
+    tag(:td, @raw_alg.name, 'single')
   end
 
   def show
     pov_adjust = @raw_alg.position.pov_adjust_u_setup
-    Cols.td_tag(Cols.tag(:a, 'show', 'show-pig'), :'data-uset' => (@raw_alg.u_setup + pov_adjust) % 4 )
+    td_tag(tag(:a, 'show', 'show-pig'), :'data-uset' => (@raw_alg.u_setup + pov_adjust) % 4 )
   end
 
   def notes
-    Cols.tag(:td, @raw_alg.specialness)
+    tag(:td, @raw_alg.specialness)
   end
 end
 
@@ -143,17 +140,17 @@ class ComboAlgColumns
     @combo_alg = combo_alg
     @context = context
 
-    @speed = @moves = @show = @notes = @position = Cols.tag(:td, '')
+    @speed = @moves = @show = @notes = @position = tag(:td, '')
     @cop = @eo = @ep = nil
   end
 
   def alg
     result = ''.html_safe
-    @combo_alg.recon.each { |part| result += Cols.tag(:span, part[0], part[1]) }
-    Cols.tag(:td, result)
+    @combo_alg.recon.each { |part| result += tag(:span, part[0], part[1]) }
+    tag(:td, result)
   end
 
   def name
-    Cols.tag(:td, Cols.tag(:span, @combo_alg.alg1.name, 'goto-pos') + '+' + Cols.tag(:span, @combo_alg.alg2.name, 'goto-pos'), 'combo')
+    tag(:td, tag(:span, @combo_alg.alg1.name, 'goto-pos') + '+' + tag(:span, @combo_alg.alg2.name, 'goto-pos'), 'combo')
   end
 end
