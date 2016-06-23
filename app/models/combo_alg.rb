@@ -22,6 +22,10 @@ class ComboAlg < ActiveRecord::Base
     end
   end
 
+  def presenter(context)
+    ComboAlgColumns.new(self, context)
+  end
+
   def self.maybe_create_alg(moves)
     Cube.new(moves).standard_ll_code == 'a1a1a1a1' ? nil : RawAlg.make(moves, Algs.length(moves))
   end

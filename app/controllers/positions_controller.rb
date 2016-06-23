@@ -188,6 +188,10 @@ class DuckRawAlg
     @specialness = 'Not in DB'
   end
 
+  def presenter(context)
+    RawAlgColumns.new(self, context)
+  end
+
   def position
     OpenStruct.new(pov_offset: 0, pov_adjust_u_setup: 0)
   end

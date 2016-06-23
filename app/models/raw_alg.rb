@@ -18,6 +18,11 @@ class RawAlg < ActiveRecord::Base
     RawAlg.create(_moves: Algs.pack(std_alg), u_setup: Algs.standard_u_setup(std_alg), length: length)
   end
 
+  def presenter(context)
+    RawAlgColumns.new(self, context)
+  end
+
+
   def algs(u_shift)
     [variant(:B), variant(:R), variant(:F), variant(:L)][u_shift]
   end

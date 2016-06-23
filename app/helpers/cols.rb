@@ -16,24 +16,24 @@ class Cols
     Cols.new(new_header, @content, @svg_config)
   end
 
-  MOVES = Cols.new('Moves', -> (view_item) { view_item.moves })
+  MOVES = Cols.new('Moves', -> (presenter) { presenter.moves })
   MOVES_P = MOVES.with_header('')
 
-  SPEED = Cols.new('Speed', -> (view_item) { view_item.speed })
-  NAME  = Cols.new('Name', -> (view_item) { view_item.name })
-  COP   = Cols.new('COP', nil, -> (view_item) { view_item.cop } )
-  EO    = Cols.new('EO',  nil, -> (view_item) { view_item.eo } )
-  EP    = Cols.new('EP',  nil, -> (view_item) { view_item.ep } )
+  SPEED = Cols.new('Speed', -> (presenter) { presenter.speed })
+  NAME  = Cols.new('Name', -> (presenter) { presenter.name })
+  COP   = Cols.new('COP', nil, -> (presenter) { presenter.cop } )
+  EO    = Cols.new('EO',  nil, -> (presenter) { presenter.eo } )
+  EP    = Cols.new('EP',  nil, -> (presenter) { presenter.ep } )
 
-  POSITION = Cols.new('Position', -> (view_item) { view_item.position })
-  ALG      = Cols.new('Alg', -> (view_item) { view_item.alg })
+  POSITION = Cols.new('Position', -> (presenter) { presenter.position })
+  ALG      = Cols.new('Alg', -> (presenter) { presenter.alg })
   ALG_P = ALG.with_header('Shortest Solution')
 
-  SHOW = Cols.new('', -> (view_item) { view_item.show })
-  NOTES = Cols.new('Notes', -> (view_item) { view_item.notes })
-  SOLUTIONS = Cols.new('Solutions', -> (view_item) { view_item.solutions })
+  SHOW = Cols.new('', -> (presenter) { presenter.show })
+  NOTES = Cols.new('Notes', -> (presenter) { presenter.notes })
+  SOLUTIONS = Cols.new('Solutions', -> (presenter) { presenter.solutions })
 
-  def td(alg)
+  def cell(alg)
     @content.call(alg)
   end
 
@@ -49,11 +49,6 @@ class Cols
     h.content_tag(type, content, class: css_class)
   end
 
-  def self.highlight(optimal, copy)
-    return nil unless optimal || copy
-    (optimal ? 'optimal' : '') + (copy ? 'copy' : '')
-  end
-
   def self.as_pos(alg_or_pos, flags)
     alg_or_pos.respond_to?(:position) ? alg_or_pos.position.pov_variant_in(flags[:selected_pos_ids]) : alg_or_pos
   end
@@ -61,28 +56,21 @@ class Cols
   def self.as_alg(alg_or_pos)
     alg_or_pos.respond_to?(:best_alg) ? (alg_or_pos.best_alg || OpenStruct.new) : alg_or_pos
   end
-
-  def self.adapter(list_item, context)
-    return AdaptRaw.new(list_item, context)   if list_item.class == RawAlg || list_item.class == DuckRawAlg
-    return AdaptCombo.new(list_item, context) if list_item.class == ComboAlg
-    return AdaptPos.new(list_item, context)   if list_item.class == Position
-    raise "Unknown list item class #{list_item.class}"
-  end
 end
 
 
 
-class AdaptPos
-  delegate :alg, :speed, :moves, :show, :to => :as_raw
+class PositionColumns
+  delegate :alg, :speed, :moves, :show, :to => :raw_cols
 
-  def initialize(position, context, adapt_raw = nil)
+  def initialize(position, context, raw_cols = nil)
     @position = position
     @context = context
-    @adapt_raw = adapt_raw
+    @raw_cols = raw_cols
   end
 
-  def as_raw
-    @adapt_raw ||= AdaptRaw.new(@position.best_alg, @context, self)
+  def raw_cols
+    @raw_cols ||= RawAlgColumns.new(@position.best_alg, @context, self)
   end
 
   def position
@@ -107,17 +95,17 @@ class AdaptPos
 end
 
 
-class AdaptRaw
-  delegate :cop, :eo, :ep, :position, :to => :as_pos
+class RawAlgColumns
+  delegate :cop, :eo, :ep, :position, :to => :pos_cols
 
-  def initialize(raw_alg, context, adapt_pos = nil)
+  def initialize(raw_alg, context, pos_cols = nil)
     @raw_alg = raw_alg
     @context = context
-    @adapt_pos = adapt_pos
+    @pos_cols = pos_cols
   end
 
-  def as_pos
-    @adapt_pos ||= AdaptPos.new(@raw_alg.position, self)
+  def pos_cols
+    @pos_cols ||= PositionColumns.new(@raw_alg.position, self)
   end
 
 
@@ -126,11 +114,11 @@ class AdaptRaw
   end
 
   def speed
-    Cols.tag(:td, '%.2f' % @raw_alg.speed, Cols.highlight(@raw_alg.speed == @context[:stats]&.fastest, false))
+    Cols.tag(:td, '%.2f' % @raw_alg.speed, @raw_alg.speed == @context[:stats]&.fastest ? 'optimal' : '')
   end
 
   def moves
-    Cols.tag(:td, @raw_alg.length, Cols.highlight(@raw_alg.length == @context[:stats]&.shortest, false))
+    Cols.tag(:td, @raw_alg.length, @raw_alg.length == @context[:stats]&.shortest ? 'optimal' : '')
   end
 
   def name
@@ -148,7 +136,7 @@ class AdaptRaw
 end
 
 
-class AdaptCombo
+class ComboAlgColumns
   attr_reader :speed, :moves, :show, :notes, :position, :cop, :eo, :ep
 
   def initialize(combo_alg, context)

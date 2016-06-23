@@ -99,17 +99,17 @@
   - @columns.each do |column|
     %th= column.header
   - @list_items.each do |item|
-    - view_item = Cols.adapter(item, context)
+    - line_presenter = item.presenter(context)
     %tr{class: item.matches(@hi_lite) ? 'hilite' : ''}
       - @columns.each do |column|
         - if column.is_svg
-          - svg_result = column.svg_config.call(view_item)
+          - svg_result = column.svg_config.call(line_presenter)
           - if svg_result
             %td= render 'cube_icon', svg_result
           - else
             %td
         -else
-          =column.td(view_item)
+          =column.cell(line_presenter)
 
 #show-alg{style: 'height:200px; width:200px;'}
 #about-box

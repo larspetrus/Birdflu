@@ -18,6 +18,10 @@ class Position < ActiveRecord::Base
     self.save
   end
 
+  def presenter(context)
+    PositionColumns.new(self, context)
+  end
+
   def algs_in_set(alg_set = AlgSet.active)
     self.old_combo_algs.where(alg_set.where_clause)
   end
