@@ -55,6 +55,18 @@ class ComboAlg < ActiveRecord::Base
     "#{alg1.name}+#{alg2.name}"
   end
 
+  def length
+    0
+  end
+
+  def speed
+    0
+  end
+
+  def matches(hi_lite)
+    false
+  end
+
   def recon
     ComboAlg.display_merge(alg1, alg2, alg2_shift, cancel_count, merge_count)
   end

@@ -31,8 +31,18 @@ class PositionsController < ApplicationController
 
     @list_items =
         @algs_mode ?
-          RawAlg.where(position_id: @positions.map(&:main_position_id)).includes(:position).order(@format.sortby).limit(@format.lines.to_i) :
+          RawAlg.where(position_id: @positions.map(&:main_position_id)).includes(:position).order(@format.sortby).limit(@format.lines.to_i).to_a :
           @positions.first(100)
+
+    show_combos = false
+    if (@algs_mode && show_combos)
+      xx = []
+      @list_items.each do |alg|
+        xx << alg
+        xx += alg.combo_algs.to_a
+      end
+      @list_items = xx
+    end
 
     @svg_ids = Set.new
     @columns = @algs_mode ? make_alg_columns : make_pos_columns
@@ -64,7 +74,6 @@ class PositionsController < ApplicationController
     columns << Cols::EO  if @selected_icons[:eo].is_none
     columns << Cols::EP  if @selected_icons[:ep].is_none
     columns << Cols::ALG << Cols::SHOW << Cols::NOTES
-    # columns << Cols::COMBOS
   end
 
   def make_pos_columns

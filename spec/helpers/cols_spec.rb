@@ -20,4 +20,8 @@ RSpec.describe Cols, :type => :model do
     expect(Cols::SHOW.td(alg_and_pos, nil)).to eq('<td data-uset="3"><a class="show-pig">show</a></td>')
   end
 
+  it 'adapter' do
+    Cols.adapter(RawAlg.new)
+  end
+
 end
