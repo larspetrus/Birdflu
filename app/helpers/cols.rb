@@ -107,7 +107,7 @@ class RawAlgColumns
 
 
   def alg
-    tag(:td, Algs.shift(@raw_alg.moves, @raw_alg.position.pov_offset), 'alg')
+    tag(:td, Algs.shift(@raw_alg.moves, @raw_alg.position.pov_offset), 'js-alg')
   end
 
   def speed
@@ -147,7 +147,7 @@ class ComboAlgColumns
   def alg
     result = ''.html_safe
     @combo_alg.recon.each { |part| result += tag(:span, part[0], part[1]) }
-    tag(:td, result)
+    tag(:td, result, 'js-combo')
   end
 
   def name
