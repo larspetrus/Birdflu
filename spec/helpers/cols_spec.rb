@@ -12,7 +12,7 @@ RSpec.describe Cols, :type => :model do
 
   it 'NAME' do
     expect(Cols::NAME.td(OpenStruct.new(name: "Z99", single?: true), nil)).to eq('<td class="single">Z99</td>')
-    expect(Cols::NAME.td(OpenStruct.new(name: "X1+Y2"), nil)).to eq('<td class="single"><span class="goto-pos">X1</span>+<span class="goto-pos">Y2</span></td>')
+    expect(Cols::NAME.td(OpenStruct.new(name: "X1+Y2"), nil)).to eq('<td class="single"><span class="js-goto-post">X1</span>+<span class="js-goto-post">Y2</span></td>')
   end
 
   it 'SHOW' do

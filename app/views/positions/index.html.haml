@@ -135,6 +135,10 @@
     $('form#main-form').submit();
   });
 
+  $('.js-goto-post').on('click', function(e) {
+    window.location.href = '/positions/' + $(event.target).text() + '?hl_name=' + $(event.target).text();
+  });
+
   // --- SVG ROTATION SECTION ---
 
   var ALG_TEXT_SELECT = 'td.js-alg, td.js-combo span';

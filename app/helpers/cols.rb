@@ -151,6 +151,6 @@ class ComboAlgColumns
   end
 
   def name
-    tag(:td, tag(:span, @combo_alg.alg1.name, 'goto-pos') + '+' + tag(:span, @combo_alg.alg2.name, 'goto-pos'), 'combo')
+    tag(:td, tag(:span, @combo_alg.alg1.name, 'js-goto-post') + '+' + tag(:span, @combo_alg.alg2.name, 'js-goto-post'), 'combo')
   end
 end
