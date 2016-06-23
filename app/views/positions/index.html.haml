@@ -94,18 +94,22 @@
         Sort by
         =Fields::SORTBY.as_tag(@format)
 
-- flags = @algs_mode ? -> (alg) do {shortest: alg.length == @stats.data.shortest, fastest: alg.speed == @stats.data.fastest, selected_pos_ids: @position_ids} end : -> (pos) do {} end
+- context = @algs_mode ?  {stats: @stats.data, selected_pos_ids: @position_ids} : {}
 %table{class: @algs_mode ? 'algs-list' : 'positions-list'}
   - @columns.each do |column|
     %th= column.header
   - @list_items.each do |item|
-    - view_item = Cols.adapter(item)
+    - view_item = Cols.adapter(item, context)
     %tr{class: item.matches(@hi_lite) ? 'hilite' : ''}
       - @columns.each do |column|
         - if column.is_svg
-          %td= render 'cube_icon', column.svg_config.call(view_item, flags)
+          - svg_result = column.svg_config.call(view_item)
+          - if svg_result
+            %td= render 'cube_icon', svg_result
+          - else
+            %td
         -else
-          =column.td(view_item, flags.call(item))
+          =column.td(view_item)
 
 #show-alg{style: 'height:200px; width:200px;'}
 #about-box

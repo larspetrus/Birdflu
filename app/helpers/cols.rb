@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-# The
-#
 # As a "view presenter" class, it makes sense to me to put this in the View helpers directory. DHH may disagree.
 
 class Cols
@@ -18,25 +16,25 @@ class Cols
     Cols.new(new_header, @content, @svg_config)
   end
 
-  MOVES = Cols.new('Moves', -> (view_item, flags) { view_item.moves(flags) })
+  MOVES = Cols.new('Moves', -> (view_item) { view_item.moves })
   MOVES_P = MOVES.with_header('')
 
-  SPEED = Cols.new('Speed', -> (view_item, flags) { view_item.speed(flags) })
-  NAME  = Cols.new('Name', -> (view_item, flags) { view_item.name(flags) })
-  COP   = Cols.new('COP', nil, -> (view_item, flags) { view_item.cop(flags) } )
-  EO    = Cols.new('EO',  nil, -> (view_item, flags) { view_item.eo(flags) } )
-  EP    = Cols.new('EP',  nil, -> (view_item, flags) { view_item.ep(flags) } )
+  SPEED = Cols.new('Speed', -> (view_item) { view_item.speed })
+  NAME  = Cols.new('Name', -> (view_item) { view_item.name })
+  COP   = Cols.new('COP', nil, -> (view_item) { view_item.cop } )
+  EO    = Cols.new('EO',  nil, -> (view_item) { view_item.eo } )
+  EP    = Cols.new('EP',  nil, -> (view_item) { view_item.ep } )
 
-  POSITION = Cols.new('Position', -> (view_item, flags) { view_item.position(flags) })
-  ALG      = Cols.new('Alg', -> (view_item, flags) { view_item.alg(flags) })
+  POSITION = Cols.new('Position', -> (view_item) { view_item.position })
+  ALG      = Cols.new('Alg', -> (view_item) { view_item.alg })
   ALG_P = ALG.with_header('Shortest Solution')
 
-  SHOW = Cols.new('', -> (view_item, flags) { view_item.show(flags) })
-  NOTES = Cols.new('Notes', -> (view_item, flags) { view_item.notes(flags) })
-  SOLUTIONS = Cols.new('Solutions', -> (view_item, flags) { view_item.solutions(flags) })
+  SHOW = Cols.new('', -> (view_item) { view_item.show })
+  NOTES = Cols.new('Notes', -> (view_item) { view_item.notes })
+  SOLUTIONS = Cols.new('Solutions', -> (view_item) { view_item.solutions })
 
-  def td(alg, flags)
-    @content.call(alg, flags)
+  def td(alg)
+    @content.call(alg)
   end
 
   def self.h
@@ -64,10 +62,10 @@ class Cols
     alg_or_pos.respond_to?(:best_alg) ? (alg_or_pos.best_alg || OpenStruct.new) : alg_or_pos
   end
 
-  def self.adapter(list_item)
-    return AdaptRaw.new(list_item)   if list_item.class == RawAlg
-    return AdaptCombo.new(list_item) if list_item.class == ComboAlg
-    return AdaptPos.new(list_item)   if list_item.class == Position
+  def self.adapter(list_item, context)
+    return AdaptRaw.new(list_item, context)   if list_item.class == RawAlg || list_item.class == DuckRawAlg
+    return AdaptCombo.new(list_item, context) if list_item.class == ComboAlg
+    return AdaptPos.new(list_item, context)   if list_item.class == Position
     raise "Unknown list item class #{list_item.class}"
   end
 end
@@ -75,56 +73,46 @@ end
 
 
 class AdaptPos
-  def initialize(position, adapt_raw = nil)
+  delegate :alg, :speed, :moves, :show, :to => :as_raw
+
+  def initialize(position, context, adapt_raw = nil)
     @position = position
+    @context = context
     @adapt_raw = adapt_raw
   end
 
   def as_raw
-    @adapt_raw ||= AdaptRaw.new(@position.best_alg)
+    @adapt_raw ||= AdaptRaw.new(@position.best_alg, @context, self)
   end
 
-  def alg(flags)
-    as_raw.alg(flags)
-  end
-
-  def speed(flags)
-    as_raw.speed(flags)
-  end
-
-  def moves(flags)
-    as_raw.moves(flags)
-  end
-
-  def show(flags)
-    as_raw.show(flags)
-  end
-
-  def position(flags)
+  def position
     Cols.tag(:td, Cols.h.link_to(@position.display_name, "/positions/#{@position.ll_code}"))
   end
 
-  def cop(flags)
+  def cop
     { icon: Icons::Cop.for(@position), size: 22, label: ''}
   end
 
-  def eo(flags)
+  def eo
     {icon: Icons::Eo.for(@position), size: 22, label: ''}
   end
 
-  def ep(flags)
+  def ep
     {icon: Icons::Ep.for(@position), size: 22, label: ''}
   end
 
-  def solutions(flags)
+  def solutions
     Cols.tag(:td, @position.alg_count)
   end
 end
 
 
 class AdaptRaw
-  def initialize(raw_alg, adapt_pos = nil)
+  delegate :cop, :eo, :ep, :position, :to => :as_pos
+
+  def initialize(raw_alg, context, adapt_pos = nil)
     @raw_alg = raw_alg
+    @context = context
     @adapt_pos = adapt_pos
   end
 
@@ -133,95 +121,51 @@ class AdaptRaw
   end
 
 
-  def alg(flags)
+  def alg
     Cols.tag(:td, Algs.shift(@raw_alg.moves, @raw_alg.position.pov_offset), 'alg')
   end
 
-  def speed(flags)
-    Cols.tag(:td, '%.2f' % @raw_alg.speed, Cols.highlight(flags[:fastest], flags[:copy]))
+  def speed
+    Cols.tag(:td, '%.2f' % @raw_alg.speed, Cols.highlight(@raw_alg.speed == @context[:stats]&.fastest, false))
   end
 
-  def moves(flags)
-    Cols.tag(:td, @raw_alg.length, Cols.highlight(flags[:shortest], flags[:copy]))
+  def moves
+    Cols.tag(:td, @raw_alg.length, Cols.highlight(@raw_alg.length == @context[:stats]&.shortest, false))
   end
 
-  def name(flags)
+  def name
     Cols.tag(:td, @raw_alg.name, 'single')
   end
 
-  def show(flags)
+  def show
     pov_adjust = @raw_alg.position.pov_adjust_u_setup
     Cols.td_tag(Cols.tag(:a, 'show', 'show-pig'), :'data-uset' => (@raw_alg.u_setup + pov_adjust) % 4 )
   end
 
-  def notes(flags)
+  def notes
     Cols.tag(:td, @raw_alg.specialness)
   end
-
-  def position(flags)
-    as_pos.position(flags)
-  end
-
-  def cop(flags)
-    as_pos.cop(flags)
-  end
-
-  def eo(flags)
-    as_pos.eo(flags)
-  end
-
-  def ep(flags)
-    as_pos.ep(flags)
-  end
-
 end
 
 
 class AdaptCombo
-  def initialize(combo_alg)
+  attr_reader :speed, :moves, :show, :notes, :position, :cop, :eo, :ep
+
+  def initialize(combo_alg, context)
     @combo_alg = combo_alg
+    @context = context
+
+    @speed = @moves = @show = @notes = @position = Cols.tag(:td, '')
+    @cop = @eo = @ep = nil
   end
 
-  def alg(flags)
+  def alg
     result = ''.html_safe
     @combo_alg.recon.each { |part| result += Cols.tag(:span, part[0], part[1]) }
     Cols.tag(:td, result)
   end
 
-  def speed(flags)
-    Cols.tag(:td, '')
-  end
-
-  def moves(flags)
-    Cols.tag(:td, '')
-  end
-
-  def name(flags)
+  def name
     Cols.tag(:td, Cols.tag(:span, @combo_alg.alg1.name, 'goto-pos') + '+' + Cols.tag(:span, @combo_alg.alg2.name, 'goto-pos'), 'combo')
   end
-
-  def show(flags)
-    Cols.tag(:td, '')
-  end
-
-  def notes(flags)
-    Cols.tag(:td, '')
-  end
-
-  def position(flags)
-    Cols.tag(:td, '')
-  end
-
-  def cop(flags)
-    {icon: Icons::Cop.for(Position.find(22)), size: 22, label: ''}
-  end
-
-  def eo(flags)
-    {icon: Icons::Cop.for(Position.find(22)), size: 22, label: ''}
-  end
-
-  def ep(flags)
-    {icon: Icons::Cop.for(Position.find(22)), size: 22, label: ''}
-  end
-
 end

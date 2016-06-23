@@ -176,7 +176,7 @@ class PositionsController < ApplicationController
 end
 
 class DuckRawAlg
-  attr_reader :moves, :length, :speed, :name, :pov_offset, :pov_adjust_u_setup, :u_setup, :specialness
+  attr_reader :moves, :length, :speed, :name, :u_setup, :specialness
 
   def initialize(moves)
     @moves = moves
@@ -185,9 +185,11 @@ class DuckRawAlg
     @u_setup = Algs.standard_u_setup(moves)
 
     @name = '-'
-    @pov_offset = 0
-    @pov_adjust_u_setup = 0
     @specialness = 'Not in DB'
+  end
+
+  def position
+    OpenStruct.new(pov_offset: 0, pov_adjust_u_setup: 0)
   end
 
   def matches(search_term)
