@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160612063341) do
+ActiveRecord::Schema.define(version: 20160623225800) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -80,6 +80,7 @@ ActiveRecord::Schema.define(version: 20160612063341) do
   add_index "positions", ["ep"], name: "index_positions_on_ep", using: :btree
   add_index "positions", ["ll_code"], name: "index_positions_on_ll_code", using: :btree
   add_index "positions", ["oll"], name: "index_positions_on_oll", using: :btree
+  add_index "positions", ["optimal_alg_length", "cop", "eo", "ep"], name: "index_positions_on_optimal_alg_length_and_cop_and_eo_and_ep", using: :btree
 
   create_table "raw_algs", force: :cascade do |t|
     t.integer "length",      limit: 2

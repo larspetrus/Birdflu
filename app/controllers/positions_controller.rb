@@ -16,7 +16,7 @@ class PositionsController < ApplicationController
     @algs_mode = (@format.list == 'algs') || @filters.fully_defined
 
     query_includes = @algs_mode ? :stats : [:stats, :best_alg]
-    @positions = Position.where(@filters.where).order(:optimal_alg_length).includes(query_includes).to_a
+    @positions = Position.where(@filters.where).order(:optimal_alg_length, :cop, :eo, :ep).includes(query_includes).to_a
     @position_ids = @positions.map(&:id)
     @only_position = @positions.first if @filters.fully_defined
 
@@ -143,6 +143,7 @@ class PositionsController < ApplicationController
     Fields::FILTER_NAMES.each { |k| new_params[k] = pos[k] }
     new_params[:prot] = params[:prot] if ['1', '2', '3'].include?(params[:prot])
     new_params[:hl_id] = params[:hl_id] if params[:hl_id]
+    new_params[:hl_id] ||= RawAlg.id(params[:hl_name]) if params[:hl_name]
     new_params[:hl_alg] = params[:hl_alg] if params[:hl_alg]
 
     redirect_to "/?" + new_params.to_query
