@@ -85,7 +85,7 @@ class PositionsController < ApplicationController
   end
 
   def stats_for_view(single_pos)
-    data = PositionStats.aggregate(@positions.map(&:stats))
+    data = PositionStats.aggregate(@positions)
     result = OpenStruct.new(sections: [], data: data)
 
     result.sections << [

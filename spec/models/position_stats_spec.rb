@@ -26,8 +26,13 @@ RSpec.describe PositionStats, :type => :model do
         shortest: 14,
         fastest: 9.88,
     }
-    aggregate = PositionStats.aggregate([PositionStats.make(1, data1), PositionStats.make(2, data2)])
-    expect(aggregate.position_count).to eq(2)
+
+    pos1 = double(id: 1, main_position_id: 1, stats: PositionStats.make(1, data1))
+    pos2 = double(id: 2, main_position_id: 2, stats: PositionStats.make(2, data2))
+    pos3 = double(id: 3, main_position_id: 2, stats: PositionStats.make(3, data2)) # variant of 2!
+
+    aggregate = PositionStats.aggregate([pos1, pos2, pos3])
+    expect(aggregate.position_count).to eq(3)
     expect(aggregate.shortest).to eq(12)
     expect(aggregate.fastest).to eq(9.88)
     expect(aggregate.raw_counts).to eq({12 => 4, 13 => 29, 14 => 141, 15 => 717})
@@ -37,6 +42,5 @@ RSpec.describe PositionStats, :type => :model do
     expect(empty_agg.shortest).to eq(99)
     expect(empty_agg.fastest).to eq(99)
     expect(empty_agg.raw_counts).to eq({})
-
   end
 end
