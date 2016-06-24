@@ -38,18 +38,6 @@ class PositionStats < ActiveRecord::Base
     _stats()[:fastest]
   end
 
-  def combo_count()
-    _stats()[:combo_count]
-  end
-
-  def shortest_combo()
-    _stats()[:shortest_combo]
-  end
-
-  def fastest_combo()
-    _stats()[:fastest_combo]
-  end
-
   def _stats()
     @stats ||= YAML.load(marshaled_stats)
   end
