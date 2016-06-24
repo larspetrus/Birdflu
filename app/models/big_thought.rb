@@ -36,10 +36,7 @@ class BigThought
 
   # Update Positions table after adding RawAlgs #TODO: make automatic
   def self.update_positions
-    alg_counts = RawAlg.group(:position_id).count
-    Position.find_each do |pos|
-      pos.update(alg_count: alg_counts[pos.main_position_id])
-    end
+    # Update stats?
   end
 
   def self.generate_positions(inverses = {}) # All LL positions

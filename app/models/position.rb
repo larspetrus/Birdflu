@@ -108,7 +108,6 @@ class Position < ActiveRecord::Base
 
       self.best_alg_id       = source_pos.best_alg_id
       self.optimal_alg_length= source_pos.optimal_alg_length
-      self.alg_count         = source_pos.alg_count
     else
       self.main_position_id = self.id
       self.pov_offset = 0
@@ -124,10 +123,11 @@ class Position < ActiveRecord::Base
   end
 
   def compute_stats
+    algs_query = RawAlg.where(position_id: main_position_id)
     {
-      raw_counts: RawAlg.where(position_id: main_position_id).group(:length).order(:length).count(),
-      shortest:   RawAlg.where(position_id: main_position_id).order(:length, :_speed, :id).first().try(:length),
-      fastest:    RawAlg.where(position_id: main_position_id).order(:_speed, :length, :id).first().try(:speed),
+      raw_counts: algs_query.group(:length).order(:length).count(),
+      shortest:   algs_query.minimum(:length) || 0,
+      fastest:    (algs_query.minimum(:_speed) || 0 )/100.0,
     }
   end
 

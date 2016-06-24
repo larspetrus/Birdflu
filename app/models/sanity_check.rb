@@ -42,9 +42,8 @@ module SanityCheck
     bad_pov_offset = pos.is_main ? pos.pov_offset != 0 : ![1, 2, 3].include?(pos.pov_offset)
     errors << "Bad pov_offset: #{pos_id}" if bad_pov_offset
 
-    stats_alg_count = pos.stats._stats[:raw_counts].values.sum
-    if pos.alg_count != stats_alg_count
-      errors << "Alg count mismatch for #{pos_id}: #{pos.alg_count} != #{stats_alg_count}"
+    if pos.stats._stats != pos.compute_stats
+      errors << "Alg count mismatch for #{pos_id}: #{pos.stats._stats} != #{pos.compute_stats}"
     end
   end
 

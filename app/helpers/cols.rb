@@ -20,7 +20,6 @@ class Cols
   ALG_P    = Cols.new('Shortest Solution', :alg)
   SHOW     = Cols.new('', :show)
   NOTES    = Cols.new('Notes', :notes)
-  SOLUTIONS= Cols.new('Solutions', :solutions)
 
   COP = Cols.new('COP', :cop, is_svg: true )
   EO  = Cols.new('EO',  :eo,  is_svg: true )
@@ -72,10 +71,6 @@ class PositionColumns
 
   def position
     tag(:td, hlp.link_to(@position.display_name, "/positions/#{@position.ll_code}"))
-  end
-
-  def solutions
-    tag(:td, @position.alg_count)
   end
 
   def cop

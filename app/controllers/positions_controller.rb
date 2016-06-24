@@ -81,7 +81,7 @@ class PositionsController < ApplicationController
     columns << Cols::COP if @selected_icons[:cop].is_none
     columns << Cols::EO  if @selected_icons[:eo].is_none
     columns << Cols::EP  if @selected_icons[:ep].is_none
-    columns << Cols::SOLUTIONS << Cols::MOVES_P << Cols::ALG_P << Cols::SHOW
+    columns << Cols::MOVES_P << Cols::ALG_P << Cols::SHOW
   end
 
   def stats_for_view(single_pos)

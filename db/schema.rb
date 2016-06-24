@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160624030010) do
+ActiveRecord::Schema.define(version: 20160624192943) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,7 +36,6 @@ ActiveRecord::Schema.define(version: 20160624030010) do
     t.string  "ll_code",            limit: 255
     t.integer "weight"
     t.integer "best_alg_id"
-    t.integer "alg_count"
     t.string  "cop",                limit: 255
     t.string  "oll",                limit: 255
     t.string  "eo",                 limit: 255
