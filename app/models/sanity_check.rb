@@ -8,7 +8,7 @@ module SanityCheck
     errors = []
     correct_CL_mirror = {"Ao"=>"Ao", "Ad"=>"Ad", "Af"=>"Af", "bo"=>"Bo", "Bo"=>"bo", "bd"=>"Bd", "Bd"=>"bd", "bb"=>"Bl", "Bl"=>"bb", "bl"=>"Bb", "Bb"=>"bl", "bf"=>"Br", "Br"=>"bf", "br"=>"Bf", "Bf"=>"br", "Co"=>"Co", "Cd"=>"Cd", "Cr"=>"Cl", "Cl"=>"Cr", "Cf"=>"Cf", "Cb"=>"Cb", "Do"=>"Do", "Dd"=>"Dd", "Dr"=>"Dl", "Dl"=>"Dr", "Df"=>"Df", "Db"=>"Db", "Eo"=>"Eo", "Ed"=>"Ed", "Ef"=>"Er", "Er"=>"Ef", "Eb"=>"El", "El"=>"Eb", "Fo"=>"Fo", "Fd"=>"Fd", "Ff"=>"Ff", "Fl"=>"Fl", "Go"=>"Go", "Gd"=>"Gd", "Gf"=>"Gb", "Gb"=>"Gf", "Gl"=>"Gl", "Gr"=>"Gr"}
 
-    Position.all.each do |pos|
+    Position.find_each do |pos|
       pos_id = "Position id: #{pos.id}, ll_code: #{pos.ll_code}"
       main_pos = pos.main_position # Ideally mirrors and inverses for ghosts would be the correct ghost
 
@@ -45,13 +45,11 @@ module SanityCheck
     result
   end
 
-  def self.old_combo_algs
+  def self.combo_algs
     errors = []
 
-    OldComboAlg.all.each do |ca|
-      unless ca.is_aligned_with_ll_code
-        errors << ca.to_s
-      end
+    ComboAlg.find_each do |ca|
+      # Check that moves are the same as the RawAlg
     end
     errors
   end

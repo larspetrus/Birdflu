@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160623225800) do
+ActiveRecord::Schema.define(version: 20160624030010) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,31 +24,6 @@ ActiveRecord::Schema.define(version: 20160623225800) do
   end
 
   add_index "combo_algs", ["combined_alg_id"], name: "index_combo_algs_on_combined_alg_id", using: :btree
-
-  create_table "old_combo_algs", force: :cascade do |t|
-    t.string  "name",         limit: 255
-    t.string  "moves",        limit: 255
-    t.integer "length",       limit: 2
-    t.integer "position_id",  limit: 2
-    t.integer "u_setup",      limit: 2
-    t.integer "base_alg1_id"
-    t.integer "base_alg2_id"
-    t.integer "alg2_u_shift"
-    t.string  "mv_start",     limit: 255
-    t.string  "mv_cancel1",   limit: 255
-    t.string  "mv_merged",    limit: 255
-    t.string  "mv_cancel2",   limit: 255
-    t.string  "mv_end",       limit: 255
-    t.integer "_speed",       limit: 2
-  end
-
-  add_index "old_combo_algs", ["_speed"], name: "index_old_combo_algs_on__speed", using: :btree
-  add_index "old_combo_algs", ["base_alg1_id"], name: "index_old_combo_algs_on_base_alg1_id", using: :btree
-  add_index "old_combo_algs", ["base_alg2_id"], name: "index_old_combo_algs_on_base_alg2_id", using: :btree
-  add_index "old_combo_algs", ["length"], name: "index_old_combo_algs_on_length", using: :btree
-  add_index "old_combo_algs", ["position_id", "_speed"], name: "index_old_combo_algs_on_position_id_and__speed", using: :btree
-  add_index "old_combo_algs", ["position_id", "length"], name: "index_old_combo_algs_on_position_id_and_length", using: :btree
-  add_index "old_combo_algs", ["position_id"], name: "index_old_combo_algs_on_position_id", using: :btree
 
   create_table "position_stats", force: :cascade do |t|
     t.integer "position_id"
