@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-# "View presenter" code for the alg/position list/table.
+# "View presenter" code for the alg/position list/table columns.
 
-class Cols
+class Column
   attr_reader :is_svg, :svg_config, :header
 
   def initialize(header, method, is_svg: false)
@@ -11,19 +11,19 @@ class Cols
     @is_svg = is_svg
   end
 
-  MOVES    = Cols.new('Moves', :moves)
-  MOVES_P  = Cols.new('', :moves)
-  SPEED    = Cols.new('Speed', :speed)
-  NAME     = Cols.new('Name', :name)
-  POSITION = Cols.new('Position', :position)
-  ALG      = Cols.new('Alg', :alg)
-  ALG_P    = Cols.new('Shortest Solution', :alg)
-  SHOW     = Cols.new('', :show)
-  NOTES    = Cols.new('Notes', :notes)
+  LENGTH   = self.new('Moves', :moves)
+  LENGTH_P = self.new('', :moves)
+  SPEED    = self.new('Speed', :speed)
+  NAME     = self.new('Name', :name)
+  POSITION = self.new('Position', :position)
+  ALG      = self.new('Alg', :alg)
+  ALG_P    = self.new('Shortest Solution', :alg)
+  SHOW     = self.new('', :show)
+  NOTES    = self.new('Notes', :notes)
 
-  COP = Cols.new('COP', :cop, is_svg: true )
-  EO  = Cols.new('EO',  :eo,  is_svg: true )
-  EP  = Cols.new('EP',  :ep,  is_svg: true )
+  COP = self.new('COP', :cop, is_svg: true )
+  EO  = self.new('EO',  :eo,  is_svg: true )
+  EP  = self.new('EP',  :ep,  is_svg: true )
 
   def cell(presenter)
     presenter.send(@method)
@@ -106,11 +106,11 @@ class RawAlgColumns
   end
 
   def speed
-    tag(:td, '%.2f' % @raw_alg.speed, @raw_alg.speed == @context[:stats]&.fastest ? 'optimal' : '')
+    tag(:td, '%.2f' % @raw_alg.speed, @raw_alg.speed == @context[:stats]&.fastest ? 'optimal' : nil)
   end
 
   def moves
-    tag(:td, @raw_alg.length, @raw_alg.length == @context[:stats]&.shortest ? 'optimal' : '')
+    tag(:td, @raw_alg.length, @raw_alg.length == @context[:stats]&.shortest ? 'optimal' : nil)
   end
 
   def name
@@ -141,7 +141,7 @@ class ComboAlgColumns
 
   def alg
     result = ''.html_safe
-    @combo_alg.recon.each { |part| result += tag(:span, part[0], part[1]) }
+    @combo_alg.merge_display_data.each { |part| result += tag(:span, part[0], part[1]) }
     tag(:td, result, 'js-combo')
   end
 

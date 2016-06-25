@@ -73,21 +73,21 @@ class PositionsController < ApplicationController
   end
 
   def make_alg_columns
-    columns = [Cols::SPEED, Cols::MOVES].rotate(@format.sortby == '_speed' ? 0 : 1)
-    columns << Cols::NAME
-    columns << Cols::POSITION unless @only_position
-    columns << Cols::COP if @selected_icons[:cop].is_none
-    columns << Cols::EO  if @selected_icons[:eo].is_none
-    columns << Cols::EP  if @selected_icons[:ep].is_none
-    columns << Cols::ALG << Cols::SHOW << Cols::NOTES
+    columns = [Column::SPEED, Column::LENGTH].rotate(@format.sortby == '_speed' ? 0 : 1)
+    columns << Column::NAME
+    columns << Column::POSITION unless @only_position
+    columns << Column::COP if @selected_icons[:cop].is_none
+    columns << Column::EO  if @selected_icons[:eo].is_none
+    columns << Column::EP  if @selected_icons[:ep].is_none
+    columns << Column::ALG << Column::SHOW << Column::NOTES
   end
 
   def make_pos_columns
-    columns = [Cols::POSITION]
-    columns << Cols::COP if @selected_icons[:cop].is_none
-    columns << Cols::EO  if @selected_icons[:eo].is_none
-    columns << Cols::EP  if @selected_icons[:ep].is_none
-    columns << Cols::MOVES_P << Cols::ALG_P << Cols::SHOW
+    columns = [Column::POSITION]
+    columns << Column::COP if @selected_icons[:cop].is_none
+    columns << Column::EO  if @selected_icons[:eo].is_none
+    columns << Column::EP  if @selected_icons[:ep].is_none
+    columns << Column::LENGTH_P << Column::ALG_P << Column::SHOW
   end
 
   def stats_for_view(single_pos)

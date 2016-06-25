@@ -18,17 +18,17 @@ describe ComboAlg do
     end
   end
 
-  it 'display_merge' do
+  it '_merge_display_data' do
     alg1 = OpenStruct.new(moves: "F R U' B U B' R' F'")
     alg2 = OpenStruct.new(moves: "B L F' L F L2 B'")
-    expect(ComboAlg.display_merge(alg1, alg2, 0, 3, 1)).to eq([["R B U' L U "], ["L' ", :merged], ["B' R'", :cancel1], [" + "], ["R B", :cancel2], [" L'", :merged], [" B L B2 R'", :alg2]])
+    expect(ComboAlg._merge_display_data(alg1, alg2, 0, 3, 1)).to eq([["R B U' L U "], ["L' ", :merged], ["B' R'", :cancel1], [" + "], ["R B", :cancel2], [" L'", :merged], [" B L B2 R'", :alg2]])
 
     alg1 = OpenStruct.new(moves: "L' B L B' U' B' U B")
     alg2 = OpenStruct.new(moves: "B L' B' L U L U' L'")
-    expect(ComboAlg.display_merge(alg1, alg2, 2, 0, 0)).to eq([["R' F R F' U' F' U F "], ["+"], [" L F' L' F U F U' F'", :alg2]])
+    expect(ComboAlg._merge_display_data(alg1, alg2, 2, 0, 0)).to eq([["R' F R F' U' F' U F "], ["+"], [" L F' L' F U F U' F'", :alg2]])
 
     alg1 = OpenStruct.new(moves: "L U F U' F' L'")
     alg2 = OpenStruct.new(moves: "R' F2 L F L' F R")
-    expect(ComboAlg.display_merge(alg1, alg2, 1, 0, 0)).to eq([["B U L U' L' B' "], ["+"], [" R' F2 L F L' F R", :alg2]])
+    expect(ComboAlg._merge_display_data(alg1, alg2, 1, 0, 0)).to eq([["B U L U' L' B' "], ["+"], [" R' F2 L F L' F R", :alg2]])
   end
 end

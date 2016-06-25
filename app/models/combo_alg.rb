@@ -71,11 +71,11 @@ class ComboAlg < ActiveRecord::Base
     false
   end
 
-  def recon
-    ComboAlg.display_merge(alg1, alg2, alg2_shift, cancel_count, merge_count)
+  def merge_display_data
+    ComboAlg._merge_display_data(alg1, alg2, alg2_shift, cancel_count, merge_count)
   end
 
-  def self.display_merge(alg1, alg2, alg2_shift, cancel_count, merge_count)
+  def self._merge_display_data(alg1, alg2, alg2_shift, cancel_count, merge_count)
     ua1 = UiAlg.new(Algs.official_variant(alg1.moves))
     ua2 = UiAlg.new(Algs.shift(Algs.official_variant(alg2.moves), alg2_shift))
     display_offset = Algs.display_offset(ua1 + ua2)
