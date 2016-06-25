@@ -30,9 +30,15 @@ class PositionsController < ApplicationController
     @icon_grids[:ep] = Icons::Ep.grid_for(@filters.as_params[:cp])
 
     @list_items =
-        @algs_mode ?
-          RawAlg.where(position_id: @positions.map(&:main_position_id)).includes(:position).order(@format.sortby).limit(@format.lines.to_i).to_a :
-          @positions.first(100)
+        if @algs_mode then
+          RawAlg.where(position_id: @positions.map(&:main_position_id)).includes(:position).order(@format.sortby).limit(@format.lines.to_i).to_a
+        else
+          limit = 100
+          if @positions.count > limit
+            @clipped = {shown: limit, total: @positions.count}
+          end
+          @positions.first(limit)
+        end
 
     show_combos = false
     if (@algs_mode && show_combos)

@@ -110,6 +110,11 @@
             %td
         -else
           =column.cell(line_presenter)
+  -if @clipped
+    %tfoot
+      %tr
+        %td{colspan: 99}
+          showing #{@clipped[:shown]} of #{@clipped[:total]} positions
 
 #show-alg{style: 'height:200px; width:200px;'}
 #about-box

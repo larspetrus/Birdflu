@@ -70,7 +70,8 @@ $optimal_color: #69f;
   }
 }
 .positions-list {
-  th { background-color: #484; color: #fff; }
+  th, tfoot { background-color: #484; color: #fff; }
+  tfoot { text-align: center; font-size: 10px; }
 
   td { padding: 0 2px; }
   td:nth-last-child(4) { text-align: right; }
