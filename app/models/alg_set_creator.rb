@@ -4,21 +4,20 @@
 
 class AlgSetCreator
   def self.coverage(human_algs)
-    ids = HumanAlg.set_to_ids(human_algs)
-    ComboAlg.where(alg1_id: ids, alg2_id: ids).pluck(:position_id).uniq.count
+    ids = MirrorAlgs.raw_alg_ids_from(human_algs)
+    ComboAlg.where(alg1_id: ids, alg2_id: ids).includes(:combined_alg).map{|ca| ca.combined_alg.position_id}.uniq.count
   end
 
   def self.make_minimal_set()
     t1 = Time.now
 
-    all = all_human_algs
-    # start_set = %w(h435 A.h435 h806 A.h787 h1004 h971 A.h904 h48 A.h932 h181 A.h806 A.h569 A.h1134 Buffy A.h846 A.h1076 h932 h405 A.h931 h50 A.h1113 h1126 A.Sune h117 A.h48 A.h347 h644 A.h181 A.h208 A.h1004 h569 h655 A.h971 h341 A.h644 A.h894 Czeslaw A.h1126)
-    start_set = %w(h435)
+    all = all_combined_as_mirror_algs
+    start_set = %w(F1·F3 F2·F4 G1·G6 G2·G7 G3·G9 G4·G8 G5·G10)
 
     alg_set = all.select {|alg| start_set.include?(alg.name) }
     redundant_algs = []
     coverage = coverage(alg_set)
-    puts "Starting coverage: #{coverage}"
+    puts "Starting coverage: #{coverage}  #{coverage/3916.0}%"
     while true do
       best_coverage = coverage
       best_alg = nil
@@ -40,7 +39,7 @@ class AlgSetCreator
       coverage = best_coverage
     end
     puts "[#{alg_set.map(&:name).join(',')}] - #{alg_set.count} algs. . Time #{'%.2f' % (Time.now - t1)}"
-    puts "[#{HumanAlg.set_to_ids(alg_set)}]"
+    puts "[#{MirrorAlgs.raw_alg_ids_from(alg_set)}]"
 
     trim_minimal_set(alg_set, coverage)
   end
@@ -59,21 +58,21 @@ class AlgSetCreator
       coverage_without = coverage(alg_set - pair)
       puts "Without pair #{pair.map(&:name)} - #{coverage_without}"
       if coverage_without == full_coverage
-        puts "Full coverage without #{pair.map(&:name)} (#{HumanAlg.set_to_ids(pair)})!"
+        puts "Full coverage without #{pair.map(&:name)} (#{MirrorAlgs.raw_alg_ids_from(pair)})!"
       end
     end
   end
 
 
   def self.average_best(human_algs)
-    @@current = HumanAlg.set_to_ids(human_algs)
+    @@current = MirrorAlgs.raw_alg_ids_from(human_algs)
     Position.all.reduce(0.0) { |sum, pos| sum + pos.best_alg_set_length }/3916
   end
 
   def self.make_fast_set(size = 50)
     t1 = Time.now
 
-    all = all_human_algs
+    all = all_combined_as_mirror_algs
     start_set = NAMES_40 + %w(Niklas Sune A.h918 h17 h304 h1161 A.h1161 h918 h886 A.h518b h519 h518b Bruno h442 h347 h1153 h1153b h787 h534 A.Czeslaw A.h179 A.h519)
 
     alg_set = all.select {|alg| start_set.include?(alg.name) }
@@ -95,7 +94,7 @@ class AlgSetCreator
         %w(Niklas Sune A.h918 h17 h304 h1161 A.h1161 h918 h886 A.h518b h519 h518b Bruno h442 h347 h1153 h1153b h787 h534 A.Czeslaw A.h179 A.h519) -
         %w(h932 A.h644 h341 Buffy A.h971 h48 A.h1004 A.h931 A.Czeslaw 9)
 
-    alg_set = all_human_algs.select {|alg| start_set.include?(alg.name) }
+    alg_set = all_combined_as_mirror_algs.select {|alg| start_set.include?(alg.name) }
 
     while alg_set.count >= 50
       slowest = find_slowest_alg(alg_set)
@@ -104,7 +103,7 @@ class AlgSetCreator
     end
     puts "Big trim took #{'%.2f' % (Time.now - t1)}"
     puts "[#{alg_set.map(&:name).join(',')}] - #{alg_set.count} algs. . Time #{'%.2f' % (Time.now - t1)}"
-    puts "[#{HumanAlg.set_to_ids(alg_set)}]"
+    puts "[#{MirrorAlgs.raw_alg_ids_from(alg_set)}]"
   end
 
   def self.find_slowest_alg(alg_set)
@@ -124,35 +123,13 @@ class AlgSetCreator
     results.first.last
   end
 
-  class HumanAlg
-    attr_reader :name, :ids
-
-    def initialize(alg, mirror_alg)
-      @alg = alg
-      @name = alg.name
-      @ids = (mirror_alg ? [alg.id, mirror_alg.id] : [alg.id])
-    end
-
-    def to_s
-      "#{@name} #{@alg.length} #{ids}"
-    end
-
-    def self.set_to_ids(alg_set)
-      [nil] + alg_set.map(&:ids).flatten
-    end
+  def self.all_combined_as_mirror_algs
+    @all_combined_as_mirror_algs ||= MirrorAlgs.make_all(RawAlg.where(id: self.combined_alg_ids).to_a)
   end
 
-  def self.all_human_algs
-    result = []
-
-    mirror_algs = {}
-    BaseAlg.where(combined: true, root_mirror: true).each do |alg|
-      mirror_algs[[alg.root_base_id, alg.root_inverse]] = alg
-    end
-
-    BaseAlg.where(combined: true, root_mirror: false).order(:id).each do |alg|
-      result << HumanAlg.new(alg, mirror_algs[[alg.root_base_id, alg.root_inverse]])
-    end
-    result
+  def self.combined_alg_ids
+    @combined_alg_ids ||= ComboAlg.distinct.pluck(:alg2_id).sort.freeze
   end
 end
+
+

@@ -2,6 +2,10 @@
 
 class PositionsController < ApplicationController
 
+  PREFS = OpenStruct.new(
+      use_combo_set: Rails.env.development?,
+  )
+
   # === Routed action ===
   def index
     @filters = PosSubsets.new(params)
@@ -30,8 +34,12 @@ class PositionsController < ApplicationController
     @icon_grids[:ep] = Icons::Ep.grid_for(@filters.as_params[:cp])
 
     @list_items =
-        if @algs_mode then
-          RawAlg.where(position_id: @positions.map(&:main_position_id)).includes(:position).order(@format.sortby).limit(@format.lines.to_i).to_a
+        if @algs_mode
+          if @only_position && PREFS.use_combo_set
+              @only_position.algs_in_set(sortby: @format.sortby, limit: @format.lines.to_i)
+            else
+              RawAlg.where(position_id: @positions.map(&:main_position_id)).includes(:position).order(@format.sortby).limit(@format.lines.to_i).to_a
+          end
         else
           limit = 100
           if @positions.count > limit
@@ -40,8 +48,7 @@ class PositionsController < ApplicationController
           @positions.first(limit)
         end
 
-    show_combos = false
-    if (@algs_mode && show_combos)
+    if @algs_mode && PREFS.use_combo_set
       xx = []
       @list_items.each do |alg|
         xx << alg
