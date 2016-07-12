@@ -23,6 +23,20 @@ describe MirrorAlgs do
     expect(a_.name).to eq('A1·--')
   end
 
+  it 'dedupes' do
+    alg_a = RawAlg.new
+    alg_b = RawAlg.new
+
+    allow(alg_a).to receive(:name) { "A1" }
+    allow(alg_a).to receive(:id) { 1 }
+    allow(alg_b).to receive(:name) { "A2" }
+    allow(alg_b).to receive(:id) { 1 }
+
+    ab = MirrorAlgs.new(alg_a, alg_b)
+    expect(ab.ids).to eq([alg_a.id])
+    expect(ab.name).to eq('A1·--')
+  end
+
   it 'set_to_ids' do
     ma1 = double(ids: [12,15])
     ma2 = double(ids: [22,25])

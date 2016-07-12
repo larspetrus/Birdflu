@@ -7,6 +7,7 @@ end
 RSpec.describe Position, :type => :model do
   it "generated everything" do
     expect(Position.count).to eq(4608)
+    expect(Position.real.count).to eq(3916)
     expect(Position.where('main_position_id = id').count).to eq(3916)
   end
 

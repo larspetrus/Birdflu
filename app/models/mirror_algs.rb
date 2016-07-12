@@ -2,13 +2,13 @@ class MirrorAlgs
   attr_reader :name, :ids
 
   def initialize(alg, mirror_alg)
-    algs = [alg, mirror_alg].compact.sort
+    algs = [alg, mirror_alg].compact.uniq.sort
     @name = algs[0].name + '·' + (algs[1]&.name || '--')
     @ids = algs.map(&:id)
   end
 
   def to_s
-    "#{@name} [#{ids}]"
+    "#{@name} #{ids}"
   end
 
   def self.raw_alg_ids_from(mirror_algs)
