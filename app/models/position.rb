@@ -23,9 +23,9 @@ class Position < ActiveRecord::Base
 
   def algs_in_set(alg_set: AlgSet.active, sortby: Fields::SORTBY.default, limit: Fields::LINES.default.to_i)
     RawAlg.joins(:combo_algs)
-      .where('combo_algs.alg1_id' => alg_set.ids, 'combo_algs.alg2_id' => alg_set.ids, position_id: id)
-      .order(sortby)
-      .limit(limit)
+    .where('combo_algs.alg1_id' => alg_set.ids, 'combo_algs.alg2_id' => alg_set.ids, 'combo_algs.position_id' => id)
+    .order(sortby)
+    .limit(limit)
     .to_a
   end
 

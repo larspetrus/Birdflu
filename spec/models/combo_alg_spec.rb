@@ -12,6 +12,7 @@ describe ComboAlg do
       expect(ca.alg1_id).to eq(alg1.id)
       expect(ca.alg2_id).to eq(alg2.id)
       expect(ca.combined_alg_id).to eq(alg3.id)
+      expect(ca.position_id).to eq(alg3.position_id)
       expect(ca.alg2_shift).to eq(3)
       expect(ca.cancel_count).to eq(2)
       expect(ca.merge_count).to eq(1)
