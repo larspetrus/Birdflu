@@ -13,6 +13,8 @@ class RawAlg < ActiveRecord::Base
     set_speed
   end
 
+  NOTHING_ID = 1
+
   def self.make(alg, length = 1)
     std_alg = Algs.display_variant(alg)
     RawAlg.create(_moves: Algs.pack(std_alg), u_setup: Algs.standard_u_setup(std_alg), length: length)
