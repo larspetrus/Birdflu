@@ -80,19 +80,23 @@
     - unless @only_position
       .center.page-format-header
         Show as
-        =Fields::LIST.as_tag(@format)
+        =Fields::LIST.as_tag(@field_values)
     - else
-      =hidden_field_tag(Fields::LIST.name, Fields::LIST.value(@format))
+      =hidden_field_tag(Fields::LIST.name, Fields::LIST.value(@field_values))
 
   - if @algs_mode
     .center.algs-list-header
       Show first
-      =Fields::LINES.as_tag(@format)
+      =Fields::LINES.as_tag(@field_values)
       algs
+
+      - if PositionsController::PREFS.use_combo_set
+        | cs:
+        =Fields::ALGSET.as_tag(@field_values)
 
       .right
         Sort by
-        =Fields::SORTBY.as_tag(@format)
+        =Fields::SORTBY.as_tag(@field_values)
 
 - context = @algs_mode ?  {stats: @stats.data, selected_pos_ids: @position_ids} : {}
 %table{class: @algs_mode ? 'algs-list' : 'positions-list'}
@@ -136,7 +140,7 @@
     $('form#main-form').submit();
   });
 
-  $("#{Fields::FORMATS.map{|f| f.as_css_id}.join(', ')}").change(function() {
+  $("#{Fields::ALL.map{|f| f.as_css_id}.join(', ')}").change(function() {
     $('form#main-form').submit();
   });
 
@@ -228,7 +232,7 @@
 
 
 
-- if Rails.env == 'production'
+- if Rails.env.production?
   :javascript
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

@@ -21,7 +21,7 @@ class Position < ActiveRecord::Base
     PositionColumns.new(self, context)
   end
 
-  def algs_in_set(alg_set: AlgSet.active, sortby: Fields::SORTBY.default, limit: Fields::LINES.default.to_i)
+  def algs_in_set(alg_set, sortby: Fields::SORTBY.default, limit: Fields::LINES.default.to_i)
     RawAlg.joins(:combo_algs)
     .where('combo_algs.alg1_id' => alg_set.ids, 'combo_algs.alg2_id' => alg_set.ids, 'combo_algs.position_id' => id)
     .order(sortby)
@@ -88,14 +88,6 @@ class Position < ActiveRecord::Base
 
   def display_name
     cop + eo + ep
-  end
-
-  def best_alg_set_length
-    AlgSet.active.shortest(self)
-  end
-
-  def best_combo
-    combo_algs.first
   end
 
   def set_mirror_id

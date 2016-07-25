@@ -8,7 +8,7 @@ class Fields
     def initialize(name, options)
       @name = name
       @options = options
-      @values = @options.map{|opt| [opt].flatten.last}
+      @values = @options.map{|opt| [opt].flatten.last.to_s}
       @default = @values.first
     end
 
@@ -28,15 +28,20 @@ class Fields
   FILTER_NAMES = [:cop, :oll, :co, :cp, :eo, :ep]
 
   LIST   = Select.new(:list,  ['positions', 'algs'])
-  LINES  = Select.new(:lines, ['25', '50', '100', '200', '500'])
+  LINES  = Select.new(:lines, [25, 50, 100, 200, 500])
   SORTBY = Select.new(:sortby,[['speed', '_speed'], ['moves', 'length']])
+  ALGSET = Select.new(:algset_id, [['---', 0]] + AlgSet.predefined.map{|as| [as.name, as.id] })
 
-  FORMATS = [LIST, LINES, SORTBY]
+  ALL = [LIST, LINES, SORTBY, ALGSET]
+
+  def self.values(params)
+    value_hash = {}
+    ALL.each { |format| value_hash[format.name] = format.value(params) }
+    OpenStruct.new(value_hash)
+  end
 
   def self.defaults(fields)
-    {}.tap do |result|
-      fields.each { |f| result[f.name] = f.default }
-    end
+    {}.tap { |result| fields.each { |f| result[f.name] = f.default } }
   end
 
 end

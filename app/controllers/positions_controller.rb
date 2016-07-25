@@ -11,13 +11,9 @@ class PositionsController < ApplicationController
     @filters = PosSubsets.new(params)
     return redirect_to "/?" + Fields::FILTER_NAMES.map{|k| "#{k}=#{@filters.as_params[k]}"}.join('&') if @filters.reload
 
-    format_params = store_parameters(:format, Fields.defaults(Fields::FORMATS))
-    @format = OpenStruct.new(
-        list:   Fields::LIST.value(format_params),
-        lines:  Fields::LINES.value(format_params),
-        sortby: Fields::SORTBY.value(format_params),
-    )
-    @algs_mode = (@format.list == 'algs') || @filters.fully_defined
+    @field_values = Fields.values(store_parameters(:field_values, Fields.defaults(Fields::ALL)))
+
+    @algs_mode = (@field_values.list == 'algs') || @filters.fully_defined
 
     query_includes = @algs_mode ? :stats : [:stats, :best_alg]
     @positions = Position.where(@filters.where).order(:optimal_alg_length, :cop, :eo, :ep).includes(query_includes).to_a
@@ -35,10 +31,11 @@ class PositionsController < ApplicationController
 
     @list_items =
         if @algs_mode
-          if @only_position && PREFS.use_combo_set
-              @only_position.algs_in_set(sortby: @format.sortby, limit: @format.lines.to_i)
-            else
-              RawAlg.where(position_id: @positions.map(&:main_position_id)).includes(:position).order(@format.sortby).limit(@format.lines.to_i).to_a
+          alg_set = AlgSet.find(@field_values.algset_id.to_i)
+          if PREFS.use_combo_set && @only_position && alg_set
+            @only_position.algs_in_set(alg_set, sortby: @field_values.sortby, limit: @field_values.lines.to_i)
+          else
+            RawAlg.where(position_id: @positions.map(&:main_position_id)).includes(:position).order(@field_values.sortby).limit(@field_values.lines.to_i).to_a
           end
         else
           limit = 100
@@ -48,13 +45,13 @@ class PositionsController < ApplicationController
           @positions.first(limit)
         end
 
-    if @algs_mode && PREFS.use_combo_set
-      xx = []
+    if @algs_mode && @only_position && PREFS.use_combo_set
+      lines = []
       @list_items.each do |alg|
-        xx << alg
-        xx += alg.combo_algs.to_a
+        lines << alg
+        lines += alg.combo_algs.to_a
       end
-      @list_items = xx
+      @list_items = lines
     end
 
     @svg_ids = Set.new
@@ -80,7 +77,7 @@ class PositionsController < ApplicationController
   end
 
   def make_alg_columns
-    columns = [Column::SPEED, Column::LENGTH].rotate(@format.sortby == '_speed' ? 0 : 1)
+    columns = [Column::SPEED, Column::LENGTH].rotate(@field_values.sortby == '_speed' ? 0 : 1)
     columns << Column::NAME
     columns << Column::POSITION unless @only_position
     columns << Column::COP if @selected_icons[:cop].is_none
@@ -133,10 +130,10 @@ class PositionsController < ApplicationController
   end
 
   def store_parameters(cookie_name, defaults, new_data = params)
-    stored_parameters = defaults.keys
-    if new_data.has_key?(stored_parameters.first)
+    keys = defaults.keys
+    if new_data.has_key?(keys.first)
       values = {}
-      stored_parameters.each { |k| values[k] = new_data[k] || defaults[k] }
+      keys.each { |k| values[k] = new_data[k] || defaults[k] }
       cookies[cookie_name] = JSON.generate(values)
     else
       values = cookies[cookie_name] ? JSON.parse(cookies[cookie_name], symbolize_names: true) : defaults
