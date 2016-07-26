@@ -1,3 +1,5 @@
+# A MirrorAlgs object contains a RawAlg and its mirror alg. A few algs are their own mirrors.
+
 class MirrorAlgs
   attr_reader :name, :ids
 
@@ -15,18 +17,7 @@ class MirrorAlgs
     mirror_algs.reduce([]){|all, ma| all += ma.ids}.sort.uniq
   end
 
-  def self.all_combined
-    _combined_data.values
-  end
-
-  def self.combined(mirror_alg_name)
-    _combined_data[mirror_alg_name]
-  end
-
-  def self.combineds(mirror_alg_names)
-    mirror_alg_names.map{|name| MirrorAlgs.combined(name) }
-  end
-
+  # Make MirrorAlgs of *all* RawAlgs that have been combined into ComboAlgs
   def self._combined_data
     @combined_data ||= begin
       {}.tap do |result|
@@ -40,6 +31,18 @@ class MirrorAlgs
         result.freeze
       end
     end
+  end
+
+  def self.all_combined
+    _combined_data.values
+  end
+
+  def self.combined(mirror_alg_name)
+    _combined_data[mirror_alg_name]
+  end
+
+  def self.combineds(mirror_alg_names)
+    mirror_alg_names.map{|name| MirrorAlgs.combined(name) }
   end
 
 end
