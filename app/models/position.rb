@@ -17,6 +17,8 @@ class Position < ActiveRecord::Base
     self.save
   end
 
+  MAX_REAL_ID = 3916
+
   def presenter(context)
     PositionColumns.new(self, context)
   end

@@ -1,21 +1,12 @@
 # frozen_string_literal: true
 
-class AlgSet
+class AlgSet < ActiveRecord::Base
 
-  attr_reader :id, :name, :ids
+  CACHE_KEYS = [:ids, :coverage, :lengths, :speeds, :average_length, :average_speed]
 
-  def initialize(ids, name = 'Algs Snow', lengths: nil, speeds: nil, id: nil)
-    @id = id
-    @ids = AlgSet.grab_ids(ids).freeze
-    @name = name
-    @length_per_positions = {}
-    @lengths = lengths
-    @speeds = speeds
+  #TODO validate that ids exist
 
-    raise "ids does not contain RawAlg::NOTHING_ID (#{RawAlg::NOTHING_ID})" unless @ids.include?(RawAlg::NOTHING_ID)
-  end
-
-  def self.grab_ids(raw_alg_id_sources)
+  def self.find_raw_alg_ids(raw_alg_id_sources)
     result = [RawAlg::NOTHING_ID]
     raw_alg_id_sources.each do |rais|
       result <<
@@ -30,12 +21,33 @@ class AlgSet
     result.flatten.uniq.sort
   end
 
-  def self.from_mirror_algs(mirror_algs, name = '(MA)', lengths: nil, speeds: nil)
-    self.new(MirrorAlgs.raw_alg_ids_from(mirror_algs), name, lengths: lengths, speeds: speeds)
+  def cache(key)
+    raise "Unknown cache key #{key}" unless CACHE_KEYS.include? key
+    computed_data[key] ||= yield
+  end
+
+  def save_cache
+    [:length, :speed].each { |measure| average(measure) }
+    coverage
+
+    raise "Uncomputed keys: #{CACHE_KEYS - @computed_data.keys}" if CACHE_KEYS.size != @computed_data.keys.size
+
+    self._cached_data = YAML.dump(@computed_data)
+    save
+  end
+
+  def computed_data
+    @computed_data ||= (_cached_data ? YAML.load(_cached_data) : {})
+  end
+
+  def ids
+    cache(:ids) { AlgSet.find_raw_alg_ids(algs.split(' ')).freeze }
   end
 
   def coverage
-    @coverage ||= ComboAlg.where(alg1_id: ids, alg2_id: ids).includes(:combined_alg).map{|ca| ca.combined_alg.position_id}.uniq.count
+    cache(:coverage) do
+      ComboAlg.where(alg1_id: ids, alg2_id: ids).includes(:combined_alg).map { |ca| ca.combined_alg.position_id }.uniq.count
+    end
   end
 
   def average(by_measure)
@@ -50,27 +62,29 @@ class AlgSet
   end
 
   def lengths
-    @lengths ||=
-      Array.new(3916+1).tap do |result|
-        Position.real.find_each { |pos| result[pos.id] = pos.algs_in_set(alg_set: self, sortby: 'length', limit: 1).first&.length || 1_000_000.0 }
+    cache(:lengths) do
+      Array.new(Position::MAX_REAL_ID + 1).tap do |result|
+        Position.real.find_each { |pos| result[pos.id] = pos.algs_in_set(self, sortby: 'length', limit: 1).first&.length || 1_000_000.0 }
         result[RawAlg::NOTHING_ID] = 0
       end
+    end
   end
 
   def average_length
-    @average_length ||= Position.real.reduce(0.0) { |sum, pos| sum + self.lengths[pos.id]*pos.weight }/7776
+    cache(:average_length) { Position.real.reduce(0.0) { |sum, pos| sum + self.lengths[pos.id]*pos.weight }/7776 }
   end
 
   def speeds
-    @speeds ||=
-      Array.new(3916+1).tap do |result|
-        Position.real.find_each{|pos| result[pos.id] = pos.algs_in_set(alg_set: self, sortby: '_speed', limit: 1).first&.speed || 1_000_000.0 }
+    cache(:speeds) do
+      Array.new(Position::MAX_REAL_ID + 1).tap do |result|
+        Position.real.find_each{|pos| result[pos.id] = pos.algs_in_set(self, sortby: '_speed', limit: 1).first&.speed || 1_000_000.0 }
         result[RawAlg::NOTHING_ID] = 0.0
       end
+    end
   end
 
   def average_speed
-    @average_speed ||= Position.real.reduce(0.0) { |sum, pos| sum + self.speeds[pos.id]*pos.weight }/7776
+    cache(:average_speed) { Position.real.reduce(0.0) { |sum, pos| sum + self.speeds[pos.id]*pos.weight }/7776 }
   end
 
   def to_s
@@ -80,15 +94,7 @@ class AlgSet
   # -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+-
 
   def self.predefined
-    @predefined ||= [
-        AlgSet.new(SMALL_39, "Small",     lengths: S39_LENGTHS, speeds: S39_SPEEDS, id: 1),
-        AlgSet.new(QUICK_49, "Quick",     lengths: Q49_LENGTHS, speeds: Q49_SPEEDS, id: 2),
-        AlgSet.new(FEW_49,   "Few Moves", lengths: F49_LENGTHS, speeds: F49_SPEEDS, id: 3),
-    ]
-  end
-
-  def self.find(id)
-    predefined.find{|alg_set| alg_set.id == id.to_i}
+    @predefined ||= AlgSet.all.to_a
   end
 
   SMALL_39 = %w(F1.F3 F2.F4 G1.G6 G2.G7 G3.G9 G4.G8 G5.G10 H12.H31 H15.H33 H16.H35 H5.H29 I19.I70 I3.I63 I54.I114 J101.J423 J103.J401 J112.J409 J126.J368 J132.J371 J16.J325 J179.J487 J183.J483 J199.J495 J204.J502 J211.J517 J212.J519 J219.J528 J266.J538 J275.J550 J34.J39 J629.J652 J637.J657 J639.J658 J78.J387 J82.J390 J93.J417 J95.J416 J98.J419 J99.J421)
