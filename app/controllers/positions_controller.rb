@@ -31,7 +31,7 @@ class PositionsController < ApplicationController
 
     @list_items =
         if @algs_mode
-          alg_set = AlgSet.find(@field_values.algset_id.to_i)
+          alg_set = AlgSet.find_by_id(@field_values.algset_id.to_i)
           if PREFS.use_combo_set && @only_position && alg_set
             @only_position.algs_in_set(alg_set, sortby: @field_values.sortby, limit: @field_values.lines.to_i)
           else
