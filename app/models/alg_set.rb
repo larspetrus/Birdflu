@@ -12,13 +12,19 @@ class AlgSet < ActiveRecord::Base
       result <<
           if rais.respond_to?(:ids)
             rais.ids                      # assume MirrorAlgs object
+          elsif rais.respond_to?(:to_i) && (rais.to_i > 0)
+            rais.to_i                     # assume RawAlg id
           elsif rais.is_a?(String)
             MirrorAlgs.combined(rais).ids # assume MirrorAlgs name
           else
-            rais                          # assume RawAlg id
+            raise "Unknown thing: '#{rais}' (#{rais.class})"
           end
     end
     result.flatten.uniq.sort
+  end
+
+  def include?(combo_alg)
+    ids.include?(combo_alg.alg1_id) && ids.include?(combo_alg.alg2_id)
   end
 
   def cache(key)

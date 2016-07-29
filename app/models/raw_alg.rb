@@ -20,10 +20,6 @@ class RawAlg < ActiveRecord::Base
     RawAlg.create(_moves: Algs.pack(std_alg), u_setup: Algs.standard_u_setup(std_alg), length: length)
   end
 
-  def presenter(context)
-    RawAlgColumns.new(self, context)
-  end
-
 
   def algs(u_shift)
     [variant(:B), variant(:R), variant(:F), variant(:L)][u_shift]
@@ -38,6 +34,10 @@ class RawAlg < ActiveRecord::Base
   end
 
   # --- Finders ---
+  def self.by_name(name)
+    self.find(self.id(name))
+  end
+
   def find_mirror
     db_alg = Algs.pack(Algs.display_variant(Algs.mirror(moves)))
     RawAlg.where(position_id: position.mirror_id, _speed: _speed, length: length, _moves: db_alg).first
@@ -56,8 +56,8 @@ class RawAlg < ActiveRecord::Base
     RawAlg.where(position_id: position_id, _speed: db_speed, length: db_alg.length, _moves: db_alg).first
   end
 
-  def self.by_name(name)
-    self.find(self.id(name))
+  def combo_algs_in(alg_set)
+    combo_algs.select{|ca| alg_set.include?(ca) }
   end
 
   # --- Populate DB columns ---
@@ -96,6 +96,10 @@ class RawAlg < ActiveRecord::Base
   end
 
   # View API
+  def presenter(context)
+    RawAlgColumns.new(self, context)
+  end
+
   def name
     RawAlg.name_for(id)
   end

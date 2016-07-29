@@ -31,9 +31,9 @@ class PositionsController < ApplicationController
 
     @list_items =
         if @algs_mode
-          alg_set = AlgSet.find_by_id(@field_values.algset_id.to_i)
-          if PREFS.use_combo_set && @only_position && alg_set
-            @only_position.algs_in_set(alg_set, sortby: @field_values.sortby, limit: @field_values.lines.to_i)
+          if PREFS.use_combo_set && @only_position && alg_set = AlgSet.find_by_id(@field_values.algset_id.to_i)
+            raw_algs = @only_position.algs_in_set(alg_set, sortby: @field_values.sortby, limit: @field_values.lines.to_i)
+            raw_algs.map { |alg| [alg] + alg.combo_algs_in(alg_set) }.reduce(:+)
           else
             RawAlg.where(position_id: @positions.map(&:main_position_id)).includes(:position).order(@field_values.sortby).limit(@field_values.lines.to_i).to_a
           end
@@ -44,15 +44,6 @@ class PositionsController < ApplicationController
           end
           @positions.first(limit)
         end
-
-    if @algs_mode && @only_position && PREFS.use_combo_set
-      lines = []
-      @list_items.each do |alg|
-        lines << alg
-        lines += alg.combo_algs.to_a
-      end
-      @list_items = lines
-    end
 
     @svg_ids = Set.new
     @columns = @algs_mode ? make_alg_columns : make_pos_columns
