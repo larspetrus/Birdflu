@@ -72,7 +72,7 @@
 
 
 =form_tag url_for(controller: "positions", action: "index"), method: 'get', id: 'main-form', enforce_utf8: false do
-  - Fields::FILTER_NAMES.each do |f|
+  - PosFilters::ALL.each do |f|
     =hidden_field_tag(f, @filters[f])
   =hidden_field_tag(:change)
 
@@ -80,23 +80,23 @@
     - unless @only_position
       .center.page-format-header
         Show as
-        =Fields::LIST.as_tag(@field_values)
+        =Fields::LIST.as_tag(@user_prefs)
     - else
-      =hidden_field_tag(Fields::LIST.name, Fields::LIST.value(@field_values))
+      =hidden_field_tag(Fields::LIST.name, Fields::LIST.value(@user_prefs))
 
   - if @algs_mode
     .center.algs-list-header
       Show first
-      =Fields::LINES.as_tag(@field_values)
+      =Fields::LINES.as_tag(@user_prefs)
       algs
 
       - if PositionsController::PREFS.use_combo_set
         | cs:
-        =Fields::ALGSET.as_tag(@field_values)
+        =Fields::ALGSET.as_tag(@user_prefs)
 
       .right
         Sort by
-        =Fields::SORTBY.as_tag(@field_values)
+        =Fields::SORTBY.as_tag(@user_prefs)
 
 - context = @algs_mode ?  {stats: @stats.data, selected_pos_ids: @position_ids} : {}
 %table{class: @algs_mode ? 'algs-list' : 'positions-list'}

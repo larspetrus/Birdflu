@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# The dropdown fields of the #main-form
 class Fields
 
   class Select
@@ -24,8 +25,6 @@ class Fields
       "##{@name}"
     end
   end
-
-  FILTER_NAMES = [:cop, :oll, :co, :cp, :eo, :ep]
 
   LIST   = Select.new(:list,  ['positions', 'algs'])
   LINES  = Select.new(:lines, [25, 50, 100, 200, 500])

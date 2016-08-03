@@ -11,31 +11,31 @@ class PositionsController < ApplicationController
     @filters = PosFilters.new(params)
     return redirect_to "/?pos=" + @filters.pos_code if @filters.reload
 
-    @field_values = Fields.values(store_parameters(:field_values, Fields.defaults(Fields::ALL)))
+    @user_prefs = Fields.values(store_parameters(:field_values, Fields.defaults(Fields::ALL)))
 
-    @algs_mode = (@field_values.list == 'algs') || @filters.fully_defined
+    @algs_mode = (@user_prefs.list == 'algs') || @filters.all_set
 
     query_includes = @algs_mode ? :stats : [:stats, :best_alg]
     @positions = Position.where(@filters.where).order(:optimal_alg_length, :cop, :eo, :ep).includes(query_includes).to_a
     @position_ids = @positions.map(&:id)
-    @only_position = @positions.first if @filters.fully_defined
+    @only_position = @positions.first if @filters.all_set
 
     @stats = stats_for_view(@only_position)
 
     @selected_icons = {}
-    Fields::FILTER_NAMES.each{ |f| @selected_icons[f] = Icons::Base.by_code(f, @filters[f]) }
+    PosFilters::ALL.each{ |f| @selected_icons[f] = Icons::Base.by_code(f, @filters[f]) }
 
     @icon_grids = {}
-    Fields::FILTER_NAMES.each{ |f| @icon_grids[f] = Icons::Base.class_by(f)::grid  unless f == :ep }
+    PosFilters::ALL.each{ |f| @icon_grids[f] = Icons::Base.class_by(f)::grid  unless f == :ep }
     @icon_grids[:ep] = Icons::Ep.grid_for(@filters[:cp])
 
     @list_items =
         if @algs_mode
-          if PREFS.use_combo_set && @only_position && alg_set = AlgSet.find_by_id(@field_values.algset_id.to_i)
-            raw_algs = @only_position.algs_in_set(alg_set, sortby: @field_values.sortby, limit: @field_values.lines.to_i)
+          if PREFS.use_combo_set && @only_position && alg_set = AlgSet.find_by_id(@user_prefs.algset_id.to_i)
+            raw_algs = @only_position.algs_in_set(alg_set, sortby: @user_prefs.sortby, limit: @user_prefs.lines.to_i)
             raw_algs.map { |alg| [alg] + alg.combo_algs_in(alg_set) }.reduce(:+)
           else
-            RawAlg.where(position_id: @positions.map(&:main_position_id)).includes(:position).order(@field_values.sortby).limit(@field_values.lines.to_i).to_a
+            RawAlg.where(position_id: @positions.map(&:main_position_id)).includes(:position).order(@user_prefs.sortby).limit(@user_prefs.lines.to_i).to_a
           end
         else
           limit = 100
@@ -68,7 +68,7 @@ class PositionsController < ApplicationController
   end
 
   def make_alg_columns
-    columns = [Column::SPEED, Column::LENGTH].rotate(@field_values.sortby == '_speed' ? 0 : 1)
+    columns = [Column::SPEED, Column::LENGTH].rotate(@user_prefs.sortby == '_speed' ? 0 : 1)
     columns << Column::NAME
     columns << Column::POSITION unless @only_position
     columns << Column::COP if @selected_icons[:cop].is_none
@@ -141,13 +141,14 @@ class PositionsController < ApplicationController
     pos = Position.find_by_id(params[:id]) || Position.by_ll_code(params[:id]) || RawAlg.by_name(params[:id]).position # Try DB id LL code, or alg name
 
     new_params = {}
-    Fields::FILTER_NAMES.each { |k| new_params[k] = pos[k] }
+    PosFilters::ALL.each { |k| new_params[k] = pos[k] }
     new_params[:prot] = params[:prot] if ['1', '2', '3'].include?(params[:prot])
-    new_params[:hl_id] = params[:hl_id] if params[:hl_id]
-    new_params[:hl_id] ||= RawAlg.id(params[:hl_name]) if params[:hl_name]
-    new_params[:hl_alg] = params[:hl_alg] if params[:hl_alg]
 
-    redirect_to "/?" + new_params.to_query
+    new_params[:hl_id] = params[:hl_id]                if params[:hl_id]
+    new_params[:hl_id] ||= RawAlg.id(params[:hl_name]) if params[:hl_name]
+    new_params[:hl_alg] = params[:hl_alg]              if params[:hl_alg]
+
+    redirect_to "/?" + new_params.to_query #TODO pos-ify?
   end
 
   # === Routed action ===

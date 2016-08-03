@@ -3,14 +3,15 @@
 # PosFilters makes filters for the next page from the form post data.
 class PosFilters
 
+  BASE = [:co, :cp, :eo, :ep]
+  DERIVED = [:cop, :oll]
+  ALL = DERIVED + BASE
+
   attr_reader :all, :where, :reload
 
   def initialize(params)
     start_params = params[:pos] ? PosFilters.unpack_pos(params[:pos]) : params
-    nf = {} # new filters
-    Fields::FILTER_NAMES.each do |f|
-      nf[f] = start_params[f] if start_params[f]
-    end
+    nf = start_params.select{|p,v| BASE.include?(p) && v.present? } # new filters
 
     changed, new_value = (params[:change] || ' - ').split('-')
     if new_value == 'random'
@@ -20,9 +21,8 @@ class PosFilters
 
     # New start with COP
     if changed == 'cop'
-      nf[:oll] = nf[:co] = nf[:cp] = ''
+      nf[:co] = nf[:cp] = nil
       if new_value.present?
-        nf[:cop] = new_value
         nf[:eo] = nf[:ep] = ''
         nf[:co], nf[:cp] = new_value.split('')
       end
@@ -30,24 +30,12 @@ class PosFilters
 
     # New start with OLL
     if changed == 'oll'
-      nf[:co] = nf[:eo] = nf[:cop] = ''
+      nf[:co] = nf[:eo] = nil
       if new_value.present?
-        nf[:oll] = new_value
+        nf[:eo] = PosFilters.eo_by_oll(new_value)
+        nf[:co] = PosFilters.co_by_oll(new_value)
         nf[:cp] = nf[:ep] = ''
-        nf[:eo] = PosFilters.eo_by_oll(nf[:oll])
-        nf[:co] = PosFilters.co_by_oll(nf[:oll])
       end
-    end
-
-    # Compute COP
-    if changed == 'co' || changed == 'cp' || nf[:cop].blank?
-      has_value = nf[:co].present? && nf[:cp].present?
-      nf[:cop] =  has_value ? "#{nf[:co]}#{nf[:cp]}" : ""
-    end
-
-    # Compute OLL
-    if changed == 'co' || changed == 'eo' || nf[:oll].blank?
-      nf[:oll] = PosFilters.oll_by_co_eo(nf[:co], nf[:eo]) || ''
     end
 
     # Did EP become incompatible?
@@ -58,6 +46,10 @@ class PosFilters
       end
     end
 
+    nf[:cop] = "#{nf[:co]}#{nf[:cp]}" if nf[:co].present? && nf[:cp].present?
+    nf[:oll] = PosFilters.oll_by_co_eo(nf[:co], nf[:eo])
+    ALL.each { |f| nf[f] ||= '' }
+
     @all = nf.freeze
     @where = @all.dup.select{|k,v| v.present? && (not [:cop, :oll].include?(k))}
   end
@@ -67,15 +59,15 @@ class PosFilters
   end
 
   def pos_code
-    [:co, :cp, :eo, :ep].map{ |f|  @where[f] || '_'}.join
+    BASE.map{ |f|  @where[f] || '_'}.join
   end
 
   def [](key)
     @all[key.to_sym]
   end
 
-  def fully_defined
-    @where.keys.sort == [:co, :cp, :eo, :ep]
+  def all_set
+    @where.keys.sort == BASE
   end
 
   def self.random_code(subset, constraints)

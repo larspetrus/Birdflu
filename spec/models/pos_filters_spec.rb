@@ -35,7 +35,7 @@ describe PosFilters do
     end
 
     it "misc" do
-      expect(PosFilters.new({}).all).to eq({cop: '', oll: ''})
+      expect(PosFilters.new({}).all).to eq({cop: '', oll: '', co:'' ,cp:'' ,eo:'' ,ep:''})
 
       no_click_params = {cop: '', oll: 'm3', co: 'B', cp: '', eo: '0', ep: ''}
       expect(PosFilters.new(no_click_params).all).to eq(no_click_params)
@@ -65,10 +65,10 @@ describe PosFilters do
     expect(PosFilters.new({change: 'cop-random', cop:'random',oll:'',co:'A',cp:'o',eo:'',ep:''}).reload).to eq(true)
   end
 
-  it 'fully_defined' do
-    expect(PosFilters.new({cop:'Ao',oll:'',co:'A',cp:'o',eo:'',ep:''}).fully_defined).to eq(false)
-    expect(PosFilters.new({cop:'Ao',oll:'m99',co:'A',cp:'o',eo:'0',ep:'k'}).fully_defined).to eq(true)
-    expect(PosFilters.new({}).fully_defined).to eq(false)
+  it 'all_set' do
+    expect(PosFilters.new({cop:'Ao',oll:'',co:'A',cp:'o',eo:'',ep:''}).all_set).to eq(false)
+    expect(PosFilters.new({cop:'Ao',oll:'m99',co:'A',cp:'o',eo:'0',ep:'k'}).all_set).to eq(true)
+    expect(PosFilters.new({}).all_set).to eq(false)
   end
 
   it "#eo_by_oll" do
