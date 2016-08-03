@@ -9,7 +9,7 @@ class PositionsController < ApplicationController
   # === Routed action ===
   def index
     @filters = PosSubsets.new(params)
-    return redirect_to "/?" + Fields::FILTER_NAMES.map{|k| "#{k}=#{@filters.as_params[k]}"}.join('&') if @filters.reload
+    return redirect_to "/?" + @filters.where.keys.map{|k| "#{k}=#{@filters.as_params[k]}"}.join('&') if @filters.reload
 
     @field_values = Fields.values(store_parameters(:field_values, Fields.defaults(Fields::ALL)))
 

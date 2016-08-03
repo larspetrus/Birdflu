@@ -74,7 +74,7 @@
 =form_tag url_for(controller: "positions", action: "index"), method: 'get', id: 'main-form', enforce_utf8: false do
   - Fields::FILTER_NAMES.each do |f|
     =hidden_field_tag(f, @filters.as_params[f])
-  =hidden_field_tag(:clicked, 'none')
+  =hidden_field_tag(:change)
 
   .page-controls
     - unless @only_position
@@ -134,13 +134,15 @@
 :javascript
   $('.ui-llicon, .random, .unselect').on('click', function() {
     var field = $(this).data('field');
+    var code = $(this).data('code')
 
-    $(field).val($(this).data('code'));
-    $('#clicked').val(field);
+    $(field).val(code);
+    $('#change').val(field.replace('#', '') + '-' + code);
     $('form#main-form').submit();
   });
 
   $("#{Fields::ALL.map{|f| f.as_css_id}.join(', ')}").change(function() {
+    $('#change').attr("disabled", "disabled");
     $('form#main-form').submit();
   });
 
