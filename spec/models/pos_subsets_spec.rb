@@ -49,8 +49,8 @@ describe PosSubsets do
   end
 
   it 'reload' do
-    expect(PosSubsets.new({cop:'Ao',oll:'',co:'A',cp:'o',eo:'',ep:''}).reload).to eq(false)
-    expect(PosSubsets.new({cop:'random',oll:'',co:'A',cp:'o',eo:'',ep:''}).reload).to eq(true)
+    expect(PosSubsets.new({cop:'Ao',oll:'',co:'A',cp:'o',eo:'',ep:''}).reload).to_not eq(true)
+    expect(PosSubsets.new({change: 'cop-random', cop:'random',oll:'',co:'A',cp:'o',eo:'',ep:''}).reload).to eq(true)
   end
 
   it 'fully_defined' do
