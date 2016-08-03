@@ -5,8 +5,6 @@ class PosSubsets
   attr_reader :as_params, :where, :reload
 
   def initialize(params)
-    @reload = params.values.include?('random')
-
     start_params = params[:pos] ? PosSubsets.unpack_pos(params[:pos]) : params
     np = {} # new parameters
     Fields::FILTER_NAMES.each do |f|
