@@ -8,8 +8,8 @@ class PositionsController < ApplicationController
 
   # === Routed action ===
   def index
-    @filters = PosSubsets.new(params)
-    return redirect_to "/?" + @filters.where.keys.map{|k| "#{k}=#{@filters.as_params[k]}"}.join('&') if @filters.reload
+    @filters = PosFilters.new(params)
+    return redirect_to "/?pos=" + @filters.pos_code if @filters.reload
 
     @field_values = Fields.values(store_parameters(:field_values, Fields.defaults(Fields::ALL)))
 
@@ -23,11 +23,11 @@ class PositionsController < ApplicationController
     @stats = stats_for_view(@only_position)
 
     @selected_icons = {}
-    Fields::FILTER_NAMES.each{ |f| @selected_icons[f] = Icons::Base.by_code(f, @filters.as_params[f]) }
+    Fields::FILTER_NAMES.each{ |f| @selected_icons[f] = Icons::Base.by_code(f, @filters[f]) }
 
     @icon_grids = {}
     Fields::FILTER_NAMES.each{ |f| @icon_grids[f] = Icons::Base.class_by(f)::grid  unless f == :ep }
-    @icon_grids[:ep] = Icons::Ep.grid_for(@filters.as_params[:cp])
+    @icon_grids[:ep] = Icons::Ep.grid_for(@filters[:cp])
 
     @list_items =
         if @algs_mode

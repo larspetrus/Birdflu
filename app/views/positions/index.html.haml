@@ -73,7 +73,7 @@
 
 =form_tag url_for(controller: "positions", action: "index"), method: 'get', id: 'main-form', enforce_utf8: false do
   - Fields::FILTER_NAMES.each do |f|
-    =hidden_field_tag(f, @filters.as_params[f])
+    =hidden_field_tag(f, @filters[f])
   =hidden_field_tag(:change)
 
   .page-controls

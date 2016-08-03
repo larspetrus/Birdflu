@@ -44,7 +44,7 @@ class Icons::Ep < Icons::Base
   end
 
   def self.grid_for(cp)
-    case PosSubsets.ep_type_by_cp(cp)
+    case PosFilters.ep_type_by_cp(cp)
       when :upper
         @upper_icons ||= [self.upper_codes].map{|row| row.map{|id| self.by_code(id)}}
       when :lower
@@ -52,7 +52,7 @@ class Icons::Ep < Icons::Base
       when :both
         @both_icons ||= [self.upper_codes, self.lower_codes].map{|row| row.map{|id| self.by_code(id)}}
       else
-        raise "Impossible EP type '#{PosSubsets.ep_type_by_cp(cp)}'!"
+        raise "Impossible EP type '#{PosFilters.ep_type_by_cp(cp)}'!"
     end
   end
 

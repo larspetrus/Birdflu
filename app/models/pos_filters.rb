@@ -1,64 +1,77 @@
 # frozen_string_literal: true
 
-class PosSubsets
+# PosFilters makes filters for the next page from the form post data.
+class PosFilters
 
-  attr_reader :as_params, :where, :reload
+  attr_reader :all, :where, :reload
 
   def initialize(params)
-    start_params = params[:pos] ? PosSubsets.unpack_pos(params[:pos]) : params
-    np = {} # new parameters
+    start_params = params[:pos] ? PosFilters.unpack_pos(params[:pos]) : params
+    nf = {} # new filters
     Fields::FILTER_NAMES.each do |f|
-      np[f] = start_params[f] if start_params[f]
+      nf[f] = start_params[f] if start_params[f]
     end
 
     changed, new_value = (params[:change] || ' - ').split('-')
     if new_value == 'random'
       @reload = true
-      new_value = np[changed.to_sym] = PosSubsets.random_code(changed, np)
+      new_value = nf[changed.to_sym] = PosFilters.random_code(changed, nf)
     end
 
     # New start with COP
     if changed == 'cop'
-      np[:oll] = np[:co] = np[:cp] = ''
+      nf[:oll] = nf[:co] = nf[:cp] = ''
       if new_value.present?
-        np[:cop] = new_value
-        np[:eo] = np[:ep] = ''
-        np[:co], np[:cp] = new_value.split('')
+        nf[:cop] = new_value
+        nf[:eo] = nf[:ep] = ''
+        nf[:co], nf[:cp] = new_value.split('')
       end
     end
 
     # New start with OLL
     if changed == 'oll'
-      np[:co] = np[:eo] = np[:cop] = ''
+      nf[:co] = nf[:eo] = nf[:cop] = ''
       if new_value.present?
-        np[:oll] = new_value
-        np[:cp] = np[:ep] = ''
-        np[:eo] = PosSubsets.eo_by_oll(np[:oll])
-        np[:co] = PosSubsets.co_by_oll(np[:oll])
+        nf[:oll] = new_value
+        nf[:cp] = nf[:ep] = ''
+        nf[:eo] = PosFilters.eo_by_oll(nf[:oll])
+        nf[:co] = PosFilters.co_by_oll(nf[:oll])
       end
     end
 
     # Compute COP
-    if changed == 'co' || changed == 'cp' || np[:cop].blank?
-      has_value = np[:co].present? && np[:cp].present?
-      np[:cop] =  has_value ? "#{np[:co]}#{np[:cp]}" : ""
+    if changed == 'co' || changed == 'cp' || nf[:cop].blank?
+      has_value = nf[:co].present? && nf[:cp].present?
+      nf[:cop] =  has_value ? "#{nf[:co]}#{nf[:cp]}" : ""
     end
 
     # Compute OLL
-    if changed == 'co' || changed == 'eo' || np[:oll].blank?
-      np[:oll] = PosSubsets.oll_by_co_eo(np[:co], np[:eo]) || ''
+    if changed == 'co' || changed == 'eo' || nf[:oll].blank?
+      nf[:oll] = PosFilters.oll_by_co_eo(nf[:co], nf[:eo]) || ''
     end
 
     # Did EP become incompatible?
-    if changed == 'cp' && np[:cp].present? && np[:ep].present?
-      ep_case = (np[:ep] == np[:ep].upcase()) ? :upper : :lower
-      if PosSubsets.ep_type_by_cp(np[:cp]) != ep_case
-        np[:ep] = ''
+    if changed == 'cp' && nf[:cp].present? && nf[:ep].present?
+      ep_case = (nf[:ep] == nf[:ep].upcase()) ? :upper : :lower
+      if PosFilters.ep_type_by_cp(nf[:cp]) != ep_case
+        nf[:ep] = ''
       end
     end
 
-    @as_params = np
-    @where = @as_params.dup.select{|k,v| v.present? && (not [:cop, :oll].include?(k))}
+    @all = nf.freeze
+    @where = @all.dup.select{|k,v| v.present? && (not [:cop, :oll].include?(k))}
+  end
+
+  def url
+    @url ||= @where.keys.map{|k| "#{k}=#{@where[k]}"}.join('&')
+  end
+
+  def pos_code
+    [:co, :cp, :eo, :ep].map{ |f|  @where[f] || '_'}.join
+  end
+
+  def [](key)
+    @all[key.to_sym]
   end
 
   def fully_defined
