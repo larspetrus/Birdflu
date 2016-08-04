@@ -11,7 +11,8 @@ class PosFilters
 
   def initialize(params)
     start_params = params[:pos] ? PosFilters.unpack_pos(params[:pos]) : params
-    nf = start_params.select{|p,v| BASE.include?(p) && v.present? } # new filters
+    nf = {} # new filters
+    start_params.each{|p,v| nf[p.to_sym] = v if BASE.include?(p.to_sym) && v.present? }
 
     changed, new_value = (params[:change] || ' - ').split('-')
     if new_value == 'random'
@@ -22,20 +23,18 @@ class PosFilters
     # New start with COP
     if changed == 'cop'
       nf[:co] = nf[:cp] = nil
-      if new_value.present?
-        nf[:eo] = nf[:ep] = ''
+      if PosFilters.valid_codes(:cop).include?(new_value)
         nf[:co], nf[:cp] = new_value.split('')
+        nf[:eo] = nf[:ep] = ''
       end
     end
 
     # New start with OLL
     if changed == 'oll'
-      nf[:co] = nf[:eo] = nil
-      if new_value.present?
-        nf[:eo] = PosFilters.eo_by_oll(new_value)
-        nf[:co] = PosFilters.co_by_oll(new_value)
-        nf[:cp] = nf[:ep] = ''
-      end
+      nf[:co] = PosFilters.co_by_oll(new_value)
+      nf[:eo] = PosFilters.eo_by_oll(new_value)
+
+      nf[:cp] = nf[:ep] = '' if new_value.present?
     end
 
     # Did EP become incompatible?
@@ -93,7 +92,7 @@ class PosFilters
   end
 
   def self.ep_codes_by_cp(cp)
-    type = self.ep_type_by_cp(cp.to_s)
+    type = self.ep_type_by_cp(cp)
     (type == :lower ? [] : Icons::Ep.upper_codes) + (type == :upper ? [] : Icons::Ep.lower_codes)
   end
 
@@ -140,9 +139,9 @@ class PosFilters
       cp: pos_string[1],
       eo: pos_string[2],
       ep: pos_string[3],
-    }
+    }.with_indifferent_access
 
-    [:co, :cp, :eo, :ep].each do |f|
+    BASE.each do |f|
       result[f] = '' unless valid_codes(f).include?(result[f])
     end
 
