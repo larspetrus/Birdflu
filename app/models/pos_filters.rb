@@ -10,47 +10,55 @@ class PosFilters
   attr_reader :all, :where, :reload
 
   def initialize(params)
-    start_params = params[:pos] ? PosFilters.unpack_pos(params[:pos]) : params
-    nf = {} # new filters
-    start_params.each{|p,v| nf[p.to_sym] = v if BASE.include?(p.to_sym) && v.present? }
+    filters = PosFilters.unpack_pos(params[:pos])
 
     changed, new_value = (params[:change] || ' - ').split('-')
-    if new_value == 'random'
-      @reload = true
-      new_value = nf[changed.to_sym] = PosFilters.random_code(changed, nf)
+    if ALL.include?(changed.to_sym)
+      if new_value == 'random'
+        @reload = true
+        new_value = PosFilters.random_code(changed, filters)
+      end
+      filters[changed.to_sym] = new_value
     end
 
     # New start with COP
     if changed == 'cop'
-      nf[:co] = nf[:cp] = nil
+      filters[:co] = filters[:cp] = nil
       if PosCodes.valid_for(:cop).include?(new_value)
-        nf[:co], nf[:cp] = new_value.split('')
-        nf[:eo] = nf[:ep] = ''
+        filters[:co], filters[:cp] = new_value.split('')
+        filters[:eo] = filters[:ep] = ''
       end
     end
 
     # New start with OLL
     if changed == 'oll'
-      nf[:co] = PosCodes.co_by_oll(new_value)
-      nf[:eo] = PosCodes.eo_by_oll(new_value)
+      filters[:co] = PosCodes.co_by_oll(new_value)
+      filters[:eo] = PosCodes.eo_by_oll(new_value)
 
-      nf[:cp] = nf[:ep] = '' if new_value.present?
+      filters[:cp] = filters[:ep] = '' if new_value.present?
     end
 
     # Did EP become incompatible?
-    if changed == 'cp' && nf[:cp].present? && nf[:ep].present?
-      ep_case = (nf[:ep] == nf[:ep].upcase()) ? :upper : :lower
-      if PosCodes.ep_type_by_cp(nf[:cp]) != ep_case
-        nf[:ep] = ''
-      end
+    if changed == 'cp' && filters[:cp].present? && filters[:ep].present?
+      ep_case = (('A'..'Z').include? filters[:ep]) ? :upper : :lower
+      filters[:ep] = '' unless PosCodes.ep_type_by_cp(filters[:cp]) == ep_case
     end
 
-    nf[:cop] = "#{nf[:co]}#{nf[:cp]}" if nf[:co].present? && nf[:cp].present?
-    nf[:oll] = PosCodes.oll_by_co_eo(nf[:co], nf[:eo])
-    ALL.each { |f| nf[f] ||= '' }
+    filters[:cop] = "#{filters[:co]}#{filters[:cp]}" if filters[:co].present? && filters[:cp].present?
+    filters[:oll] = PosCodes.oll_by_co_eo(filters[:co], filters[:eo])
+    ALL.each { |f| filters[f] ||= '' }
 
-    @all = nf.freeze
+    @all = filters.freeze
     @where = @all.dup.select{|k,v| v.present? && (not [:cop, :oll].include?(k))}
+  end
+
+  def self.unpack_pos(pos)
+    return {} unless pos
+    result = {}
+    BASE.each_with_index do |code, i|
+      result[code] = pos[i] if PosCodes.valid_for(code).include?(pos[i])
+    end
+    result
   end
 
   def url
@@ -80,20 +88,5 @@ class PosFilters
       else
         raise "Unknown position subset '#{subset}'"
     end
-  end
-
-  def self.unpack_pos(pos_string)
-    result = {
-      co: pos_string[0],
-      cp: pos_string[1],
-      eo: pos_string[2],
-      ep: pos_string[3],
-    }.with_indifferent_access
-
-    BASE.each do |f|
-      result[f] = '' unless PosCodes.valid_for(f).include?(result[f])
-    end
-
-    result
   end
 end

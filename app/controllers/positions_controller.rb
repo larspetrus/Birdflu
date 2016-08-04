@@ -140,15 +140,14 @@ class PositionsController < ApplicationController
   def show
     pos = Position.find_by_id(params[:id]) || Position.by_ll_code(params[:id]) || RawAlg.by_name(params[:id]).position # Try DB id LL code, or alg name
 
-    new_params = {}
-    PosFilters::ALL.each { |k| new_params[k] = pos[k] }
+    new_params = { pos: pos.display_name }
     new_params[:prot] = params[:prot] if ['1', '2', '3'].include?(params[:prot])
 
     new_params[:hl_id] = params[:hl_id]                if params[:hl_id]
     new_params[:hl_id] ||= RawAlg.id(params[:hl_name]) if params[:hl_name]
     new_params[:hl_alg] = params[:hl_alg]              if params[:hl_alg]
 
-    redirect_to "/?" + new_params.to_query #TODO pos-ify?
+    redirect_to "/?" + new_params.to_query
   end
 
   # === Routed action ===
