@@ -96,42 +96,6 @@ describe PosFilters do
     expect(pos_filters_new(co:'A',cp:'o',eo:'0',ep:'k').all_set).to eq(true)
     expect(pos_filters_new({}).all_set).to eq(false)
   end
-
-  it "#eo_by_oll" do
-    expect(PosFilters.eo_by_oll(:m10)).to eq('7')
-    expect(PosFilters.eo_by_oll(:m20)).to eq('0')
-    expect(PosFilters.eo_by_oll(:m30)).to eq('7')
-    expect(PosFilters.eo_by_oll(:m40)).to eq('2')
-  end
-
-  it '#oll_by_co_eo' do
-    expect(PosFilters.oll_by_co_eo(:D, :'7')).to eq('m41')
-    expect(PosFilters.oll_by_co_eo(:b, :'9')).to eq('m6')
-    expect(PosFilters.oll_by_co_eo(:B, :'1')).to eq('m13')
-  end
-
-  it '#ep_type_by_cp' do
-    expect(PosFilters.ep_type_by_cp(:o)).to eq(:upper)
-    expect(PosFilters.ep_type_by_cp(:b)).to eq(:upper)
-    expect(PosFilters.ep_type_by_cp(:d)).to eq(:lower)
-    expect(PosFilters.ep_type_by_cp(:f)).to eq(:lower)
-    expect(PosFilters.ep_type_by_cp('invalid')).to eq(:both)
-    expect(PosFilters.ep_type_by_cp(nil)).to eq(:both)
-  end
-
-  it '#ep_codes_by_cp' do
-    expect(PosFilters.ep_codes_by_cp(:o)).to eq(Icons::Ep.upper_codes)
-    expect(PosFilters.ep_codes_by_cp(:d)).to eq(Icons::Ep.lower_codes)
-    expect(PosFilters.ep_codes_by_cp(nil)).to eq(Icons::Ep.upper_codes + Icons::Ep.lower_codes)
-  end
-
-  it 'valid_xx_codes' do
-    expect(PosFilters.valid_codes(:co)).to eq(%w(A B C D E F G b))
-    expect(PosFilters.valid_codes(:cp)).to eq(%w(b d f l o r))
-    expect(PosFilters.valid_codes(:eo)).to eq(%w(0 1 2 4 6 7 8 9))
-    expect(PosFilters.valid_codes(:ep)).to eq(%w(A B C D E F G H I J K L a b c d e f g h i j k l))
-
-  end
   
   it 'unpack_pos' do
     expect(PosFilters.unpack_pos('Fl4I')).to eq({co: 'F', cp: 'l', eo: '4', ep: 'I'}.with_indifferent_access)

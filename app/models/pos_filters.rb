@@ -23,7 +23,7 @@ class PosFilters
     # New start with COP
     if changed == 'cop'
       nf[:co] = nf[:cp] = nil
-      if PosFilters.valid_codes(:cop).include?(new_value)
+      if PosCodes.valid_for(:cop).include?(new_value)
         nf[:co], nf[:cp] = new_value.split('')
         nf[:eo] = nf[:ep] = ''
       end
@@ -31,8 +31,8 @@ class PosFilters
 
     # New start with OLL
     if changed == 'oll'
-      nf[:co] = PosFilters.co_by_oll(new_value)
-      nf[:eo] = PosFilters.eo_by_oll(new_value)
+      nf[:co] = PosCodes.co_by_oll(new_value)
+      nf[:eo] = PosCodes.eo_by_oll(new_value)
 
       nf[:cp] = nf[:ep] = '' if new_value.present?
     end
@@ -40,13 +40,13 @@ class PosFilters
     # Did EP become incompatible?
     if changed == 'cp' && nf[:cp].present? && nf[:ep].present?
       ep_case = (nf[:ep] == nf[:ep].upcase()) ? :upper : :lower
-      if PosFilters.ep_type_by_cp(nf[:cp]) != ep_case
+      if PosCodes.ep_type_by_cp(nf[:cp]) != ep_case
         nf[:ep] = ''
       end
     end
 
     nf[:cop] = "#{nf[:co]}#{nf[:cp]}" if nf[:co].present? && nf[:cp].present?
-    nf[:oll] = PosFilters.oll_by_co_eo(nf[:co], nf[:eo])
+    nf[:oll] = PosCodes.oll_by_co_eo(nf[:co], nf[:eo])
     ALL.each { |f| nf[f] ||= '' }
 
     @all = nf.freeze
@@ -58,7 +58,7 @@ class PosFilters
   end
 
   def pos_code
-    BASE.map{ |f|  @where[f] || '_'}.join
+    BASE.map{|f| @where[f] || '_'}.join
   end
 
   def [](key)
@@ -74,63 +74,12 @@ class PosFilters
       when :cop, :oll
         Position.find(Position.random_id)[subset] # Gives natural distribution (ignoring weight)
       when :co, :cp, :eo
-        valid_codes(subset).sample
+        PosCodes.valid_for(subset).sample
       when :ep
-        self.ep_codes_by_cp(constraints[:cp]).sample
+        PosCodes.ep_by_cp(constraints[:cp]).sample
       else
         raise "Unknown position subset '#{subset}'"
     end
-  end
-
-  def self.valid_codes(field)
-    @valid_codes ||= {}
-    @valid_codes[field.to_sym] ||= _valid_codes(field)
-  end
-
-  def self._valid_codes(field)
-    execute("select distinct #{field} from positions").values.flatten.sort
-  end
-
-  def self.ep_codes_by_cp(cp)
-    type = self.ep_type_by_cp(cp)
-    (type == :lower ? [] : Icons::Ep.upper_codes) + (type == :upper ? [] : Icons::Ep.lower_codes)
-  end
-
-  def self.co_by_oll(oll)
-    @co_oll ||= {}.tap do |h|
-      execute("select distinct oll, co from positions").each do |q|
-        h[q['oll']] = q['co']
-      end
-    end
-    @co_oll[oll.to_s]
-  end
-
-  def self.eo_by_oll(oll)
-    @eo_oll ||= {}.tap do |h|
-      execute("select distinct oll, eo from positions").each do |q|
-        h[q['oll']] = q['eo']
-      end
-    end
-    @eo_oll[oll.to_s]
-  end
-
-  def self.oll_by_co_eo(co, eo)
-    @oll_co_eo ||= {}.tap do |h|
-      execute("select distinct oll, co, eo from positions").each do |q|
-        h[[q['co'], q['eo']]] = q['oll']
-      end
-    end
-    @oll_co_eo[[co.to_s, eo.to_s]]
-  end
-
-  def self.ep_type_by_cp(cp)
-    @ep_cop ||= {}.tap do |h|
-      execute("select distinct cp, ep from positions").each do |q|
-        ep = q['ep']
-        h[q['cp']] = (ep == ep.upcase()) ? :upper : :lower
-      end
-    end
-    @ep_cop[cp.to_s] || :both
   end
 
   def self.unpack_pos(pos_string)
@@ -142,13 +91,9 @@ class PosFilters
     }.with_indifferent_access
 
     BASE.each do |f|
-      result[f] = '' unless valid_codes(f).include?(result[f])
+      result[f] = '' unless PosCodes.valid_for(f).include?(result[f])
     end
 
     result
-  end
-
-  def self.execute(sql)
-    ActiveRecord::Base.connection.execute(sql)
   end
 end
