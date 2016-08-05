@@ -30,10 +30,10 @@ RSpec.describe 'Fields' do
   end
 
     it 'values' do
-      expect(Fields.values({})).to eq(OpenStruct.new(list: "positions", lines: "25", sortby: "_speed", algset_id: "0"))
+      expect(Fields.values({})).to eq(OpenStruct.new(list: "positions", lines: "25", sortby: "_speed", algset: "0"))
 
-      params = {list: "algs", lines: "50", sortby: "length", algset_id: "11"}
-      expect(Fields.values(params)).to eq(OpenStruct.new(list: "algs", lines: "50", sortby: "length", algset_id: "11"))
+      params = {list: "algs", lines: "50", sortby: "length", algset: "11"}
+      expect(Fields.values(params)).to eq(OpenStruct.new(list: "algs", lines: "50", sortby: "length", algset: "11"))
     end
 
   it '#defaults()' do

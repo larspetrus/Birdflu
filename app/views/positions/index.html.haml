@@ -128,23 +128,33 @@
   %p
     Big thanks to
     = link_to("Tom Rokicki", "http://tomas.rokicki.com/")
-    for generating all the algs!
+    for generating the algs!
 
 :javascript
   $('.ui-llicon, .random, .unselect').on('click', function() {
     $('#change').val($(this).data('field').replace('#','') + '-' + $(this).data('code'));
-    $('form#main-form').submit();
+    send_form();
   });
 
   $("#{Fields::ALL.map{|f| f.as_css_id}.join(', ')}").change(function() {
     $('#change').attr("disabled", "disabled");
-    $('form#main-form').submit();
+    send_form();
   });
 
   $('.js-goto-post').on('click', function(e) {
     window.location.href = '/positions/' + $(event.target).text() + '?hl_name=' + $(event.target).text();
   });
 
+  function send_form() {
+    var field_defaults = #{@field_defaults};
+
+    for (var prop in field_defaults) {
+      if ($('#'+prop).val() === field_defaults[prop]) {
+        $('#'+prop).attr("disabled", "disabled");
+      }
+    }
+    $('form#main-form').submit();
+  }
   // --- SVG ROTATION SECTION ---
 
   var ALG_TEXT_SELECT = 'td.js-alg, td.js-combo span';

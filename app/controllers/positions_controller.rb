@@ -9,7 +9,7 @@ class PositionsController < ApplicationController
   # === Routed action ===
   def index
     @filters = PosFilters.new(params)
-    return redirect_to "/?pos=" + @filters.pos_code if @filters.reload
+    return redirect_to "/?pos=#{@filters.pos_code}&" + non_default_fields.to_query if @filters.reload
 
     @user_prefs = Fields.values(store_parameters(:field_values, Fields.defaults(Fields::ALL)))
 
@@ -31,7 +31,7 @@ class PositionsController < ApplicationController
 
     @list_items =
         if @algs_mode
-          if PREFS.use_combo_set && @only_position && alg_set = AlgSet.find_by_id(@user_prefs.algset_id.to_i)
+          if PREFS.use_combo_set && @only_position && alg_set = AlgSet.find_by_id(@user_prefs.algset.to_i)
             raw_algs = @only_position.algs_in_set(alg_set, sortby: @user_prefs.sortby, limit: @user_prefs.lines.to_i)
             raw_algs.map { |alg| [alg] + alg.combo_algs_in(alg_set) }.reduce(:+)
           else
@@ -57,6 +57,8 @@ class PositionsController < ApplicationController
       @hi_lite = params[:hl_id].to_i
       @list_items += [RawAlg.find(params[:hl_id].to_i)] unless @list_items.map(&:id).include?(@hi_lite)
     end
+
+    @field_defaults = Fields.defaults(Fields::ALL).to_s.gsub(':', '').gsub('=>', ': ')
 
     if session[:wca_login]
       if Time.now.to_i > (session[:wca_login]['expires'] || 0)
@@ -147,7 +149,13 @@ class PositionsController < ApplicationController
     new_params[:hl_id] ||= RawAlg.id(params[:hl_name]) if params[:hl_name]
     new_params[:hl_alg] = params[:hl_alg]              if params[:hl_alg]
 
-    redirect_to "/?" + new_params.to_query
+    redirect_to "/?" + new_params.merge!(non_default_fields).to_query
+  end
+
+  def non_default_fields
+    field_defaults = Fields.defaults(Fields::ALL)
+    fields = store_parameters(:field_values, field_defaults)
+    fields.reject {|k,v| field_defaults[k] == v }
   end
 
   # === Routed action ===
