@@ -8,6 +8,8 @@
 
 .stat PID #{Process.pid}
 
-.stat Git commit #{`git rev-parse HEAD`}
+.stat
+  %a{href: "https://github.com/larspetrus/Birdflu/commit/#{`git rev-parse HEAD`}"}
+    Git commit
 
 .stat #{RawAlg.count} algs, #{ComboAlg.count} combos, #{WcaUserData.count} users
