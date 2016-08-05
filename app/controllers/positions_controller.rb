@@ -143,13 +143,16 @@ class PositionsController < ApplicationController
     pos = Position.find_by_id(params[:id]) || Position.by_ll_code(params[:id]) || RawAlg.by_name(params[:id]).position # Try DB id LL code, or alg name
 
     new_params = { pos: pos.display_name }
-    new_params[:prot] = params[:prot] if ['1', '2', '3'].include?(params[:prot])
 
     new_params[:hl_id] = params[:hl_id]                if params[:hl_id]
     new_params[:hl_id] ||= RawAlg.id(params[:hl_name]) if params[:hl_name]
     new_params[:hl_alg] = params[:hl_alg]              if params[:hl_alg]
 
-    redirect_to "/?" + new_params.merge!(non_default_fields).to_query
+    new_params[:prot] = params[:prot] if ['1', '2', '3'].include?(params[:prot])
+
+    as_query = []
+    new_params.merge!(non_default_fields).each{ |k,v| as_query << "#{k}=#{v}"}
+    redirect_to "/?" + as_query.join('&')
   end
 
   def non_default_fields
