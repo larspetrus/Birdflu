@@ -2,11 +2,6 @@ require 'rails_helper'
 
 RSpec.describe 'Fields' do
 
-
-  before(:each) do
-    allow(AlgSet).to receive(:predefined) {[double(name: 'abc', id: 11), double(name: 'xyz', id: 12)]}
-  end
-
   describe 'Fields::Select' do
     let(:size) {Fields::Select.new(:size, %w(S M L XL))}
     let(:count){Fields::Select.new(:count, [1,2,3])}
@@ -30,10 +25,12 @@ RSpec.describe 'Fields' do
   end
 
     it 'values' do
+      allow(AlgSet).to receive(:predefined) {[101, 102].map{|id| OpenStruct.new(id: id)}} # TODO Ugh... Since there is no way to reset class method stubs, let's stub them all the same for now
+
       expect(Fields.values({})).to eq(OpenStruct.new(list: "positions", lines: "25", sortby: "_speed", algset: "0"))
 
-      params = {list: "algs", lines: "50", sortby: "length", algset: "11"}
-      expect(Fields.values(params)).to eq(OpenStruct.new(list: "algs", lines: "50", sortby: "length", algset: "11"))
+      params = {list: "algs", lines: "50", sortby: "length", algset: "101"}
+      expect(Fields.values(params)).to eq(OpenStruct.new(list: "algs", lines: "50", sortby: "length", algset: "101"))
     end
 
   it '#defaults()' do

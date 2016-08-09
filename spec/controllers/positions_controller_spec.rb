@@ -1,6 +1,42 @@
 require 'rails_helper'
 
 RSpec.describe PositionsController do
+
+  it 'read_user_prefs' do
+    allow(AlgSet).to receive(:predefined) {[101, 102].map{|id| OpenStruct.new(id: id)}} # TODO Ugh... Since there is no way to reset class method stubs, let's stub them all the same for now
+
+    missing_cookie = {}
+    expect(PositionsController.read_user_prefs(missing_cookie).to_h).to eq(Fields::ALL_DEFAULTS)
+
+    invalid_cookie = {field_values: ''}
+    expect(PositionsController.read_user_prefs(invalid_cookie).to_h).to eq(Fields::ALL_DEFAULTS)
+
+    fully_defined = {field_values: JSON.generate({:list=>"algs", :lines=>"100", :sortby=>"length", :algset=>"101"})}
+    expect(PositionsController.read_user_prefs(fully_defined).to_h).to eq({:list=>"algs", :lines=>"100", :sortby=>"length", :algset=>"101"})
+
+    partially_defined = {field_values: JSON.generate({:algset=>"101"})}
+    expect(PositionsController.read_user_prefs(partially_defined).to_h).to eq({:list=>"positions", :lines=>"25", :sortby=>"_speed", :algset=>"101"})
+
+    obsolete_property = {field_values: JSON.generate({:algset=>"102", extra_key: 'Sparta!'})}
+    expect(PositionsController.read_user_prefs(obsolete_property).to_h).to eq({:list=>"positions", :lines=>"25", :sortby=>"_speed", :algset=>"102"})
+
+    invalid_value = {field_values: JSON.generate({:lines=>"37"})}
+    expect(PositionsController.read_user_prefs(invalid_value).to_h).to eq({:list=>"positions", :lines=>"25", :sortby=>"_speed", :algset=>"0"})
+  end
+
+  it 'store_user_prefs' do
+    allow(AlgSet).to receive(:predefined) {[101, 102].map{|id| OpenStruct.new(id: id)}} # TODO Ugh... Since there is no way to reset class method stubs, let's stub them all the same for now
+
+    PositionsController.store_user_prefs(cookies = {}, {lines: '50', algset: '101'}.with_indifferent_access)
+    expect(cookies[:field_values]).to eq(JSON.generate({lines: '50', algset: '101'}))
+
+    PositionsController.store_user_prefs(cookies = {}, {'lines' => '50', 'algset' => '101'}.with_indifferent_access)
+    expect(cookies[:field_values]).to eq(JSON.generate({lines: '50', algset: '101'}))
+
+    PositionsController.store_user_prefs(cookies = {}, {lines: '25', algset: '102', extra_key: 'Mango'}.with_indifferent_access)
+    expect(cookies[:field_values]).to eq(JSON.generate({lines: '25', algset: '102'}))
+  end
+
   describe "POST find_by_alg" do
     it "computes the ll_code by alg" do
       post_find_by_alg("R' F' L F' L D' L' D L' F2 R")

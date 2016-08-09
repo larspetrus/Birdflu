@@ -31,7 +31,9 @@ class Fields
   SORTBY = Select.new(:sortby,[['speed', '_speed'], ['moves', 'length']])
   ALGSET = Select.new(:algset,[['All', 0]] + AlgSet.predefined.map{|as| [as.name, as.id] })
 
-  ALL = [LIST, LINES, SORTBY, ALGSET]
+  ALL = [LIST, LINES, SORTBY, ALGSET].freeze
+
+  COOKIE_NAME = :field_values
 
   def self.values(params)
     value_hash = {}
@@ -42,5 +44,7 @@ class Fields
   def self.defaults(fields)
     {}.tap { |result| fields.each { |f| result[f.name] = f.default } }
   end
+
+  ALL_DEFAULTS = Fields.defaults(Fields::ALL).freeze
 
 end

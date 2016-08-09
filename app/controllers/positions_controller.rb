@@ -11,7 +11,11 @@ class PositionsController < ApplicationController
     @filters = PosFilters.new(params)
     return redirect_to "/?pos=#{@filters.pos_code}&" + non_default_fields.to_query if @filters.reload
 
-    @user_prefs = Fields.values(store_parameters(:field_values, Fields.defaults(Fields::ALL)))
+    take_prefs_from_params = (params.keys.map(&:to_sym) & Fields::ALL_DEFAULTS.keys).present? || params[:change] == 'prefs'
+    if take_prefs_from_params
+      PositionsController.store_user_prefs(cookies, params)
+    end
+    @user_prefs = PositionsController.read_user_prefs(cookies)
 
     @algs_mode = (@user_prefs.list == 'algs') || @filters.all_set
 
@@ -122,7 +126,7 @@ class PositionsController < ApplicationController
     vc.link_to(pos.display_name,  "positions/#{pos.id}")
   end
 
-  def store_parameters(cookie_name, defaults, new_data = params)
+  def store_parameters(cookie_name, defaults, new_data)
     keys = defaults.keys
     if new_data.has_key?(keys.first)
       values = {}
@@ -132,6 +136,19 @@ class PositionsController < ApplicationController
       values = cookies[cookie_name] ? JSON.parse(cookies[cookie_name], symbolize_names: true) : defaults
     end
     values
+  end
+
+  def self.store_user_prefs(the_cookies, new_prefs)
+    values = {}
+    Fields::ALL.each { |field| values[field.name] = field.value(new_prefs) if new_prefs.keys.map(&:to_sym).include?(field.name) }
+    the_cookies[Fields::COOKIE_NAME] = JSON.generate(values)
+  end
+
+  def self.read_user_prefs(the_cookies)
+    from_cookies = the_cookies[Fields::COOKIE_NAME] ? JSON.parse(the_cookies[:field_values], symbolize_names: true) : {}
+    OpenStruct.new(Fields.values(from_cookies))
+  rescue
+    OpenStruct.new(Fields::ALL_DEFAULTS)
   end
 
   def vc
@@ -156,9 +173,8 @@ class PositionsController < ApplicationController
   end
 
   def non_default_fields
-    field_defaults = Fields.defaults(Fields::ALL)
-    fields = store_parameters(:field_values, field_defaults)
-    fields.reject {|k,v| field_defaults[k] == v }
+    user_prefs = PositionsController.read_user_prefs(params).to_h
+    user_prefs.reject {|k,v| Fields::ALL_DEFAULTS[k] == v }
   end
 
   # === Routed action ===

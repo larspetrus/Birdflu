@@ -133,26 +133,37 @@
 :javascript
   $('.ui-llicon, .random, .unselect').on('click', function() {
     $('#change').val($(this).data('field').replace('#','') + '-' + $(this).data('code'));
-    send_form();
+    send_form(false);
   });
 
   $("#{Fields::ALL.map{|f| f.as_css_id}.join(', ')}").change(function() {
-    $('#change').attr("disabled", "disabled");
-    send_form();
+    send_form(true);
   });
 
   $('.js-goto-post').on('click', function(e) {
     window.location.href = '/positions/' + $(event.target).text() + '?hl_name=' + $(event.target).text();
   });
 
-  function send_form() {
+  function send_form(prefs_changed) {
+    var only_defaults = true;
     var field_defaults = #{@field_defaults};
 
     for (var prop in field_defaults) {
       if ($('#'+prop).val() === field_defaults[prop]) {
         $('#'+prop).attr("disabled", "disabled");
+      } else {
+        only_defaults = false;
       }
     }
+
+    if (prefs_changed) {
+      if (only_defaults) {
+        $('#change').val('prefs')
+      } else {
+        $('#change').attr("disabled", "disabled");
+      }
+    }
+
     $('form#main-form').submit();
   }
   // --- SVG ROTATION SECTION ---
