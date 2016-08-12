@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160726171131) do
+ActiveRecord::Schema.define(version: 20160812053618) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -20,6 +20,7 @@ ActiveRecord::Schema.define(version: 20160726171131) do
     t.string "name"
     t.string "algs"
     t.string "_cached_data"
+    t.string "subset"
   end
 
   create_table "combo_algs", force: :cascade do |t|
@@ -79,9 +80,11 @@ ActiveRecord::Schema.define(version: 20160726171131) do
   add_index "raw_algs", ["position_id", "length", "_speed"], name: "index_raw_algs_on_position_id_and_length_and__speed", using: :btree
 
   create_table "wca_user_data", force: :cascade do |t|
-    t.integer "wca_db_id"
-    t.string  "wca_id"
-    t.string  "full_name"
+    t.integer  "wca_db_id"
+    t.string   "wca_id"
+    t.string   "full_name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "wca_user_data", ["wca_db_id"], name: "index_wca_user_data_on_wca_db_id", using: :btree
