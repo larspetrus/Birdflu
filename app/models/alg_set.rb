@@ -2,6 +2,11 @@
 
 class AlgSet < ActiveRecord::Base
 
+  def self.make(algs:, name:, subset: 'all')
+    algs = algs.join(' ') if algs.respond_to? :join
+    AlgSet.create(subset: subset, name: name, algs: algs)
+  end
+
   CACHE_KEYS = [:ids, :coverage, :lengths, :speeds, :average_length, :average_speed]
 
   #TODO validate that ids exist
@@ -21,6 +26,27 @@ class AlgSet < ActiveRecord::Base
           end
     end
     result.flatten.uniq.sort
+  end
+
+  def pos_subset
+    case subset
+      when 'all'
+        Position.real
+      when 'eo'
+        Position.real.where(eo: '4')
+      else
+        raise "Invalid subset '#{subset}'"
+    end
+  end
+
+  @@pos_ids = {} # cache position ids per subset
+  def subset_pos_ids
+    @@pos_ids[subset] ||= pos_subset.pluck(:id)
+  end
+
+  @@weights = {} # cache total weight per subset
+  def subset_weight
+    @@weights[subset] ||= pos_subset.sum(:weight)
   end
 
   def include?(combo_alg)
@@ -52,7 +78,8 @@ class AlgSet < ActiveRecord::Base
 
   def coverage
     cache(:coverage) do
-      ComboAlg.where(alg1_id: ids, alg2_id: ids).includes(:combined_alg).map { |ca| ca.combined_alg.position_id }.uniq.count
+      unique_pos_ids = ComboAlg.where(alg1_id: ids, alg2_id: ids).includes(:combined_alg).map { |ca| ca.combined_alg.position_id }.uniq
+      (unique_pos_ids & subset_pos_ids).count
     end
   end
 
@@ -70,31 +97,31 @@ class AlgSet < ActiveRecord::Base
   def lengths
     cache(:lengths) do
       Array.new(Position::MAX_REAL_ID + 1).tap do |result|
-        Position.real.find_each { |pos| result[pos.id] = pos.algs_in_set(self, sortby: 'length', limit: 1).first&.length || 1_000_000.0 }
+        pos_subset.find_each { |pos| result[pos.id] = pos.algs_in_set(self, sortby: 'length', limit: 1).first&.length || 1_000_000.0 }
         result[RawAlg::NOTHING_ID] = 0
       end
     end
   end
 
   def average_length
-    cache(:average_length) { Position.real.reduce(0.0) { |sum, pos| sum + self.lengths[pos.id]*pos.weight }/7776 }
+    cache(:average_length) { pos_subset.reduce(0.0) { |sum, pos| sum + self.lengths[pos.id]*pos.weight }/subset_weight }
   end
 
   def speeds
     cache(:speeds) do
       Array.new(Position::MAX_REAL_ID + 1).tap do |result|
-        Position.real.find_each{|pos| result[pos.id] = pos.algs_in_set(self, sortby: '_speed', limit: 1).first&.speed || 1_000_000.0 }
+        pos_subset.find_each{|pos| result[pos.id] = pos.algs_in_set(self, sortby: '_speed', limit: 1).first&.speed || 1_000_000.0 }
         result[RawAlg::NOTHING_ID] = 0.0
       end
     end
   end
 
   def average_speed
-    cache(:average_speed) { Position.real.reduce(0.0) { |sum, pos| sum + self.speeds[pos.id]*pos.weight }/7776 }
+    cache(:average_speed) { pos_subset.reduce(0.0) { |sum, pos| sum + self.speeds[pos.id]*pos.weight }/subset_weight }
   end
 
   def to_s
-    "AlgSet #{id}: '#{name}'"
+    "AlgSet #{id}: '#{name}' (#{subset})"
   end
 
   # -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+-
