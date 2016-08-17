@@ -2,7 +2,7 @@
 
 #Toolbox for making AlgSets
 
-class AlgSetCreator
+class AlgSetLab
 
   SUBSET = ['all', 'eo'].last # QnD way to swap...
 
