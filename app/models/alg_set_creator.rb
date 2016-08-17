@@ -3,20 +3,31 @@
 #Toolbox for making AlgSets
 
 class AlgSetCreator
+
+  SUBSET = ['all', 'eo'].last # QnD way to swap...
+
   def self.coverage(selected_malgs)
     ids = MirrorAlgs.raw_alg_ids_from(selected_malgs)
-    ComboAlg.where(alg1_id: ids, alg2_id: ids).includes(:combined_alg).map{|ca| ca.combined_alg.position_id}.uniq.count
+    AlgSet.new(algs: ids.join(' '), subset: SUBSET).coverage
   end
 
-  def self.make_minimal_set()
+  def self.new_alg_set(mirror_alg_names)
+    mirror_alg_names = mirror_alg_names.map(&:name) if mirror_alg_names.first.respond_to?(:name)
+    AlgSet.new(algs: mirror_alg_names.join(' '), subset: SUBSET)
+  end
+
+  def self.make_minimal_set
+    max_coverage = (SUBSET == 'all' ? 3915.0 : 493.0)
+
     t1 = Time.now
 
-    start_set = %w(F1.F3 F2.F4 G1.G6 G2.G7 G3.G9 G4.G8 G5.G10)
+    # start_set = %w(G3.G9 G4.G8 G5.G10)
+    start_set = %w(G3.G9 G4.G8 G5.G10 J252.J470 J44.J45 I129.I137 J266.J538 I120.I125 J51.J56 I28.I88 J112.J409 J260.J467 I20.I68)
 
     selected_malgs = MirrorAlgs.combineds(start_set)
     redundant_malgs = []
     coverage = coverage(selected_malgs)
-    puts "Starting coverage: #{coverage}  #{coverage/3915.0}%"
+    puts "Starting coverage: #{coverage}  #{coverage/max_coverage}%"
     while true do
       best_coverage = coverage
       best_alg = nil
@@ -73,22 +84,39 @@ class AlgSetCreator
 
   SLOW_NAMES = %w(I1.I60 I11.I84 I119.I124 I121.I126 I127.I135 I131.I133 I140.I143 I24.I73 I26.I86 I27.I87 I32.I66 I4.I62 I43.I99 I44.I101 I45.I104 I47.I108 I8.I75 I9.I76 J105.J403 J117.J426 J120.J373 J130.J364 J134.J377 J138.J379 J139.J383 J14.J323 J142.J428 J143.J427 J147.J433 J149.J432 J150.J435 J152.J436 J153.J437 J154.J440 J157.J441 J158.J443 J161.J355 J167.J361 J168.J348 J169.J349 J172.J353 J18.-- J189.J481 J19.J330 J193.J497 J194.J498 J195.J493 J197.J492 J200.J499 J201.J500 J208.J507 J210.J523 J222.J529 J233.J447 J236.J450 J243.J452 J254.J461 J255.J462 J260.J467 J261.J557 J269.J536 J285.J553 J289.J560 J295.J573 J298.J567 J299.J566 J303.J572 J304.J582 J305.J580 J308.J575 J32.J37 J329.-- J40.J43 J41.J42 J47.J58 J48.J57 J5.J312 J588.J607 J590.J608 J592.J612 J593.J613 J594.J611 J596.J615 J598.J616 J599.J618 J6.J313 J600.J619 J621.J648 J623.J650 J627.J647 J630.J655 J631.J653 J632.J654 J633.J656 J634.J660 J635.J661 J636.J662 J643.J664 J65.J337 J66.J336 J667.J685 J668.J686 J67.J339 J670.J688 J671.J689 J676.J699 J68.J338 J681.J702 J684.J697 J69.J341 J7.J319 J70.J342 J704.J706 J71.J343 J72.J344 J73.J345 J74.J340 J75.J346 J8.J318 J87.J393 J9.J320 J91.J395 J92.J400)
 
-  def self.make_better_set(measure, start_set_names, useless_names = [])
+  EO_MINI = %w(G3.G9 G4.G8 G5.G10 J252.J470 J44.J45 I129.I137 J266.J538 I120.I125 J51.J56 I28.I88 J112.J409 J260.J467 I20.I68 J93.J417)
+
+  EO_FEW_BASE = %w(G3.G9 G5.G10 H10.H20 H4.H26 I120.I125 I20.I68 I54.I114 I59.I116 J119.J372 J146.J431 J240.J459 J252.J470 J253.J471 J264.J533 J266.J538 J93.J417)
+  EO_FEW_NEXT = %w(G4.G8 I118.I123 I28.I88 J26.J31 I129.I137 J300.J570 J260.J467 I53.I113 I36.I100 J144.J429 F2.F4 J244.J453 I141.I144 J51.J56 J112.J409 H1.H25 J295.J573 J44.J45 J257.J465 I25.I85 J182.J489 J219.J528 J150.J435 J220.J525)
+
+  EO_FAST_BASE = %w(G3.G9 G4.G8 G5.G10 J252.J470 J44.J45 J93.J417 J219.J528 J264.J533 J286.J555 J241.J460 J20.J331 J234.J448 J198.J494 I50.I106 I59.I116 J146.J431)
+  EO_FAST_NEXT = %w(J51.J56 J266.J538 J112.J409 J300.J570 J301.J571 J240.J459 J26.J31 J21.J332 J253.J471 H4.H26 J182.J489 I120.I125 I20.I68 J144.J429 I36.I100 J141.J384 H1.H25 J275.J550 J176.J475 H2.H27 I28.I88 I129.I137 J260.J467 J220.J525)
+
+
+  def self.find_improvements(measure, start_set_names, useless_names = [])
     ActiveRecord::Base.logger.level = 1
     t1 = Time.now
 
     malg_set = MirrorAlgs.combineds(start_set_names)
 
-    baseline = AlgSet.new(start_set_names)
+    baseline = new_alg_set(start_set_names)
     puts "---- Optimizing for #{measure} ----"
     puts "Baseline: #{baseline.ids.size}, #{start_set_names.count} algs. Avg speed: #{baseline.average_speed}. Avg length: #{baseline.average_length}"
     puts "Current algs: #{start_set_names}"
+
+    scores = []
     MirrorAlgs.all_combined.each do |malg|
       unless malg_set.include?(malg) || useless_names.include?(malg.name)
-        score = AlgSet.new(malg_set + [malg]).average(measure)
-        puts "#{'%.4f' % score}  #{malg.name}   ∆#{'%.3f' % (baseline.average(measure) - score)}"
+        score = new_alg_set(malg_set + [malg]).average(measure)
+        score_text = "#{'%.4f' % score}  #{malg.name}   ∆#{'%.3f' % (baseline.average(measure) - score)}"
+        scores << score_text
+        puts score_text
       end
     end
+
+    puts '-'*88
+    puts scores.sort.first(20)
+
     puts "That took #{self.duration_to_s(Time.now - t1)}"
     ActiveRecord::Base.logger.level = 0
   end
@@ -109,26 +137,27 @@ class AlgSetCreator
     end
     puts "[#{remaining_malg_names.join(',')}] - #{remaining_malg_names.count} algs. . Time #{self.duration_to_s(Time.now - t1)}"
     puts "removed: #{removed}"
-    puts "[#{AlgSet.new(remaining_malg_names).ids}]"
+    puts "[#{new_alg_set(remaining_malg_names).ids}]"
     ActiveRecord::Base.logger.level = 0
   end
 
   def self.find_worst_alg(malg_names, measure, unremovables = [])
     t1 = Time.now
 
-    baseline = AlgSet.new(malg_names).average(measure)
+    baseline = new_alg_set(malg_names).average(measure)
     results = []
     puts "Baseline: #{baseline}, #{malg_names.count} algs"
 
     as_mirror_algs = MirrorAlgs.combineds(malg_names)
     as_mirror_algs.each do |malg|
       unless unremovables.include?(malg.name)
-        reduced_set = AlgSet.new(as_mirror_algs - [malg])
+        reduced_set = new_alg_set(as_mirror_algs - [malg])
         unremovables << malg.name if reduced_set.average(measure) > 50
         putc '.'
         results << [reduced_set.average(measure)-baseline, malg.name, malg]
       end
     end
+    puts "\nLeast useful in set:"
     results.sort!
     results.each { |r| puts "#{'%.4f' % r[0]} - #{r[1]}"}
 
