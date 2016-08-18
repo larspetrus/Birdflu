@@ -50,12 +50,12 @@
       %th= header
   %tr#pickers
     = render 'picker_td', prop: :cop, add_class: 'grid-lines'
-    = render 'picker_td', prop: :oll, add_class: 'grid-lines'
+    = render 'picker_td', prop: :oll, add_class: 'grid-lines', message: PositionsController::PREFS.position_set == 'eo' ? 'Locked to oriented edges.' : nil
     %td{style: 'border-right: solid 1px #bbb;'}
     = render 'picker_td', prop: :co
     = render 'picker_td', prop: :cp
     = render 'picker_td', prop: :eo
-    = render 'picker_td', prop: :ep,  add_class: 'relative', ubl_text: true
+    = render 'picker_td', prop: :ep,  add_class: 'relative', message: 'Images assume the darker corner is placed correctly.'
 .rotation-ui
   %h1
     %span rotate

@@ -2,8 +2,8 @@ require 'rails_helper'
 
 describe PosFilters do
 
-  def pos_filters_new(params_hash)
-    PosFilters.new(params_hash.with_indifferent_access, 'all')
+  def pos_filters_new(params_hash, position_subset = 'all')
+    PosFilters.new(params_hash.with_indifferent_access, position_subset)
   end
 
   describe ".all" do
@@ -69,6 +69,12 @@ describe PosFilters do
 
       no_click_params = {cop: '', oll: 'm3', co: 'B', cp: '', eo: '0', ep: ''}
       expect(pos_filters_new({pos: 'B 0 '}).all).to eq({cop: '', oll: 'm3', co: 'B', cp: '', eo: '0', ep: ''})
+    end
+
+    it 'restricts to EO' do
+      expect(pos_filters_new({}, 'eo').all).to        eq({cop:'',oll:'',co:'',cp:'',eo:'4',ep:''})
+      expect(pos_filters_new({eo: '2'}, 'eo').all).to eq({cop:'',oll:'',co:'',cp:'',eo:'4',ep:''})
+      expect(pos_filters_new({change:'eo-1',pos:'G_4_'}, 'eo').all).to eq({cop:'',oll:'m22',co:'G',cp:'',eo:'4',ep:''})
     end
   end
 

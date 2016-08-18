@@ -13,6 +13,10 @@ class PosFilters
     filters = PosFilters.unpack_pos(params[:pos])
 
     changed, new_value = (params[:change] || ' - ').split('-')
+    if position_set == 'eo'
+      filters[:eo] = '4'
+      changed = '' if changed.to_sym == :eo
+    end
     if ALL.include?(changed.to_sym)
       if new_value == 'random'
         @reload = true
