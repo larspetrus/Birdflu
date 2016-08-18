@@ -21,11 +21,8 @@ class Icons::Cp < Icons::Base
     by_code(position.cp)
   end
 
-  def self.grid
-    @@grid ||=
-        [
-            %w(o d b l r f),
-        ].map{|row| row.map{|id| self.by_code(id)}}
+  def self.grid(factors)
+    @@grid ||= icon_grid [%w(o d b l r f)]
   end
 
   ALL = [

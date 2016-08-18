@@ -146,9 +146,12 @@ class Position < ActiveRecord::Base
     end
   end
 
-  def self.random_id
-    @main_pos_ids ||= Position.where("main_position_id = id").pluck(:id)
-    @main_pos_ids.sample
+  def self.random_id(subset = 'all')
+    @pos_ids ||= {
+        all: Position.real.pluck(:id),
+        eo:  Position.real.where(eo: '4').pluck(:id)
+    }
+    @pos_ids[subset.to_sym].sample
   end
 
   # Update positions with optimal RawAlgs data. Expects algs to exist for all positions.

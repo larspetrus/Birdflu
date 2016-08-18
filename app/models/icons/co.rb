@@ -25,15 +25,12 @@ class Icons::Co < Icons::Base
     by_code(position.co)
   end
 
-  def self.grid
-    @@grid ||=
-        [
-            %w(A B b C D E F G)
-        ].map{|row| row.map{|id| self.by_code(id)}}
+  def self.grid(factors)
+    @@grid ||= icon_grid [%w(A B b C D E F G)]
   end
 
   ALL = [
-      self.new(:'', []),
+  self.new(:'', []),
       self.new(:A, %w(U U U U)),
       self.new(:B, %w(U R L F)),
       self.new(:C, %w(U U L R)),

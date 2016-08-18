@@ -25,18 +25,22 @@ class Icons::Oll < Icons::Base
     by_code(position.oll)
   end
 
-  def self.grid
-    @@grid ||=
-        [
-            %i(m0  m27 m26 m24 m23 m25 m21 m22),
-            %i( -  m13 m16 m33 m45 m39 m55 m52),
-            %i(m57 m15 m14 m34 m46 m40 m56 m51),
-            %i(m28 m7  m12 m32 m44 m36 m54 m49),
-            %i( -  m10 m9  m30 m41 m37  -  m50),
-            %i( -  m11 m8  m29 m42 m38  -  m47),
-            %i( -  m5  m6  m31 m43 m35 m53 m48),
-            %i(m20 m3  m4  m19 m18 m17 m1  m2 ),
-        ].map{|row| row.map{|id| self.by_code(id)}}
+  EO_GRID = [%i(m0  m27 m26 m24 m23 m25 m21 m22)]
+
+  ALL_GRID = [
+      EO_GRID.first,
+      %i( -  m13 m16 m33 m45 m39 m55 m52),
+      %i(m57 m15 m14 m34 m46 m40 m56 m51),
+      %i(m28 m7  m12 m32 m44 m36 m54 m49),
+      %i( -  m10 m9  m30 m41 m37  -  m50),
+      %i( -  m11 m8  m29 m42 m38  -  m47),
+      %i( -  m5  m6  m31 m43 m35 m53 m48),
+      %i(m20 m3  m4  m19 m18 m17 m1  m2 ),
+  ]
+
+  def self.grid(factors)
+    @@grid ||= {}
+    @@grid[factors[:subset]] ||= icon_grid (factors[:subset] == 'eo' ? EO_GRID : ALL_GRID)
   end
 
   ALL = [

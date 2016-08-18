@@ -2,8 +2,9 @@
 - pad ||= false
 - label ||= icon.name
 - selected_icon ||= nil
+- locked ||= false
 
-%div{data: { code: "#{icon.code}", field: "#{icon.field}" }, style: "width: #{size}px;", class: icon.css_classes(selected_icon)}
+%div{data: { code: "#{icon.code}", field: "#{icon.field}" }, style: "width: #{size}px;", class: icon.css_classes(selected_icon, locked)}
   - if label.present?
     .name{style: "font-size: #{size*0.21}px;"}= label
   - unrendered = @svg_ids.add?(icon.id)

@@ -25,11 +25,12 @@ class Icons::Eo < Icons::Base
     by_code(position.eo)
   end
 
-  def self.grid
-    @@grid ||=
-        [
-            %w(0 1 2 4 6 7 8 9)
-        ].map{|row| row.map{|id| self.by_code(id)}}
+  def self.grid(factors)
+    if factors[:subset] == 'eo'
+      nil
+    else
+      @@grid ||= icon_grid [%w(0 1 2 4 6 7 8 9)]
+    end
   end
 
   ALL = [

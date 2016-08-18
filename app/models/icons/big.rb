@@ -26,7 +26,7 @@ class Icons::Big
     true
   end
 
-  def css_classes(selected_name)
-    'illustration-llicon'
+  def css_classes(selected_name, locked)
+    'illustration-icon'
   end
 end

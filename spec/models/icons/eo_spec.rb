@@ -5,7 +5,7 @@ RSpec.describe Icons::Eo, :type => :model do
     grid_count = Hash.new(0)
     real_count = Hash.new(0)
 
-    Icons::Eo.grid.flatten.each { |pos|  grid_count[pos.code] += 1 if pos }
+    Icons::Eo.grid({}).flatten.each { |pos|  grid_count[pos.code] += 1 if pos }
     grid_count[:''] += 1
     Icons::Eo::ALL.each { |cpos|  real_count[cpos.code] += 1}
 

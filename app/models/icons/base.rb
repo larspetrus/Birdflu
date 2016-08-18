@@ -20,8 +20,13 @@ class Icons::Base
     {cop: Icons::Cop, co: Icons::Co, cp: Icons::Cp, eo: Icons::Eo, ep: Icons::Ep, oll: Icons::Oll}[form_field]
   end
 
-  def self.by_code(form_field, code)
+  def self.icon_by(form_field, code)
     class_by(form_field).by_code(code)
+  end
+
+
+  def self.icon_grid(code_rows)
+    code_rows.map{|row| row.map{|id| self.by_code(id)}}
   end
 
   def set_colors(color_class, *stickers)
@@ -36,8 +41,9 @@ class Icons::Base
     false
   end
 
-  def css_classes(selected_code)
+  def css_classes(selected_code, locked = false)
+    return 'locked-icon' if locked
     highlight = (selected_code&.to_sym == @code) && !@is_none
-    highlight ? 'ui-llicon selected' : 'ui-llicon'
+    highlight ? 'pick-icon selected' : 'pick-icon'
   end
 end

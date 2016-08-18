@@ -9,14 +9,14 @@ class PosFilters
 
   attr_reader :all, :where, :reload
 
-  def initialize(params)
+  def initialize(params, position_set)
     filters = PosFilters.unpack_pos(params[:pos])
 
     changed, new_value = (params[:change] || ' - ').split('-')
     if ALL.include?(changed.to_sym)
       if new_value == 'random'
         @reload = true
-        new_value = PosFilters.random_code(changed, filters)
+        new_value = PosFilters.random_code(changed, filters, position_set)
       end
       filters[changed.to_sym] = new_value
     end
@@ -77,16 +77,16 @@ class PosFilters
     @where.keys.sort == BASE
   end
 
-  def self.random_code(subset, constraints)
-    case subset.to_sym
+  def self.random_code(filter_prop, constraints, position_set)
+    case filter_prop.to_sym
       when :cop, :oll
-        Position.find(Position.random_id)[subset] # Gives natural distribution (ignoring weight)
+        Position.find(Position.random_id(position_set))[filter_prop] # Gives natural distribution (ignoring weight)
       when :co, :cp, :eo
-        PosCodes.valid_for(subset).sample
+        PosCodes.valid_for(filter_prop).sample
       when :ep
         PosCodes.ep_by_cp(constraints[:cp]).sample
       else
-        raise "Unknown position subset '#{subset}'"
+        raise "Unknown position filter '#{filter_prop}'"
     end
   end
 end

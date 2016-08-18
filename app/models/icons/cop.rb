@@ -26,16 +26,15 @@ class Icons::Cop < Icons::Base
     by_code(position.cop)
   end
 
-  def self.grid
-    @@grid ||=
-      [
+  def self.grid(factors)
+    @@grid ||= icon_grid [
         [:Ao,:Bo,:bo,:Co,:Do,:Eo,:Fo,:Go],
         [:Ad,:Bd,:bd,:Cd,:Dd,:Ed,:Fd,:Gd],
         [:Ab,:Bb,:bb,:Cb,:Db,:Eb,:Fb,:Gb],
         [:Al,:Bl,:bl,:Cl,:Dl,:El,:Fl,:Gl],
         [:Ar,:Br,:br,:Cr,:Dr,:Er,:Fr,:Gr],
         [:Af,:Bf,:bf,:Cf,:Df,:Ef,:Ff,:Gf],
-      ].map{|row| row.map{|id| self.by_code(id)}}
+      ]
   end
 
   CA = %w(U U U U)

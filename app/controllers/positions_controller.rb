@@ -4,11 +4,12 @@ class PositionsController < ApplicationController
 
   PREFS = OpenStruct.new(
       use_combo_set: Rails.env.development?,
+      position_set: Rails.env.development? ? 'eo' : 'all',
   )
 
   # === Routed action ===
   def index
-    @filters = PosFilters.new(params)
+    @filters = PosFilters.new(params, PREFS.position_set)
     return redirect_to "/?pos=#{@filters.pos_code}&" + non_default_fields.to_query if @filters.reload
 
     take_prefs_from_params = (params.keys.map(&:to_sym) & Fields::ALL_DEFAULTS.keys).present? || params[:change] == 'prefs'
@@ -26,12 +27,12 @@ class PositionsController < ApplicationController
 
     @stats = stats_for_view(@only_position)
 
-    @selected_icons = {}
-    PosFilters::ALL.each{ |f| @selected_icons[f] = Icons::Base.by_code(f, @filters[f]) }
-
-    @icon_grids = {}
-    PosFilters::ALL.each{ |f| @icon_grids[f] = Icons::Base.class_by(f)::grid  unless f == :ep }
-    @icon_grids[:ep] = Icons::Ep.grid_for(@filters[:cp])
+    @selected_icons, @icon_grids = {}, {}
+    PosFilters::ALL.each do |f|
+      icons = Icons::Base.class_by(f)
+      @selected_icons[f] = icons.by_code(@filters[f])
+      @icon_grids[f] = icons::grid(subset: PREFS.position_set, cp: @filters[:cp])
+    end
 
     @list_items =
         if @algs_mode

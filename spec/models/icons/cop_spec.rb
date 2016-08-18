@@ -5,7 +5,7 @@ RSpec.describe Icons::Cop do
     grid_count = Hash.new(0)
     real_count = Hash.new(0)
 
-    Icons::Cop.grid.flatten.each { |pos|  grid_count[pos.code] += 1 if pos }
+    Icons::Cop.grid({}).flatten.each { |pos|  grid_count[pos.code] += 1 if pos }
     grid_count[:''] += 1
     Icons::Cop::ALL.each { |cpos|  real_count[cpos.code] += 1}
 

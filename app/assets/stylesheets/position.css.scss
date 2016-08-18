@@ -156,7 +156,7 @@ $optimal_color: #69f;
 }
 
 // --- SVG ---
-.ui-llicon {
+.pick-icon  {
   .name {
     font-weight: bold;
     text-align: center;
@@ -172,7 +172,16 @@ $optimal_color: #69f;
 .selected {
   .name { background-color: #aff; }
 }
-.illustration-llicon svg {
+.locked-icon {
+  .name {
+    font-weight: bold;
+    text-align: center;
+
+    background-color: #ccc;
+  }
+  background-color: #ddd;
+}
+.illustration-icon  svg {
   path.e_arrow {
     fill-opacity: 0.7;
   }

@@ -6,18 +6,19 @@
 - icon_size = 45
 %td
   .selected-icon{data: {prop: prop}}
-    = render 'cube_icon', icon: icon, size: icon_size, selected_icon: @filters[prop]
+    = render 'cube_icon', icon: icon, size: icon_size, selected_icon: @filters[prop], locked: @icon_grids[prop].blank?
 
-  %div{id: "#{prop}-picker", class: 'hidden-picker'}
-    .picker_buttons
-      %a{class: "random knapp knapp-enabled", data: {field: field, code: 'random'}} Random
-      %a{class: "unselect knapp" + (@selected_icons[prop].is_none ? "" : " knapp-enabled"), data: {field: field, code: ''}} Unselect
-    %table{class: "icon-grid " + add_class}
-      - @icon_grids[prop].each do |icon_row|
-        %tr
-          - icon_row.each do |icon|
-            %td
-              = render 'cube_icon', icon: icon, size: icon_size, selected_icon: @filters[prop] if icon
-      - if ubl_text
-        .ubl-text Images assume the darker corner is placed correctly.
+  - if @icon_grids[prop]
+    %div{id: "#{prop}-picker", class: 'hidden-picker'}
+      .picker_buttons
+        %a{class: "random knapp knapp-enabled", data: {field: field, code: 'random'}} Random
+        %a{class: "unselect knapp" + (@selected_icons[prop].is_none ? "" : " knapp-enabled"), data: {field: field, code: ''}} Unselect
+      %table{class: "icon-grid " + add_class}
+        - @icon_grids[prop].each do |icon_row|
+          %tr
+            - icon_row.each do |icon|
+              %td
+                = render 'cube_icon', icon: icon, size: icon_size, selected_icon: @filters[prop] if icon
+        - if ubl_text
+          .ubl-text Images assume the darker corner is placed correctly.
 

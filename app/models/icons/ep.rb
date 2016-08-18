@@ -43,14 +43,15 @@ class Icons::Ep < Icons::Base
     by_code(position.ep)
   end
 
-  def self.grid_for(cp)
+  def self.grid(factors)
+    cp = factors[:cp]
     case PosCodes.ep_type_by_cp(cp)
       when :upper
-        @upper_icons ||= [self.upper_codes].map{|row| row.map{|id| self.by_code(id)}}
+        @upper_icons ||= icon_grid [self.upper_codes]
       when :lower
-        @lower_icons ||= [self.lower_codes].map{|row| row.map{|id| self.by_code(id)}}
+        @lower_icons ||= icon_grid [self.lower_codes]
       when :both
-        @both_icons ||= [self.upper_codes, self.lower_codes].map{|row| row.map{|id| self.by_code(id)}}
+        @both_icons  ||= icon_grid [self.upper_codes, self.lower_codes]
       else
         raise "Impossible EP type '#{PosCodes.ep_type_by_cp(cp)}'!"
     end
