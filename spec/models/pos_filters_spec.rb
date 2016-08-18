@@ -3,7 +3,7 @@ require 'rails_helper'
 describe PosFilters do
 
   def pos_filters_new(params_hash)
-    PosFilters.new(params_hash.with_indifferent_access)
+    PosFilters.new(params_hash.with_indifferent_access, 'all')
   end
 
   describe ".all" do
