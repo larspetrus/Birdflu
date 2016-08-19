@@ -8,13 +8,7 @@ body {
   font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif;
 }
 
-a {
-  color: #07c;
-  &:hover {
-    color: #30a7fc;
-  }
-  text-decoration: none;
-}
+a { text-decoration: none; }
 
 .left     { float: left; }
 .right    { float: right; }
@@ -88,6 +82,52 @@ $optimal_color: #69f;
 }
 
 
+// ------------ Side bars
+
+$left-color: #16A2D7;
+.leftbar {
+  position: absolute;
+  top:40px;
+  left:8px;
+
+  display: flex;
+  flex-direction: column;
+
+  width: 150px;
+  padding: 5px;
+
+  .leftitem {
+    font-size: 14px;
+
+    margin-top: 3px;
+    padding: 5px 10px;
+
+    background-color: #f2f2f2;
+    color: #16A2D7;
+    border: 1px solid #D7DBDD;
+  }
+
+  .clickable {
+    cursor: pointer;
+
+    a {color: $left-color; }
+    &:visited { color: red; }
+    &:hover { text-shadow: 2px 2px 5px #777; }
+    &:active {color: white; text-shadow: 0px 0px 5px #000, 0 0 8px #00F; }
+  }
+}
+
+.rightbar {
+  position: absolute;
+  top:40px;
+  right:0px;
+
+  display: flex;
+  flex-direction: column;
+
+  width: 190px;
+  padding: 5px;
+}
 
 .menurow {
   display: flex;
@@ -101,7 +141,7 @@ $optimal_color: #69f;
   }
 }
 
-.menuitem, .left_side_stats {
+.menuitem, .stats-box {
   a {
     color: black;
     text-shadow: 2px 2px 5px orange;
@@ -113,7 +153,7 @@ $optimal_color: #69f;
   a:hover { text-shadow: 2px 2px 5px red; }
   a:active {color: white; text-shadow: 0px 0px 5px #000, 0 0 8px #00F; }
 
-  input { background-color: #fc7; }
+//  input { background-color: #fc7; }
 }
 
 #about-link {
@@ -125,11 +165,7 @@ $optimal_color: #69f;
   font-size: 11px;
 }
 // ------------ Position info
-.left_side_stats {
-  position: absolute;
-  top:40px;
-  left:8px;
-
+.stats-box {
   border: 1px solid #bbb;
   font-size: 12px;
   padding: 6px;
@@ -255,12 +291,11 @@ $panel-width: 450px;
 }
 
 
-%div{style: ""}
 .rotation-ui {
   position:absolute;
   top:46px;
   left:50%;
-  margin-left:180px; // Start this far right of center
+  margin-left:164px; // Start this far right of center
   border: 1px solid #aaa;
 
   h1 {

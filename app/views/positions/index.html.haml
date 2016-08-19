@@ -1,12 +1,4 @@
-.menurow{style: 'float: left;'}
-  .menuitem= link_to 'Random Position', "positions/#{Position.random_id(PositionsController::PREFS.position_set)}"
-  = render 'find_by_alg'
-
-
 .menurow{style: 'float: right;'}
-  .menuitem
-    #about-link About…
-
   - if @login_name
     .menuitem
       #{@login_name}
@@ -20,29 +12,36 @@
       - else
         = link_to 'Fake Login', fake_wca_login_path
 
-%hr{style: 'clear:both;'}
+%nav.leftbar
+  .leftitem.clickable= link_to 'Random Position', "positions/#{Position.random_id(PositionsController::PREFS.position_set)}"
+  .leftitem.clickable#about-link About…
+  .leftitem
+    =render 'find_by_alg'
 
-.left_side_stats{class: @only_position ? '' : 'positions-stats'}
-  %span#headline= @stats.headline
-  - if @only_position
-    %span#headline_prot
-  %table
-    - @stats.sections[0].each do |line|
-      %tr
-        %td= line.label
-        %td{class: line.class_name}= line.text
-    %tr.spacer
-    - @stats.sections[1].each do |line|
-      %tr
-        %td= line.label
-        %td{class: line.class_name}= line.text
-  - if @stats.link_section
-    .spacer
-    - @stats.link_section.each do |link_line|
-      %div
-        = link_line[:label]
-        - link_line[:links].each do |one_link|
-          .link= one_link
+.rightbar
+  -if @only_position
+    = render 'cube_icon', icon: Icons::Big.new(@only_position), size: 192, pad: true, label: '', add_class: 'illustration-icon'
+  .stats-box{class: @only_position ? '' : 'positions-stats'}
+    %span#headline= @stats.headline
+    - if @only_position
+      %span#headline_prot
+    %table
+      - @stats.sections[0].each do |line|
+        %tr
+          %td= line.label
+          %td{class: line.class_name}= line.text
+      %tr.spacer
+      - @stats.sections[1].each do |line|
+        %tr
+          %td= line.label
+          %td{class: line.class_name}= line.text
+    - if @stats.link_section
+      .spacer
+      - @stats.link_section.each do |link_line|
+        %div
+          = link_line[:label]
+          - link_line[:links].each do |one_link|
+            .link= one_link
 
 %table.center
   %tr
@@ -65,10 +64,6 @@
     %a{class: 'show-pig', onclick: "rotate_page(-1);"} U'
   .shortcuts
     shortcuts: , . /
-
--if @only_position
-  %div{style: "width: 216px; position: absolute; top:24px; right:-24px;"}
-    = render 'cube_icon', icon: Icons::Big.new(@only_position), size: 192, pad: true, label: '', add_class: 'illustration-icon'
 
 
 =form_tag url_for(controller: "positions", action: "index"), method: 'get', id: 'main-form', enforce_utf8: false do
