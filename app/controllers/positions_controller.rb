@@ -4,12 +4,12 @@ class PositionsController < ApplicationController
 
   PREFS = OpenStruct.new(
       use_combo_set: Rails.env.development?,
-      position_set: Rails.env.development? ? 'eo' : 'all',
   )
 
   # === Routed action ===
   def index
-    @filters = PosFilters.new(params, PREFS.position_set)
+    @position_set = cookies[:zbll] ?  'eo' : 'all'
+    @filters = PosFilters.new(params, @position_set)
     return redirect_to "/?pos=#{@filters.pos_code}&" + non_default_fields.to_query if @filters.reload
 
     take_prefs_from_params = (params.keys.map(&:to_sym) & Fields::ALL_DEFAULTS.keys).present? || params[:change] == 'prefs'
@@ -31,7 +31,7 @@ class PositionsController < ApplicationController
     PosFilters::ALL.each do |f|
       icons = Icons::Base.class_by(f)
       @selected_icons[f] = icons.by_code(@filters[f])
-      @icon_grids[f] = icons::grid(subset: PREFS.position_set, cp: @filters[:cp])
+      @icon_grids[f] = icons::grid(subset: @position_set, cp: @filters[:cp])
     end
 
     @list_items =

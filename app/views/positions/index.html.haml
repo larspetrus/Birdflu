@@ -13,10 +13,15 @@
         = link_to 'Fake Login', fake_wca_login_path
 
 %nav.leftbar
-  .leftitem.clickable= link_to 'Random Position', "positions/#{Position.random_id(PositionsController::PREFS.position_set)}"
+  .leftitem.clickable= link_to 'Random Position', "positions/#{Position.random_id(@position_set)}"
   .leftitem.clickable#about-link About…
   .leftitem
     =render 'find_by_alg'
+  .leftitem.clickable
+    %label
+      = check_box_tag(:zbll, 1, @position_set == 'eo')
+      Lock EO (ZBLL)
+
 
 .rightbar
   -if @only_position
@@ -49,7 +54,7 @@
       %th= header
   %tr#pickers
     = render 'picker_td', prop: :cop, add_class: 'grid-lines'
-    = render 'picker_td', prop: :oll, add_class: 'grid-lines', message: PositionsController::PREFS.position_set == 'eo' ? 'Locked to oriented edges.' : nil
+    = render 'picker_td', prop: :oll, add_class: 'grid-lines', message: @position_set == 'eo' ? 'Locked to oriented edges.' : nil
     %td{style: 'border-right: solid 1px #bbb;'}
     = render 'picker_td', prop: :co
     = render 'picker_td', prop: :cp
@@ -83,10 +88,6 @@
       Show first
       =Fields::LINES.as_tag(@user_prefs)
       algs
-
-      - if PositionsController::PREFS.use_combo_set
-        | cs:
-        =Fields::ALGSET.as_tag(@user_prefs)
 
       .right
         Sort by
@@ -243,6 +244,14 @@
     if (event.keyCode === 47) { rotate_page(+2); } // slash = 47
   });
 
+  $('#zbll').on('click', function() {
+    if ($(this).is(":checked")) {
+      Cookies.set('zbll', 'Yep');
+    } else {
+      Cookies.remove('zbll')
+    }
+    window.location.reload()
+  });
 
 
 - if Rails.env.production?

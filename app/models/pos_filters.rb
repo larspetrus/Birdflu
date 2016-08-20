@@ -13,7 +13,8 @@ class PosFilters
     filters = PosFilters.unpack_pos(params[:pos])
 
     changed, new_value = (params[:change] || ' - ').split('-')
-    if position_set == 'eo'
+    zbll_lock = position_set == 'eo'
+    if zbll_lock
       filters[:eo] = '4'
       changed = '' if changed.to_sym == :eo
     end
@@ -30,16 +31,20 @@ class PosFilters
       filters[:co] = filters[:cp] = nil
       if PosCodes.valid_for(:cop).include?(new_value)
         filters[:co], filters[:cp] = new_value.split('')
-        filters[:eo] = filters[:ep] = ''
+        filters[:eo] = (zbll_lock ? '4' : '')
+        filters[:ep] = ''
       end
     end
 
     # New start with OLL
     if changed == 'oll'
-      filters[:co] = PosCodes.co_by_oll(new_value)
-      filters[:eo] = PosCodes.eo_by_oll(new_value)
+      oll_eo = PosCodes.eo_by_oll(new_value)
+      unless zbll_lock && oll_eo != '4'
+        filters[:co] = PosCodes.co_by_oll(new_value)
+        filters[:eo] = oll_eo
 
-      filters[:cp] = filters[:ep] = '' if new_value.present?
+        filters[:cp] = filters[:ep] = '' if new_value.present?
+      end
     end
 
     # Did EP become incompatible?
