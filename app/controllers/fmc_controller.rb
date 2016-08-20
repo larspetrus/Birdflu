@@ -23,6 +23,11 @@ class FmcController < ApplicationController
   SPLIT_REX = /[\(\)]/
 
   def index
+    @example = params[:example] == '1'
+    if @example
+      params[:s] = 'lublbrqdqruRpnln1rDur'
+      params[:n] = 'pq(pl)Pdf(qpPb)BnRUqrB(bnPURBu)'
+    end
     @scramble  = params[:scramble] || Algs.unpack(params[:s])
     @niss_code = params[:niss] || FmcController.unpack(params[:n])
 

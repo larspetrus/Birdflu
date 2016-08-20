@@ -39,6 +39,21 @@ form#niss-form {
 
   input[type="text"] {
     font-size:9px;
+    margin-right: 12px;
   }
+}
+
+.intro {
+  width: 50%;
+  border-radius: 6px;
+  padding: 6px;
+  margin-top: 10px;
+  font-size: 11px;
+
+  background-color: #eef;
+  border: 1px solid #77f;
+
+  p { margin: 0; }
+  p + p { margin-top: 5px; }
 }
 
