@@ -106,7 +106,10 @@ $left-color: #16A2D7;
     color: #16A2D7;
     border: 1px solid #D7DBDD;
 
-    input[type="text"] { margin-top: 4px; }
+    input[type="text"] {
+      margin-top: 4px;
+      font-size: 9px;
+    }
   }
 
   .clickable {
