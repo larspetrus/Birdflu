@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   get 'positions/:id', to: "positions#show"
   post 'positions/find_by_alg'
 
-  get 'status', to: 'status#index'
+  get 'hemlig', to: 'status#index'
   get 'fmc', to: 'fmc#index'
 
   get "wca_callback" => "oauth#wca"

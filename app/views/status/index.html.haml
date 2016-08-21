@@ -1,14 +1,10 @@
-%h2 Various application stats/diagnostix
+%h4 This is a Lars only page. How did you even find it?
 
-.stat Uptime: #{AlgSetLab.duration_to_s(Time.now - Birdflu::BOOTED_AT)}
-
-.stat Ruby version: #{@ruby_version}
-
-.stat Rails version: #{Rails.version}
+.stat Rails version: #{Rails.version} · Ruby version: #{@ruby_version}
 
 .stat Cache #{number_to_human_size Rails.cache.instance_variable_get('@cache_size')}
 
-.stat PID #{Process.pid}
+.stat PID #{Process.pid} · Uptime: #{AlgSetLab.duration_to_s(Time.now - Birdflu::BOOTED_AT)}
 
 .stat
   %a{href: "https://github.com/larspetrus/Birdflu/commit/#{`git rev-parse HEAD`}"}
@@ -18,4 +14,4 @@
 
 
 :javascript
-  $('body').addClass('status-page');
+  $('body').addClass("#{@body_css}");
