@@ -1,5 +1,7 @@
 %h2 Various application stats/diagnostix
 
+.stat Uptime: #{AlgSetLab.duration_to_s(Time.now - Birdflu::BOOTED_AT)}
+
 .stat Ruby version: #{@ruby_version}
 
 .stat Rails version: #{Rails.version}

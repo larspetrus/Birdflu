@@ -7,6 +7,9 @@ require 'rails/all'
 Bundler.require(*Rails.groups)
 
 module Birdflu
+
+  BOOTED_AT = Time.now
+
   class Application < Rails::Application
 
     config.cache_store = :memory_store
