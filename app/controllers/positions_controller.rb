@@ -127,22 +127,10 @@ class PositionsController < ApplicationController
     vc.link_to(pos.display_name,  "positions/#{pos.id}")
   end
 
-  def store_parameters(cookie_name, defaults, new_data)
-    keys = defaults.keys
-    if new_data.has_key?(keys.first)
-      values = {}
-      keys.each { |k| values[k] = new_data[k] || defaults[k] }
-      cookies[cookie_name] = JSON.generate(values)
-    else
-      values = cookies[cookie_name] ? JSON.parse(cookies[cookie_name], symbolize_names: true) : defaults
-    end
-    values
-  end
-
   def self.store_user_prefs(the_cookies, new_prefs)
     values = {}
     Fields::ALL.each { |field| values[field.name] = field.value(new_prefs) if new_prefs.keys.map(&:to_sym).include?(field.name) }
-    the_cookies[Fields::COOKIE_NAME] = JSON.generate(values)
+    the_cookies.permanent[Fields::COOKIE_NAME] = JSON.generate(values)
   end
 
   def self.read_user_prefs(the_cookies)

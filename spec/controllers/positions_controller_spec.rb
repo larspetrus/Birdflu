@@ -24,16 +24,20 @@ RSpec.describe PositionsController do
     expect(PositionsController.read_user_prefs(invalid_value).to_h).to eq({:list=>"positions", :lines=>"25", :sortby=>"_speed", :algset=>"0"})
   end
 
+  def mockies
+    def (mock_cookies = {}).permanent; self end
+    mock_cookies
+  end
   it 'store_user_prefs' do
     allow(AlgSet).to receive(:predefined) {[101, 102].map{|id| OpenStruct.new(id: id)}} # TODO Ugh... Since there is no way to reset class method stubs, let's stub them all the same for now
 
-    PositionsController.store_user_prefs(cookies = {}, {lines: '50', algset: '101'}.with_indifferent_access)
+    PositionsController.store_user_prefs(cookies = mockies, {lines: '50', algset: '101'}.with_indifferent_access)
     expect(cookies[:field_values]).to eq(JSON.generate({lines: '50', algset: '101'}))
 
-    PositionsController.store_user_prefs(cookies = {}, {'lines' => '50', 'algset' => '101'}.with_indifferent_access)
+    PositionsController.store_user_prefs(cookies = mockies, {'lines' => '50', 'algset' => '101'}.with_indifferent_access)
     expect(cookies[:field_values]).to eq(JSON.generate({lines: '50', algset: '101'}))
 
-    PositionsController.store_user_prefs(cookies = {}, {lines: '25', algset: '102', extra_key: 'Mango'}.with_indifferent_access)
+    PositionsController.store_user_prefs(cookies = mockies, {lines: '25', algset: '102', extra_key: 'Mango'}.with_indifferent_access)
     expect(cookies[:field_values]).to eq(JSON.generate({lines: '25', algset: '102'}))
   end
 

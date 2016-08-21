@@ -247,7 +247,7 @@
 
   $('#zbll').on('click', function() {
     if ($(this).is(":checked")) {
-      Cookies.set('zbll', 'Yep');
+      Cookies.set('zbll', 'Yep', { expires: 3650 });
     } else {
       Cookies.remove('zbll')
     }
