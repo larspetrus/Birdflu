@@ -63,8 +63,6 @@ class PositionsController < ApplicationController
       @list_items += [RawAlg.find(params[:hl_id].to_i)] unless @list_items.map(&:id).include?(@hi_lite)
     end
 
-    @field_defaults = Fields.defaults(Fields::ALL).to_s.gsub(':', '').gsub('=>', ': ')
-
     if session[:wca_login]
       if Time.now.to_i > (session[:wca_login]['expires'] || 0)
         session.delete(:wca_login)

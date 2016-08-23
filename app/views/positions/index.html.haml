@@ -143,7 +143,7 @@
 
   function send_form(prefs_changed) {
     var only_defaults = true;
-    var field_defaults = #{@field_defaults};
+    var field_defaults = #{Fields::JS_DEFAULTS};
 
     for (var prop in field_defaults) {
       if ($('#'+prop).val() === field_defaults[prop]) {

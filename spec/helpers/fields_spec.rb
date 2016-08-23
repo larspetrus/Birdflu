@@ -40,4 +40,8 @@ RSpec.describe 'Fields' do
     expect(Fields.defaults([size, color])).to eq(size: 'S', color: 'Red')
   end
 
+  it 'JS_DEFAULTS' do
+    expect(Fields::JS_DEFAULTS).to eq('{list: "positions", lines: "25", sortby: "_speed", algset: "0"}')
+  end
+
 end

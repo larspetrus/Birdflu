@@ -45,6 +45,8 @@ class Fields
     {}.tap { |result| fields.each { |f| result[f.name] = f.default } }
   end
 
+  JS_DEFAULTS = Fields.defaults(Fields::ALL).to_s.gsub(':', '').gsub('=>', ': ').freeze
+
   ALL_DEFAULTS = Fields.defaults(Fields::ALL).freeze
 
 end
