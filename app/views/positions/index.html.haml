@@ -250,12 +250,14 @@
   });
 
   $('#zbll').on('click', function() {
+    var addon = '';
     if ($(this).is(":checked")) {
       Cookies.set('zbll', 'Yep', { expires: 3650 });
+      addon = '&poschange=eo-4'
     } else {
       Cookies.remove('zbll')
     }
-    window.location.reload()
+    window.location = window.location.search + addon;
   });
 
 

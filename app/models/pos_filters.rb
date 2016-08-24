@@ -14,11 +14,6 @@ class PosFilters
 
     changed, new_value = (params[:poschange] || ' - ').split('-')
 
-    zbll_lock = (position_set == 'eo')
-    if zbll_lock
-      filters[:eo] = '4'
-      changed = '' if changed.to_sym == :eo
-    end
     if ALL.include?(changed.to_sym)
       new_value = PosFilters.random_code(changed, filters, position_set) if new_value == 'random'
       filters[changed.to_sym] = new_value
@@ -29,20 +24,17 @@ class PosFilters
       filters[:co] = filters[:cp] = nil
       if PosCodes.valid_for(:cop).include?(new_value)
         filters[:co], filters[:cp] = new_value.split('')
-        filters[:eo] = (zbll_lock ? '4' : '')
+        filters[:eo] = ((position_set == 'eo') ? '4' : '')
         filters[:ep] = ''
       end
     end
 
     # New start with OLL
     if changed == 'oll'
-      oll_eo = PosCodes.eo_by_oll(new_value)
-      unless zbll_lock && oll_eo != '4'
-        filters[:co] = PosCodes.co_by_oll(new_value)
-        filters[:eo] = oll_eo
+      filters[:co] = PosCodes.co_by_oll(new_value)
+      filters[:eo] = PosCodes.eo_by_oll(new_value)
 
-        filters[:cp] = filters[:ep] = '' if new_value.present?
-      end
+      filters[:cp] = filters[:ep] = '' if new_value.present?
     end
 
     # Did EP become incompatible?
