@@ -72,6 +72,7 @@ describe PosFilters do
     end
 
     it 'restricts to EO' do
+      expect(pos_filters_new({pos:'____'}, 'eo').all).to eq({eo: "4", cop: "", cp: "", co: "", ep: "", oll: ""})
       expect(pos_filters_new({poschange:'cop-bo',pos:'____'}, 'eo').all).to eq({eo: "4", cop: "bo", cp: "o", co: "b", ep: "", oll: "m26"})
     end
   end

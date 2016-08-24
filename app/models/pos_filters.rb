@@ -24,7 +24,7 @@ class PosFilters
       filters[:co] = filters[:cp] = nil
       if PosCodes.valid_for(:cop).include?(new_value)
         filters[:co], filters[:cp] = new_value.split('')
-        filters[:eo] = ((position_set == 'eo') ? '4' : '')
+        filters[:eo] = ''
         filters[:ep] = ''
       end
     end
@@ -43,6 +43,7 @@ class PosFilters
       filters[:ep] = '' unless PosCodes.ep_type_by_cp(filters[:cp]) == ep_case
     end
 
+    filters[:eo] = '4' if position_set == 'eo' && filters[:eo].blank?
     filters[:cop] = "#{filters[:co]}#{filters[:cp]}" if filters[:co].present? && filters[:cp].present?
     filters[:oll] = PosCodes.oll_by_co_eo(filters[:co], filters[:eo])
     ALL.each { |f| filters[f] ||= '' }
