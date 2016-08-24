@@ -8,7 +8,7 @@ describe PosFilters do
 
   describe ".all" do
     it 'does the basics' do
-      parms = {"pos"=>"_b__", "change"=>"cp-b", "list"=>"algs", "lines"=>"25", "algset_id"=>"2", "sortby"=>"length", "controller"=>"positions", "action"=>"index"}
+      parms = {"pos"=>"_b__", "poschange"=>"cp-b", "list"=>"algs", "lines"=>"25", "algset_id"=>"2", "sortby"=>"length", "controller"=>"positions", "action"=>"index"}
       expect(pos_filters_new(parms).all).to eq({oll: "", cop: "", co: "", cp: "b", eo: "", ep: ""})
 
       parms["pos"] ="Fb__"
@@ -24,29 +24,29 @@ describe PosFilters do
     it 'random' do
       allow(PosFilters).to receive(:random_code) {'f'}
 
-      parms = {"pos"=>"", "change"=>"cp-random"}
+      parms = {"pos"=>"", "poschange"=>"cp-random"}
       expect(pos_filters_new(parms).all).to eq({oll: "", cop: "", co: "", cp: "f", eo: "", ep: ""})
     end
 
 
-    it 'change: #cop or #oll resets everything else' do
-      expect(pos_filters_new(change:'cop-Bf', pos:'  4h').all).to eq(
+    it 'poschange: #cop or #oll resets everything else' do
+      expect(pos_filters_new(poschange:'cop-Bf', pos:'  4h').all).to eq(
                                             {cop:'Bf', oll:'',   co:'B',cp:'f',eo:'', ep:''})
-      expect(pos_filters_new(change:'oll-m13', pos:'  4h').all).to eq(
+      expect(pos_filters_new(poschange:'oll-m13', pos:'  4h').all).to eq(
                                             {cop:'', oll:'m13',co:'B',cp:'', eo:'1',ep:''})
       # except when erased
-      expect(pos_filters_new(change:'cop-', pos:'Bf4h').all).to eq(
+      expect(pos_filters_new(poschange:'cop-', pos:'Bf4h').all).to eq(
                                             {cop:'',oll:'',   co:'', cp:'', eo:'4',ep:'h' })
-      expect(pos_filters_new(change:'oll-', pos:'Bb4h').all).to eq(
+      expect(pos_filters_new(poschange:'oll-', pos:'Bb4h').all).to eq(
                                             {cop:'',  oll:'',co:'',cp:'b',eo:'' ,ep:'h'})
     end
 
     it 'computes cop and oll' do
-      expect(pos_filters_new(change:'cp-o',pos:'Ao  ').all).to eq(
+      expect(pos_filters_new(poschange:'cp-o',pos:'Ao  ').all).to eq(
                                            {cop:'Ao',oll:'',co:'A',cp:'o',eo:'',ep:''})
-      expect(pos_filters_new(change:'eo-4',pos:'G 4').all).to eq(
+      expect(pos_filters_new(poschange:'eo-4',pos:'G 4').all).to eq(
                                            {cop:'',oll:'m22',co:'G',cp:'',eo:'4',ep:''})
-      expect(pos_filters_new(change:'co-G',pos:'Go8').all).to eq(
+      expect(pos_filters_new(poschange:'co-G',pos:'Go8').all).to eq(
                                            {cop:'Go',oll:'m47',co:'G',cp:'o',eo:'8',ep:''})
 
       expect(pos_filters_new(pos:'bf4j').all).to eq(
@@ -54,13 +54,13 @@ describe PosFilters do
     end
     
     it 'wtf' do
-      expect(pos_filters_new("pos"=>"Ab__", "change"=>"eo-6").all).to eq(co: "A", cp: "b", cop: "Ab", oll: "m28", eo: "6", ep: "")
+      expect(pos_filters_new("pos"=>"Ab__", "poschange"=>"eo-6").all).to eq(co: "A", cp: "b", cop: "Ab", oll: "m28", eo: "6", ep: "")
     end
 
     it 'removes incompatible ep (when needed)' do
-      expect(pos_filters_new(change:'cp-r',pos:'Dr8E').all).to eq(
+      expect(pos_filters_new(poschange:'cp-r',pos:'Dr8E').all).to eq(
                                            {cop:'Dr',oll:'m42',co:'D',cp:'r',eo:'8',ep:''})
-      expect(pos_filters_new(change:'cp-',pos:'B 0C').all).to eq(
+      expect(pos_filters_new(poschange:'cp-',pos:'B 0C').all).to eq(
                                             {cop: '',  oll:'m3',co:'B',cp:'',eo:'0',ep:'C'})
     end
 
@@ -74,9 +74,9 @@ describe PosFilters do
     it 'restricts to EO' do
       expect(pos_filters_new({}, 'eo').all).to        eq({cop:'',oll:'',co:'',cp:'',eo:'4',ep:''})
       expect(pos_filters_new({eo: '2'}, 'eo').all).to eq({cop:'',oll:'',co:'',cp:'',eo:'4',ep:''})
-      expect(pos_filters_new({change:'eo-1',pos:'G_4_'}, 'eo').all).to eq({cop:'',oll:'m22',co:'G',cp:'',eo:'4',ep:''})
-      expect(pos_filters_new({change:'cop-bo',pos:'____'}, 'eo').all).to eq({eo: "4", cop: "bo", cp: "o", co: "b", ep: "", oll: "m26"})
-      expect(pos_filters_new({change:'oll-m40',pos:'__4_'}, 'eo').all).to eq({eo: "4", cop: "", cp: "", co: "", ep: "", oll: ""})
+      expect(pos_filters_new({poschange:'eo-1',pos:'G_4_'}, 'eo').all).to eq({cop:'',oll:'m22',co:'G',cp:'',eo:'4',ep:''})
+      expect(pos_filters_new({poschange:'cop-bo',pos:'____'}, 'eo').all).to eq({eo: "4", cop: "bo", cp: "o", co: "b", ep: "", oll: "m26"})
+      expect(pos_filters_new({poschange:'oll-m40',pos:'__4_'}, 'eo').all).to eq({eo: "4", cop: "", cp: "", co: "", ep: "", oll: ""})
     end
   end
 
@@ -90,17 +90,6 @@ describe PosFilters do
     expect(pos_filters_new(pos:'Bf4h').pos_code).to eq('Bf4h')
     expect(pos_filters_new(pos:'B 0 ').pos_code).to eq('B_0_')
     expect(pos_filters_new(pos:'    ').pos_code).to eq('____')
-  end
-
-  it '.url' do
-    expect(pos_filters_new(pos:'Bf4h').url).to eq('co=B&cp=f&eo=4&ep=h')
-    expect(pos_filters_new(pos:'B 0 ').url).to eq('co=B&eo=0')
-    expect(pos_filters_new(pos:'    ').url).to eq('')
-  end
-
-  it 'reload' do
-    expect(pos_filters_new(pos:'Ao  ').reload).to_not eq(true)
-    expect(pos_filters_new(pos:'Ao  ', change: 'cop-random').reload).to eq(true)
   end
 
   it 'all_set' do

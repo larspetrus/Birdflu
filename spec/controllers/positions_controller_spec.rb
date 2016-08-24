@@ -92,4 +92,16 @@ RSpec.describe PositionsController do
       expect(response.code).to eq("200")
     end
   end
+
+  it 'bookmark_url' do
+    simple_filter = PosFilters.new({pos: 'Bf__'}, 'all')
+    expect(PositionsController.bookmark_url(simple_filter, {})).to eq('?pos=Bf__')
+
+    filter_with_change = PosFilters.new({pos: 'Bf__', poschange: 'eo-2'}, 'all')
+    expect(PositionsController.bookmark_url(filter_with_change, {})).to eq('?pos=Bf2_')
+
+    complex_params = __getobj__ = ActionController::Parameters.new({pos: 'xyz', poschange: 'xy-z', prot: '1', foo: 'bar'})
+    expect(PositionsController.bookmark_url(simple_filter, complex_params)).to eq('?pos=Bf__&foo=bar&prot=1')
+  end
+  
 end

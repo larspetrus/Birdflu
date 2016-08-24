@@ -7,22 +7,20 @@ class PosFilters
   DERIVED = [:cop, :oll]
   ALL = DERIVED + BASE
 
-  attr_reader :all, :where, :reload
+  attr_reader :all, :where
 
   def initialize(params, position_set)
     filters = PosFilters.unpack_pos(params[:pos])
 
-    changed, new_value = (params[:change] || ' - ').split('-')
-    zbll_lock = position_set == 'eo'
+    changed, new_value = (params[:poschange] || ' - ').split('-')
+
+    zbll_lock = (position_set == 'eo')
     if zbll_lock
       filters[:eo] = '4'
       changed = '' if changed.to_sym == :eo
     end
     if ALL.include?(changed.to_sym)
-      if new_value == 'random'
-        @reload = true
-        new_value = PosFilters.random_code(changed, filters, position_set)
-      end
+      new_value = PosFilters.random_code(changed, filters, position_set) if new_value == 'random'
       filters[changed.to_sym] = new_value
     end
 
@@ -68,10 +66,6 @@ class PosFilters
       result[code] = pos[i] if PosCodes.valid_for(code).include?(pos[i])
     end
     result
-  end
-
-  def url
-    @url ||= @where.keys.map{|k| "#{k}=#{@where[k]}"}.join('&')
   end
 
   def pos_code

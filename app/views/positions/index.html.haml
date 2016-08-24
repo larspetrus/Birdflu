@@ -1,3 +1,6 @@
+:javascript
+  history.replaceState('', '', '#{@bookmark_url}');
+
 .menurow{style: 'float: right;'}
   - if @login_name
     .menuitem
@@ -74,7 +77,8 @@
 
 =form_tag url_for(controller: "positions", action: "index"), method: 'get', id: 'main-form', enforce_utf8: false do
   =hidden_field_tag(:pos, @filters.pos_code)
-  =hidden_field_tag(:change)
+  =hidden_field_tag(:poschange)
+  =hidden_field_tag(:udf)
 
   .page-controls
     - unless @only_position
@@ -129,11 +133,12 @@
 
 :javascript
   $('.pick-icon, .random, .unselect').on('click', function() {
-    $('#change').val($(this).data('field').replace('#','') + '-' + $(this).data('code'));
+    $('#poschange').val($(this).data('field').replace('#','') + '-' + $(this).data('code'));
     send_form(false);
   });
 
   $('#{Fields::JQ_SELECTOR}').change(function() {
+    $('#poschange').prop('disabled', true);
     send_form(true);
   });
 
@@ -141,24 +146,23 @@
     window.location.href = '/positions/' + $(event.target).text() + '?hl_name=' + $(event.target).text();
   });
 
-  function send_form(prefs_changed) {
-    var only_defaults = true;
+  function send_form(new_prefs) {
+    var all_defaults = true;
     var field_defaults = #{Fields::JS_DEFAULTS};
 
     for (var prop in field_defaults) {
-      if ($('#'+prop).val() === field_defaults[prop]) {
-        $('#'+prop).attr("disabled", "disabled");
+      var elm = $('#'+prop)
+      if (elm.val() === field_defaults[prop]) {
+        elm.prop('disabled', true);
       } else {
-        only_defaults = false;
+        if (elm.val()) {
+          all_defaults = false
+        }
       }
     }
 
-    if (prefs_changed) {
-      if (only_defaults) {
-        $('#change').val('prefs')
-      } else {
-        $('#change').attr("disabled", "disabled");
-      }
+    if (!(new_prefs && all_defaults)) {
+      $('#udf').prop('disabled', true);
     }
 
     $('form#main-form').submit();

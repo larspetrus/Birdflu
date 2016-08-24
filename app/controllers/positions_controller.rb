@@ -10,9 +10,9 @@ class PositionsController < ApplicationController
   def index
     @position_set = cookies[:zbll] ?  'eo' : 'all'
     @filters = PosFilters.new(params, @position_set)
-    return redirect_to "/?pos=#{@filters.pos_code}&" + non_default_fields.to_query if @filters.reload
+    @bookmark_url = PositionsController.bookmark_url(@filters, request.query_parameters)
 
-    take_prefs_from_params = (params.keys.map(&:to_sym) & Fields::ALL_DEFAULTS.keys).present? || params[:change] == 'prefs'
+    take_prefs_from_params = (params.keys.map(&:to_sym) & Fields::ALL_DEFAULTS.keys).present? || params[:udf].present?
     if take_prefs_from_params
       PositionsController.store_user_prefs(cookies, params)
     end
@@ -136,6 +136,11 @@ class PositionsController < ApplicationController
     OpenStruct.new(Fields.values(from_cookies))
   rescue
     OpenStruct.new(Fields::ALL_DEFAULTS)
+  end
+
+  def self.bookmark_url(filters, all_params)
+    tail = all_params.except(:pos, :poschange).to_query
+    "?pos=#{filters.pos_code}" + (tail.present? ? '&' + tail : '')
   end
 
   def vc
