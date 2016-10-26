@@ -35,7 +35,7 @@ $optimal_color: #69f;
 .optimal { color: $optimal_color; }
 
 .algs-list, .positions-list {
-  font-size: 12px;
+  font-size: 40px;
 
   margin: 0 auto;
   border-collapse: collapse;
@@ -68,10 +68,27 @@ $optimal_color: #69f;
   tfoot { text-align: center; font-size: 10px; }
 
   td { padding: 0 2px; }
-  td:nth-last-child(4) { text-align: right; }
+  td:nth-last-child(4) { text-align: right; } // move count
   td:nth-last-child(3) { color: $optimal_color; text-align: right; }
   td:nth-last-child(1), th:nth-last-child(1), th:nth-last-child(2) { border-left: none; }
 }
+
+@mixin list-size($text-size, $button-size, $icon-size) {
+  font-size: $text-size;
+  .show-pig { font-size: $button-size; }
+  .pick-icon { height: $icon-size; width: $icon-size; }
+}
+
+.size-l    { @include list-size(14px, 12px, 25px) }
+.size-l-wc { @include list-size(16px, 13px, 25px) }
+
+.size-m    { @include list-size(12px,  9px, 22px) }
+.size-m-wc { @include list-size(14px, 10px, 22px) }
+
+.size-s    { @include list-size(10px,  8px, 20px) }
+.size-s-wc { @include list-size(12px,  9px, 20px) }
+
+
 .positions-stats { background-color: #f0f8f0; }
 
 .rp-dialog {
@@ -134,19 +151,19 @@ $left-color: #16A2D7;
   padding: 5px;
 }
 
-.menurow {
-  display: flex;
-  align-items: center;
+.login {
+  position: absolute;
+  top:10px;
+  right:10px;
 
   font-size: 12px;
-  padding: 3px 14px;
   font-weight: bold;
-  div {
-    margin: 0 7px;
+  .logout {
+    font-size: 60%;
   }
 }
 
-.menuitem, .stats-box {
+.login, .stats-box {
   a {
     color: black;
     text-shadow: 2px 2px 5px orange;
@@ -157,8 +174,6 @@ $left-color: #16A2D7;
   a:visited { }
   a:hover { text-shadow: 2px 2px 5px red; }
   a:active {color: white; text-shadow: 0px 0px 5px #000, 0 0 8px #00F; }
-
-//  input { background-color: #fc7; }
 }
 
 #about-link {

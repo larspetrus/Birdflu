@@ -1,8 +1,7 @@
-.menuitem
-  =form_tag url_for(controller: 'positions', action: 'find_by_alg'), method: 'post', id: 'find_by_alg', remote: true, enforce_utf8: false do
-    Find by Alg:
-    =text_field_tag "alg", nil, placeholder: 'BRDFLU or alg name', size: 24
-    #find_by_alg_msg{style: "padding: 10px; display:none;"}
+=form_tag url_for(controller: 'positions', action: 'find_by_alg'), method: 'post', id: 'find_by_alg', remote: true, enforce_utf8: false do
+  Find by Alg:
+  =text_field_tag "alg", nil, placeholder: 'BRDFLU or alg name', size: 24
+  #find_by_alg_msg{style: "padding: 10px; display:none;"}
 
 :javascript
   $('#find_by_alg').on('ajax:success', function(e, data, status, xhr) {

@@ -34,6 +34,8 @@ class PositionsController < ApplicationController
       @icon_grids[f] = icons::grid(subset: @position_set, cp: @filters[:cp])
     end
 
+    @list_classes = PositionsController.table_class(@algs_mode, 'm', @selected_icons)
+
     @list_items =
         if @algs_mode
           if PREFS.use_combo_set && @only_position && alg_set = AlgSet.find_by_id(@user_prefs.algset.to_i)
@@ -50,7 +52,7 @@ class PositionsController < ApplicationController
           @positions.first(limit)
         end
 
-    @svg_ids = Set.new
+    @rendered_svg_ids = Set.new
     @columns = @algs_mode ? make_alg_columns : make_pos_columns
     @page_rotation = (params[:prot] || 0).to_i
 
@@ -141,6 +143,13 @@ class PositionsController < ApplicationController
   def self.bookmark_url(filters, all_params)
     tail = all_params.except(:pos, :poschange).to_query
     "?pos=#{filters.pos_code}" + (tail.present? ? '&' + tail : '')
+  end
+
+  def self.table_class(algs_mode, size, selected_icons)
+    base = algs_mode ? 'algs-list' : 'positions-list'
+    has_cubes = selected_icons[:cop].is_none || selected_icons[:eo].is_none || selected_icons[:ep].is_none
+    with_cubes = (has_cubes ? '-wc' : '')
+    "#{base} size-#{size}#{with_cubes}"
   end
 
   def vc

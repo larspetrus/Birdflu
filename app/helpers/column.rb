@@ -74,15 +74,15 @@ class PositionColumns
   end
 
   def cop
-    { icon: Icons::Cop.for(@position), size: 22, label: ''}
+    { icon: Icons::Cop.for(@position), label: ''}
   end
 
   def eo
-    { icon: Icons::Eo.for(@position), size: 22, label: ''}
+    { icon: Icons::Eo.for(@position), label: ''}
   end
 
   def ep
-    { icon: Icons::Ep.for(@position), size: 22, label: ''}
+    { icon: Icons::Ep.for(@position), label: ''}
   end
 end
 

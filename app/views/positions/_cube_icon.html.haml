@@ -1,13 +1,15 @@
-- size ||= 100
 - pad ||= false
 - label ||= icon.name
 - selected_icon ||= nil
 - locked ||= false
+- size ||= nil
+- size_style = (size ? "width: #{size}px;" : nil)
+- label_style = (size ? "font-size: #{size*0.21}px;" : nil)
 
-%div{data: { code: "#{icon.code}", field: "#{icon.field}" }, style: "width: #{size}px;", class: icon.css_classes(selected_icon, locked)}
+%div{data: { code: "#{icon.code}", field: "#{icon.field}" }, style: size_style, class: icon.css_classes(selected_icon, locked)}
   - if label.present?
-    .name{style: "font-size: #{size*0.21}px;"}= label
-  - unrendered = @svg_ids.add?(icon.id)
+    .name{style: label_style}= label
+  - unrendered = @rendered_svg_ids.add?(icon.id)
   - cache([icon.id, unrendered ? "T" : "F"], skip_digest: true) do
     %svg{Icons::Geometry.box_dimension(pad)}
       - if icon.is_illustration?
