@@ -6,22 +6,22 @@ RSpec.describe PositionsController do
     allow(AlgSet).to receive(:predefined) {[101, 102].map{|id| OpenStruct.new(id: id)}} # TODO Ugh... Since there is no way to reset class method stubs, let's stub them all the same for now
 
     missing_cookie = {}
-    expect(PositionsController.read_user_prefs(missing_cookie).to_h).to eq(Fields::ALL_DEFAULTS)
+    expect(PositionsController.read_list_format(missing_cookie).to_h).to eq(Fields::ALL_DEFAULTS)
 
     invalid_cookie = {field_values: ''}
-    expect(PositionsController.read_user_prefs(invalid_cookie).to_h).to eq(Fields::ALL_DEFAULTS)
+    expect(PositionsController.read_list_format(invalid_cookie).to_h).to eq(Fields::ALL_DEFAULTS)
 
-    fully_defined = {field_values: JSON.generate({:list=>"algs", :lines=>"100", :sortby=>"length", :algset=>"101"})}
-    expect(PositionsController.read_user_prefs(fully_defined).to_h).to eq({:list=>"algs", :lines=>"100", :sortby=>"length", :algset=>"101"})
+    fully_defined = {field_values: JSON.generate(list: "algs", lines: "100", sortby: "length", algset: "101")}
+    expect(PositionsController.read_list_format(fully_defined).to_h).to eq(:list=>"algs", :lines=>"100", :sortby=>"length", :algset=>"101")
 
-    partially_defined = {field_values: JSON.generate({:algset=>"101"})}
-    expect(PositionsController.read_user_prefs(partially_defined).to_h).to eq({:list=>"positions", :lines=>"25", :sortby=>"_speed", :algset=>"101"})
+    partially_defined = {field_values: JSON.generate(algset: "101")}
+    expect(PositionsController.read_list_format(partially_defined).to_h).to eq(:list=>"positions", :lines=>"25", :sortby=>"_speed", :algset=>"101")
 
-    obsolete_property = {field_values: JSON.generate({:algset=>"102", extra_key: 'Sparta!'})}
-    expect(PositionsController.read_user_prefs(obsolete_property).to_h).to eq({:list=>"positions", :lines=>"25", :sortby=>"_speed", :algset=>"102"})
+    obsolete_property = {field_values: JSON.generate(algset: "102", extra_key: 'Sparta!')}
+    expect(PositionsController.read_list_format(obsolete_property).to_h).to eq(:list=>"positions", :lines=>"25", :sortby=>"_speed", :algset=>"102")
 
-    invalid_value = {field_values: JSON.generate({:lines=>"37"})}
-    expect(PositionsController.read_user_prefs(invalid_value).to_h).to eq({:list=>"positions", :lines=>"25", :sortby=>"_speed", :algset=>"0"})
+    invalid_value = {field_values: JSON.generate(lines: "37")}
+    expect(PositionsController.read_list_format(invalid_value).to_h).to eq(:list=>"positions", :lines=>"25", :sortby=>"_speed", :algset=>"0")
   end
 
   def mockies
@@ -31,14 +31,14 @@ RSpec.describe PositionsController do
   it 'store_user_prefs' do
     allow(AlgSet).to receive(:predefined) {[101, 102].map{|id| OpenStruct.new(id: id)}} # TODO Ugh... Since there is no way to reset class method stubs, let's stub them all the same for now
 
-    PositionsController.store_user_prefs(cookies = mockies, {lines: '50', algset: '101'}.with_indifferent_access)
-    expect(cookies[:field_values]).to eq(JSON.generate({lines: '50', algset: '101'}))
+    PositionsController.store_list_format(cookies = mockies, {lines: '50', algset: '101'}.with_indifferent_access)
+    expect(cookies[:field_values]).to eq(JSON.generate(lines: '50', algset: '101'))
 
-    PositionsController.store_user_prefs(cookies = mockies, {'lines' => '50', 'algset' => '101'}.with_indifferent_access)
-    expect(cookies[:field_values]).to eq(JSON.generate({lines: '50', algset: '101'}))
+    PositionsController.store_list_format(cookies = mockies, {'lines' => '50', 'algset' => '101'}.with_indifferent_access)
+    expect(cookies[:field_values]).to eq(JSON.generate(lines: '50', algset: '101'))
 
-    PositionsController.store_user_prefs(cookies = mockies, {lines: '25', algset: '102', extra_key: 'Mango'}.with_indifferent_access)
-    expect(cookies[:field_values]).to eq(JSON.generate({lines: '25', algset: '102'}))
+    PositionsController.store_list_format(cookies = mockies, {lines: '25', algset: '102', extra_key: 'Mango'}.with_indifferent_access)
+    expect(cookies[:field_values]).to eq(JSON.generate(lines: '25', algset: '102'))
   end
 
   describe "POST find_by_alg" do
@@ -100,7 +100,7 @@ RSpec.describe PositionsController do
     filter_with_change = PosFilters.new({pos: 'Bf__', poschange: 'eo-2'}, 'all')
     expect(PositionsController.bookmark_url(filter_with_change, {})).to eq('?pos=Bf2_')
 
-    complex_params = __getobj__ = ActionController::Parameters.new({pos: 'xyz', poschange: 'xy-z', prot: '1', foo: 'bar'})
+    complex_params = ActionController::Parameters.new(pos: 'xyz', poschange: 'xy-z', prot: '1', foo: 'bar')
     expect(PositionsController.bookmark_url(simple_filter, complex_params)).to eq('?pos=Bf__&foo=bar&prot=1')
   end
   

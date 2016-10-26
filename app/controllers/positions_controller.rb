@@ -12,13 +12,13 @@ class PositionsController < ApplicationController
     @filters = PosFilters.new(params, @position_set)
     @bookmark_url = PositionsController.bookmark_url(@filters, request.query_parameters)
 
-    take_prefs_from_params = (params.keys.map(&:to_sym) & Fields::ALL_DEFAULTS.keys).present? || params[:udf].present?
+    take_prefs_from_params = (params.keys.map(&:to_sym) & Fields::ALL_DEFAULTS.keys).present? || !params[:udf].nil?
     if take_prefs_from_params
-      PositionsController.store_user_prefs(cookies, params)
+      PositionsController.store_list_format(cookies, params)
     end
-    @user_prefs = PositionsController.read_user_prefs(cookies)
+    @list_format = PositionsController.read_list_format(cookies)
 
-    @algs_mode = (@user_prefs.list == 'algs') || @filters.all_set
+    @algs_mode = (@list_format.list == 'algs') || @filters.all_set
 
     query_includes = @algs_mode ? :stats : [:stats, :best_alg]
     @positions = Position.where(@filters.where).order(:optimal_alg_length, :cop, :eo, :ep).includes(query_includes).to_a
@@ -34,15 +34,15 @@ class PositionsController < ApplicationController
       @icon_grids[f] = icons::grid(subset: @position_set, cp: @filters[:cp])
     end
 
-    @list_classes = PositionsController.table_class(@algs_mode, 'm', @selected_icons)
+    @list_classes = PositionsController.table_class(@algs_mode, 'l', @selected_icons)
 
     @list_items =
         if @algs_mode
-          if PREFS.use_combo_set && @only_position && alg_set = AlgSet.find_by_id(@user_prefs.algset.to_i)
-            raw_algs = @only_position.algs_in_set(alg_set, sortby: @user_prefs.sortby, limit: @user_prefs.lines.to_i)
+          if PREFS.use_combo_set && @only_position && alg_set = AlgSet.find_by_id(@list_format.algset.to_i)
+            raw_algs = @only_position.algs_in_set(alg_set, sortby: @list_format.sortby, limit: @list_format.lines.to_i)
             raw_algs.map { |alg| [alg] + alg.combo_algs_in(alg_set) }.reduce(:+)
           else
-            RawAlg.where(position_id: @positions.map(&:main_position_id)).includes(:position).order(@user_prefs.sortby).limit(@user_prefs.lines.to_i).to_a
+            RawAlg.where(position_id: @positions.map(&:main_position_id)).includes(:position).order(@list_format.sortby).limit(@list_format.lines.to_i).to_a
           end
         else
           limit = 100
@@ -75,7 +75,7 @@ class PositionsController < ApplicationController
   end
 
   def make_alg_columns
-    columns = [Column::SPEED, Column::LENGTH].rotate(@user_prefs.sortby == '_speed' ? 0 : 1)
+    columns = [Column::SPEED, Column::LENGTH].rotate(@list_format.sortby == '_speed' ? 0 : 1)
     columns << Column::NAME
     columns << Column::POSITION unless @only_position
     columns << Column::COP if @selected_icons[:cop].is_none
@@ -127,13 +127,13 @@ class PositionsController < ApplicationController
     vc.link_to(pos.display_name,  "positions/#{pos.id}")
   end
 
-  def self.store_user_prefs(the_cookies, new_prefs)
+  def self.store_list_format(the_cookies, new_prefs)
     values = {}
     Fields::ALL.each { |field| values[field.name] = field.value(new_prefs) if new_prefs.keys.map(&:to_sym).include?(field.name) }
     the_cookies.permanent[Fields::COOKIE_NAME] = JSON.generate(values)
   end
 
-  def self.read_user_prefs(the_cookies)
+  def self.read_list_format(the_cookies)
     from_cookies = the_cookies[Fields::COOKIE_NAME] ? JSON.parse(the_cookies[:field_values], symbolize_names: true) : {}
     OpenStruct.new(Fields.values(from_cookies))
   rescue
@@ -174,7 +174,7 @@ class PositionsController < ApplicationController
   end
 
   def non_default_fields
-    user_prefs = PositionsController.read_user_prefs(params).to_h
+    user_prefs = PositionsController.read_list_format(params).to_h
     user_prefs.reject {|k,v| Fields::ALL_DEFAULTS[k] == v }
   end
 
