@@ -35,7 +35,6 @@ $optimal_color: #69f;
 .optimal { color: $optimal_color; }
 
 .algs-list, .positions-list {
-  font-size: 40px;
 
   margin: 0 auto;
   border-collapse: collapse;
@@ -138,6 +137,62 @@ $left-color: #16A2D7;
     &:active {color: white; text-shadow: 0px 0px 5px #000, 0 0 8px #00F; }
   }
 }
+
+.list-size__select{
+  font-size: inherit;
+  margin: 0;
+  background-color: inherit;
+  color: inherit;
+}
+@supports (pointer-events: none) and
+    ((-webkit-appearance: none) or (-moz-appearance: none) or (appearance: none)) {
+
+  .list-size {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .list-size__select {
+    padding-right: 2.5em; /* accommodate with the pseudo elements for the dropdown arrow */
+    border: 0;
+    border-radius: 3px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+
+  .list-size::before,
+  .list-size::after {
+    content: "";
+    position: absolute;
+    pointer-events: none;
+  }
+
+  .list-size::after { /*  Custom dropdown arrow */
+    content: "\25BC";
+    height: 1em;
+    font-size: .625em;
+    line-height: 1;
+    right: 1.2em;
+    top: 50%;
+    margin-top: -.5em;
+    color: #37f;
+  }
+
+  .list-size::before { /*  Custom dropdown arrow cover */
+    width: 2em;
+    right: 0; top: 0; bottom: 0;
+    border-radius: 0 3px 3px 0;
+    background-color: #ddd;
+  }
+
+  /* FF only temp fix */
+  @-moz-document url-prefix() {
+    .list-size__select { padding-right: .9em }
+  }
+}
+
 
 .rightbar {
   position: absolute;
@@ -497,4 +552,3 @@ $shadow: #ffffff;
   position: relative;
   top: 2px;
 }
-

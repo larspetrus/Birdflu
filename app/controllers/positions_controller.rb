@@ -34,7 +34,8 @@ class PositionsController < ApplicationController
       @icon_grids[f] = icons::grid(subset: @position_set, cp: @filters[:cp])
     end
 
-    @list_classes = PositionsController.table_class(@algs_mode, 'l', @selected_icons)
+    @text_size = cookies[:size] || 'm'
+    @list_classes = PositionsController.table_class(@algs_mode, @text_size, @selected_icons)
 
     @list_items =
         if @algs_mode
