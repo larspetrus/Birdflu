@@ -7,7 +7,7 @@ RSpec.describe Icons::Base do
     
     expect(icon.css_classes('blah', false)).to eq('pick-icon')
     expect(icon.css_classes(icon.name, false)).to eq('pick-icon selected')
-    expect(icon.css_classes(icon.name, true)).to eq('locked-icon')
+    expect(icon.css_classes(icon.name, true)).to eq('locked-pick-icon')
 
     none_icon = Icons::Eo.by_code(:'')
     expect(none_icon.css_classes(none_icon.name)).to eq('pick-icon')

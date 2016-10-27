@@ -42,7 +42,7 @@ class Icons::Base
   end
 
   def css_classes(selected_code, locked = false)
-    return 'locked-icon' if locked
+    return 'locked-pick-icon' if locked
     highlight = (selected_code&.to_sym == @code) && !@is_none
     highlight ? 'pick-icon selected' : 'pick-icon'
   end

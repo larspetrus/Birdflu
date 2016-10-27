@@ -4,6 +4,6 @@ RSpec.describe Icons::Big do
 
   it 'css_classes' do
     big_icon = Icons::Big.new(Position.find(666))
-    expect(big_icon.css_classes('xyz', false)).to eq('illustration-icon')
+    expect(big_icon.css_classes('xyz', false)).to eq('pretty-icon')
   end
 end

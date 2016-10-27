@@ -267,11 +267,16 @@ $left-color: #16A2D7;
 }
 
 // --- SVG ---
-.pick-icon  {
+.pick-icon, .locked-pick-icon {
+  width: 45px;
+  height: 59px;
+  font-size: 9.45px;
   .name {
     font-weight: bold;
     text-align: center;
   }
+}
+.pick-icon  {
   &:hover {
     background-color:#bbb;
     .name {
@@ -280,19 +285,18 @@ $left-color: #16A2D7;
     }
   }
 }
-.selected {
-  .name { background-color: #aff; }
-}
-.locked-icon {
+.locked-pick-icon {
   .name {
-    font-weight: bold;
-    text-align: center;
-
     background-color: #ccc;
   }
   background-color: #ddd;
 }
-.illustration-icon  svg {
+.selected {
+  .name { background-color: #aff; }
+}
+.pretty-icon svg {
+  width:  192px;
+  height: 195px;
   path.e_arrow {
     fill-opacity: 0.7;
   }

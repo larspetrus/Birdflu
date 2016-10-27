@@ -27,6 +27,6 @@ class Icons::Big
   end
 
   def css_classes(selected_name, locked)
-    'illustration-icon'
+    'pretty-icon'
   end
 end

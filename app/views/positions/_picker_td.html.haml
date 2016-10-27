@@ -3,10 +3,9 @@
 - message ||= nil
 - icon = @selected_icons[prop]
 
-- icon_size = 45
 %td
   .selected-icon{data: {prop: prop}}
-    = render 'cube_icon', icon: icon, size: icon_size, selected_icon: @filters[prop], locked: @icon_grids[prop].blank?
+    = render 'cube_icon', icon: icon, selected_icon: @filters[prop], locked: @icon_grids[prop].blank?
 
   - if @icon_grids[prop]
     %div{id: "#{prop}-picker", class: 'hidden-picker'}
@@ -18,7 +17,7 @@
           %tr
             - icon_row.each do |icon|
               %td
-                = render 'cube_icon', icon: icon, size: icon_size, selected_icon: @filters[prop] if icon
+                = render 'cube_icon', icon: icon, selected_icon: @filters[prop] if icon
         - if message
           .message
             =message
