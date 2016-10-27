@@ -101,7 +101,8 @@ class PositionsController < ApplicationController
         OpenStruct.new(label: 'Shortest', text: data.shortest, class_name: 'optimal'),
         OpenStruct.new(label: 'Fastest',  text: '%.2f' % data.fastest,  class_name: 'optimal'),
     ]
-    result.sections << data.raw_counts.keys.sort.map do |length|
+    fully_populated_lengths = data.raw_counts.keys.reject{ |len| len > RawAlg::DB_COMPLETENESS_LENGTH }.sort
+    result.sections << fully_populated_lengths.map do |length|
       OpenStruct.new(label: "#{length} moves", text: vc.pluralize(data.raw_counts[length], 'alg'))
     end
 

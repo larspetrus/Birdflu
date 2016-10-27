@@ -14,6 +14,7 @@ class RawAlg < ActiveRecord::Base
   end
 
   NOTHING_ID = 1
+  DB_COMPLETENESS_LENGTH = 17
 
   def self.make(alg, length = 1)
     std_alg = Algs.display_variant(alg)
@@ -121,16 +122,19 @@ class RawAlg < ActiveRecord::Base
   end
 
   def self.id_ranges
-    if @id_ranges.nil? && RawAlg.maximum(:id) == 46321380
+    if @id_ranges.nil? && RawAlg.maximum(:id) == 46_321_380
       puts "@id_ranges SHORTCUT"
-      @id_ranges = [2, 6, 16, 54, 198, 904, 3502, 15340, 70522, 347930, 1666938, 8569752, 43463107, 43524744, 43525777]
+      @id_ranges = [2, 6, 16, 54, 198, 904, 3502, 15340, 70522, 347_930, 1666_938, 8569_752, 43463_107, 43524_744, 43525_777]
     end
     @id_ranges ||= (6..RawAlg.maximum(:length)).map{ |l| RawAlg.where(length: l).minimum(:id) }
   end
 
   def self.name_for(db_id, ranges = self.id_ranges)
     lower = ranges.select{|r| r <= db_id }
-    lower.present? ? "#{('E'.ord + lower.count).chr}#{db_id + 1 - lower.last}" : 'Nothing'
+    return "Nothing" unless lower.present?
+    return "" if lower.count + 5 > DB_COMPLETENESS_LENGTH
+
+    "#{('E'.ord + lower.count).chr}#{db_id + 1 - lower.last}"
   end
 
   def self.id(name, ranges = self.id_ranges)
