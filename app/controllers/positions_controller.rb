@@ -39,7 +39,8 @@ class PositionsController < ApplicationController
 
     @list_items =
         if @algs_mode
-          if PREFS.use_combo_set && @only_position && alg_set = AlgSet.find_by_id(@list_format.algset.to_i)
+          alg_set = AlgSet.find_by_id(@list_format.algset.to_i)
+          if PREFS.use_combo_set && @only_position && alg_set && (@only_position.eo == '4' || alg_set.subset == 'all')
             raw_algs = @only_position.algs_in_set(alg_set, sortby: @list_format.sortby, limit: @list_format.lines.to_i)
             raw_algs.map { |alg| [alg] + alg.combo_algs_in(alg_set) }.reduce(:+)
           else
@@ -104,8 +105,7 @@ class PositionsController < ApplicationController
     fully_populated_lengths = data.raw_counts.keys.reject{ |len| len > RawAlg::DB_COMPLETENESS_LENGTH }.sort
     result.sections << fully_populated_lengths.map do |length|
       count = data.raw_counts[length]
-      OpenStruct.new(label: "#{length} moves",
-                     text: vc.number_with_delimiter(count, delimiter: "\u2009") + ' alg' + (count == 1 ? '' : 's'))
+      OpenStruct.new(label: "#{length} moves", text: vc.spaced_number(count) + ' alg' + (count == 1 ? '' : 's'))
     end
 
     if single_pos
@@ -156,7 +156,7 @@ class PositionsController < ApplicationController
     "#{base} size-#{size}#{with_cubes}"
   end
 
-  def vc
+  def vc # access helpers
     view_context
   end
 

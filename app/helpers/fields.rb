@@ -17,8 +17,8 @@ class Fields
       @values.include?(parameters[@name]) ? parameters[@name] : @default
     end
 
-    def as_tag(parameters)
-      hlp.select_tag(@name, hlp.options_for_select(@options, selected: value(parameters)))
+    def as_tag(parameters, options = {})
+      hlp.select_tag(@name, hlp.options_for_select(@options, selected: value(parameters)), options)
     end
 
     def as_css_id
