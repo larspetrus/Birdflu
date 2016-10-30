@@ -40,12 +40,14 @@ class PositionsController < ApplicationController
     @list_items =
         if @algs_mode
           if PREFS.use_combo_set && @only_position && alg_set = AlgSet.find_by_id(@list_format.algset.to_i)
+            puts "---- A ---- #{alg_set}"
             raw_algs = @only_position.algs_in_set(alg_set, sortby: @list_format.sortby, limit: @list_format.lines.to_i)
             raw_algs.map { |alg| [alg] + alg.combo_algs_in(alg_set) }.reduce(:+)
           else
             RawAlg.where(position_id: @positions.map(&:main_position_id)).includes(:position).order(@list_format.sortby).limit(@list_format.lines.to_i).to_a
           end
         else
+            puts "---- C ----"
           limit = 100
           if @positions.count > limit
             @clipped = {shown: limit, total: @positions.count}
@@ -103,7 +105,9 @@ class PositionsController < ApplicationController
     ]
     fully_populated_lengths = data.raw_counts.keys.reject{ |len| len > RawAlg::DB_COMPLETENESS_LENGTH }.sort
     result.sections << fully_populated_lengths.map do |length|
-      OpenStruct.new(label: "#{length} moves", text: vc.pluralize(data.raw_counts[length], 'alg'))
+      count = data.raw_counts[length]
+      OpenStruct.new(label: "#{length} moves",
+                     text: vc.number_with_delimiter(count, delimiter: "\u2009") + ' alg' + (count == 1 ? '' : 's'))
     end
 
     if single_pos
