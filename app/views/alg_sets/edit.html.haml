@@ -1,0 +1,9 @@
+%h3 Edit AlgSet
+
+=form_for(@algset) do |f|
+  -#= render 'shared/error_messages'
+
+  = f.label :name
+  = f.text_field :name, class: 'form-control'
+
+  = f.submit "Save changes", class: "btn btn-primary"

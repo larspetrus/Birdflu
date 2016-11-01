@@ -9,6 +9,8 @@ Rails.application.routes.draw do
   get 'positions/:id', to: "positions#show"
   post 'positions/find_by_alg'
 
+  resources :alg_sets
+
   get 'hemlig', to: 'status#index'
   get 'fmc', to: 'fmc#index'
 
