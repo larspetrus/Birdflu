@@ -2,31 +2,28 @@
 
 class AlgSet < ActiveRecord::Base
 
+  validates :name, presence: true
+
+  validate do
+    algs.split(' ').each do |mirror_alg_name|
+      ma = MirrorAlgs.combined(mirror_alg_name)
+
+      errors.add(:algs, "'#{mirror_alg_name}' is not a valid mirrored alg pair") unless ma
+      errors.add(:algs, "'Nothing' is not a real alg") if ma&.ids == [RawAlg::NOTHING_ID]
+    end
+  end
+
+  before_validation do
+    self.algs = self.algs.split(' ').uniq.sort.join(' ')
+  end
+
+
   def self.make(algs:, name:, subset: 'all')
     algs = algs.join(' ') if algs.respond_to? :join
     AlgSet.create(subset: subset, name: name, algs: algs)
   end
 
   CACHE_KEYS = [:ids, :coverage, :lengths, :speeds, :average_length, :average_speed]
-
-  #TODO validate that ids exist
-
-  def self.find_raw_alg_ids(raw_alg_id_sources)
-    result = [RawAlg::NOTHING_ID]
-    raw_alg_id_sources.each do |rais|
-      result <<
-          if rais.respond_to?(:ids)
-            rais.ids                      # assume MirrorAlgs object
-          elsif rais.respond_to?(:to_i) && (rais.to_i > 0)
-            rais.to_i                     # assume RawAlg id
-          elsif rais.is_a?(String)
-            MirrorAlgs.combined(rais).ids # assume MirrorAlgs name
-          else
-            raise "Unknown thing: '#{rais}' (#{rais.class})"
-          end
-    end
-    result.flatten.uniq.sort
-  end
 
   def pos_subset
     case subset
@@ -58,6 +55,11 @@ class AlgSet < ActiveRecord::Base
     computed_data[key] ||= yield
   end
 
+  def recompute_cache
+    @computed_data = {}
+    save_cache
+  end
+
   def save_cache
     [:length, :speed].each { |measure| average(measure) }
     coverage
@@ -73,7 +75,9 @@ class AlgSet < ActiveRecord::Base
   end
 
   def ids
-    cache(:ids) { AlgSet.find_raw_alg_ids(algs.split(' ')).freeze }
+    cache(:ids) do
+      ('Nothing.-- ' + algs).split(' ').map { |ma_name| MirrorAlgs.combined(ma_name).ids }.flatten.sort.freeze
+    end
   end
 
   def coverage

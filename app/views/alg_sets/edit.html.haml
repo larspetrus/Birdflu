@@ -1,8 +1,18 @@
+.algset_top
+  =link_to('Birdflu', '/')
+  =link_to('Algsets', alg_sets_path)
+
 %h3 Edit AlgSet
 
+- if @algset.errors.any?
+  #error_explanation
+    .alert
+      Errors
+    %ul
+    - @algset.errors.full_messages.each do |msg|
+      %li
+        = msg
 =form_for(@algset) do |f|
-  -#= render 'shared/error_messages'
-
   = f.label :name
   = f.text_field :name, class: 'form-control'
 

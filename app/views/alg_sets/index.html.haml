@@ -1,3 +1,7 @@
+.algset_top
+  =link_to('Birdflu', '/')
+  =link_to('Algsets', alg_sets_path)
+
 %table.algsets
   %tr
     %th
@@ -8,6 +12,10 @@
       subset
     %th
       algs
+    %th
+      avg length
+    %th
+      avg speed
     %th
     %th
   - @all_sets.each do |algset|
@@ -20,6 +28,10 @@
         =algset.subset
       %td
         ="#{algset.algs.split(' ').count}/#{algset.ids.count-1}"
+      %td
+        ='%.3f' % algset.average_length
+      %td
+        ='%.3f' % algset.average_speed
       %td
         =link_to('show', alg_set_path(algset))
       %td

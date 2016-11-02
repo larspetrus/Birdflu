@@ -1,10 +1,35 @@
-=link_to('Index page', alg_sets_path)
+.algset_top
+  =link_to('Birdflu', '/')
+  =link_to('Algsets', alg_sets_path)
 
-%p
-  =@algset.id
-%p
-  =@algset.name
-%p
-  =@algset.subset
-%p
-  =@algset.algs
+%h3 Show
+
+%table.algsets
+  %tr
+    %td id
+    %td
+      =@algset.id
+  %tr
+    %td name
+    %td
+      =@algset.name
+  %tr
+    %td subset
+    %td
+      =@algset.subset
+  %tr
+    %td algs
+    %td.small
+      =@algset.algs
+  %tr
+    %td avg length
+    %td
+      ='%.3f' % @algset.average_length
+  %tr
+    %td avg speed
+    %td
+      ='%.3f' % @algset.average_speed
+  %tr
+    %td
+    %td
+      =link_to('edit', edit_alg_set_path(@algset))
