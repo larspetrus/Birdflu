@@ -12,8 +12,16 @@
     - @algset.errors.full_messages.each do |msg|
       %li
         = msg
-=form_for(@algset) do |f|
-  = f.label :name
-  = f.text_field :name, class: 'form-control'
+=form_for(@algset, html: {class: "edit_algset"}) do |f|
+  %p
+    = f.label :name
+  %p
+    = f.text_field :name, class: 'form-control'
 
-  = f.submit "Save changes", class: "btn btn-primary"
+  %p
+    = f.label :description
+  %p
+    = f.text_area :description, size: "50x3", class: 'form-control'
+
+  %p
+    = f.submit "Save changes", class: "btn btn-primary"

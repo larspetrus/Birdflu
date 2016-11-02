@@ -3,6 +3,7 @@
 class AlgSet < ActiveRecord::Base
 
   validates :name, presence: true
+  validates_inclusion_of :subset, :in => %w(all eo)
 
   validate do
     algs.split(' ').each do |mirror_alg_name|

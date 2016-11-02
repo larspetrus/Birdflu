@@ -11,16 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160812053618) do
+ActiveRecord::Schema.define(version: 20161102181407) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "alg_sets", force: :cascade do |t|
-    t.string "name"
-    t.string "algs"
-    t.string "_cached_data"
-    t.string "subset"
+    t.string   "name"
+    t.string   "algs"
+    t.string   "_cached_data"
+    t.string   "subset"
+    t.string   "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "combo_algs", force: :cascade do |t|

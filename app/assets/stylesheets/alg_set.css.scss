@@ -29,10 +29,16 @@ $menu-color: #4a4;
 
   td {
     padding: 3px;
-    .small {
-      font-size: 8px;
-    }
+    .small { font-size: 8px; }
   }
+}
+
+.edit_algset {
+  label {
+    font-size: 12px;
+    font-weight: 700;
+  }
+  p { margin: 4px; }
 }
 
 #error_explanation {

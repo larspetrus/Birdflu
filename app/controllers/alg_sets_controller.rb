@@ -36,6 +36,6 @@ class AlgSetsController < ApplicationController
   private
 
   def algset_params
-    params.require(:alg_set).permit(:name, :algs)
+    params.require(:alg_set).permit(:name, :description, :subset, :algs)
   end
 end
