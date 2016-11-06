@@ -26,14 +26,10 @@
     %td.small
       =@algset.algs
   %tr
-    %td avg length
+    %td coverage
     %td
-      ='%.3f' % @algset.average_length
-  %tr
-    %td avg speed
-    %td
-      ='%.3f' % @algset.average_speed
+      = "#{@algset.coverage}/#{@algset.subset_pos_ids.count - 1}"
   %tr
     %td
     %td
-      =link_to('edit', edit_alg_set_path(@algset))
+      =link_to('edit', edit_alg_set_path(@algset), class: 'show-pig')

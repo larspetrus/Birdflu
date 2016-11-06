@@ -1,14 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Birdflu 0.8 beta, or whatever.</title>
+  <title>Birdflu 0.81 "beta"-ish</title>
   <%= stylesheet_link_tag    'application', media: 'all' %>
   <%= javascript_include_tag 'application' %>
   <%= csrf_meta_tags %>
 </head>
 <body>
 
+<% flash.each do |name, msg| %>
+  <%= content_tag :div, msg, class: "flash_msgs" %>
+<% end %>
+
 <%= yield %>
+
+<script>
+  setTimeout("$('.flash_msgs').fadeOut('slow')", 5000)
+</script>
 
 </body>
 </html>

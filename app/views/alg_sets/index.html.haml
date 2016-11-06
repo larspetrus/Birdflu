@@ -17,6 +17,8 @@
     %th
       avg speed
     %th
+      coverage
+    %th
     %th
   - @all_sets.each do |algset|
     %tr
@@ -27,12 +29,14 @@
       %td
         =algset.subset
       %td
-        ="#{algset.algs.split(' ').count}/#{algset.ids.count-1}"
+        =algset.algs.split(' ').count
       %td
         ='%.3f' % algset.average_length
       %td
         ='%.3f' % algset.average_speed
       %td
-        =link_to('show', alg_set_path(algset))
+        = "#{algset.coverage}/#{algset.subset_pos_ids.count - 1}"
       %td
-        =link_to('edit', edit_alg_set_path(algset))
+        =link_to('show', alg_set_path(algset), class: 'show-pig')
+      %td
+        =link_to('edit', edit_alg_set_path(algset), class: 'show-pig')

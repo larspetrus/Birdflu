@@ -6,8 +6,6 @@
 
 - if @algset.errors.any?
   #error_explanation
-    .alert
-      Errors
     %ul
     - @algset.errors.full_messages.each do |msg|
       %li
@@ -24,4 +22,15 @@
     = f.text_area :description, size: "50x3", class: 'form-control'
 
   %p
-    = f.submit "Save changes", class: "btn btn-primary"
+    = f.label :algs
+  %p.small
+    = @algset.algs
+  %p
+    = f.label 'Add algs'
+    = text_field_tag :add_algs, params[:add_algs]
+    = f.label 'Remove algs'
+    = text_field_tag :remove_algs, params[:remove_algs]
+
+
+  %p
+    = f.submit "Save changes", class: "show-pig", style: 'font-size: 14px;'

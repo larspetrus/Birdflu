@@ -15,8 +15,13 @@ class AlgSet < ActiveRecord::Base
   end
 
   before_validation do
-    self.algs = self.algs.split(' ').uniq.sort.join(' ')
+    self.algs = self.algs.split(' ').uniq.sort.join(' ') # sort names
   end
+
+  before_validation do
+    recompute_cache if self._cached_data.blank?
+  end
+
 
 
   def self.make(algs:, name:, subset: 'all')
@@ -37,7 +42,7 @@ class AlgSet < ActiveRecord::Base
     end
   end
 
-  @@pos_ids = {} # cache position ids per subset
+  @@pos_ids = {} # cache position ids per subset (all/eo)
   def subset_pos_ids
     @@pos_ids[subset] ||= pos_subset.pluck(:id)
   end

@@ -37,6 +37,10 @@ class MirrorAlgs
     _combined_data.values
   end
 
+  def self.all_names
+    @all_names ||= self.all_combined.map(&:name)
+  end
+
   def self.combined(mirror_alg_name)
     _combined_data[mirror_alg_name]
   end
