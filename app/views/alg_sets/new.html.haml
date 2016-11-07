@@ -2,7 +2,7 @@
   =link_to('Birdflu', '/')
   =link_to('Algsets', alg_sets_path)
 
-%h3 Edit AlgSet
+%h3 Create AlgSet
 
 - if @algset.errors.any?
   #error_explanation
@@ -19,7 +19,7 @@
   %p
     = f.label :subset
   %p
-    = @algset.subset
+    = f.select(:subset, subset_options)
 
   %p
     = f.label :description
@@ -28,16 +28,9 @@
 
   %p
     = f.label :algs
-  %p
-    -fmt_algs(@algset).each do |line|
-      .small
-        =line
-  %p
-    = f.label 'Add algs'
-    = text_field_tag :add_algs, params[:add_algs]
-    = f.label 'Remove algs'
-    = text_field_tag :remove_algs, params[:remove_algs]
+  %p.small
+    = f.text_area :algs, size: "80x4", class: 'form-control'
 
 
   %p
-    = f.submit "Save changes", class: "show-pig", style: 'font-size: 14px;'
+    = f.submit "Create", class: "show-pig", style: 'font-size: 14px;'

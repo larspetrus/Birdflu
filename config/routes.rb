@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   post 'positions/find_by_alg'
 
   resources :alg_sets
+  get 'alg_sets/compute/:ids', to: "alg_sets#compute"
 
   get 'hemlig', to: 'status#index'
   get 'fmc', to: 'fmc#index'

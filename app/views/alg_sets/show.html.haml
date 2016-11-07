@@ -23,13 +23,25 @@
       =@algset.subset
   %tr
     %td algs
-    %td.small
-      =@algset.algs
+    %td
+      -fmt_algs(@algset).each do |line|
+        .small
+          =line
   %tr
     %td coverage
     %td
-      = "#{@algset.coverage}/#{@algset.subset_pos_ids.count - 1}"
+      = fmt_coverage(@algset)
   %tr
     %td
     %td
       =link_to('edit', edit_alg_set_path(@algset), class: 'show-pig')
+
+-unless @algset.computed
+  :javascript
+    $.get("/alg_sets/compute/#{@algset.id}", function(result) {
+      if (result.success) {
+        location.reload();
+      } else {
+        console.log("/alg_sets/compute/#{@algset.id} failed: ", result.error);
+      }
+    });

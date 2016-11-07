@@ -18,18 +18,18 @@ class AlgSet < ActiveRecord::Base
     self.algs = self.algs.split(' ').uniq.sort.join(' ') # sort names
   end
 
-  before_validation do
-    recompute_cache if self._cached_data.blank?
-  end
-
-
 
   def self.make(algs:, name:, subset: 'all')
     algs = algs.join(' ') if algs.respond_to? :join
     AlgSet.create(subset: subset, name: name, algs: algs)
   end
 
-  CACHE_KEYS = [:ids, :coverage, :lengths, :speeds, :average_length, :average_speed]
+  CACHE_KEYS = [:coverage, :lengths, :speeds, :average_length, :average_speed]
+
+  def computing_off
+    @computing_off = true
+    self
+  end
 
   def pos_subset
     case subset
@@ -58,7 +58,12 @@ class AlgSet < ActiveRecord::Base
 
   def cache(key)
     raise "Unknown cache key #{key}" unless CACHE_KEYS.include? key
-    computed_data[key] ||= yield
+
+    if @computing_off
+      computed_data[key]
+    else
+      computed_data[key] ||= yield
+    end
   end
 
   def recompute_cache
@@ -70,10 +75,15 @@ class AlgSet < ActiveRecord::Base
     [:length, :speed].each { |measure| average(measure) }
     coverage
 
-    raise "Uncomputed keys: #{CACHE_KEYS - @computed_data.keys}" if CACHE_KEYS.size != @computed_data.keys.size
+    uncomputed_keys = CACHE_KEYS - @computed_data.keys
+    raise "Uncomputed keys: #{uncomputed_keys}" if (uncomputed_keys).present?
 
     self._cached_data = YAML.dump(@computed_data)
     save
+  end
+
+  def computed
+    _cached_data.present?
   end
 
   def computed_data
@@ -81,9 +91,7 @@ class AlgSet < ActiveRecord::Base
   end
 
   def ids
-    cache(:ids) do
-      ('Nothing.-- ' + algs).split(' ').map { |ma_name| MirrorAlgs.combined(ma_name).ids }.flatten.sort.freeze
-    end
+    @ids ||= ('Nothing.-- ' + algs).split(' ').map { |ma_name| MirrorAlgs.combined(ma_name).ids }.flatten.sort.freeze
   end
 
   def coverage
@@ -91,6 +99,11 @@ class AlgSet < ActiveRecord::Base
       unique_pos_ids = ComboAlg.where(alg1_id: ids, alg2_id: ids).includes(:combined_alg).map { |ca| ca.combined_alg.position_id }.uniq
       (unique_pos_ids & subset_pos_ids).count
     end
+  end
+
+  def full_coverage
+    return nil unless coverage
+    coverage == subset_pos_ids.count - 1
   end
 
   def average(by_measure)

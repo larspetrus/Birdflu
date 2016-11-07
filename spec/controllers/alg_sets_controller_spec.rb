@@ -51,6 +51,28 @@ RSpec.describe AlgSetsController do
 
     # "Add and remove the same alg"
     # "Add/remove single alg ('autocomplete')"
-
   end
+
+  describe 'computing_off' do
+    before(:each) do
+      allow(ComboAlg).to receive(:where) { double(includes: double(map: [66, 77]))}
+      allow(algset).to receive(:ids) { [1,2,5]}
+    end
+
+    let (:algset) { AlgSet.new(name: "test", algs: "F1.F3", subset: "all") }
+
+    it 'computes by default, ad returns alrady cached data when compute is off' do
+      expect(algset.coverage).to eq(2)
+
+      algset.computing_off
+
+      expect(algset.coverage).to eq(2)
+    end
+
+    it 'respects computing_off' do
+      algset.computing_off
+      expect(algset.coverage).to eq(nil)
+    end
+  end
+
 end

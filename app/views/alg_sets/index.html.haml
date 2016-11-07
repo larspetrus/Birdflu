@@ -2,22 +2,18 @@
   =link_to('Birdflu', '/')
   =link_to('Algsets', alg_sets_path)
 
+=link_to('New Algset', new_alg_set_path, class: 'show-pig', style: 'font-size: 14px;')
+%p
+
 %table.algsets
   %tr
-    %th
-      id
-    %th
-      name
-    %th
-      subset
-    %th
-      algs
-    %th
-      avg length
-    %th
-      avg speed
-    %th
-      coverage
+    %th id
+    %th name
+    %th subset
+    %th algs
+    %th avg length
+    %th avg speed
+    %th coverage
     %th
     %th
   - @all_sets.each do |algset|
@@ -31,12 +27,22 @@
       %td
         =algset.algs.split(' ').count
       %td
-        ='%.3f' % algset.average_length
+        =fmt_avg_length(algset)
       %td
-        ='%.3f' % algset.average_speed
+        =fmt_avg_speed(algset)
       %td
-        = "#{algset.coverage}/#{algset.subset_pos_ids.count - 1}"
+        =fmt_coverage(algset)
       %td
         =link_to('show', alg_set_path(algset), class: 'show-pig')
       %td
         =link_to('edit', edit_alg_set_path(algset), class: 'show-pig')
+
+-if @to_compute.present?
+  :javascript
+    $.get("/alg_sets/compute/#{@to_compute}", function(data) {
+      if (data.success) {
+        location.reload();
+      } else {
+        console.log("/alg_sets/compute/#{@to_compute} failed: ", data.error);
+      }
+    });

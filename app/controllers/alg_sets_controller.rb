@@ -2,17 +2,26 @@
 
 class AlgSetsController < ApplicationController
   def index
-    @all_sets = AlgSet.all.to_a.sort_by {|as| [as.subset, as.algs.length] }
+    @all_sets = AlgSet.all.map(&:computing_off).sort_by {|as| [as.subset, as.algs.length] }
+    @to_compute = @all_sets.reject(&:computed).map(&:id).join(',')
   end
 
   def new
+    @algset = AlgSet.new
   end
 
   def create
+    @algset = AlgSet.new(algset_params)
+    if @algset.save
+      flash[:success] = "Alg set created!"
+      redirect_to @algset
+    else
+      render 'new'
+    end
   end
 
   def show
-    @algset = AlgSet.find(params[:id])
+    @algset = AlgSet.find(params[:id]).computing_off
   end
 
   def edit
@@ -20,16 +29,12 @@ class AlgSetsController < ApplicationController
   end
 
   def update
-    #TODO forbid :algs and :_cached_data from posting
-    @algset = AlgSet.find(params[:id])
+    @algset = AlgSet.find(params[:id]).computing_off
 
     algs_result = AlgSetsController::alter_algs(@algset, params[:add_algs], params[:remove_algs])
     unless algs_result[:errors].present?
-      if algs_result[:new_algs]
-        params[:alg_set][:algs] = algs_result[:new_algs]
-        params[:alg_set][:_cached_data] = nil
-      end
-      @algset.update_attributes(algset_params)
+      generated_params = (algs_result[:new_algs] ? {algs: algs_result[:new_algs], _cached_data: nil} : {})
+      @algset.update_attributes(algset_params(generated_params))
     end
 
     if @algset.errors.blank?
@@ -41,8 +46,15 @@ class AlgSetsController < ApplicationController
     end
   end
 
-  def algset_params
-    params.require(:alg_set).permit(:name, :description, :subset, :algs, :_cached_data)
+  def compute
+    params[:ids].split(',').each { |id| AlgSet.find(id).save_cache }
+    render json: { success: :true }
+  rescue  Exception => e
+    render json: { error: e.message }
+  end
+
+  def algset_params(generated_params = {})
+    params.require(:alg_set).permit(:name, :description, :subset, :algs).merge(generated_params)
   end
 
   def self.alter_algs(algset, adds, removes)
