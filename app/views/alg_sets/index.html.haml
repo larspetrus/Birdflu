@@ -36,7 +36,8 @@
       %td
         =link_to('show', alg_set_path(algset), class: 'show-pig')
       %td
-        =link_to('edit', edit_alg_set_path(algset), class: 'show-pig')
+        - if algset.editable?
+          =link_to('edit', edit_alg_set_path(algset), class: 'show-pig')
       %td
         - if algset.deletable?
           = link_to "Remove", algset, method: :delete, data: {confirm:"You Sure?"}, class: 'show-pig'

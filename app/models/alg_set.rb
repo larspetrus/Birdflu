@@ -2,6 +2,8 @@
 
 class AlgSet < ActiveRecord::Base
 
+  CAN_EDIT_PREDEFINED = Rails.env.development?
+
   validates :name, presence: true
   validates_inclusion_of :subset, :in => %w(all eo)
 
@@ -86,8 +88,12 @@ class AlgSet < ActiveRecord::Base
     _cached_data.present?
   end
 
+  def editable?
+    CAN_EDIT_PREDEFINED || (not predefined)
+  end
+
   def deletable?
-    id > 61
+    not predefined
   end
 
   def computed_data
