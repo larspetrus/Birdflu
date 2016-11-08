@@ -20,6 +20,17 @@ class AlgSetsController < ApplicationController
     end
   end
 
+  def destroy
+    algset = AlgSet.find(params[:id])
+    if algset.deletable?
+      flash[:success] = "Algset '#{algset.name}' deleted"
+      algset.destroy
+    else
+      flash[:error] = "Not allowed to delete this Algset"
+    end
+    redirect_to alg_sets_url
+  end
+
   def show
     @algset = AlgSet.find(params[:id]).computing_off
   end

@@ -86,6 +86,10 @@ class AlgSet < ActiveRecord::Base
     _cached_data.present?
   end
 
+  def deletable?
+    id > 61
+  end
+
   def computed_data
     @computed_data ||= (_cached_data ? YAML.load(_cached_data) : {})
   end
