@@ -66,14 +66,6 @@ class PositionsController < ApplicationController
       @hi_lite = params[:hl_id].to_i
       @list_items += [RawAlg.find(params[:hl_id].to_i)] unless @list_items.map(&:id).include?(@hi_lite)
     end
-
-    if session[:wca_login]
-      if Time.now.to_i > (session[:wca_login]['expires'] || 0)
-        session.delete(:wca_login)
-      else
-        @login_name = session[:wca_login]['name']
-      end
-    end
   end
 
   def make_alg_columns

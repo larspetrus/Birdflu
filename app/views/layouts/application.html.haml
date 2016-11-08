@@ -1,0 +1,27 @@
+!!!
+%html
+  %head
+    %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
+    %title Birdflu 0.81 "beta"-ish
+    = stylesheet_link_tag    'application', media: 'all'
+    = javascript_include_tag 'application'
+    = csrf_meta_tags
+  %body
+    - flash.each do |name, msg|
+      = content_tag :div, msg, class: "flash_msgs"
+    = yield
+
+    .login
+      - if @login_name
+        #{@login_name}
+        .logout
+          = link_to 'Logout', wca_logout_path
+      - else
+        - if Rails.application.secrets.wca_oauth_client_secret
+          %a{href: OauthController::WCA_LOGIN_URL}
+            Login
+        - else
+          = link_to 'Login', fake_wca_login_path
+
+    :javascript
+      setTimeout("$('.flash_msgs').fadeOut('slow')", 5000)

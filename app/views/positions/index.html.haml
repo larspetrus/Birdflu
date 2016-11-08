@@ -1,18 +1,6 @@
 :javascript
   history.replaceState('', '', '#{@bookmark_url}');
 
-.login
-  - if @login_name
-    #{@login_name}
-    .logout
-      = link_to 'Logout', wca_logout_path
-  - else
-    - if Rails.application.secrets.wca_oauth_client_secret
-      %a{href: OauthController::WCA_LOGIN_URL}
-        Login
-    - else
-      = link_to 'Login', fake_wca_login_path
-
 %nav.leftbar
   .leftitem.clickable= link_to 'Random Position', "positions/#{Position.random_id(@position_set)}"
   .leftitem
