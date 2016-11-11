@@ -68,7 +68,7 @@ class AlgSetsController < ApplicationController
   end
 
   def can_change(algset)
-    owned_by_user = @login.db_id && (@login.db_id == algset.wca_user_data_id)
+    owned_by_user = @login&.db_id && (@login.db_id == algset.wca_user_data_id)
     owned_by_user || AlgSet::ARE_WE_ADMIN
   end
 
