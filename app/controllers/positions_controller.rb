@@ -34,13 +34,11 @@ class PositionsController < ApplicationController
       @icon_grids[f] = icons::grid(subset: @position_set, cp: @filters[:cp])
     end
 
-    @text_size = cookies[:size] || 'm'
-    @list_classes = PositionsController.table_class(@algs_mode, @text_size, @selected_icons)
-
     @list_items =
         if @algs_mode
           alg_set = AlgSet.find_by_id(@list_format.algset.to_i)
-          if PREFS.use_combo_set && @only_position && alg_set && (@only_position.eo == '4' || alg_set.subset == 'all')
+          @combo_mode = PREFS.use_combo_set && @only_position && alg_set && (@only_position.eo == '4' || alg_set.subset == 'all')
+          if @combo_mode
             raw_algs = @only_position.algs_in_set(alg_set, sortby: @list_format.sortby, limit: @list_format.lines.to_i)
             raw_algs.map { |alg| [alg] + alg.combo_algs_in(alg_set) }.reduce(:+)
           else
@@ -53,6 +51,9 @@ class PositionsController < ApplicationController
           end
           @positions.first(limit)
         end
+
+    @text_size = cookies[:size] || 'm'
+    @list_classes = PositionsController.table_class(@algs_mode, @combo_mode, @text_size, @selected_icons)
 
     @rendered_svg_ids = Set.new
     @columns = @algs_mode ? make_alg_columns : make_pos_columns
@@ -141,11 +142,12 @@ class PositionsController < ApplicationController
     "?pos=#{filters.pos_code}" + (tail.present? ? '&' + tail : '')
   end
 
-  def self.table_class(algs_mode, size, selected_icons)
+  def self.table_class(algs_mode, combo_mode, size, selected_icons)
     base = algs_mode ? 'algs-list' : 'positions-list'
-    has_cubes = selected_icons[:cop].is_none || selected_icons[:eo].is_none || selected_icons[:ep].is_none
-    with_cubes = (has_cubes ? '-wc' : '')
-    "#{base} size-#{size}#{with_cubes}"
+    base += ' combo-list' if combo_mode
+    has_icons = selected_icons[:cop].is_none || selected_icons[:eo].is_none || selected_icons[:ep].is_none
+    with_icons = (has_icons ? '-wc' : '')
+    "#{base} size-#{size}#{with_icons}"
   end
 
   def vc # access helpers

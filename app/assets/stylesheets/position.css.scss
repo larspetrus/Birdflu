@@ -72,6 +72,10 @@ $optimal_color: #69f;
   td:nth-last-child(1), th:nth-last-child(1), th:nth-last-child(2) { border-left: none; }
 }
 
+.combo-list {
+  tr:nth-child(5n + 1) { border-bottom: none;}
+}
+
 @mixin list-size($text-size, $button-size, $icon-size) {
   font-size: $text-size;
   .show-pig { font-size: $button-size; }
