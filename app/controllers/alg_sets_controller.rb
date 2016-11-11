@@ -3,15 +3,21 @@
 class AlgSetsController < ApplicationController
   def index
     @all_sets = AlgSet.all.map(&:computing_off).sort_by {|as| [as.subset, as.algs.length] }
+    @all_sets.each { |as| as.editable_by_this_user = can_change(as) }
     @to_compute = @all_sets.reject(&:computed).map(&:id).join(',')
   end
 
   def new
+    raise "Not allowed to create Algset" unless can_create
+
     @algset = AlgSet.new
   end
 
   def create
-    @algset = AlgSet.new(algset_params)
+    raise "Not allowed to create Algset" unless can_create
+
+    more_params = @login ? {wca_user_data_id: @login.db_id} : {predefined: true}
+    @algset = AlgSet.new(algset_params(more_params))
     if @algset.save
       flash[:success] = "Alg set created!"
       redirect_to @algset
@@ -22,12 +28,10 @@ class AlgSetsController < ApplicationController
 
   def destroy
     algset = AlgSet.find(params[:id])
-    if algset.deletable?
-      flash[:success] = "Algset '#{algset.name}' deleted"
-      algset.destroy
-    else
-      flash[:error] = "Not allowed to delete this Algset"
-    end
+    raise "Not allowed to edit Algset #{algset.id}" unless can_change(algset)
+
+    flash[:success] = "Algset '#{algset.name}' deleted"
+    algset.destroy
     redirect_to alg_sets_url
   end
 
@@ -37,15 +41,17 @@ class AlgSetsController < ApplicationController
 
   def edit
     @algset = AlgSet.find(params[:id])
+    raise "Not allowed to edit Algset #{@algset.id}" unless can_change(@algset)
   end
 
   def update
     @algset = AlgSet.find(params[:id]).computing_off
+    raise "Not allowed to update Algset #{@algset.id}" unless can_change(@algset)
 
     algs_result = AlgSetsController::alter_algs(@algset, params[:add_algs], params[:remove_algs])
     unless algs_result[:errors].present?
-      generated_params = (algs_result[:new_algs] ? {algs: algs_result[:new_algs], _cached_data: nil} : {})
-      @algset.update_attributes(algset_params(generated_params))
+      more_params = (algs_result[:new_algs] ? {algs: algs_result[:new_algs], _cached_data: nil} : {})
+      @algset.update_attributes(algset_params(more_params))
     end
 
     if @algset.errors.blank?
@@ -57,6 +63,15 @@ class AlgSetsController < ApplicationController
     end
   end
 
+  def can_create
+    @login || AlgSet::ARE_WE_ADMIN
+  end
+
+  def can_change(algset)
+    owned_by_user = @login.db_id && (@login.db_id == algset.wca_user_data_id)
+    owned_by_user || AlgSet::ARE_WE_ADMIN
+  end
+
   def compute
     params[:ids].split(',').each { |id| AlgSet.find(id).save_cache }
     render json: { success: :true }
@@ -64,8 +79,8 @@ class AlgSetsController < ApplicationController
     render json: { error: e.message }
   end
 
-  def algset_params(generated_params = {})
-    params.require(:alg_set).permit(:name, :description, :subset, :algs).merge(generated_params)
+  def algset_params(more_params = {})
+    params.require(:alg_set).permit(:name, :description, :subset, :algs).merge(more_params)
   end
 
   def self.alter_algs(algset, adds, removes)

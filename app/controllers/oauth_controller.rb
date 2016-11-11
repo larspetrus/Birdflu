@@ -39,7 +39,7 @@ class OauthController < ActionController::Base
   end
 
   def fake_wca_login
-    store_user_data(99099099, '2016FRAU99', 'Fakey McFraud', 1.hour.from_now.to_i)
+    store_user_data(909, '2016FRAU99', 'Fakey McFraud', 1.hour.from_now.to_i)
 
     redirect_to(:back)
   end
@@ -47,11 +47,12 @@ class OauthController < ActionController::Base
   def wca_logout
     Rails.logger.info "WCA Logged out '#{session[:wca_login]['name']}'."
     session.delete(:wca_login)
+
     redirect_to(:back)
   end
 
   def store_user_data(id, wca_id, name, expires)
-    session[:wca_login] = { id: id, wca_id: wca_id, name: name, expires: expires }
-    WcaUserData.create_or_update(id, wca_id, name)
+    local_db_id = WcaUserData.create_or_update(id, wca_id, name)
+    session[:wca_login] = { db_id: local_db_id, wca_db_id: id, wca_id: wca_id, name: name, expires: expires }
   end
 end

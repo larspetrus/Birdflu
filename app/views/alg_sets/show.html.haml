@@ -32,6 +32,10 @@
     %td
       = fmt_coverage(@algset)
   %tr
+    %td owner
+    %td
+      = owner(@algset)
+  %tr
     %td
     %td
       =link_to('edit', edit_alg_set_path(@algset), class: 'show-pig')

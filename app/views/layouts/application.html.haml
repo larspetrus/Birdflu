@@ -12,8 +12,8 @@
     = yield
 
     .login
-      - if @login_name
-        #{@login_name}
+      - if @login
+        #{@login.name}
         .logout
           = link_to 'Logout', wca_logout_path
       - else

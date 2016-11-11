@@ -13,7 +13,8 @@ class ApplicationController < ActionController::Base
         flash[:notification] = 'WCA login expired'
         session.delete(:wca_login)
       else
-        @login_name = session[:wca_login]['name']
+        sn = session[:wca_login]
+        @login = OpenStruct.new(name: sn['name'], db_id: sn['db_id'])
       end
     end
   end

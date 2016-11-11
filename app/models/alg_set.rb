@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 class AlgSet < ActiveRecord::Base
+  ARE_WE_ADMIN = Rails.env.development?
 
-  CAN_EDIT_PREDEFINED = Rails.env.development?
+  belongs_to :wca_user_data, class_name: WcaUserData.name
 
   validates :name, presence: true
   validates_inclusion_of :subset, :in => %w(all eo)
@@ -14,12 +15,14 @@ class AlgSet < ActiveRecord::Base
       errors.add(:algs, "'#{mirror_alg_name}' is not a valid mirrored alg pair") unless ma
       errors.add(:algs, "'Nothing' is not a real alg") if ma&.ids == [RawAlg::NOTHING_ID]
     end
+
   end
 
   before_validation do
     self.algs = self.algs.split(' ').uniq.sort.join(' ') # sort names
   end
 
+  attr_accessor :editable_by_this_user
 
   def self.make(algs:, name:, subset: 'all')
     algs = algs.join(' ') if algs.respond_to? :join
@@ -86,14 +89,6 @@ class AlgSet < ActiveRecord::Base
 
   def computed
     _cached_data.present?
-  end
-
-  def editable?
-    CAN_EDIT_PREDEFINED || (not predefined)
-  end
-
-  def deletable?
-    not predefined
   end
 
   def computed_data

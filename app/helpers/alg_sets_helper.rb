@@ -10,12 +10,12 @@ module AlgSetsHelper
   end
 
   def fmt_avg_length(algset)
-    return '--' unless algset.full_coverage
+    return 'n/a' unless algset.full_coverage
     '%.3f' % algset.average_length
   end
 
   def fmt_avg_speed(algset)
-    return '--' unless algset.full_coverage
+    return 'n/a' unless algset.full_coverage
     '%.3f' % algset.average_speed
   end
 
@@ -25,5 +25,9 @@ module AlgSetsHelper
 
   def fmt_algs(algset)
     algset.algs.sub("G", "|G").sub("H", "|H").sub("I", "|I").sub("J", "|J").split('|')
+  end
+
+  def owner(algset)
+    algset.predefined ? 'predefined' : algset.wca_user_data&.full_name
   end
 end

@@ -2,7 +2,10 @@
   =link_to('Birdflu', '/')
   =link_to('Algsets', alg_sets_path)
 
-=link_to('New Algset', new_alg_set_path, class: 'show-pig', style: 'font-size: 14px;')
+- if @login
+  =link_to('New Algset', new_alg_set_path, class: 'show-pig', style: 'font-size: 14px;')
+- else
+  %div{style: 'font-size: 9px;'} (log in to create)
 %p
 
 %table.algsets
@@ -14,6 +17,7 @@
     %th avg length
     %th avg speed
     %th coverage
+    %th owner
     %th
     %th
     %th
@@ -34,12 +38,14 @@
       %td
         =fmt_coverage(algset)
       %td
+        =owner(algset)
+      %td
         =link_to('show', alg_set_path(algset), class: 'show-pig')
       %td
-        - if algset.editable?
+        - if algset.editable_by_this_user
           =link_to('edit', edit_alg_set_path(algset), class: 'show-pig')
       %td
-        - if algset.deletable?
+        - if algset.editable_by_this_user && (not algset.predefined)
           = link_to "Remove", algset, method: :delete, data: {confirm:"You Sure?"}, class: 'show-pig'
 
 -if @to_compute.present?
