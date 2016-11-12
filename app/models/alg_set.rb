@@ -149,7 +149,7 @@ class AlgSet < ActiveRecord::Base
   end
 
   def menu_name
-    "#{name} (#{subset})"
+    "#{name}·#{subset}"
   end
 
   def to_s
@@ -159,7 +159,7 @@ class AlgSet < ActiveRecord::Base
   # -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+-
 
   def self.predefined
-    @predefined ||= AlgSet.all.to_a
+    AlgSet.all.to_a.sort_by {|as| [as.predefined ? 0 : 1, as.subset, as.algs.length] }.map{|as| [as.menu_name, as.id] }
   end
 
   SMALL_39 = %w(F1.F3 F2.F4 G1.G6 G2.G7 G3.G9 G4.G8 G5.G10 H12.H31 H15.H33 H16.H35 H5.H29 I19.I70 I3.I63 I54.I114 J101.J423 J103.J401 J112.J409 J126.J368 J132.J371 J16.J325 J179.J487 J183.J483 J199.J495 J204.J502 J211.J517 J212.J519 J219.J528 J266.J538 J275.J550 J34.J39 J629.J652 J637.J657 J639.J658 J78.J387 J82.J390 J93.J417 J95.J416 J98.J419 J99.J421)

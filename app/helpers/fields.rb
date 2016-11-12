@@ -29,7 +29,7 @@ class Fields
   LIST   = Select.new(:list,  ['positions', 'algs'])
   LINES  = Select.new(:lines, [25, 50, 100, 200, 500])
   SORTBY = Select.new(:sortby,[['speed', '_speed'], ['moves', 'length']])
-  ALGSET = Select.new(:algset,[['All', 0]] + AlgSet.predefined.map{|as| [as.menu_name, as.id] })
+  ALGSET = Select.new(:algset,[['None', 0]] + AlgSet.predefined.map{|as| [as.menu_name, as.id] })
 
   ALL = [LIST, LINES, SORTBY, ALGSET].freeze
 
