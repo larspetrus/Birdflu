@@ -148,6 +148,10 @@ class AlgSet < ActiveRecord::Base
     cache(:average_speed) { pos_subset.reduce(0.0) { |sum, pos| sum + self.speeds[pos.id]*pos.weight }/subset_weight }
   end
 
+  def menu_name
+    "#{name} (#{subset})"
+  end
+
   def to_s
     "AlgSet #{id}: '#{name}' (#{subset})"
   end

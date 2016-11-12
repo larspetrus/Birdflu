@@ -38,7 +38,7 @@ $menu-color: #44f;
     font-size: 12px;
     font-weight: 700;
   }
-  p { margin: 4px; }
+  p { margin: 10px 0 4px 0; }
   .small { font-size: 10px; }
 }
 
@@ -58,7 +58,9 @@ $menu-color: #44f;
   top: 8px;
   left: 50%;
 
+  border-radius: 5px;
+
   padding: 12px;
   background-color: rgba(188, 255, 188, 0.7);
-  border: 1px solid #5b5;
+  border: 2px solid #5b5;
 }

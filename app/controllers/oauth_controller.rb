@@ -39,7 +39,7 @@ class OauthController < ActionController::Base
   end
 
   def fake_wca_login
-    store_user_data(909, '2016FRAU99', 'Fakey McFraud', 1.hour.from_now.to_i)
+    store_user_data(909, '2016FRAU99', 'Fakey McFraud', 4.hours.from_now.to_i)
 
     redirect_to(:back)
   end

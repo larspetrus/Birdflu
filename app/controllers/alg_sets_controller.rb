@@ -2,7 +2,7 @@
 
 class AlgSetsController < ApplicationController
   def index
-    @all_sets = AlgSet.all.map(&:computing_off).sort_by {|as| [as.subset, as.algs.length] }
+    @all_sets = AlgSet.all.map(&:computing_off).sort_by {|as| [as.predefined ? 0 : 1, as.subset, as.algs.length] }
     @all_sets.each { |as| as.editable_by_this_user = can_change(as) }
     @to_compute = @all_sets.reject(&:computed).map(&:id).join(',')
   end
@@ -55,7 +55,7 @@ class AlgSetsController < ApplicationController
     end
 
     if @algset.errors.blank?
-      flash[:success] = "Alg set updated"
+      flash[:success] = "Algset updated"
       redirect_to @algset
     else
       params[:alg_set][:add_algs] = params[:add_algs]

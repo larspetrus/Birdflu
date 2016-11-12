@@ -23,6 +23,11 @@ module AlgSetsHelper
     [['All Positions (3916)', 'all'], ['Edges Oriented (494)', 'eo']]
   end
 
+  def subset_long_name(algset)
+    @@long_names ||= {}.tap{|h| subset_options.each { |so| h[so.last] = so.first } }
+    @@long_names[algset.subset]
+  end
+
   def fmt_algs(algset)
     algset.algs.sub("G", "|G").sub("H", "|H").sub("I", "|I").sub("J", "|J").split('|')
   end
