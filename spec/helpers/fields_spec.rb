@@ -25,7 +25,7 @@ RSpec.describe 'Fields' do
   end
 
     it 'values' do
-      allow(AlgSet).to receive(:predefined) {[101, 102].map{|id| OpenStruct.new(id: id)}} # TODO Ugh... Since there is no way to reset class method stubs, let's stub them all the same for now
+      allow(AlgSet).to receive(:menu_options) {[101, 102].map{|id| OpenStruct.new(id: id)}} # TODO Ugh... Since there is no way to reset class method stubs, let's stub them all the same for now
 
       expect(Fields.values({})).to eq(OpenStruct.new(list: "positions", lines: "25", sortby: "_speed", algset: "0"))
 

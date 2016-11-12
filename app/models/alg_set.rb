@@ -158,7 +158,7 @@ class AlgSet < ActiveRecord::Base
 
   # -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+-
 
-  def self.predefined
+  def self.menu_options
     AlgSet.all.to_a.sort_by {|as| [as.predefined ? 0 : 1, as.subset, as.algs.length] }.map{|as| [as.menu_name, as.id] }
   end
 
