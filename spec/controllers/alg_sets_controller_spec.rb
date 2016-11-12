@@ -49,8 +49,9 @@ RSpec.describe AlgSetsController do
       expect(AlgSetsController::alter_algs(algset, "f1.f3", "j18.--")).to eq({new_algs: "F1.F3 G1.G6"})
     end
 
-    # "Add and remove the same alg"
-    # "Add/remove single alg ('autocomplete')"
+    it 'expands single alg names' do
+      expect(AlgSetsController::alter_algs(algset, "F3", "J18")).to eq({new_algs: "F1.F3 G1.G6"})
+    end
   end
 
   describe 'computing_off' do

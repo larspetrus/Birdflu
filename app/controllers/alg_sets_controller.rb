@@ -55,7 +55,7 @@ class AlgSetsController < ApplicationController
     end
 
     if @algset.errors.blank?
-      flash[:success] = "Algset updated"
+      flash[:success] = algs_result[:summary] ||  "Algset updated"
       redirect_to @algset
     else
       params[:alg_set][:add_algs] = params[:add_algs]
@@ -91,20 +91,20 @@ class AlgSetsController < ApplicationController
     remove_malgs = removes.upcase.split(' ')
     errors = []
 
-    add_malgs.each do |user_ma|
-      errors << "Bad alg '#{user_ma}'" unless MirrorAlgs.all_names.include?(user_ma)
+    (add_malgs + remove_malgs).each do |user_ma|
+      errors << "Bad alg '#{user_ma}'" unless MirrorAlgs.combined_name_for(user_ma)
     end
 
+    add_malgs = add_malgs.map{|ma| MirrorAlgs.combined_name_for(ma)}
+    remove_malgs = remove_malgs.map{|ma| MirrorAlgs.combined_name_for(ma)}
+
     remove_malgs.each do |user_ma|
-      if MirrorAlgs.all_names.include?(user_ma)
-        errors << "#{user_ma} is not in this algset" unless old_malgs.include?(user_ma)
-      else
-        errors << "Bad alg '#{user_ma}'"
-      end
+      errors << "'#{user_ma}' is not in this algset" unless old_malgs.include?(user_ma)
     end
 
     if errors.empty?
-      return { new_algs: (old_malgs + add_malgs - remove_malgs).sort.join(' ') }
+      summary = (add_malgs.present? ? "Added #{add_malgs.join(', ')}" : "") +(remove_malgs.present? ? " Removed #{remove_malgs.join(', ')}" : "")
+      return { new_algs: (old_malgs + add_malgs - remove_malgs).sort.join(' '), summary: summary }
     else
       errors.each { |error| algset.errors.add(:base, error)}
       return { errors: algset.errors.full_messages}

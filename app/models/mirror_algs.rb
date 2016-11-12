@@ -41,6 +41,11 @@ class MirrorAlgs
     @all_names ||= self.all_combined.map(&:name)
   end
 
+  def self.combined_name_for(alg_or_pair)
+    @name_map ||= self.all_names.map{|aa| [[aa, aa]] + aa.split('.').map{|a| [a, aa]}}.reduce(&:+).reject{|pair| pair.first == '--'}.to_h
+    @name_map[alg_or_pair]
+  end
+
   def self.combined(mirror_alg_name)
     _combined_data[mirror_alg_name]
   end

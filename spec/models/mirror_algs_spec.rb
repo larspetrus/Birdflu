@@ -46,5 +46,16 @@ describe MirrorAlgs do
     
     expect(MirrorAlgs.combined('H15.H33').to_s).to eq("H15.H33 [30, 48]")
   end
+
+  it 'combined_name_for' do
+    allow(MirrorAlgs).to receive(:all_names) {%w(F1.F3 G1.G6 H4.H26 J18.--)}
+
+    expect(MirrorAlgs.combined_name_for("F1.F3")).to eq("F1.F3")
+    expect(MirrorAlgs.combined_name_for("G1")).to eq("G1.G6")
+    expect(MirrorAlgs.combined_name_for("H26")).to eq("H4.H26")
+    expect(MirrorAlgs.combined_name_for("J18.--")).to eq("J18.--")
+    expect(MirrorAlgs.combined_name_for("J18")).to eq("J18.--")
+    expect(MirrorAlgs.combined_name_for("--")).to eq(nil)
+  end
 end
 
