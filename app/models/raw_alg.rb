@@ -122,11 +122,11 @@ class RawAlg < ActiveRecord::Base
   end
 
   def self.id_ranges
-    if @id_ranges.nil? && RawAlg.maximum(:id) == 46_321_380
+    if @id_ranges.nil? && RawAlg.where(length: 17).maximum(:id) == 46_314_320
       puts "@id_ranges SHORTCUT"
-      @id_ranges = [2, 6, 16, 54, 198, 904, 3502, 15340, 70522, 347_930, 1666_938, 8569_752, 43463_107, 43524_744, 43525_777]
+      @id_ranges = [2, 6, 16, 54, 198, 904, 3502, 15340, 70522, 347_930, 1666_938, 8569_752, 43_463_107]
     end
-    @id_ranges ||= (6..RawAlg.maximum(:length)).map{ |l| RawAlg.where(length: l).minimum(:id) }
+    @id_ranges ||= (6..DB_COMPLETENESS_LENGTH).map{ |l| RawAlg.where(length: l).minimum(:id) }
   end
 
   def self.name_for(db_id, ranges = self.id_ranges)
@@ -138,8 +138,8 @@ class RawAlg < ActiveRecord::Base
   end
 
   def self.id(name, ranges = self.id_ranges)
-    name = name.to_s
     return 1 if name == 'Nothing'
+    name = name.to_s.upcase
 
     computed_id = ranges[name.bytes[0] - 'F'.ord] + name[1..-1].to_i - 1
     self.name_for(computed_id, ranges) == name ? computed_id : nil

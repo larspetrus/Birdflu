@@ -51,6 +51,7 @@ class PositionsController < ApplicationController
           end
           @positions.first(limit)
         end
+    @list_items ||= []
 
     @text_size = cookies[:size] || 'm'
     @list_classes = PositionsController.table_class(@algs_mode, @combo_mode, @text_size, @selected_icons)

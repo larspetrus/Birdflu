@@ -99,7 +99,7 @@ class AlgSetsController < ApplicationController
     remove_malgs = remove_malgs.map{|ma| MirrorAlgs.combined_name_for(ma)}
 
     remove_malgs.each do |user_ma|
-      errors << "'#{user_ma}' is not in this algset" unless old_malgs.include?(user_ma)
+      errors << "'#{user_ma}' is not in this algset" unless old_malgs.include?(user_ma) || user_ma.blank?
     end
 
     if errors.empty?

@@ -113,6 +113,7 @@ describe RawAlg do
     expect(RawAlg.id('F1',  id_mins)).to eq(2)
     expect(RawAlg.id('G2',  id_mins)).to eq(6)
     expect(RawAlg.id('H14', id_mins)).to eq(25)
+    expect(RawAlg.id('h14', id_mins)).to eq(25)
     expect(RawAlg.id('Nothing', id_mins)).to eq(1)
 
     expect(RawAlg.id('G200', id_mins)).to eq(nil) # G7 is the highest G name

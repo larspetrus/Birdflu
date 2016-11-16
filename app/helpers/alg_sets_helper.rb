@@ -29,7 +29,7 @@ module AlgSetsHelper
   end
 
   def fmt_algs(algset)
-    algset.algs.sub("G", "|G").sub("H", "|H").sub("I", "|I").sub("J", "|J").split('|')
+    algset.algs.sub("G", "|G").sub("H", "|H").sub("I", "|I").sub("J", "|J").sub("K", "|K").split('|')
   end
 
   def owner(algset)
