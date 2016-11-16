@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Handles alg strings in packed format (Sune = "FUEUFuE"). Counterpart to UiAlg.
 class DbAlg
   def initialize(alg)
     @alg = (alg || '').freeze
@@ -32,6 +33,7 @@ class DbAlg
   def move_count
     @alg.length
   end
+
 
   def ui_alg
     UiAlg.new(Algs.unpack(@alg))

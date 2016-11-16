@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Handles alg strings in human readable format (Sune = "F U F' U F U2 F'"). Counterpart to DbAlg.
 class UiAlg
   def initialize(alg)
     @alg = (alg || '').freeze
