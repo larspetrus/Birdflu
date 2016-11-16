@@ -2,6 +2,10 @@
 
 # The Positions table contains a static data set of 4608 LL positions. Once initialized, it will never
 # change. It could live in memory instead of (or in addition to) the DB, and maybe that's a future feature.
+#
+# While there are 4608 distinct positions in our co/cp/eo/ep model, there are really only 3916 distinct positions.
+# The other 692 are rotational variations. We handle this by appointing one of the variations the "main_position",
+# that the others refer to through main_position_id, with the rotation defined in pov_offset.
 class Position < ActiveRecord::Base
   belongs_to :best_alg, class_name: RawAlg.name
   belongs_to :main_position, class_name: Position.name
@@ -25,7 +29,7 @@ class Position < ActiveRecord::Base
 
   def algs_in_set(alg_set, sortby: Fields::SORTBY.default, limit: Fields::LINES.default.to_i)
     RawAlg.joins(:combo_algs)
-    .where('combo_algs.alg1_id' => alg_set.ids, 'combo_algs.alg2_id' => alg_set.ids, 'combo_algs.position_id' => id)
+    .where('combo_algs.alg1_id' => alg_set.ids, 'combo_algs.alg2_id' => alg_set.ids, 'combo_algs.position_id' => main_position_id)
     .distinct
     .order(sortby)
     .limit(limit)
