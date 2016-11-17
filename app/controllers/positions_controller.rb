@@ -18,12 +18,13 @@ class PositionsController < ApplicationController
     end
     @list_format = PositionsController.read_list_format(cookies)
 
-    @algs_mode = (@list_format.list == 'algs') || @filters.all_set
+    @algs_mode = (@list_format.list == 'algs') || @filters.count == PosFilters::BASE.count
 
     query_includes = @algs_mode ? :stats : [:stats, :best_alg]
     @positions = Position.where(@filters.where).order(:optimal_alg_length, :cop, :eo, :ep).includes(query_includes).to_a
     @position_ids = @positions.map(&:id)
-    @only_position = @positions.first if @filters.all_set
+    @only_position = @positions.first if @filters.count == PosFilters::BASE.count
+    @setup_alg = Algs.reverse(Algs.shift(@positions.first.best_alg.moves, @positions.first.pov_offset)) if @filters.count >= 2
 
     @stats = stats_for_view(@only_position)
 

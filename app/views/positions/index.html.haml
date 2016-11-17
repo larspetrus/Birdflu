@@ -43,6 +43,12 @@
           = link_line[:label]
           - link_line[:links].each do |one_link|
             .link= one_link
+    -if @setup_alg
+      .spacer
+      .setupalg
+        Setup:
+        %span
+          = @setup_alg
 
 %table.center
   %tr
@@ -163,7 +169,7 @@
   }
   // --- SVG ROTATION SECTION ---
 
-  var ALG_TEXT_SELECT = 'td.js-alg, td.js-combo span';
+  var ALG_TEXT_SELECT = 'td.js-alg, td.js-combo span, .setupalg span';
 
   var U_TRANSPOSITIONS = {
      1: { R: 'F', F: 'L', L: 'B', B: 'R' },

@@ -272,6 +272,11 @@ $left-bgcolor: #f2f2f2;
   .spacer { height: 10px; }
 }
 
+.setupalg {
+  font-size: 80%;
+  span { display: inline-block; }
+}
+
 // --- SVG ---
 .pick-icon, .locked-pick-icon {
   width: 45px;

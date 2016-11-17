@@ -69,8 +69,8 @@ class PosFilters
     @all[key.to_sym]
   end
 
-  def all_set
-    @where.keys.sort == BASE
+  def count
+    @where.keys.count
   end
 
   def self.random_code(filter_prop, constraints, position_set)

@@ -89,12 +89,13 @@ describe PosFilters do
     expect(pos_filters_new(pos:'    ').pos_code).to eq('____')
   end
 
-  it 'all_set' do
-    expect(pos_filters_new(pos:'Ao  ').all_set).to eq(false)
-    expect(pos_filters_new(pos:'Ao0k').all_set).to eq(true)
-    expect(pos_filters_new({}).all_set).to eq(false)
+  it 'two_set' do
+    expect(pos_filters_new(pos:'Ao  ').count).to eq(2)
+    expect(pos_filters_new(pos:'Ao0k').count).to eq(4)
+    expect(pos_filters_new(pos:'__0_').count).to eq(1)
+    expect(pos_filters_new({}).count).to eq(0)
   end
-  
+
   it 'unpack_pos' do
     expect(PosFilters.unpack_pos('Fl4I')).to eq({co: 'F', cp: 'l', eo: '4', ep: 'I'})
     expect(PosFilters.unpack_pos('F_4_')).to eq({co: 'F', eo: '4'})
