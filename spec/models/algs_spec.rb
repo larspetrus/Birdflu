@@ -25,7 +25,10 @@ RSpec.describe Algs do
 
   it '#shift' do
     expect(Algs.shift("F U2 R' D B2 L'")).to eq("L U2 F' D R2 B'")
+    expect(Algs.shift("F U2 R' D B2 L'", 0)).to eq("F U2 R' D B2 L'")
     expect(Algs.shift("B F", 2)).to eq("B F")    # normalize
+    expect(Algs.shift("B F", 0)).to eq("B F")    # normalize
+    expect(Algs.shift(UiAlg.new("F U2 R' D B2 L'"))).to eq("L U2 F' D R2 B'")
   end
 
   it 'display_variant' do

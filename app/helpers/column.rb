@@ -32,16 +32,7 @@ class Column
   def svg_params(presenter)
     presenter.send(@method)
   end
-
-  def self.as_pos(alg_or_pos, flags)
-    alg_or_pos.respond_to?(:position) ? alg_or_pos.position.pov_variant_in(flags[:selected_pos_ids]) : alg_or_pos
-  end
-
-  def self.as_alg(alg_or_pos)
-    alg_or_pos.respond_to?(:best_alg) ? (alg_or_pos.best_alg || OpenStruct.new) : alg_or_pos
-  end
 end
-
 
 def hlp
   ActionController::Base.helpers
@@ -100,9 +91,13 @@ class RawAlgColumns
     @pos_cols ||= PositionColumns.new(@raw_alg.position, self)
   end
 
+  def ui_pos
+    @raw_alg.position.pov_variant_in(@context[:selected_pos_ids])
+  end
+
 
   def alg
-    tag(:td, Algs.shift(@raw_alg.moves, @raw_alg.position.pov_offset), 'js-alg')
+    tag(:td, Algs.shift(@raw_alg.moves, ui_pos.pov_offset), 'js-alg')
   end
 
   def speed
@@ -118,8 +113,7 @@ class RawAlgColumns
   end
 
   def show
-    pov_adjust = @raw_alg.position.pov_adjust_u_setup
-    td_tag(tag(:a, 'show', 'show-pig'), :'data-uset' => (@raw_alg.u_setup + pov_adjust) % 4 )
+    td_tag(tag(:a, 'show', 'show-pig'), :'data-uset' => (@raw_alg.u_setup + ui_pos.pov_adjust_u_setup) % 4 )
   end
 
   def notes

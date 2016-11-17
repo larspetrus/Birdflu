@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe PositionsController do
 
   it 'read_user_prefs' do
-    allow(AlgSet).to receive(:menu_options) {[101, 102].map{|id| OpenStruct.new(id: id)}} # TODO Ugh... Since there is no way to reset class method stubs, let's stub them all the same for now
+    allow(AlgSet).to receive(:menu_options) {[101, 102].map{|id| ["Algset ##{id}", id]}} # TODO Ugh... Since there is no way to reset class method stubs, let's stub them all the same for now
 
     missing_cookie = {}
     expect(PositionsController.read_list_format(missing_cookie).to_h).to eq(Fields::ALL_DEFAULTS)
@@ -29,7 +29,7 @@ RSpec.describe PositionsController do
     mock_cookies
   end
   it 'store_user_prefs' do
-    allow(AlgSet).to receive(:menu_options) {[101, 102].map{|id| OpenStruct.new(id: id)}} # TODO Ugh... Since there is no way to reset class method stubs, let's stub them all the same for now
+    allow(AlgSet).to receive(:menu_options) {[101, 102].map{|id| ["Algset ##{id}", id]}} # TODO Ugh... Since there is no way to reset class method stubs, let's stub them all the same for now
 
     PositionsController.store_list_format(cookies = mockies, {lines: '50', algset: '101'}.with_indifferent_access)
     expect(cookies[:field_values]).to eq(JSON.generate(lines: '50', algset: '101'))
