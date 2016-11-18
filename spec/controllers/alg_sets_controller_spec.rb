@@ -56,13 +56,13 @@ RSpec.describe AlgSetsController do
 
   describe 'computing_off' do
     before(:each) do
-      allow(ComboAlg).to receive(:where) { double(includes: double(map: [66, 77]))}
-      allow(algset).to receive(:ids) { [1,2,5]}
+      allow(algset).to receive(:subset_pos_ids) { [0,1,2]}
+      allow(algset).to receive(:lengths) { [12, 14, 10000]}
     end
 
     let (:algset) { AlgSet.new(name: "test", algs: "F1.F3", subset: "all") }
 
-    it 'computes by default, ad returns alrady cached data when compute is off' do
+    it 'computes by default, and returns already cached data when compute is off' do
       expect(algset.coverage).to eq(2)
 
       algset.computing_off

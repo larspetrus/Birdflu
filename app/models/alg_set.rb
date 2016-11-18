@@ -101,14 +101,17 @@ class AlgSet < ActiveRecord::Base
 
   def coverage
     cache(:coverage) do
-      unique_pos_ids = ComboAlg.where(alg1_id: ids, alg2_id: ids).includes(:combined_alg).map { |ca| ca.combined_alg.position_id }.uniq
-      (unique_pos_ids & subset_pos_ids).count
+      subset_pos_ids.count{|id| lengths[id] < 30 }
     end
   end
 
   def full_coverage
     return nil unless coverage
-    coverage == subset_pos_ids.count - 1
+    coverage == subset_pos_ids.count
+  end
+
+  def uncovered_ids
+    subset_pos_ids.select{|id| lengths[id] > 30 }
   end
 
   def average(by_measure)

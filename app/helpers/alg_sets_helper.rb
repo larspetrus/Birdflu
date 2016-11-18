@@ -6,7 +6,7 @@ module AlgSetsHelper
 
   def fmt_coverage(algset)
     return '--' unless algset.coverage
-    algset.full_coverage ? '100%' :  "#{algset.coverage}/#{algset.subset_pos_ids.count - 1}"
+    algset.full_coverage ? '100%' :  "#{algset.coverage}/#{algset.subset_pos_ids.count}"
   end
 
   def fmt_avg_length(algset)
