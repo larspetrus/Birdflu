@@ -6,7 +6,12 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   before_action :handle_wca_login
+  around_action :notice_exceptions
 
+  private
+
+  @@trouble_list = []
+  
   def handle_wca_login
     if session[:wca_login]
       if Time.now.to_i > (session[:wca_login]['expires'] || 0)
@@ -18,4 +23,12 @@ class ApplicationController < ActionController::Base
       end
     end
   end
+
+  def notice_exceptions
+    yield
+  rescue Exception => e
+    @@trouble_list << "Exception at #{Time.now} --- #{e.message}"
+    raise
+  end
+
 end

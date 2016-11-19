@@ -225,7 +225,7 @@ class DuckPosition
 end
 
 class DuckRawAlg
-  attr_reader :moves, :length, :speed, :name, :u_setup, :specialness
+  attr_reader :moves, :length, :speed, :name, :u_setup, :specialness, :nick_name
 
   def initialize(moves)
     @moves = moves

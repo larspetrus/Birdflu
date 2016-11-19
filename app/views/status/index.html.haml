@@ -12,6 +12,13 @@
 
 .stat #{spaced_number(@raw_alg_count)} algs, #{spaced_number(@combo_alg_count)} combos, #{WcaUserData.count} users
 
+.stat
+  -if @troubles.empty?
+    All is calm.
+  -else
+    -@troubles.each do |e|
+      %br
+      =e
 
 :javascript
   $('body').addClass("#{@body_css}");
