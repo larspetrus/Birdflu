@@ -73,6 +73,16 @@ RSpec.describe PositionsController do
       expect(JSON.parse(response.body)).to eq("ll_code" => "a5c6g8q3", "prot" => 0, "found_by"=>"B2 R2 F R F' R B2 U' L U' L'")
     end
 
+    it "ignores ()+ responsibly" do
+      post_find_by_alg("B2 R2 F+R F' R B2 (U' L) U' L'")
+      expect(JSON.parse(response.body)).to eq("ll_code" => "a5c6g8q3", "prot" => 0, "found_by"=>"B2 R2 F R F' R B2 U' L U' L'")
+    end
+
+    it "removes needless U turns" do
+      post_find_by_alg("B2 R2 F R F' R B2 U' L U' L' U2")
+      expect(JSON.parse(response.body)).to eq("ll_code" => "a5c6g8q3", "prot" => 0, "found_by"=>"B2 R2 F R F' R B2 U' L U' L'")
+    end
+
 
     it "Detects errors" do
       post_find_by_alg("F blah U")

@@ -180,7 +180,10 @@ class PositionsController < ApplicationController
 
   # === Routed action ===
   def find_by_alg
-    user_input = params[:alg].upcase.strip
+    user_input = params[:alg].upcase.gsub(/[\+\(\)]/, ' ').strip
+    moves = user_input.split(' ')
+    while moves.last[0] == 'U' do moves.pop end
+    user_input = moves.join(' ')
 
     if user_input.include? ' ' # interpret as moves
       actual_moves = user_input
@@ -205,6 +208,21 @@ class PositionsController < ApplicationController
   end
 end
 
+# TODO Got to get rid of these Ducks...
+class DuckPosition
+  def pov_offset
+    0
+  end
+
+  def pov_adjust_u_setup
+    0
+  end
+
+  def pov_variant_in(selected_ids)
+    self
+  end
+end
+
 class DuckRawAlg
   attr_reader :moves, :length, :speed, :name, :u_setup, :specialness
 
@@ -223,7 +241,11 @@ class DuckRawAlg
   end
 
   def position
-    OpenStruct.new(pov_offset: 0, pov_adjust_u_setup: 0)
+    DuckPosition.new
+  end
+
+  def pov_variant_in(ignore)
+    position
   end
 
   def matches(search_term)
