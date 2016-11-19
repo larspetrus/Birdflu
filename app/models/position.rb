@@ -139,6 +139,11 @@ class Position < ActiveRecord::Base
     false
   end
 
+  NICK_NAMES = {491 => 'H Perm', 59 => 'U Perm b', 275 => 'U Perm a', 549 => 'Z Perm', 2607 =>'A Perm b', 3255 =>'E Perm', 3039 =>'F Perm', 2391 =>'G Perm a', 1527 =>'G Perm b', 1095 =>'G Perm c', 1959 =>'G Perm d', 1743 =>'J Perm a', 2175 =>'J Perm b', 3859 =>'N Perm a', 3801 =>'N Perm b', 1311 =>'R Perm a', 879 =>'R Perm b', 2823 =>'T Perm', 3369 =>'V Perm', 3585 =>'Y Perm', }
+  def nick_name
+    NICK_NAMES[main_position_id]
+  end
+
   def to_s
     "Position #{id} - #{display_name}"
   end

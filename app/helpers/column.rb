@@ -117,7 +117,7 @@ class RawAlgColumns
   end
 
   def notes
-    tag(:td, @raw_alg.specialness)
+    tag(:td, [@raw_alg.specialness, @raw_alg.nick_name].compact.join(' '))
   end
 end
 

@@ -55,7 +55,8 @@ $optimal_color: #69f;
   }
   td { padding: 0 2px; }
   td:nth-child(-n+2) { text-align: right; } // first two columns
-  th:nth-last-child(2), td:nth-last-child(2) { border-left: none; }
+  th:nth-last-child(2), td:nth-last-child(2) { border-left: none; } // no line between alg and button
+  td:nth-last-child(1) { font-size: 85%; } // Notes column
   .hilite td {
     background-color: #ff0;
     border-top: solid red 1px;
@@ -251,6 +252,12 @@ $left-bgcolor: #f2f2f2;
   font-size: 12px;
   padding: 6px;
   margin: 4px;
+
+  .nickname {
+    font-size: 9px;
+    font-weight: 700;
+    margin: -4px 0 4px;
+  }
 
   #headline, #headline_prot {
     font-size: 16px;

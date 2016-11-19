@@ -26,6 +26,9 @@
     %span#headline= @stats.headline
     - if @only_position
       %span#headline_prot
+    -if @pos_name
+      .nickname
+        =@pos_name
     %table
       - @stats.sections[0].each do |line|
         %tr

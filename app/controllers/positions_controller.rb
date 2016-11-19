@@ -25,6 +25,7 @@ class PositionsController < ApplicationController
     @position_ids = @positions.map(&:id)
     @only_position = @positions.first if @filters.count == PosFilters::BASE.count
     @setup_alg = Algs.reverse(Algs.shift(@positions.first.best_alg.moves, @positions.first.pov_offset)) if @filters.count >= 2
+    @pos_name = @only_position&.nick_name
 
     @stats = stats_for_view(@only_position)
 
@@ -63,7 +64,7 @@ class PositionsController < ApplicationController
 
     if params[:hl_alg]
       @hi_lite = params[:hl_alg]
-      @list_items += [DuckRawAlg.new(Algs.shift(@hi_lite, -@page_rotation))]
+      @list_items.insert(0, DuckRawAlg.new(Algs.shift(@hi_lite, -@page_rotation)))
     end
     if params[:hl_id]
       @hi_lite = params[:hl_id].to_i
@@ -180,7 +181,7 @@ class PositionsController < ApplicationController
 
   # === Routed action ===
   def find_by_alg
-    user_input = params[:alg].upcase.gsub(/[\+\(\)]/, ' ').strip
+    user_input = params[:alg].upcase.gsub(/[\+\(\)]/, ' ').gsub("2'", "2").strip
     moves = user_input.split(' ')
     while moves.last[0] == 'U' do moves.pop end
     user_input = moves.join(' ')
