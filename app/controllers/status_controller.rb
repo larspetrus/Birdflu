@@ -9,5 +9,6 @@ class StatusController < ApplicationController
     @combo_alg_count ||= @@combo_alg_count ||= ComboAlg.count
 
     @troubles = @@trouble_list
+    @requests = @@request_count.keys.sort.map{|k| [k, @@request_count[k]] }
   end
 end

@@ -13,6 +13,15 @@
 .stat #{spaced_number(@raw_alg_count)} algs, #{spaced_number(@combo_alg_count)} combos, #{WcaUserData.count} users
 
 .stat
+  %table
+    -@requests.each do |req|
+      %tr
+        %td
+          =req.first
+        %td
+          =req.last
+
+.stat
   -if @troubles.empty?
     All is calm.
   -else
