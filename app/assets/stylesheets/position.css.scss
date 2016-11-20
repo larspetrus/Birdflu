@@ -47,10 +47,12 @@ $optimal_color: #69f;
   .combo   { color: #700; }
 }
 .algs-list {
-  th { background-color: #cef; }
+  th {
+    background:linear-gradient(to bottom, #cef 5%, #8af 100%);
+  }
 
   th:nth-child(1) { // Sortby column header
-    background: #37f;
+    background:linear-gradient(to top, #16f 5%, #9bf 100%);
     color: #fff;
   }
   td { padding: 0 2px; }
@@ -64,7 +66,10 @@ $optimal_color: #69f;
   }
 }
 .positions-list {
-  th, tfoot { background-color: #484; color: #fff; }
+  th, tfoot {
+    background:linear-gradient(to bottom, #8b8 5%, #484 100%);
+    color: #fff;
+  }
   tfoot { text-align: center; font-size: 10px; }
 
   td { padding: 0 2px; }
