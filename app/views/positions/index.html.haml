@@ -17,6 +17,8 @@
     .leftitem
       .combo-head
         Combo Alg Set:
+      .setting
+        =link_to("\u2699", alg_sets_path)
       %span{ class: "list-size"}
         =Fields::ALGSET.as_tag(@list_format, class: 'list-size__select', form: 'main-form')
   .leftitem.clickable= link_to 'FMC Nissualizer', "fmc?example=1"

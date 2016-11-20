@@ -137,7 +137,13 @@ $left-bgcolor: #f2f2f2;
     .combo-head {
       margin-bottom: 4px;
       font-size: 85%;
-      text-align: center;
+      display:inline-block;
+    }
+
+    .setting {
+      color: black;
+      float: right;
+      font-size: 12px;
     }
   }
 
