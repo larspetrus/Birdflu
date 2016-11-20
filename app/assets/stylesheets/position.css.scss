@@ -509,18 +509,9 @@ $sp_border: #666;
 $sp_text_shadow: #000;
 
 .show-pig {
-  -moz-box-shadow: 0px 10px 14px -7px $sp_box_shadow;
-  -webkit-box-shadow: 0px 10px 14px -7px $sp_box_shadow;
   box-shadow: 0px 10px 14px -7px $sp_box_shadow;
-  background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, $sp_light_gradient), color-stop(1, $sp_dark_gradient));
-  background:-moz-linear-gradient(top, $sp_light_gradient 5%, $sp_dark_gradient 100%);
-  background:-webkit-linear-gradient(top, $sp_light_gradient 5%, $sp_dark_gradient 100%);
-  background:-o-linear-gradient(top, $sp_light_gradient 5%, $sp_dark_gradient 100%);
-  background:-ms-linear-gradient(top, $sp_light_gradient 5%, $sp_dark_gradient 100%);
   background:linear-gradient(to bottom, $sp_light_gradient 5%, $sp_dark_gradient 100%);
-  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='$sp1', endColorstr='$sp2',GradientType=0);
   background-color: $sp_light_gradient;
-  -moz-border-radius:2px;
   border-radius:2px;
   border:1px solid $sp_border;
   display:inline-block;
@@ -533,13 +524,7 @@ $sp_text_shadow: #000;
   text-shadow:0px 1px 0px $sp_text_shadow;
 }
 .show-pig:hover {
-  background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, $sp_dark_gradient), color-stop(1, $sp_light_gradient));
-  background:-moz-linear-gradient(top, $sp_dark_gradient 5%, $sp_light_gradient 100%);
-  background:-webkit-linear-gradient(top, $sp_dark_gradient 5%, $sp_light_gradient 100%);
-  background:-o-linear-gradient(top, $sp_dark_gradient 5%, $sp_light_gradient 100%);
-  background:-ms-linear-gradient(top, $sp_dark_gradient 5%, $sp_light_gradient 100%);
   background:linear-gradient(to bottom, $sp_dark_gradient 5%, $sp_light_gradient 100%);
-  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='$sp2', endColorstr='$sp1',GradientType=0);
   background-color: $sp_dark_gradient;
 }
 .show-pig:active {
@@ -574,12 +559,10 @@ $shadow: #ffffff;
   cursor: pointer;
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #{$light}), color-stop(1, #{$dark}));
   background: -moz-linear-gradient(center top, #{$light} 5%, #{$dark} 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#{$light}', endColorstr='#{$dark}');
 }
 .knapp-enabled:hover {
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #{$dark}), color-stop(1, #{$light}));
   background: -moz-linear-gradient(center top, #{$dark} 5%, #{$light} 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#{$dark}', endColorstr='#{$light}');
 }
 .knapp-enabled:active, .knapp-fake-active {
   position: relative;
