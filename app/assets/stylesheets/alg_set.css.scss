@@ -18,13 +18,23 @@ $menu-color: #44f;
   margin-bottom: 10px;
 }
 
+.index-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-.algsets {
+  h2 {
+    margin-top: 0;
+  }
+}
+
+.show_table {
   font-size: 12px;
   border-collapse: collapse;
 
-  table, th, td {
-    border: 1px solid #ddd;
+  td:nth-child(1) {
+    font-weight: 700;
+    text-align: right;
   }
 
   td {
@@ -33,13 +43,36 @@ $menu-color: #44f;
   }
 }
 
+
+.algset-list {
+  margin: 0 auto;
+  border-collapse: collapse;
+  border: 1px solid #ddd;
+  tr:hover { background: #eef; }
+  tr { border-bottom: solid 1px #ddd;}
+  td {
+    border-left: 1px solid #ddd;
+    padding: 0 3px;
+  }
+  th { border-left: 1px solid #fff; padding: 1px 4px;}
+
+  th:nth-last-child(2), td:nth-last-child(2) { border-left: none; } // no line between buttons
+  th:nth-last-child(1), td:nth-last-child(1) { border-left: none; } // no line between buttons
+
+  th {
+    background:linear-gradient(to bottom, #eb8 5%, #b83 100%);
+  }
+
+  .knapp { font-weight: 700; }
+}
+
 .edit_algset {
   label {
     font-size: 12px;
     font-weight: 700;
   }
   p { margin: 10px 0 4px 0; }
-  .small { font-size: 10px; }
+  .small { font-size: 10px; margin: 0 0 0 20px;}
 }
 
 #error_explanation {

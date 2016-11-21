@@ -35,7 +35,6 @@ $optimal_color: #69f;
 .optimal { color: $optimal_color; }
 
 .algs-list, .positions-list {
-
   margin: 0 auto;
   border-collapse: collapse;
   border: 1px solid #ddd;
@@ -542,7 +541,7 @@ $dark:   #bbb;
 $shadow: #ffffff;
 
 .knapp {
-  font-size: 16px;
+//  font-size: 16px;
   font-family: Lucida Sans Unicode, Lucida Grande, sans-serif;
   font-weight: normal;
   font-style: normal;
@@ -558,6 +557,9 @@ $shadow: #ffffff;
   text-decoration: none;
   text-align: center;
   text-shadow: 1px 1px 0 #{$shadow};
+}
+.knapp16 {
+  font-size: 16px;
 }
 .knapp-enabled {
   cursor: pointer;

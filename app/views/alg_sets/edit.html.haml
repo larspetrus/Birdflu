@@ -18,6 +18,7 @@
 
   %p
     = f.label :subset
+  %p{style: 'font-size: 12px; margin: 0 0 0 20px;'}
     = subset_long_name(@algset)
 
   %p
@@ -27,7 +28,7 @@
 
   %p
     = f.label :algs
-  %p
+  %p{style: 'margin: 0;'}
     -fmt_algs(@algset).each do |line|
       .small
         =line
@@ -39,4 +40,4 @@
 
 
   %p
-    = f.submit "Save changes", class: "show-pig", style: 'font-size: 14px;'
+    = f.submit "Save changes", class: "knapp knapp-enabled knapp16", style: "font-weight: 700;"

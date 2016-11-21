@@ -2,9 +2,9 @@
   =link_to('Birdflu', '/')
   =link_to('Algsets', alg_sets_path)
 
-%h3 Show
+%h3 Show Algset
 
-%table.algsets
+%table.show_table
   %tr
     %td id
     %td
@@ -20,7 +20,7 @@
   %tr
     %td subset
     %td
-      =@algset.subset
+      =subset_long_name(@algset)
   %tr
     %td algs
     %td
@@ -38,7 +38,7 @@
   %tr
     %td
     %td
-      =link_to('edit', edit_alg_set_path(@algset), class: 'show-pig')
+      =link_to('Edit', edit_alg_set_path(@algset), class: 'knapp knapp-enabled knapp16')
 
 -unless @algset.computed
   :javascript

@@ -1,13 +1,16 @@
 .algset_top
   =link_to('Birdflu', '/')
 
-- if @login
-  =link_to('New Algset', new_alg_set_path, class: 'show-pig', style: 'font-size: 14px;')
-- else
-  %div{style: 'font-size: 9px;'} (log in to create)
+
+.index-header
+  %h2 Alg Sets
+  - if @login
+    =link_to('Create', new_alg_set_path, class: 'knapp knapp-enabled knapp16')
+  - else
+    %div{style: 'font-size: 9px;'} (log in to create)
 %p
 
-%table.algsets
+%table.algset-list.size-s-wc
   %tr
     %th id
     %th name
@@ -36,13 +39,13 @@
       %td
         =owner(algset)
       %td
-        =link_to('show', alg_set_path(algset), class: 'show-pig')
+        =link_to('Show', alg_set_path(algset), class: 'knapp knapp-enabled')
       %td
         - if algset.editable_by_this_user
-          =link_to('edit', edit_alg_set_path(algset), class: 'show-pig')
+          =link_to('Edit', edit_alg_set_path(algset), class: 'knapp knapp-enabled')
       %td
         - if algset.editable_by_this_user && (not algset.predefined)
-          = link_to "Remove", algset, method: :delete, data: {confirm:"You Sure?"}, class: 'show-pig'
+          = link_to "Remove", algset, method: :delete, data: {confirm:"You Sure?"}, class: 'knapp knapp-enabled'
 
 -if @to_compute.present?
   :javascript
