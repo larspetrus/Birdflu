@@ -11,6 +11,7 @@ Rails.application.routes.draw do
 
   resources :alg_sets
   get 'alg_sets/compute/:ids', to: "alg_sets#compute"
+  post 'alg_sets/update_star'
 
   get 'hemlig', to: 'status#index'
   get 'fmc', to: 'fmc#index'

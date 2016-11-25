@@ -21,6 +21,8 @@ class Column
   SHOW     = self.new('', :show)
   NOTES    = self.new('Notes', :notes)
 
+  STARS    = self.new('☆', :stars)
+
   COP = self.new('COP', :cop, is_svg: true )
   EO  = self.new('EO',  :eo,  is_svg: true )
   EP  = self.new('EP',  :ep,  is_svg: true )
@@ -119,18 +121,27 @@ class RawAlgColumns
   def notes
     tag(:td, [@raw_alg.specialness, @raw_alg.nick_name].compact.join(' '))
   end
+
+  def stars
+    stars = @raw_alg.stars
+    data = {aid: @raw_alg.id}
+    data[:present] = stars.join(' ') if stars.present?
+
+    # NOTE that there is a duplicate implementation of this in the AJAX handler
+    hlp.content_tag(:td, stars.map{|star_id| tag(:span, '', "star#{star_id}") }.join.html_safe, class: :stars_td, data: data)
+  end
 end
 
 
 class ComboAlgColumns
-  attr_reader :speed, :moves, :show, :notes, :position, :cop, :eo, :ep
+  attr_reader :speed, :moves, :show, :notes, :position, :cop, :eo, :ep, :stars
 
   def initialize(combo_alg, context)
     @combo_alg = combo_alg
     @context = context
 
     @speed = @moves = @show = @notes = @position = tag(:td, '')
-    @cop = @eo = @ep = nil
+    @cop = @eo = @ep = @stars = nil
   end
 
   def alg

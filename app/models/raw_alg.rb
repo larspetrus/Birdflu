@@ -34,6 +34,15 @@ class RawAlg < ActiveRecord::Base
     Algs.unpack(_moves)
   end
 
+  def stars
+    result = []
+    result << 1 if id % 19 == 0
+    result << 2 if id % 41 == 0
+    result << 3 if id % 77 == 0
+    result << 4 if id % 99 == 0
+    result
+  end
+
   # --- Finders ---
   def self.by_name(name)
     self.find(self.id(name))
@@ -156,7 +165,6 @@ class RawAlg < ActiveRecord::Base
   end
 
   NICK_NAMES = {8=>"Sune", 14=>"Sune", 10=>"AntiSune", 15=>"AntiSune", 9=>"Niklas", 13=>"Niklas", 112=>"Bruno", 169=>"Bruno", 194=>"Allan", 197=>"Allan", 2636=>"Sune²", 1605=>"Sune²", 1874=>"AntiSune²", 2809=>"AntiSune²"}
-
   def nick_name
     NICK_NAMES[id]
   end

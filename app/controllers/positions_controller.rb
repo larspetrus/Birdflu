@@ -79,6 +79,7 @@ class PositionsController < ApplicationController
     columns << Column::COP if @selected_icons[:cop].is_none
     columns << Column::EO  if @selected_icons[:eo].is_none
     columns << Column::EP  if @selected_icons[:ep].is_none
+    columns << Column::STARS
     columns << Column::ALG << Column::SHOW << Column::NOTES
   end
 

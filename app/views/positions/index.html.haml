@@ -126,6 +126,18 @@
           showing #{@clipped[:shown]} of #{@clipped[:total]} positions
 
 #show-alg{style: 'height:200px; width:200px;'}
+
+#star-picker{style: 'height: 60px; width: 99px; display: none;'}
+  .star1
+  .star2
+  .star3
+  .star4
+
+=form_tag url_for(controller: 'alg_sets', action: 'update_star'), method: 'post', id: 'star_form', remote: true do
+  =hidden_field_tag(:rawalg_id)
+  =hidden_field_tag(:star_class)
+
+
 #about-box
   %p Birdflu aims to contain all knowledge of algorithms and positions for the last layer of Rubik's Cube, and present it in simple and useful ways. That will take a while.
   %p For now is has all algs up to 17 moves (43 million), and some basic features. More to come.
@@ -271,6 +283,59 @@
     Cookies.set('size',$(this).val() , { expires: 3650 });
     window.location = window.location.search;
   });
+
+  var star_alg_id = null;
+  $('.stars_td').on('click', function() {
+    star_alg_id = $(this).data('aid');
+    var present_stars = ($(this).data('present') ? String($(this).data('present')).split(' ') : []);
+
+    $('#star-picker').children().text('')
+    for (var ii of present_stars) {
+      $($('#star-picker').children().get(ii - 1)).text('-')
+    }
+
+    $('#star-picker').dialog({
+      position: { my: 'center top', at: 'center top', of: this },
+      width: 92,
+      height: 40,
+      modal: true,
+      closeOnEscape: true,
+      dialogClass: 'stars-dialog',
+      //close: function( event, ui ) {
+      //  var cube_id = $('#show-alg').children().attr('data-cube-id');
+      //  if (cube_id) {
+      //    CubeAnimation.by_id[cube_id].remove();
+      //  }
+      //}
+    });
+
+  });
+
+  $(document).on({
+    mouseleave: function(event) {
+      $('#star-picker').dialog('close');
+    }
+  }, ".stars-dialog");
+
+  $('#star-picker .star1, #star-picker .star2, #star-picker .star3, #star-picker .star4').on('click', function() {
+    var clicked = this.className
+    //var existing = $(this).siblings().map(function() { return this.className; });
+    //console.log(clicked, star_alg_id);
+    $('#star-picker').dialog('close');
+    $('#rawalg_id').val(star_alg_id);
+    $('#star_class').val(clicked);
+    $('#star_form').submit();
+  });
+  $('#star_form').on('ajax:success', function(e, data, status, xhr) {
+    var td = $("td[data-aid='" + star_alg_id + "']")
+    var td = td.empty()
+
+    var result = JSON.parse(xhr.responseText);
+    for (var i = 0; i < result.length; i++) {
+      td.append("<span class=" + result[i] + "></span>")
+    }
+  });
+
 
 - if Rails.env.production?
   :javascript

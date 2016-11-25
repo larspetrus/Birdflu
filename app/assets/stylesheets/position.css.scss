@@ -480,6 +480,11 @@ $panel-width: 450px;
   font-size: 80% !important;
 }
 
+.stars-dialog {
+  font-size: 80% !important;
+  .ui-dialog-titlebar {display: none}
+}
+
 .js-goto-post {
   &:hover {
     font-weight: bold;

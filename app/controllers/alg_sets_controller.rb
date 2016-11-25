@@ -110,4 +110,10 @@ class AlgSetsController < ApplicationController
       return { errors: algset.errors.full_messages}
     end
   end
+
+  def update_star
+    raise "Must be logged in to update stars" unless @login
+    # Actual implementation, using params[:rawalg_id] & params[:star_class] goes here
+    render json: ['star1', 'star4']
+  end
 end

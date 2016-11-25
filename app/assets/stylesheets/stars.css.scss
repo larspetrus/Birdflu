@@ -1,0 +1,25 @@
+.stars_td {
+  cursor: pointer;
+}
+
+@mixin star_n($col, $char) {
+  display: inline-block;
+  &:before { content: $char; }
+  color: $col;
+}
+
+.star1 { @include star_n(red, "★") }
+.star2 { @include star_n(red, "☆") }
+.star3 { @include star_n(blue, "★") }
+.star4 { @include star_n(blue, "☆") }
+
+
+#star-picker {
+  .star1, .star2, .star3, .star4 {
+    margin: 0 -1px;
+
+    border: 1px solid white;
+    &:hover { border: 1px dashed purple; }
+  }
+
+}
