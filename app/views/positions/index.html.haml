@@ -103,7 +103,7 @@
         Sort by
         =Fields::SORTBY.as_tag(@list_format)
 
-- context = @algs_mode ?  {stats: @stats.data, selected_pos_ids: @position_ids} : {selected_pos_ids: @position_ids}
+- context = @algs_mode ?  {stats: @stats.data, selected_pos_ids: @position_ids, login: @login} : {selected_pos_ids: @position_ids}
 %table{class: @list_classes}
   - @columns.each do |column|
     %th= column.header

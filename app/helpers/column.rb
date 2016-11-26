@@ -123,7 +123,7 @@ class RawAlgColumns
   end
 
   def stars
-    stars = @raw_alg.stars
+    stars = @context[:login] ? @raw_alg.stars(@context[:login].db_id) : []
     data = {aid: @raw_alg.id}
     data[:present] = stars.join(' ') if stars.present?
 

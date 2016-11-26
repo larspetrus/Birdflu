@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161108041933) do
+ActiveRecord::Schema.define(version: 20161126023916) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -38,6 +38,11 @@ ActiveRecord::Schema.define(version: 20161108041933) do
 
   add_index "combo_algs", ["combined_alg_id"], name: "index_combo_algs_on_combined_alg_id", using: :btree
   add_index "combo_algs", ["position_id", "alg1_id", "alg2_id"], name: "index_combo_algs_on_position_id_and_alg1_id_and_alg2_id", using: :btree
+
+  create_table "galaxies", force: :cascade do |t|
+    t.integer "wca_user_data_id"
+    t.integer "style",            limit: 2
+  end
 
   create_table "position_stats", force: :cascade do |t|
     t.integer "position_id"
@@ -83,6 +88,11 @@ ActiveRecord::Schema.define(version: 20161108041933) do
   add_index "raw_algs", ["length", "_speed"], name: "index_raw_algs_on_length_and__speed", using: :btree
   add_index "raw_algs", ["position_id", "_speed", "length"], name: "index_raw_algs_on_position_id_and__speed_and_length", using: :btree
   add_index "raw_algs", ["position_id", "length", "_speed"], name: "index_raw_algs_on_position_id_and_length_and__speed", using: :btree
+
+  create_table "stars", force: :cascade do |t|
+    t.integer "galaxy_id"
+    t.integer "raw_alg_id"
+  end
 
   create_table "wca_user_data", force: :cascade do |t|
     t.integer  "wca_db_id"

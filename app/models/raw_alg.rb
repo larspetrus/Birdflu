@@ -34,13 +34,8 @@ class RawAlg < ActiveRecord::Base
     Algs.unpack(_moves)
   end
 
-  def stars
-    result = []
-    result << 1 if id % 19 == 0
-    result << 2 if id % 41 == 0
-    result << 3 if id % 77 == 0
-    result << 4 if id % 99 == 0
-    result
+  def stars(wca_user_id_thing)
+    Galaxy.star_styles_for(wca_user_id_thing, id)
   end
 
   # --- Finders ---

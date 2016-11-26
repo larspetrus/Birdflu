@@ -113,7 +113,16 @@ class AlgSetsController < ApplicationController
 
   def update_star
     raise "Must be logged in to update stars" unless @login
-    # Actual implementation, using params[:rawalg_id] & params[:star_class] goes here
-    render json: ['star1', 'star4']
+
+    style = params[:star_class][4..-1].to_i # Format has to be "star#{style}"
+    galaxy = Galaxy.find_or_create_by(wca_user_data_id: @login.db_id, style: style)
+    toggle_id = params[:rawalg_id].to_i
+    if galaxy.include?(toggle_id)
+      galaxy.remove_id(toggle_id)
+    else
+      galaxy.add_id(toggle_id)
+    end
+
+    render json: Galaxy.star_styles_for(@login.db_id, toggle_id).map{|style| "star#{style}" }
   end
 end
