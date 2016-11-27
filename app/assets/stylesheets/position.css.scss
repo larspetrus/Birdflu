@@ -56,6 +56,7 @@ $optimal_color: #69f;
   }
   td { padding: 0 2px; }
   td:nth-child(-n+2) { text-align: right; } // first two columns
+  td:nth-child(3) { font-size: 90%; } // Name column
   th:nth-last-child(2), td:nth-last-child(2) { border-left: none; } // no line between alg and button
   td:nth-last-child(1) { font-size: 85%; } // Notes column
   .hilite td {
