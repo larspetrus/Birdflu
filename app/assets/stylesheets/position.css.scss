@@ -40,45 +40,60 @@ $optimal_color: #69f;
   border: 1px solid #ddd;
   tr:hover { background: #eef; }
   tr:nth-child(5n + 1) { border-bottom: solid 1px #ddd;}
-  td { border-left: 1px solid #ddd; }
+  td {
+    border-left: 1px solid #ddd;
+    padding: 0 2px;
+  }
   th { border-left: 1px solid #fff; padding: 1px 4px;}
   .single  { color: #073; }
   .combo   { color: #700; }
 }
+
+$sortby-nth: 1;
+$name-nth: 3;
+$show-nthlast: 3;
+$notes-nthlast: 2;
+$stars-nthlast: 1;
 .algs-list {
   th {
     background:linear-gradient(to bottom, #cef 5%, #8af 100%);
   }
 
-  th:nth-child(1) { // Sortby column header
+  th:nth-child(#{$sortby-nth}) {
     background:linear-gradient(to top, #16f 5%, #9bf 100%);
     color: #fff;
   }
-  td { padding: 0 2px; }
   td:nth-child(-n+2) { text-align: right; } // first two columns
-  td:nth-child(3) { font-size: 90%; } // Name column
-  th:nth-last-child(2), td:nth-last-child(2) { border-left: none; } // no line between alg and button
-  td:nth-last-child(1) { font-size: 85%; } // Notes column
+  td:nth-child(#{$name-nth}) { font-size: 90%; }
+  th:nth-last-child(#{$show-nthlast}), td:nth-last-child(#{$show-nthlast}) { border-left: none; }
+  td:nth-last-child(#{$notes-nthlast}) { font-size: 85%; }
+  th:nth-last-child(#{$stars-nthlast}), td:nth-last-child(#{$stars-nthlast}) { display: none; }
   .hilite td {
     background-color: #ff0;
     border-top: solid red 1px;
     border-bottom: solid red 1px;
   }
 }
+.combo-list {
+  tr:nth-child(5n + 1) { border-bottom: none;}
+}
+.loggedin {
+  th:nth-last-child(#{$stars-nthlast}), td:nth-last-child(#{$stars-nthlast}) { display: table-cell; }
+}
+
+$movecount-nthlast: 3;
+$alg-nthlast: 2;
+$show-nthlast: 1;
 .positions-list {
   th, tfoot {
     background:linear-gradient(to bottom, #afa 5%, #5c5 100%);
   }
   tfoot { text-align: center; font-size: 10px; }
 
-  td { padding: 0 2px; }
-  td:nth-last-child(4) { text-align: right; } // move count
-  td:nth-last-child(3) { color: $optimal_color; text-align: right; }
-  td:nth-last-child(1), th:nth-last-child(1), th:nth-last-child(2) { border-left: none; }
-}
-
-.combo-list {
-  tr:nth-child(5n + 1) { border-bottom: none;}
+  td:nth-last-child(#{$movecount-nthlast}) { color: $optimal_color; text-align: right; }
+  td:nth-last-child(#{$show-nthlast}), th:nth-last-child(#{$show-nthlast}), th:nth-last-child(#{$alg-nthlast}) {
+    border-left: none;
+  }
 }
 
 @mixin list-size($text-size, $button-size, $icon-size) {

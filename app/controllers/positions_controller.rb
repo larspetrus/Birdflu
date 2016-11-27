@@ -60,7 +60,7 @@ class PositionsController < ApplicationController
     end
 
     @text_size = cookies[:size] || 'm'
-    @list_classes = PositionsController.table_class(@algs_mode, @combo_mode, @text_size, @selected_icons)
+    @list_classes = PositionsController.table_class(@algs_mode, @combo_mode, @text_size, @selected_icons, @login)
 
     @rendered_svg_ids = Set.new
     @columns = @algs_mode ? make_alg_columns : make_pos_columns
@@ -83,8 +83,8 @@ class PositionsController < ApplicationController
     columns << Column::COP if @selected_icons[:cop].is_none
     columns << Column::EO  if @selected_icons[:eo].is_none
     columns << Column::EP  if @selected_icons[:ep].is_none
-    columns << Column::STARS
     columns << Column::ALG << Column::SHOW << Column::NOTES
+    columns << Column::STARS
   end
 
   def make_pos_columns
@@ -150,9 +150,10 @@ class PositionsController < ApplicationController
     "?pos=#{filters.pos_code}" + (tail.present? ? '&' + tail : '')
   end
 
-  def self.table_class(algs_mode, combo_mode, size, selected_icons)
+  def self.table_class(algs_mode, combo_mode, size, selected_icons, login)
     base = algs_mode ? 'algs-list' : 'positions-list'
     base += ' combo-list' if combo_mode
+    base += ' loggedin' if login
     has_icons = selected_icons[:cop].is_none || selected_icons[:eo].is_none || selected_icons[:ep].is_none
     with_icons = (has_icons ? '-wc' : '')
     "#{base} size-#{size}#{with_icons}"
