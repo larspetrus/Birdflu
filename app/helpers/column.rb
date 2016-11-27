@@ -123,7 +123,7 @@ class RawAlgColumns
   end
 
   def stars
-    return [] unless @context[:login]
+    return td_tag('') unless @context[:login]
 
     star_styles = @context[:stars] ? @context[:stars][@raw_alg.id] : @raw_alg.star_styles(@context[:login].db_id)
     data = {aid: @raw_alg.id}
@@ -136,14 +136,14 @@ end
 
 
 class ComboAlgColumns
-  attr_reader :speed, :moves, :show, :notes, :position, :cop, :eo, :ep, :stars
+  attr_reader :speed, :moves, :show, :notes, :position, :cop, :eo, :ep
 
   def initialize(combo_alg, context)
     @combo_alg = combo_alg
     @context = context
 
     @speed = @moves = @show = @notes = @position = tag(:td, '')
-    @cop = @eo = @ep = @stars = nil
+    @cop = @eo = @ep = nil
   end
 
   def alg
@@ -154,5 +154,9 @@ class ComboAlgColumns
 
   def name
     tag(:td, tag(:span, @combo_alg.alg1.name, 'js-goto-post') + '+' + tag(:span, @combo_alg.alg2.name, 'js-goto-post'), 'combo')
+  end
+
+  def stars
+    td_tag('')
   end
 end
