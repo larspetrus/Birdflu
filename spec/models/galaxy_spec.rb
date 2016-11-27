@@ -31,14 +31,14 @@ describe Galaxy do
   end
 
   it 'add and remove ids' do
-    g1.add_id(175)
+    g1.add(175)
 
     expect(g1.alg_ids).to eq([5, 25, 175, 625])
 
     g1b = Galaxy.find(g1.id)
     expect(g1b.alg_ids).to eq([5, 25, 175, 625])
 
-    g1b.remove_id(25)
+    g1b.remove(25)
     expect(g1b.alg_ids).to eq([5, 175, 625])
 
     g1c = Galaxy.find(g1.id)

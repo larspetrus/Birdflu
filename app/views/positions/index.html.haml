@@ -103,7 +103,7 @@
         Sort by
         =Fields::SORTBY.as_tag(@list_format)
 
-- context = @algs_mode ?  {stats: @stats.data, selected_pos_ids: @position_ids, login: @login} : {selected_pos_ids: @position_ids}
+- context = {stats: @stats.data, selected_pos_ids: @position_ids, login: @login, stars: @stars_by_alg}
 %table{class: @list_classes}
   - @columns.each do |column|
     %th= column.header
@@ -287,11 +287,11 @@
   var star_alg_id = null;
   $('.stars_td').on('click', function() {
     star_alg_id = $(this).data('aid');
-    var present_stars = ($(this).data('present') ? String($(this).data('present')).split(' ') : []);
+    var deletable_stars = ($(this).data('deletable') ? String($(this).data('deletable')).split(' ') : []);
 
     $('#star-picker').children().text('')
-    for (var ii of present_stars) {
-      $($('#star-picker').children().get(ii - 1)).text('-')
+    for (var i of deletable_stars) {
+      $($('#star-picker').children().get(i - 1)).text('▘')
     }
 
     $('#star-picker').dialog({
@@ -301,14 +301,7 @@
       modal: true,
       closeOnEscape: true,
       dialogClass: 'stars-dialog',
-      //close: function( event, ui ) {
-      //  var cube_id = $('#show-alg').children().attr('data-cube-id');
-      //  if (cube_id) {
-      //    CubeAnimation.by_id[cube_id].remove();
-      //  }
-      //}
     });
-
   });
 
   $(document).on({
@@ -319,8 +312,6 @@
 
   $('#star-picker .star1, #star-picker .star2, #star-picker .star3, #star-picker .star4').on('click', function() {
     var clicked = this.className
-    //var existing = $(this).siblings().map(function() { return this.className; });
-    //console.log(clicked, star_alg_id);
     $('#star-picker').dialog('close');
     $('#rawalg_id').val(star_alg_id);
     $('#star_class').val(clicked);

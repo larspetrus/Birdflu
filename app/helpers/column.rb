@@ -123,12 +123,14 @@ class RawAlgColumns
   end
 
   def stars
-    stars = @context[:login] ? @raw_alg.stars(@context[:login].db_id) : []
+    return [] unless @context[:login]
+
+    star_styles = @context[:stars] ? @context[:stars][@raw_alg.id] : @raw_alg.star_styles(@context[:login].db_id)
     data = {aid: @raw_alg.id}
-    data[:present] = stars.join(' ') if stars.present?
+    data[:deletable] = star_styles.join(' ') if star_styles.present?
 
     # NOTE that there is a duplicate implementation of this in the AJAX handler
-    hlp.content_tag(:td, stars.map{|star_id| tag(:span, '', "star#{star_id}") }.join.html_safe, class: :stars_td, data: data)
+    hlp.content_tag(:td, star_styles.map{|style| tag(:span, '', "star#{style}") }.join.html_safe, class: :stars_td, data: data)
   end
 end
 

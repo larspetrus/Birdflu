@@ -34,8 +34,8 @@ class RawAlg < ActiveRecord::Base
     Algs.unpack(_moves)
   end
 
-  def stars(wca_user_id_thing)
-    Galaxy.star_styles_for(wca_user_id_thing, id)
+  def star_styles(wca_user_id)
+    Galaxy.star_styles_for(wca_user_id, id)
   end
 
   # --- Finders ---

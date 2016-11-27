@@ -55,6 +55,10 @@ class PositionsController < ApplicationController
         end
     @list_items ||= []
 
+    if @login && @algs_mode && (not @combo_mode)
+      @stars_by_alg = Galaxy.star_styles_by_alg(@login.db_id, @list_items.map(&:id))
+    end
+
     @text_size = cookies[:size] || 'm'
     @list_classes = PositionsController.table_class(@algs_mode, @combo_mode, @text_size, @selected_icons)
 
