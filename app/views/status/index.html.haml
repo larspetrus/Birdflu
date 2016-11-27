@@ -10,7 +10,7 @@
   %a{href: "https://github.com/larspetrus/Birdflu/commit/#{`git rev-parse HEAD`}"}
     Git commit
 
-.stat #{spaced_number(@raw_alg_count)} algs, #{spaced_number(@combo_alg_count)} combos, #{WcaUserData.count} users
+.stat #{spaced_number(@raw_alg_count)} algs, #{spaced_number(@combo_alg_count)} combos, #{WcaUser.count} users
 
 -if @login&.db_id == 1 || Rails.env.development?
   .stat

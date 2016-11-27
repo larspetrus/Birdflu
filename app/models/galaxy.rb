@@ -1,20 +1,22 @@
 # frozen_string_literal: true
 
 class Galaxy < ActiveRecord::Base
-  belongs_to :wca_user_data, class_name: WcaUserData.name
+  belongs_to :wca_user
   has_many :stars
 
-  def self.make(wca_user_data_id, style, alg_ids)
-    self.create(wca_user_data_id: wca_user_data_id, style: style, alg_ids: alg_ids.join(' '))
+  def self.make(wca_user_id, style, alg_ids)
+    self.create(wca_user_id: wca_user_id, style: style).tap do |new_galaxy|
+      alg_ids.each { |alg_id| new_galaxy.add(alg_id) }
+    end
   end
 
   def self.star_styles_for(wca_user_id, alg_id)
-    Galaxy.joins(:stars).where(wca_user_data_id: wca_user_id, stars: {raw_alg_id: alg_id}).pluck(:style).sort
+    Galaxy.joins(:stars).where(wca_user_id: wca_user_id, stars: {raw_alg_id: alg_id}).pluck(:style).sort
   end
 
   def self.star_styles_by_alg(wca_user_id, alg_ids)
     Hash.new { |hash, key| hash[key] = []}.tap do |result|
-      pairs = Galaxy.joins(:stars).where(wca_user_data_id: wca_user_id, stars: {raw_alg_id: alg_ids}).pluck(:raw_alg_id, :style)
+      pairs = Galaxy.joins(:stars).where(wca_user_id: wca_user_id, stars: {raw_alg_id: alg_ids}).pluck(:raw_alg_id, :style)
       pairs.sort.each{|pair| result[pair.first] << pair.last }
     end
   end

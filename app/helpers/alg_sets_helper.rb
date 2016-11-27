@@ -33,6 +33,6 @@ module AlgSetsHelper
   end
 
   def owner(algset)
-    algset.predefined ? 'predefined' : algset.wca_user_data&.full_name
+    algset.predefined ? 'predefined' : algset.wca_user&.full_name
   end
 end

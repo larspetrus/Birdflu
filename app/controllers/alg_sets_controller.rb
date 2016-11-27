@@ -16,7 +16,7 @@ class AlgSetsController < ApplicationController
   def create
     raise "Not allowed to create Algset" unless can_create
 
-    more_params = @login ? {wca_user_data_id: @login.db_id} : {predefined: true}
+    more_params = @login ? {wca_user_id: @login.db_id} : {predefined: true}
     @algset = AlgSet.new(algset_params(more_params))
     if @algset.save
       flash[:success] = "Alg set created!"
@@ -68,7 +68,7 @@ class AlgSetsController < ApplicationController
   end
 
   def can_change(algset)
-    owned_by_user = @login&.db_id && (@login.db_id == algset.wca_user_data_id)
+    owned_by_user = @login&.db_id && (@login.db_id == algset.wca_user_id)
     owned_by_user || AlgSet::ARE_WE_ADMIN
   end
 
@@ -115,7 +115,7 @@ class AlgSetsController < ApplicationController
     raise "Must be logged in to update stars" unless @login
 
     style = params[:star_class][4..-1].to_i # Format assumed to be "star#{style}"
-    galaxy = Galaxy.find_or_create_by(wca_user_data_id: @login.db_id, style: style)
+    galaxy = Galaxy.find_or_create_by(wca_user_id: @login.db_id, style: style)
     alg_id = params[:rawalg_id].to_i
     galaxy.toggle(alg_id)
 

@@ -52,7 +52,7 @@ class OauthController < ActionController::Base
   end
 
   def store_user_data(id, wca_id, name, expires)
-    local_db_id = WcaUserData.create_or_update(id, wca_id, name)
+    local_db_id = WcaUser.create_or_update(id, wca_id, name)
     session[:wca_login] = { db_id: local_db_id, wca_db_id: id, wca_id: wca_id, name: name, expires: expires }
   end
 end

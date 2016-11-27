@@ -3,7 +3,7 @@
 class AlgSet < ActiveRecord::Base
   ARE_WE_ADMIN = Rails.env.development?
 
-  belongs_to :wca_user_data, class_name: WcaUserData.name
+  belongs_to :wca_user
 
   validates :name, presence: true
   validates_inclusion_of :subset, :in => %w(all eo)
