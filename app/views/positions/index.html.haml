@@ -11,15 +11,21 @@
       = check_box_tag(:zbll, 1, @position_set == 'eo')
       Lock EO (ZBLL)
   .leftitem
-    %span{ class: "list-size"}
+    %span.list-size
       = select_tag(:'list-size', options_for_select([['Small Text', 's'], ['Medium Text', 'm'], ['Large Text', 'l']], @text_size), class: 'list-size__select')
+  - if @login
+    .leftitem.clickable= link_to 'Favorite Algs', galaxies_index_url
+  - else
+    .leftitem{style: 'color:grey;'}
+      %span Favorite Algs
+      %span{style: 'font-size: 9px; text-align: right;'} (Login)
   - if PositionsController::PREFS.use_combo_set
     .leftitem
       .combo-head
         Combo Alg Set:
       .setting
         =link_to("\u2699", alg_sets_path)
-      %span{ class: "list-size"}
+      %span.list-size.list-outline
         =Fields::ALGSET.as_tag(@list_format, class: 'list-size__select', form: 'main-form')
   .leftitem.clickable= link_to 'FMC Nissualizer', "fmc?example=1"
 
@@ -127,13 +133,13 @@
 
 #show-alg{style: 'height:200px; width:200px;'}
 
-#star-picker{style: 'height: 60px; width: 99px; display: none;'}
+#star-picker{style: 'display: none;'}
   .star1
   .star2
   .star3
   .star4
 
-=form_tag url_for(controller: 'alg_sets', action: 'update_star'), method: 'post', id: 'star_form', remote: true do
+=form_tag url_for(controller: 'galaxies', action: 'update_star'), method: 'post', id: 'star_form', remote: true do
   =hidden_field_tag(:rawalg_id)
   =hidden_field_tag(:star_class)
 

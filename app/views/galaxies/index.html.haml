@@ -1,0 +1,24 @@
+.galaxy-header Favorite Algs for #{@login&.name}
+
+-unless @chunks.present?
+  %div{style: 'text-align: center; margin-top: 30px;'} To add favorites, use the ☆ column in an alg list.
+
+-@chunks.each do |line|
+  %div{class: "star#{line.first}", style: "font-size: 30px; width: 100%; text-align: center; margin-top: 10px;"}
+  %table.galaxy-list.size-m-wc
+    %tr
+      %th Alg
+      %th Position
+      %th Moves
+      %th All stars
+      %th
+    - line.last.each do |star|
+      - alg_presenter = RawAlgColumns.new(star.raw_alg, login: OpenStruct.new(db_id: @login&.db_id), selected_pos_ids: [star.raw_alg.position_id])
+      %tr
+
+        =Column::NAME.cell(alg_presenter)
+        =Column::HL_POSITION.cell(alg_presenter)
+        =Column::ALG.cell(alg_presenter)
+        =Column::STARS.cell(alg_presenter)
+        %td{}
+          =link_to('Remove', "/galaxies/remove_star?galaxy_id=#{star.galaxy_id}&raw_alg_id=#{star.raw_alg_id}", class: 'knapp knapp-enabled')

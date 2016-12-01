@@ -21,7 +21,8 @@ class Column
   SHOW     = self.new('', :show)
   NOTES    = self.new('Notes', :notes)
 
-  STARS    = self.new('☆', :stars)
+  STARS       = self.new('☆', :stars)
+  HL_POSITION = self.new('Position', :hl_position)
 
   COP = self.new('COP', :cop, is_svg: true )
   EO  = self.new('EO',  :eo,  is_svg: true )
@@ -131,6 +132,10 @@ class RawAlgColumns
 
     # NOTE that there is a duplicate implementation of this in the AJAX handler
     hlp.content_tag(:td, star_styles.map{|style| tag(:span, '', "star#{style}") }.join.html_safe, class: :stars_td, data: data)
+  end
+
+  def hl_position
+    tag(:td, hlp.link_to(@raw_alg.position.display_name, "/?pos=#{@raw_alg.position.display_name}&hl_id=#{@raw_alg.id}"))
   end
 end
 

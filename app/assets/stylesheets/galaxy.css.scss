@@ -1,0 +1,25 @@
+.galaxy-header {
+  font-size: 30px;
+  width: 100%;
+  text-align: center;
+  margin-top: 10px
+}
+
+.galaxy-list {
+  margin: 0 auto;
+  border-collapse: collapse;
+  border: 1px solid #ddd;
+  tr:hover { background: #eef; }
+  tr { border-bottom: solid 1px #ddd;}
+  td {
+    border-left: 1px solid #ddd;
+    padding: 0 3px;
+  }
+  th { border-left: 1px solid #fff; padding: 1px 4px;}
+
+  th {
+    background:linear-gradient(to bottom, #fcc 5%, #f00 100%);
+  }
+
+  .knapp { font-weight: 700; }
+}

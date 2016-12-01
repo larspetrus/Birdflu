@@ -110,15 +110,4 @@ class AlgSetsController < ApplicationController
       return { errors: algset.errors.full_messages}
     end
   end
-
-  def update_star
-    raise "Must be logged in to update stars" unless @login
-
-    style = params[:star_class][4..-1].to_i # Format assumed to be "star#{style}"
-    galaxy = Galaxy.find_or_create_by(wca_user_id: @login.db_id, style: style)
-    alg_id = params[:rawalg_id].to_i
-    galaxy.toggle(alg_id)
-
-    render json: Galaxy.star_styles_for(@login.db_id, alg_id).map{|style| "star#{style}" }
-  end
 end

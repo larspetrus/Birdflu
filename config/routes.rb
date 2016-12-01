@@ -1,9 +1,13 @@
 Rails.application.routes.draw do
+  # The priority is based upon order of creation: first created -> highest priority.
+  # See how all your routes lay out with "rake routes".
+
   get 'fmc/index'
   get 'status/index'
 
-  # The priority is based upon order of creation: first created -> highest priority.
-  # See how all your routes lay out with "rake routes".
+  get 'galaxies/index'
+  get 'galaxies/remove_star'
+  post 'galaxies/update_star'
 
   match "/" => "positions#index", via: [:get, :post]
   get 'positions/:id', to: "positions#show"
@@ -11,7 +15,6 @@ Rails.application.routes.draw do
 
   resources :alg_sets
   get 'alg_sets/compute/:ids', to: "alg_sets#compute"
-  post 'alg_sets/update_star'
 
   get 'hemlig', to: 'status#index'
   get 'fmc', to: 'fmc#index'

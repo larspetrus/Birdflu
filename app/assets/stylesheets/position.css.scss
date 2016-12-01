@@ -191,6 +191,11 @@ $left-bgcolor: #f2f2f2;
     vertical-align: middle;
   }
 
+  .list-outline {
+    border: 1px solid #ddd;
+    padding-left: 1px;
+  }
+
   .list-size__select {
     padding-right: 2.5em; /* accommodate with the pseudo elements for the dropdown arrow */
     border: 0;
