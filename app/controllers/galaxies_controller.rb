@@ -2,8 +2,9 @@
 
 class GalaxiesController < ApplicationController
   def index
-    redirect_to(:back) unless @login
+    redirect_to('/') unless @login
 
+    setup_leftbar
     blah = Column::NAME # TODO This makes the helper load. Should do something better...
     @stars = Star.where(galaxies: {wca_user_id: @login&.db_id}).order(['galaxies.style', 'raw_algs.id']).includes(:raw_alg, :galaxy).to_a
     @chunks = @stars.chunk{ |line| line.galaxy.style }.to_a

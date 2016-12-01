@@ -8,6 +8,21 @@ class ApplicationController < ActionController::Base
   before_action :handle_wca_login
   around_action :keep_track
 
+  MAIN_NAME = 'Main'
+  FAV_NAME = 'Stars'
+  ALGSETS_NAME = 'Combos'
+  FMC_NAME = 'FMC'
+
+  def setup_leftbar
+    @text_size = cookies[:size] || 'm'
+    @position_set = cookies[:zbll] ?  'eo' : 'all'
+    @list_format = ApplicationController.read_list_format(cookies)
+
+    @lb_sections = [MAIN_NAME, FAV_NAME] + (PositionsController::PREFS.use_combo_set ? [ALGSETS_NAME]: []) + [FMC_NAME]
+    @lb_disabled = @login ? '' : FAV_NAME
+  end
+
+  # ==================== PRIVATE AREA ========
   private
 
   @@request_count = Hash.new(0)
@@ -31,6 +46,13 @@ class ApplicationController < ActionController::Base
   rescue Exception => e
     @@trouble_list << "Exception at #{Time.now} --- #{e.message}"
     raise
+  end
+
+  def self.read_list_format(the_cookies)
+    from_cookies = the_cookies[Fields::COOKIE_NAME] ? JSON.parse(the_cookies[:field_values], symbolize_names: true) : {}
+    OpenStruct.new(Fields.values(from_cookies))
+  rescue
+    OpenStruct.new(Fields::ALL_DEFAULTS)
   end
 
 end

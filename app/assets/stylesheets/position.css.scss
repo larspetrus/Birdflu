@@ -124,6 +124,21 @@ $show-nthlast: 1;
 
 // ------------ Side bars
 
+.section {
+  position: absolute;
+  top:10px;
+  left:10px;
+
+  font-size: 12px;
+  font-weight: bold;
+
+  background-color: #555;
+  color: white;
+
+  padding: 4px;
+}
+
+
 $left-color: #16A2D7;
 $left-bgcolor: #f2f2f2;
 

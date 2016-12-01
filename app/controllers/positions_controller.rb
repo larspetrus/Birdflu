@@ -8,7 +8,7 @@ class PositionsController < ApplicationController
 
   # === Routed action ===
   def index
-    @position_set = cookies[:zbll] ?  'eo' : 'all'
+    setup_leftbar
     @filters = PosFilters.new(params, @position_set)
     @bookmark_url = PositionsController.bookmark_url(@filters, request.query_parameters)
 
@@ -16,7 +16,6 @@ class PositionsController < ApplicationController
     if take_prefs_from_params
       PositionsController.store_list_format(cookies, params)
     end
-    @list_format = PositionsController.read_list_format(cookies)
 
     @algs_mode = (@list_format.list == 'algs') || @filters.count == PosFilters::BASE.count
 
@@ -139,13 +138,6 @@ class PositionsController < ApplicationController
     the_cookies.permanent[Fields::COOKIE_NAME] = JSON.generate(values)
   end
 
-  def self.read_list_format(the_cookies)
-    from_cookies = the_cookies[Fields::COOKIE_NAME] ? JSON.parse(the_cookies[:field_values], symbolize_names: true) : {}
-    OpenStruct.new(Fields.values(from_cookies))
-  rescue
-    OpenStruct.new(Fields::ALL_DEFAULTS)
-  end
-
   def self.bookmark_url(filters, all_params)
     tail = all_params.except(:pos, :poschange).to_query
     "?pos=#{filters.pos_code}" + (tail.present? ? '&' + tail : '')
@@ -182,7 +174,7 @@ class PositionsController < ApplicationController
   end
 
   def non_default_fields
-    user_prefs = PositionsController.read_list_format(params).to_h
+    user_prefs = ApplicationController.read_list_format(params).to_h
     user_prefs.reject {|k,v| Fields::ALL_DEFAULTS[k] == v }
   end
 

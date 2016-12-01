@@ -24,6 +24,10 @@ class Fields
     def as_css_id
       "##{@name}"
     end
+
+    def hlp
+      ActionController::Base.helpers
+    end
   end
 
   LIST   = Select.new(:list,  ['positions', 'algs'])

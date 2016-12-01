@@ -6,22 +6,22 @@ RSpec.describe PositionsController do
     allow(AlgSet).to receive(:menu_options) {[101, 102].map{|id| ["Algset ##{id}", id]}} # TODO Ugh... Since there is no way to reset class method stubs, let's stub them all the same for now
 
     missing_cookie = {}
-    expect(PositionsController.read_list_format(missing_cookie).to_h).to eq(Fields::ALL_DEFAULTS)
+    expect(ApplicationController.read_list_format(missing_cookie).to_h).to eq(Fields::ALL_DEFAULTS)
 
     invalid_cookie = {field_values: ''}
-    expect(PositionsController.read_list_format(invalid_cookie).to_h).to eq(Fields::ALL_DEFAULTS)
+    expect(ApplicationController.read_list_format(invalid_cookie).to_h).to eq(Fields::ALL_DEFAULTS)
 
     fully_defined = {field_values: JSON.generate(list: "algs", lines: "100", sortby: "length", algset: "101")}
-    expect(PositionsController.read_list_format(fully_defined).to_h).to eq(:list=>"algs", :lines=>"100", :sortby=>"length", :algset=>"101")
+    expect(ApplicationController.read_list_format(fully_defined).to_h).to eq(:list=>"algs", :lines=>"100", :sortby=>"length", :algset=>"101")
 
     partially_defined = {field_values: JSON.generate(algset: "101")}
-    expect(PositionsController.read_list_format(partially_defined).to_h).to eq(:list=>"positions", :lines=>"25", :sortby=>"_speed", :algset=>"101")
+    expect(ApplicationController.read_list_format(partially_defined).to_h).to eq(:list=>"positions", :lines=>"25", :sortby=>"_speed", :algset=>"101")
 
     obsolete_property = {field_values: JSON.generate(algset: "102", extra_key: 'Sparta!')}
-    expect(PositionsController.read_list_format(obsolete_property).to_h).to eq(:list=>"positions", :lines=>"25", :sortby=>"_speed", :algset=>"102")
+    expect(ApplicationController.read_list_format(obsolete_property).to_h).to eq(:list=>"positions", :lines=>"25", :sortby=>"_speed", :algset=>"102")
 
     invalid_value = {field_values: JSON.generate(lines: "37")}
-    expect(PositionsController.read_list_format(invalid_value).to_h).to eq(:list=>"positions", :lines=>"25", :sortby=>"_speed", :algset=>"0")
+    expect(ApplicationController.read_list_format(invalid_value).to_h).to eq(:list=>"positions", :lines=>"25", :sortby=>"_speed", :algset=>"0")
   end
 
   def mockies

@@ -1,33 +1,7 @@
 :javascript
   history.replaceState('', '', '#{@bookmark_url}');
 
-%nav.leftbar
-  .leftitem.clickable= link_to 'Random Position', "positions/#{Position.random_id(@position_set)}"
-  .leftitem
-    =render 'find_by_alg'
-  .leftitem.clickable#about-link About…
-  .leftitem.clickable
-    %label
-      = check_box_tag(:zbll, 1, @position_set == 'eo')
-      Lock EO (ZBLL)
-  .leftitem
-    %span.list-size
-      = select_tag(:'list-size', options_for_select([['Small Text', 's'], ['Medium Text', 'm'], ['Large Text', 'l']], @text_size), class: 'list-size__select')
-  - if @login
-    .leftitem.clickable= link_to 'Favorite Algs', galaxies_index_url
-  - else
-    .leftitem{style: 'color:grey;'}
-      %span Favorite Algs
-      %span{style: 'font-size: 9px; text-align: right;'} (Login)
-  - if PositionsController::PREFS.use_combo_set
-    .leftitem
-      .combo-head
-        Combo Alg Set:
-      .setting
-        =link_to("\u2699", alg_sets_path)
-      %span.list-size.list-outline
-        =Fields::ALGSET.as_tag(@list_format, class: 'list-size__select', form: 'main-form')
-  .leftitem.clickable= link_to 'FMC Nissualizer', "fmc?example=1"
+= render 'leftbar', page: ApplicationController::MAIN_NAME
 
 .rightbar
   -if @only_position
@@ -142,18 +116,6 @@
   =hidden_field_tag(:rawalg_id)
   =hidden_field_tag(:star_class)
 
-
-#about-box
-  %p Birdflu aims to contain all knowledge of algorithms and positions for the last layer of Rubik's Cube, and present it in simple and useful ways. That will take a while.
-  %p For now is has all algs up to 17 moves (43 million), and some basic features. More to come.
-  %p
-  %p Hand crafted by Lars Petrus in Oakland 2015-16.
-  %p
-    Big thanks to
-    = link_to("Tom Rokicki", "http://tomas.rokicki.com/")
-    for generating the algs!
-  %hr
-  %p "Birdflu" is the shortest English word containing the basic moves BDFLRU.
 
 :javascript
   $('.pick-icon, .random, .unselect').on('click', function() {
@@ -271,22 +233,6 @@
     if (event.keyCode === 44) { rotate_page(-1); } // comma = 44
     if (event.keyCode === 46) { rotate_page(+1); } // period = 46
     if (event.keyCode === 47) { rotate_page(+2); } // slash = 47
-  });
-
-  $('#zbll').on('click', function() {
-    var addon = '';
-    if ($(this).is(":checked")) {
-      Cookies.set('zbll', 'Yep', { expires: 3650 });
-      addon = '&poschange=eo-4'
-    } else {
-      Cookies.remove('zbll')
-    }
-    window.location = window.location.search + addon;
-  });
-
-  $('#list-size').on('change', function() {
-    Cookies.set('size',$(this).val() , { expires: 3650 });
-    window.location = window.location.search;
   });
 
   var star_alg_id = null;
