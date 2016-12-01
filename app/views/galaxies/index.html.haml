@@ -1,4 +1,4 @@
-.galaxy-header Favorite Algs for #{@login&.name}
+.galaxy-header Your Starred Algs
 
 -unless @chunks.present?
   %div{style: 'text-align: center; margin-top: 30px;'} To add favorites, use the ☆ column in an alg list.
@@ -13,9 +13,8 @@
       %th All stars
       %th
     - line.last.each do |star|
-      - alg_presenter = RawAlgColumns.new(star.raw_alg, login: OpenStruct.new(db_id: @login&.db_id), selected_pos_ids: [star.raw_alg.position_id])
+      - alg_presenter = RawAlgColumns.new(star.raw_alg, login: @login)
       %tr
-
         =Column::NAME.cell(alg_presenter)
         =Column::HL_POSITION.cell(alg_presenter)
         =Column::ALG.cell(alg_presenter)

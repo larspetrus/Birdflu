@@ -8,7 +8,7 @@ RSpec.describe Column, :type => :model do
 
   let(:combo1) {ComboAlg.new(alg1: raw1, alg2: raw2)}
 
-  let(:context) { {stats: OpenStruct.new(shortest: 7, fastest: 5.55), selected_pos_ids: [pos1.id]} }
+  let(:context) { {stats: OpenStruct.new(shortest: 7, fastest: 5.55), possible_pos_ids: [pos1.id]} }
 
   it 'MOVES' do
     expect(Column::LENGTH.cell(raw1.presenter(context))).to eq('<td class="optimal">7</td>')

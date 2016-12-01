@@ -109,12 +109,11 @@
         Sort by
         =Fields::SORTBY.as_tag(@list_format)
 
-- context = {stats: @stats.data, selected_pos_ids: @position_ids, login: @login, stars: @stars_by_alg}
 %table{class: @list_classes}
   - @columns.each do |column|
     %th= column.header
   - @list_items.each do |item|
-    - line_presenter = item.presenter(context)
+    - line_presenter = item.presenter(@table_context)
     %tr{class: item.matches(@hi_lite) ? 'hilite' : ''}
       - @columns.each do |column|
         - if column.is_svg

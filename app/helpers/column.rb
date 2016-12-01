@@ -95,7 +95,7 @@ class RawAlgColumns
   end
 
   def ui_pos
-    @raw_alg.position.pov_variant_in(@context[:selected_pos_ids])
+    @raw_alg.position.pov_variant_in(@context[:possible_pos_ids])
   end
 
 

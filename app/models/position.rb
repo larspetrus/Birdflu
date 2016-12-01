@@ -83,10 +83,10 @@ class Position < ActiveRecord::Base
   end
 
   POV_IDS_CACHE = Hash.new{|hash, key| hash[key] = Position.where(main_position_id: key).pluck(:id).freeze }
-  def pov_variant_in(selected_ids)
-    return self if selected_ids.include?(id)
+  def pov_variant_in(alternate_ids)
+    return self if alternate_ids&.include?(id) || alternate_ids.blank?
 
-    Position.find((selected_ids & POV_IDS_CACHE[id]).first)
+    Position.find((alternate_ids & POV_IDS_CACHE[id]).first)
   end
 
   def pov_rotations
