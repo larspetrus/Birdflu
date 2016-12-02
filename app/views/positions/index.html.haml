@@ -49,16 +49,8 @@
     = render 'picker_td', prop: :cp
     = render 'picker_td', prop: :eo
     = render 'picker_td', prop: :ep,  add_class: 'relative', message: 'Images assume the darker corner is placed correctly.'
-.rotation-ui
-  %h1
-    %span rotate
-  .buttons
-    %a{class: 'show-pig', onclick: "rotate_page(1);"} U
-    %a{class: 'show-pig', onclick: "rotate_page(2);"} U2
-    %a{class: 'show-pig', onclick: "rotate_page(-1);"} U'
-  .shortcuts
-    shortcuts: , . /
 
+= render 'page_rotation'
 
 =form_tag url_for(controller: "positions", action: "index"), method: 'get', id: 'main-form', enforce_utf8: false do
   =hidden_field_tag(:pos, @filters.pos_code)
@@ -153,87 +145,8 @@
 
     $('form#main-form').submit();
   }
-  // --- SVG ROTATION SECTION ---
 
-  var ALG_TEXT_SELECT = 'td.js-alg, td.js-combo span, .setupalg span';
-
-  var U_TRANSPOSITIONS = {
-     1: { R: 'F', F: 'L', L: 'B', B: 'R' },
-     2: { R: 'L', F: 'B', L: 'R', B: 'F' },
-     3: { R: 'B', F: 'R', L: 'F', B: 'L' },
-  }
-
-  function rotate_all_algs(rotation) {
-    var diff = (rotation + 4) % 4;
-    if (diff > 0) {
-      var u_transposition = U_TRANSPOSITIONS[diff];
-      $(ALG_TEXT_SELECT).text(function(i, current_text){
-        result = '';
-        for (var i = 0, len = current_text.length; i < len; i++) {
-          result += u_transposition[current_text[i]] || current_text[i];
-        }
-        return result;
-      });
-    }
-  }
-
-  function spin_svgs(diff, progress) {
-    $('svg g').attr("transform", "rotate(" + (page_rotation*90 + diff*90*progress) + ", 50, 50)");
-  }
-
-  function adjust_pos_name() {
-    $('#headline_prot').text(['', '+U', '+U2', "+U'"][page_rotation]);
-  }
-
-  var page_rotation = #{@page_rotation}; // Global state
-  if (page_rotation > 0) {
-    adjust_pos_name();
-    spin_svgs(0, 0);
-    rotate_all_algs(page_rotation);
-  };
-
-  function adjust_url() {
-    var old_url = window.location.search;
-    var new_prot = 'prot=' + page_rotation;
-    if (old_url.indexOf('prot') != -1) {
-      history.replaceState('', '', old_url.replace(/prot=./, new_prot));
-    } else {
-      var sep = old_url.indexOf('?') == -1 ? '?' : '&';
-      history.replaceState('', '', old_url + sep + new_prot);
-    }
-  }
-
-  function rotate_page(diff) {
-    var algs_rotated = false;
-    $('body').animate({ dummyAttr: '20px' },
-      {
-        duration:400,
-        progress: function(animation, progress) {
-          spin_svgs(diff, progress);
-
-          var gray = Math.floor(400.0 * (0.5 - Math.abs(progress - 0.5)));
-          $(ALG_TEXT_SELECT).attr("style", "color: rgb("+gray+","+gray+","+gray+");");
-
-          if (progress > 0.5 && !algs_rotated) {
-            rotate_all_algs(diff);
-            algs_rotated = true;
-          }
-        },
-        complete: function() {
-          page_rotation = (page_rotation + diff + 4) % 4;
-          adjust_url();
-          adjust_pos_name();
-          $(ALG_TEXT_SELECT).removeAttr("style");
-        }
-      }
-    );
-  }
-
-  $(document).on('keypress', function(event) {
-    if (event.keyCode === 44) { rotate_page(-1); } // comma = 44
-    if (event.keyCode === 46) { rotate_page(+1); } // period = 46
-    if (event.keyCode === 47) { rotate_page(+2); } // slash = 47
-  });
+  // ☆★☆★☆★☆★ Star code: ☆★☆★☆★☆★☆★
 
   var star_alg_id = null;
   $('.stars_td').on('click', function() {
@@ -277,5 +190,3 @@
       td.append("<span class=" + result[i] + "></span>")
     }
   });
-
-
