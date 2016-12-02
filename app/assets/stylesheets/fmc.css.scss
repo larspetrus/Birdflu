@@ -25,21 +25,27 @@
   margin: 16px;
 }
 
+$niss-border: thin solid #aaa;
 form#niss-form {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+
   background-color: #dfd;
   padding: 4px;
   font-size: 10px;
 
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  margin: 46px -8px 0;
 
-  border-bottom: thin solid #aaa;
+  border-top: $niss-border;
+  border-bottom: $niss-border;
 
   input[type="text"] {
     font-size:9px;
     margin-right: 12px;
+  }
+  .thing {
+    display: inline-block;
   }
 }
 

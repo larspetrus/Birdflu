@@ -1,9 +1,12 @@
+= render 'leftbar', page: ApplicationController::FMC_NAME
 
 %form#niss-form{"accept-charset" => "UTF-8", action:"/fmc", method:"get"}
-  %label{for: "niss"} Solution:
-  %input#niss{name:"niss", size:72, type:"text", value: @niss_code}/
-  %label{for: "scramble"} Scramble:
-  %input#scramble{name:"scramble", size:52, type:"text", value: @scramble}/
+  .thing
+    %label{for: "niss"} Solution:
+    %input#niss{name:"niss", size:72, type:"text", value: @niss_code}/
+  .thing
+    %label{for: "scramble"} Scramble:
+    %input#scramble{name:"scramble", size:52, type:"text", value: @scramble}/
   %input#show-niss-btn{name:"commit", type:"submit", value:"Show"}/
 
 %div{style: "height: 22px;"}
@@ -18,7 +21,7 @@
       %p The Nissualizer makes NISS solutions easy to follow without a ton of manual cube turning. Here is a sample solution to demonstrate. Enter a solution and (optionally) scramble above.
       %p It needs more work. Let me know ideas and bugs (niss@lar5.com).
 
-%h1 The Nissualizer #{(@example ? ' example' :'')}
+%h1 The Nissualizer #{(@example ? ' (example)' :'')}
 
 - if @niss_code.present?
   %table.nissolutions

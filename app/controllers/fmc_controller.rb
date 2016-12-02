@@ -23,6 +23,7 @@ class FmcController < ApplicationController
   SPLIT_REX = /[\(\)]/
 
   def index
+    setup_leftbar
     @example = params[:example] == '1'
     if @example
       params[:s] = 'lublbrqdqruRpnln1rDur'
