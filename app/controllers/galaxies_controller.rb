@@ -18,7 +18,7 @@ class GalaxiesController < ApplicationController
     alg_id = params[:rawalg_id].to_i
     galaxy.toggle(alg_id)
 
-    render json: Galaxy.star_styles_for(@login.db_id, alg_id).map{|style| "star#{style}" }
+    render json: Galaxy.star_styles_for(@login.db_id, alg_id)
   end
 
 

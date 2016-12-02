@@ -182,11 +182,12 @@
     $('#star_form').submit();
   });
   $('#star_form').on('ajax:success', function(e, data, status, xhr) {
-    var td = $("td[data-aid='" + star_alg_id + "']")
+    var td = $("td[data-aid='"+star_alg_id+"']")
     var td = td.empty()
 
-    var result = JSON.parse(xhr.responseText);
-    for (var i = 0; i < result.length; i++) {
-      td.append("<span class=" + result[i] + "></span>")
+    var active_stars = JSON.parse(xhr.responseText);
+    td.data('deletable', active_stars.join(' '));
+    for (var i = 0; i < active_stars.length; i++) {
+      td.append("<span class=star"+active_stars[i]+"></span>")
     }
   });
