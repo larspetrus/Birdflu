@@ -1,6 +1,10 @@
 %nav.section
-  Section:
-  = select_tag(:sectionator, options_for_select(@lb_sections, selected: page, disabled: @lb_disabled))
+  %h1
+    %span
+      section
+  .middiv
+    %span.list-size
+      = select_tag(:sectionator, options_for_select(@lb_sections, selected: page, disabled: @lb_disabled), class: 'list-size__select')
 
 %nav.leftbar
   -if page == ApplicationController::MAIN_NAME

@@ -127,15 +127,37 @@ $show-nthlast: 1;
 .section {
   position: absolute;
   top:10px;
-  left:10px;
+  left:13px;
+
+  width: 148px;
+  height: 30px;
 
   font-size: 12px;
   font-weight: bold;
 
-  background-color: #555;
-  color: white;
+  border: 1px solid #808;
+  border-radius: 3px;
 
-  padding: 4px;
+  h1 {
+    text-align: center;
+    position: relative;
+    margin: -8px 0 2px 0;
+    font-size: 10px;
+  }
+  h1 span{
+    background-color: white;
+    padding: 0 2px;
+  }
+
+  .middiv {
+    font-size: 14px;
+    font-weight: 700;
+
+    .list-size {
+      margin-left: 31px;
+      padding: 2px;
+    }
+  }
 }
 
 
