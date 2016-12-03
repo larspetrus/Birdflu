@@ -8,14 +8,14 @@ class PositionsController < ApplicationController
 
   # === Routed action ===
   def index
-    setup_leftbar
-    @filters = PosFilters.new(params, @position_set)
-    @bookmark_url = PositionsController.bookmark_url(@filters, request.query_parameters)
-
     take_prefs_from_params = (params.keys.map(&:to_sym) & Fields::ALL_DEFAULTS.keys).present? || !params[:udf].nil?
     if take_prefs_from_params
       PositionsController.store_list_format(cookies, params)
     end
+
+    setup_leftbar
+    @filters = PosFilters.new(params, @position_set)
+    @bookmark_url = PositionsController.bookmark_url(@filters, request.query_parameters)
 
     @algs_mode = (@list_format.list == 'algs') || @filters.count == PosFilters::BASE.count
 
