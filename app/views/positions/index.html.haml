@@ -100,11 +100,13 @@
 #show-alg{style: 'height:200px; width:200px;'}
 
 #star-picker{style: 'display: none;'}
-  .star1
-  .star2
-  .star3
-  .star4
-
+  -if @login
+    .star1
+    .star2
+    .star3
+    .star4
+  -else
+    Log in to star algs.
 =form_tag url_for(controller: 'galaxies', action: 'update_star'), method: 'post', id: 'star_form', remote: true do
   =hidden_field_tag(:rawalg_id)
   =hidden_field_tag(:star_class)

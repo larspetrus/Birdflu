@@ -124,9 +124,13 @@ class RawAlgColumns
   end
 
   def stars
-    return td_tag('') unless @context[:login]
-
-    star_styles = @context[:stars] ? @context[:stars][@raw_alg.id] : @raw_alg.star_styles(@context[:login].db_id)
+    if @context[:stars]
+      star_styles = @context[:stars][@raw_alg.id]
+    elsif @context[:login]
+      star_styles = @raw_alg.star_styles(@context[:login].db_id)
+    else
+      star_styles = []
+    end
     data = {aid: @raw_alg.id}
     data[:deletable] = star_styles.join(' ') if star_styles.present?
 

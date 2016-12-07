@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
   around_action :keep_track
 
   MAIN_NAME = 'Main'
-  FAV_NAME = 'Alg sets'
+  FAV_NAME = 'Alg stars'
   ALGSETS_NAME = 'Combos'
   FMC_NAME = 'FMC'
 

@@ -67,18 +67,17 @@ $stars-nthlast: 1;
   td:nth-child(#{$name-nth}) { font-size: 90%; }
   th:nth-last-child(#{$show-nthlast}), td:nth-last-child(#{$show-nthlast}) { border-left: none; }
   td:nth-last-child(#{$notes-nthlast}) { font-size: 85%; }
-  th:nth-last-child(#{$stars-nthlast}), td:nth-last-child(#{$stars-nthlast}) { display: none; }
   .hilite td {
     background-color: #ff0;
     border-top: solid red 1px;
     border-bottom: solid red 1px;
   }
 }
+.algs-loggedout {
+  th:nth-last-child(#{$stars-nthlast}) { background: #ddd; }
+}
 .combo-list {
   tr:nth-child(5n + 1) { border-bottom: none;}
-}
-.loggedin {
-  th:nth-last-child(#{$stars-nthlast}), td:nth-last-child(#{$stars-nthlast}) { display: table-cell; }
 }
 
 $movecount-nthlast: 3;

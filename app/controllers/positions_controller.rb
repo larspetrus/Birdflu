@@ -146,7 +146,7 @@ class PositionsController < ApplicationController
   def self.table_class(algs_mode, combo_mode, size, selected_icons, login)
     base = algs_mode ? 'algs-list' : 'positions-list'
     base += ' combo-list' if combo_mode
-    base += ' loggedin' if login
+    base += ' algs-loggedout' unless login || !algs_mode
     has_icons = selected_icons[:cop].is_none || selected_icons[:eo].is_none || selected_icons[:ep].is_none
     with_icons = (has_icons ? '-wc' : '')
     "#{base} size-#{size}#{with_icons}"
