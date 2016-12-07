@@ -35,7 +35,8 @@
       .setupalg
         Setup:
         %span
-          = @setup_alg
+          -alg_sections(@setup_alg).each do |section|
+            =section
 
 %table.center
   %tr
