@@ -29,7 +29,7 @@ class AlgSetsController < ApplicationController
 
   def destroy
     algset = AlgSet.find(params[:id])
-    raise "Not allowed to edit Algset #{algset.id}" unless can_change(algset)
+    raise "Not allowed to delete Algset #{algset.id}" unless can_change(algset)
 
     flash[:success] = "Algset '#{algset.name}' deleted"
     algset.destroy
