@@ -1,0 +1,8 @@
+$("#show-algset").html("<%= j render(partial: 'show') %>");
+$("#show-algset").dialog({
+//  position: { my: 'center top', at: 'center top', of: this },
+  modal: true,
+  closeOnEscape: true,
+  width: 400,
+  dialogClass: 'lars-dialog',
+});

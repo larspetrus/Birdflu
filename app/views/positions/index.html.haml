@@ -132,7 +132,7 @@
     var field_defaults = #{Fields::JS_DEFAULTS};
 
     for (var prop in field_defaults) {
-      var elm = $('#'+prop)
+      var elm = $('#'+prop);
       if (elm.val() === field_defaults[prop]) {
         elm.prop('disabled', true);
       } else {
@@ -152,11 +152,11 @@
   // ☆★☆★☆★☆★ Star code: ☆★☆★☆★☆★☆★
 
   var star_alg_id = null;
-  $('.stars_td').on('click', function() {
+  $('.stars_td').on('click', function() { // Open star picker dialog
     star_alg_id = $(this).data('aid');
     var deletable_stars = ($(this).data('deletable') ? String($(this).data('deletable')).split(' ') : []);
 
-    $('#star-picker').children().text('')
+    $('#star-picker').children().text('');
     for (var i of deletable_stars) {
       $($('#star-picker').children().get(i - 1)).text('▘')
     }
@@ -178,16 +178,16 @@
   }, ".stars-dialog");
 
   $('#star-picker .star1, #star-picker .star2, #star-picker .star3, #star-picker .star4').on('click', function() {
-    var clicked = this.className
+    var clicked = this.className;
     $('#star-picker').dialog('close');
     $('#rawalg_id').val(star_alg_id);
     $('#star_class').val(clicked);
     $('#star_form').submit();
   });
   $('#star_form').on('ajax:success', function(e, data, status, xhr) {
-    var td = $("td[data-aid='"+star_alg_id+"']")
-    var td = td.empty()
+    var td = $("td[data-aid='"+star_alg_id+"']");
 
+    td.empty();
     var active_stars = JSON.parse(xhr.responseText);
     td.data('deletable', active_stars.join(' '));
     for (var i = 0; i < active_stars.length; i++) {

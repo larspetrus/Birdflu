@@ -1,7 +1,7 @@
 = render 'leftbar', page: ApplicationController::ALGSETS_NAME
 
 .index-header
-  %h2 Alg Sets
+  %h2 Combo Alg Sets
   - if @login
     =link_to('Create', new_alg_set_path, class: 'knapp knapp-enabled knapp16')
   - else
@@ -37,13 +37,15 @@
       %td
         =owner(algset)
       %td
-        =link_to('Show', alg_set_path(algset), class: 'knapp knapp-enabled')
+        =link_to('Show', alg_set_path(algset), class: 'knapp knapp-enabled', remote: true)
       %td
         - if algset.editable_by_this_user
           =link_to('Edit', edit_alg_set_path(algset), class: 'knapp knapp-enabled')
       %td
         - if algset.editable_by_this_user && (not algset.predefined)
           = link_to "Remove", algset, method: :delete, data: {confirm:"You Sure?"}, class: 'knapp knapp-enabled'
+
+#show-algset
 
 -if @to_compute.present?
   :javascript

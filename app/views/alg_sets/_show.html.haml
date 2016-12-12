@@ -1,0 +1,32 @@
+%table.show_table
+  %tr
+  %tr
+    %td Name
+    %td
+      =@algset.name
+  %tr
+    %td Description
+    %td
+      =@algset.description
+  %tr
+    %td Subset
+    %td
+      =subset_long_name(@algset)
+  %tr
+    %td Algs
+    %td
+      -fmt_algs(@algset).each do |line|
+        .small
+          =line
+  %tr
+    %td Coverage
+    %td
+      = fmt_coverage(@algset)
+  %tr
+    %td Owner
+    %td
+      = owner(@algset)
+  %tr
+    %td
+    %td
+      =link_to('Edit', edit_alg_set_path(@algset), class: 'knapp knapp-enabled knapp16')

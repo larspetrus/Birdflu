@@ -4,41 +4,7 @@
 
 %h3 Show Algset
 
-%table.show_table
-  %tr
-    %td id
-    %td
-      =@algset.id
-  %tr
-    %td name
-    %td
-      =@algset.name
-  %tr
-    %td description
-    %td
-      =@algset.description
-  %tr
-    %td subset
-    %td
-      =subset_long_name(@algset)
-  %tr
-    %td algs
-    %td
-      -fmt_algs(@algset).each do |line|
-        .small
-          =line
-  %tr
-    %td coverage
-    %td
-      = fmt_coverage(@algset)
-  %tr
-    %td owner
-    %td
-      = owner(@algset)
-  %tr
-    %td
-    %td
-      =link_to('Edit', edit_alg_set_path(@algset), class: 'knapp knapp-enabled knapp16')
+=render 'show'
 
 -unless @algset.computed
   :javascript

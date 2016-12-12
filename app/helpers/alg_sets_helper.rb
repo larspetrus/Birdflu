@@ -20,7 +20,7 @@ module AlgSetsHelper
   end
 
   def subset_options
-    [['All Positions (3916)', 'all'], ['Edges Oriented (494)', 'eo']]
+    [['All Positions (3916)', 'all'], ['Oriented Edges (494)', 'eo']]
   end
 
   def subset_long_name(algset)
