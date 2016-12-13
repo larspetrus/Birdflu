@@ -369,21 +369,21 @@ $left-bgcolor: #f2f2f2;
 }
 .pick-icon  {
   &:hover {
-    background-color:#bbb;
+    background:#bbb;
     .name {
       color:white;
-      background-color:black;
+      background:black;
     }
   }
 }
 .locked-pick-icon {
   .name {
-    background-color: #ccc;
+    background: #ccc;
   }
-  background-color: #ddd;
+  background: #ddd;
 }
 .selected {
-  .name { background-image: radial-gradient(#cef 40%, #8af); }
+  .name { background: radial-gradient(#cef 40%, #8af); }
 }
 .pretty-icon svg {
   width:  192px;
@@ -583,7 +583,7 @@ $sp_text_shadow: #000;
   display:inline-block;
   cursor:pointer;
   color:#fff;
-  font-family:Arial;
+  font-family:Arial, sans-serif;
   font-size:9px;
   padding:1px 5px;
   text-decoration:none;
