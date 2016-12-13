@@ -1,36 +1,35 @@
-.algset_top
-  =link_to('Birdflu', '/')
-  =link_to('Algsets', alg_sets_path)
+= render 'leftbar', page: ApplicationController::ALGSETS_NAME
 
-%h3 Create AlgSet
+.alg-set-form
+  %h3 Create AlgSet
 
-- if @algset.errors.any?
-  #error_explanation
-    %ul
-    - @algset.errors.full_messages.each do |msg|
-      %li
-        = msg
-=form_for(@algset, html: {class: "edit_algset"}) do |f|
-  %p
-    = f.label :name
-  %p
-    = f.text_field :name, class: 'form-control'
+  - if @algset.errors.any?
+    #error_explanation
+      %ul
+      - @algset.errors.full_messages.each do |msg|
+        %li
+          = msg
+  =form_for(@algset, html: {class: "edit_algset"}) do |f|
+    %p
+      = f.label :name
+    %p
+      = f.text_field :name, class: 'form-control'
 
-  %p
-    = f.label :subset
-  %p
-    = f.select(:subset, subset_options)
+    %p
+      = f.label :subset
+    %p
+      = f.select(:subset, subset_options)
 
-  %p
-    = f.label :description
-  %p
-    = f.text_area :description, size: "50x3", class: 'form-control'
+    %p
+      = f.label :description
+    %p
+      = f.text_area :description, size: "50x3", class: 'form-control'
 
-  %p
-    = f.label :algs
-  %p.small
-    = f.text_area :algs, size: "80x4", class: 'form-control'
+    %p
+      = f.label :algs
+    %p
+      = f.text_area :algs, size: "80x4", class: 'form-control'
 
-
-  %p
-    = f.submit "Create", class: "show-pig", style: 'font-size: 14px;'
+    %p
+      = f.submit "Create", class: "knapp knapp-enabled knapp16", style: "font-weight: 700;"
+      = link_to "Cancel", alg_sets_path, class: "knapp knapp-enabled knapp16", style: "font-weight: 700;"

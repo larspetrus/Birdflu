@@ -2,22 +2,6 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-$menu-color: #44f;
-.algset_top {
-  font-size: 16px;
-  font-weight: 700;
-
-  a {
-    margin: 6px;
-    color: $menu-color;
-  }
-  a:visited { color: $menu-color; }
-  a:hover { text-shadow: 2px 2px 5px #777; }
-  a:active {color: white; text-shadow: 0px 0px 5px #000, 0 0 8px #00F; }
-
-  margin-bottom: 10px;
-}
-
 .index-header {
   display: flex;
   flex-direction: column;
@@ -76,15 +60,19 @@ $menu-color: #44f;
   .small { font-size: 10px; margin: 0 0 0 20px;}
 }
 
+.alg-set-form {
+  width: 450px;
+  margin: 0 auto;
+}
+
 #error_explanation {
-  width: 200px;
+  width: 400px;
   padding: 10px;
+
   color: red;
-  ul {
-    color: red;
-    margin: 0;
-  }
+  font-size: 14px;
   background-color: #fee;
+  ul { margin: 0; }
 }
 
 .flash_msgs {

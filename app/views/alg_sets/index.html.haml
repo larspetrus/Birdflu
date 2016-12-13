@@ -43,7 +43,7 @@
           =link_to('Edit', edit_alg_set_path(algset), class: 'knapp knapp-enabled')
       %td
         - if algset.editable_by_this_user && (not algset.predefined)
-          = link_to "Remove", algset, method: :delete, data: {confirm:"You Sure?"}, class: 'knapp knapp-enabled'
+          = link_to "Remove", algset, method: :delete, data: {confirm:"Remove alg set?"}, class: 'knapp knapp-enabled'
 
 #show-algset
 

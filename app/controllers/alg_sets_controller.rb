@@ -11,19 +11,21 @@ class AlgSetsController < ApplicationController
   def new
     raise "Not allowed to create Algset" unless can_create
 
+    setup_leftbar
     @algset = AlgSet.new
   end
 
   def create
     raise "Not allowed to create Algset" unless can_create
 
+    setup_leftbar
     more_params = @login ? {wca_user_id: @login.db_id} : {predefined: true}
     @algset = AlgSet.new(algset_params(more_params))
     if @algset.save
       flash[:success] = "Alg set created!"
-      redirect_to @algset
+      redirect_to alg_sets_path
     else
-      render 'new'
+      render new_alg_set_path
     end
   end
 
@@ -41,11 +43,13 @@ class AlgSetsController < ApplicationController
   end
 
   def edit
+    setup_leftbar
     @algset = AlgSet.find(params[:id])
     raise "Not allowed to edit Algset #{@algset.id}" unless can_change(@algset)
   end
 
   def update
+    setup_leftbar
     @algset = AlgSet.find(params[:id]).computing_off
     raise "Not allowed to update Algset #{@algset.id}" unless can_change(@algset)
 
@@ -57,7 +61,7 @@ class AlgSetsController < ApplicationController
 
     if @algset.errors.blank?
       flash[:success] = algs_result[:summary] ||  "Algset updated"
-      redirect_to @algset
+      redirect_to alg_sets_path
     else
       params[:alg_set][:add_algs] = params[:add_algs]
       render 'edit'

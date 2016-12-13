@@ -29,10 +29,12 @@ module AlgSetsHelper
   end
 
   def fmt_algs(algset)
+    return ['(no algs)'] if algset.algs.empty?
+
     algset.algs.sub("G", "|G").sub("H", "|H").sub("I", "|I").sub("J", "|J").sub("K", "|K").split('|')
   end
 
   def owner(algset)
-    algset.predefined ? 'predefined' : algset.wca_user&.full_name
+    algset.predefined ? 'system' : algset.wca_user&.full_name
   end
 end
