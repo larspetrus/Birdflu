@@ -27,6 +27,7 @@ class Column
   COP = self.new('COP', :cop, is_svg: true )
   EO  = self.new('EO',  :eo,  is_svg: true )
   EP  = self.new('EP',  :ep,  is_svg: true )
+  EOP = self.new('EOP', :eop, is_svg: true )
 
   def cell(presenter)
     presenter.send(@method)
@@ -78,11 +79,15 @@ class PositionColumns
   def ep
     { icon: Icons::Ep.for(@position), label: ''}
   end
+
+  def eop
+    { icon: Icons::Eop.for(@position), label: ''}
+  end
 end
 
 
 class RawAlgColumns
-  delegate :cop, :eo, :ep, :position, :to => :pos_cols
+  delegate :cop, :eo, :ep, :eop, :big, :position, :to => :pos_cols
 
   def initialize(raw_alg, context, pos_cols = nil)
     @raw_alg = raw_alg

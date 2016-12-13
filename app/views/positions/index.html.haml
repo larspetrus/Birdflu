@@ -5,7 +5,7 @@
 
 .rightbar
   -if @only_position
-    = render 'cube_icon', icon: Icons::Big.new(@only_position), pad: true, label: '', add_class: 'pretty-icon'
+    = render 'cube_icon', icon: Icons::Big.new(@only_position), pad: true, label: ''
   .stats-box{class: @only_position ? '' : 'positions-stats'}
     %span#headline= @stats.headline
     - if @only_position
