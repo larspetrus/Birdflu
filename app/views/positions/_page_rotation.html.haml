@@ -21,7 +21,7 @@
      1: { R: 'F', F: 'L', L: 'B', B: 'R' },
      2: { R: 'L', F: 'B', L: 'R', B: 'F' },
      3: { R: 'B', F: 'R', L: 'F', B: 'L' },
-  }
+  };
   function rotate_all_algs(rotation) {
     var diff = (rotation + 4) % 4;
     if (diff > 0) {
@@ -49,7 +49,7 @@
     adjust_pos_name();
     spin_svgs(0, 0);
     rotate_all_algs(page_rotation);
-  };
+  }
 
   function adjust_url() {
     var old_url = window.location.search;
