@@ -67,12 +67,11 @@ class PositionsController < ApplicationController
     @page_rotation = (params[:prot] || 0).to_i
 
     if params[:hl_alg]
-      @hi_lite = params[:hl_alg]
-      @list_items.insert(0, RawAlg.make_non_db(Algs.shift(@hi_lite, -@page_rotation)))
+      @list_items.insert(0, RawAlg.make_non_db(Algs.shift(Algs.unpack(params[:hl_alg]), -@page_rotation)))
     end
     if params[:hl_id]
-      @hi_lite = params[:hl_id].to_i
-      @list_items += [RawAlg.find(params[:hl_id].to_i)] unless @list_items.map(&:id).include?(@hi_lite)
+      @hi_lite_id = params[:hl_id].to_i
+      @list_items += [RawAlg.find(@hi_lite_id)] unless @list_items.map(&:id).include?(@hi_lite_id)
     end
   end
 
@@ -200,7 +199,7 @@ class PositionsController < ApplicationController
     if db_alg
       result[:alg_id] = db_alg.id
     else
-      result[:found_by] = user_input
+      result[:packed_alg] = Algs.pack(user_input)
     end
     render json: result
   rescue Exception => e

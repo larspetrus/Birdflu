@@ -70,7 +70,7 @@
     %th= column.header
   - @list_items.each do |item|
     - line_presenter = item.presenter(@table_context)
-    %tr{class: item.matches(@hi_lite) ? 'hilite' : ''}
+    %tr{class: item.matches(@hi_lite_id) ? 'hilite' : ''}
       - @columns.each do |column|
         =list_td(line_presenter, column)
   -if @clipped

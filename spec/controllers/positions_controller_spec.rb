@@ -43,14 +43,16 @@ RSpec.describe PositionsController do
 
   describe "POST find_by_alg" do
     it "computes the ll_code by alg" do
-      post_find_by_alg("R' F' L F' L D' L' D L' F2 R")
+      alg = "R' F' L F' L D' L' D L' F2 R"
+      post_find_by_alg(alg)
 
-      expect(JSON.parse(response.body)).to eq("ll_code" => "a7j7b8j8", "prot" => 0, "found_by"=>"R' F' L F' L D' L' D L' F2 R")
+      expect(JSON.parse(response.body)).to eq("ll_code" => "a7j7b8j8", "prot" => 0, "packed_alg"=> Algs.pack(alg))
     end
 
     it "computes the page rotation" do
-      post_find_by_alg("F' L' B L' B D' B' D B' L2 F")
-      expect(JSON.parse(response.body)).to eq("ll_code" => "a7j7b8j8", "prot" => 1, "found_by"=>"F' L' B L' B D' B' D B' L2 F")
+      alg = "F' L' B L' B D' B' D B' L2 F"
+      post_find_by_alg(alg)
+      expect(JSON.parse(response.body)).to eq("ll_code" => "a7j7b8j8", "prot" => 1, "packed_alg"=> Algs.pack(alg))
     end
 
     it "finds the ll_code and position id by alg name" do
@@ -69,23 +71,25 @@ RSpec.describe PositionsController do
     end
 
     it "is case independent" do
-      post_find_by_alg("B2 r2 f r f' r b2 u' L U' L'")
-      expect(JSON.parse(response.body)).to eq("ll_code" => "a5c6g8q3", "prot" => 0, "found_by"=>"B2 R2 F R F' R B2 U' L U' L'")
+      alg = "B2 r2 f r f' r b2 u' L U' L'"
+      post_find_by_alg(alg)
+      expect(JSON.parse(response.body)).to eq("ll_code" => "a5c6g8q3", "prot" => 0, "packed_alg"=> Algs.pack(alg.upcase))
     end
 
-    it "handles 2'" do
-      post_find_by_alg("B2 R2' F R F' R B2 U' L U' L'")
-      expect(JSON.parse(response.body)).to eq("ll_code" => "a5c6g8q3", "prot" => 0, "found_by"=>"B2 R2 F R F' R B2 U' L U' L'")
+    it "handles 2' " do
+      alg = "B2 R2' F R F' R B2 U' L U' L'"
+      post_find_by_alg(alg)
+      expect(JSON.parse(response.body)).to eq("ll_code" => "a5c6g8q3", "prot" => 0, "packed_alg"=> Algs.pack("B2 R2 F R F' R B2 U' L U' L'"))
     end
 
     it "ignores ()+ responsibly" do
       post_find_by_alg("B2 R2 F+R F' R B2 (U' L) U' L'")
-      expect(JSON.parse(response.body)).to eq("ll_code" => "a5c6g8q3", "prot" => 0, "found_by"=>"B2 R2 F R F' R B2 U' L U' L'")
+      expect(JSON.parse(response.body)).to eq("ll_code" => "a5c6g8q3", "prot" => 0, "packed_alg"=>Algs.pack("B2 R2 F R F' R B2 U' L U' L'"))
     end
 
     it "removes needless U turns" do
       post_find_by_alg("B2 R2 F R F' R B2 U' L U' L' U2")
-      expect(JSON.parse(response.body)).to eq("ll_code" => "a5c6g8q3", "prot" => 0, "found_by"=>"B2 R2 F R F' R B2 U' L U' L'")
+      expect(JSON.parse(response.body)).to eq("ll_code" => "a5c6g8q3", "prot" => 0, "packed_alg"=> Algs.pack("B2 R2 F R F' R B2 U' L U' L'"))
     end
 
 
