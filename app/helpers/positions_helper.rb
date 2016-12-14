@@ -106,7 +106,9 @@ class RawAlgColumns
   end
 
   def ui_pos
-    @raw_alg.position.pov_variant_in(@context[:possible_pos_ids])
+    @raw_alg.non_db? ?
+        OpenStruct.new(pov_offset: 0, pov_adjust_u_setup: 0) :
+        @raw_alg.position.pov_variant_in(@context[:possible_pos_ids])
   end
 
 

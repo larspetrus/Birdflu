@@ -68,7 +68,7 @@ class PositionsController < ApplicationController
 
     if params[:hl_alg]
       @hi_lite = params[:hl_alg]
-      @list_items.insert(0, DuckRawAlg.new(Algs.shift(@hi_lite, -@page_rotation)))
+      @list_items.insert(0, RawAlg.make_non_db(Algs.shift(@hi_lite, -@page_rotation)))
     end
     if params[:hl_id]
       @hi_lite = params[:hl_id].to_i
@@ -205,54 +205,5 @@ class PositionsController < ApplicationController
     render json: result
   rescue Exception => e
     render json: { error: e.message }
-  end
-end
-
-# TODO Got to get rid of these Ducks...
-class DuckPosition
-  def pov_offset
-    0
-  end
-
-  def pov_adjust_u_setup
-    0
-  end
-
-  def pov_variant_in(selected_ids)
-    self
-  end
-end
-
-class DuckRawAlg
-  attr_reader :moves, :length, :speed, :name, :u_setup, :specialness, :nick_name
-
-  def initialize(moves)
-    @moves = moves
-    @length  = Algs.length(moves)
-    @speed   = Algs.speed_score(moves)
-    @u_setup = Algs.standard_u_setup(moves)
-
-    @name = '-'
-    @specialness = 'Not in DB'
-  end
-
-  def presenter(context)
-    RawAlgColumns.new(self, context)
-  end
-
-  def position
-    DuckPosition.new
-  end
-
-  def pov_variant_in(ignore)
-    position
-  end
-
-  def matches(search_term)
-    true
-  end
-
-  def single?
-    true
   end
 end

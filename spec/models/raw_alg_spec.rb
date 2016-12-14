@@ -15,6 +15,8 @@ describe RawAlg do
       expect(alg.moves).to eq("R' F2 L F L' F R")
       expect(alg.specialness).to eq("LFR")
       expect(alg.speed).to eq(6.3)
+
+      expect(alg.non_db?).to eq(false)
     end
 
     it 'all fields 2' do
@@ -128,5 +130,23 @@ describe RawAlg do
 
     expect(raw_alg.ui_alg.to_s).to eq(raw_alg.moves)
     expect(raw_alg.db_alg.to_s).to eq(raw_alg._moves)
+  end
+
+  it 'non_bd' do
+    alg = RawAlg.make_non_db("F U F' U F U2 F'")
+
+    expect(alg.moves).to eq("F U F' U F U2 F'")
+    expect(alg.length).to eq(7)
+    expect(alg.speed).to eq(4.8)
+    expect(alg.u_setup).to eq(2)
+    expect(alg.name).to eq('-')
+    expect(alg.specialness).to eq('Not in DB')
+
+    expect(alg.id).to eq(nil)
+    expect(alg.non_db?).to eq(true)
+    expect(alg.matches(:anything)).to eq(true)
+    expect(alg.single?).to eq(true)
+
+    expect(alg.valid?).to eq(false) # Make sure it can't end up in DB!
   end
 end

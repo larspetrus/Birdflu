@@ -5,7 +5,10 @@ class RawAlg < ActiveRecord::Base
   belongs_to :mirror, class_name: RawAlg.name
   has_many :combo_algs, foreign_key: :combined_alg_id
 
+  NON_DB_TEXT = 'Not in DB'
+
   validates :length, presence: true
+  validate { errors.add(:specialness, "Save of non DB RawAlg averted") if non_db? }
 
   before_create do
     set_position
@@ -19,6 +22,12 @@ class RawAlg < ActiveRecord::Base
   def self.make(alg, length = 1)
     std_alg = Algs.display_variant(alg)
     RawAlg.create(_moves: Algs.pack(std_alg), u_setup: Algs.standard_u_setup(std_alg), length: length)
+  end
+
+  def self.make_non_db(alg)
+    packed = Algs.pack(alg)
+    fields = {_moves: packed, length: packed.length, u_setup: Algs.standard_u_setup(alg), specialness: NON_DB_TEXT}
+    self.new(fields).tap{|newalg| newalg.set_speed}
   end
 
 
@@ -113,8 +122,12 @@ class RawAlg < ActiveRecord::Base
     true
   end
 
+  def non_db?
+    specialness == NON_DB_TEXT
+  end
+
   def matches(search_term)
-    search_term == id
+    search_term == id || non_db?
   end
 
   # Set up a "premove" so the Roofpig colors look like the Position illustration
@@ -134,6 +147,7 @@ class RawAlg < ActiveRecord::Base
   end
 
   def self.name_for(db_id, ranges = self.id_ranges)
+    return '-' unless db_id
     lower = ranges.select{|r| r <= db_id }
     return "Nothing" unless lower.present?
     return "" if lower.count + 5 > DB_COMPLETENESS_LENGTH
