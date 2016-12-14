@@ -10,6 +10,15 @@ module ApplicationHelper
     sections.map.with_index { |slice, i| hlp.content_tag(:span, slice, class: (i.odd? ? :odd : :even)) }
   end
 
+  def list_td(presenter, column)
+    if column.is_svg
+      svg_params = column.content(presenter)
+      content_tag(:td, render('cube_icon', svg_params))
+    else
+      column.content(presenter)
+    end
+  end
+
   def hlp
     ActionController::Base.helpers
   end

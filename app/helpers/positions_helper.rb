@@ -1,5 +1,14 @@
 # frozen_string_literal: true
 
+module PositionsHelper
+  def svg_cell(presenter, method)
+    svg_params = presenter.send(method)
+    icon = render 'cube_icon', svg_params
+    content_tag(:td, icon)
+  end
+
+end
+
 # "View presenter" code for the alg/position list/table columns.
 
 class Column
@@ -23,17 +32,14 @@ class Column
 
   STARS       = self.new('☆', :stars)
   HL_POSITION = self.new('Position', :hl_position)
+  REMOVE_STAR = self.new('', :remove_star)
 
   COP = self.new('COP', :cop, is_svg: true )
   EO  = self.new('EO',  :eo,  is_svg: true )
   EP  = self.new('EP',  :ep,  is_svg: true )
   EOP = self.new('EOP', :eop, is_svg: true )
 
-  def cell(presenter)
-    presenter.send(@method)
-  end
-
-  def svg_params(presenter)
+  def content(presenter)
     presenter.send(@method)
   end
 end
@@ -145,6 +151,11 @@ class RawAlgColumns
 
   def hl_position
     tag(:td, hlp.link_to(@raw_alg.position.display_name, "/?pos=#{@raw_alg.position.display_name}&hl_id=#{@raw_alg.id}"))
+  end
+
+  def remove_star
+    star = @context[:star]
+    tag(:td, hlp.link_to('Remove', "/galaxies/remove_star?galaxy_id=#{star.galaxy_id}&raw_alg_id=#{star.raw_alg_id}", class: 'knapp knapp-enabled'))
   end
 end
 

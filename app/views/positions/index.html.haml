@@ -72,14 +72,7 @@
     - line_presenter = item.presenter(@table_context)
     %tr{class: item.matches(@hi_lite) ? 'hilite' : ''}
       - @columns.each do |column|
-        - if column.is_svg
-          - svg_params = column.svg_params(line_presenter)
-          - if svg_params
-            %td= render 'cube_icon', svg_params
-          - else
-            %td
-        -else
-          =column.cell(line_presenter)
+        =list_td(line_presenter, column)
   -if @clipped
     %tfoot
       %tr

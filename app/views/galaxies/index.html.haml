@@ -9,24 +9,10 @@
   %div{class: "star#{line.first}", style: "font-size: 30px; width: 100%; text-align: center; margin-top: 10px;"}
   %table.galaxy-list.size-m-wc
     %tr
-      %th Alg
-      %th Position
-      %th COP
-      %th EOP
-      %th Moves
-      %th All stars
-      %th
+      -@columns.each do |column|
+        %th= column.header
     - line.last.each do |star|
-      - alg_presenter = RawAlgColumns.new(star.raw_alg, login: @login)
-      - cop_svg_params = Column::COP.svg_params(alg_presenter)
-      - eop_svg_params = Column::EOP.svg_params(alg_presenter)
-
+      - alg_presenter = RawAlgColumns.new(star.raw_alg, login: @login, star: star)
       %tr
-        =Column::NAME.cell(alg_presenter)
-        =Column::HL_POSITION.cell(alg_presenter)
-        %td= render 'cube_icon', cop_svg_params
-        %td= render 'cube_icon', eop_svg_params
-        =Column::ALG.cell(alg_presenter)
-        =Column::STARS.cell(alg_presenter)
-        %td
-          =link_to('Remove', "/galaxies/remove_star?galaxy_id=#{star.galaxy_id}&raw_alg_id=#{star.raw_alg_id}", class: 'knapp knapp-enabled')
+        -@columns.each do |column|
+          =list_td(alg_presenter, column)
