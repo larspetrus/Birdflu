@@ -31,7 +31,7 @@
         .setting
           =link_to("\u2699", alg_sets_path)
         %span.list-size.list-outline
-          =Fields::ALGSET.as_tag(@list_format, class: 'list-size__select', form: 'main-form')
+          =Fields::ALGSET.as_tag(@list_format, AlgSet.menu_options, class: 'list-size__select', form: 'main-form') # TODO caching candidate
 
     .leftitem.clickable#about-link About…
 

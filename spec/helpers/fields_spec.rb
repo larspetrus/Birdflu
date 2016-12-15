@@ -4,7 +4,7 @@ RSpec.describe 'Fields' do
 
   describe 'Fields::Select' do
     let(:size) {Fields::Select.new(:size, %w(S M L XL))}
-    let(:count){Fields::Select.new(:count, [1,2,3])}
+    let(:count){Fields::Select.new(:count, [1,2,3], true)}
 
     it 'value()' do
       expect(size.value(size: 'M')).to eq('M')
@@ -12,6 +12,8 @@ RSpec.describe 'Fields' do
       expect(size.value(size: 'ALSO DEFAULT ->')).to eq('S')
 
       expect(count.value(count: '2')).to eq('2')
+      expect(count.value(fall_back: 'on default')).to eq('1')
+      expect(count.value(count: '14')).to eq('14')
     end
 
     it 'default' do
@@ -25,12 +27,13 @@ RSpec.describe 'Fields' do
   end
 
     it 'values' do
-      allow(AlgSet).to receive(:menu_options) {[101, 102].map{|id| ["Algset ##{id}", id]}} # TODO Ugh... Since there is no way to reset class method stubs, let's stub them all the same for now
-
       expect(Fields.values({})).to eq(OpenStruct.new(list: "positions", lines: "25", sortby: "_speed", algset: "0"))
 
-      params = {list: "algs", lines: "50", sortby: "length", algset: "101"}
-      expect(Fields.values(params)).to eq(OpenStruct.new(list: "algs", lines: "50", sortby: "length", algset: "101"))
+      non_default_selections = {list: "algs", lines: "50", sortby: "length", algset: "101"}
+      expect(Fields.values(non_default_selections)).to eq(OpenStruct.new(list: "algs", lines: "50", sortby: "length", algset: "101"))
+
+      invalid_default_selections = {list: "invalid", lines: "invalid", sortby: "invalid", algset: "invalid"}
+      expect(Fields.values(invalid_default_selections)).to eq(OpenStruct.new(list: "positions", lines: "25", sortby: "_speed", algset: "invalid"))
     end
 
   it '#defaults()' do

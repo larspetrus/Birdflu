@@ -6,19 +6,20 @@ class Fields
   class Select
     attr_reader :name, :default
 
-    def initialize(name, options)
+    def initialize(name, choices, any_values = false)
       @name = name
-      @options = options
-      @values = @options.map{|opt| [opt].flatten.last.to_s}
+      @choices = choices
+      @values = @choices.map{|opt| [opt].flatten.last.to_s}
       @default = @values.first
+      @any_values = any_values
     end
 
-    def value(parameters)
-      @values.include?(parameters[@name]) ? parameters[@name] : @default
+    def value(selections)
+      (@values.include?(selections[@name]) || @any_values) ? (selections[@name] || @default) : @default
     end
 
-    def as_tag(parameters, options = {})
-      hlp.select_tag(@name, hlp.options_for_select(@options, selected: value(parameters)), options)
+    def as_tag(selections, extra_choices = [], html_options = {})
+      hlp.select_tag(@name, hlp.options_for_select(@choices + extra_choices, selected: value(selections)), html_options)
     end
 
     def as_css_id
@@ -33,7 +34,7 @@ class Fields
   LIST   = Select.new(:list,  ['positions', 'algs'])
   LINES  = Select.new(:lines, [25, 50, 100, 200, 500])
   SORTBY = Select.new(:sortby,[['speed', '_speed'], ['moves', 'length']])
-  ALGSET = Select.new(:algset,[['None', 0]] + AlgSet.menu_options)
+  ALGSET = Select.new(:algset,[['None', 0]], true)
 
   ALL = [LIST, LINES, SORTBY, ALGSET].freeze
 
