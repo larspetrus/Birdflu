@@ -20,24 +20,33 @@ class Column
     @is_svg = is_svg
   end
 
-  LENGTH   = self.new('Moves', :moves)
-  LENGTH_P = self.new('', :moves)
-  SPEED    = self.new('Speed', :speed)
-  NAME     = self.new('Name', :name)
-  POSITION = self.new('Position', :position)
-  ALG      = self.new('Alg', :alg)
-  ALG_P    = self.new('Shortest Solution', :alg)
-  SHOW     = self.new('', :show)
-  NOTES    = self.new('Notes', :notes)
+  ALL = {
+      length:      self.new('Moves', :moves),
+      length_p:    self.new('', :moves),
+      speed:       self.new('Speed', :speed),
+      name:        self.new('Name', :name),
+      position:    self.new('Position', :position),
+      alg:         self.new('Alg', :alg),
+      alg_p:       self.new('Shortest Solution', :alg),
+      show:        self.new('', :show),
+      notes:       self.new('Notes', :notes),
+      stars:       self.new('☆', :stars),
+      hl_position: self.new('Position', :hl_position),
+      remove_star: self.new('', :remove_star),
+      cop:         self.new('COP', :cop, is_svg: true),
+      eo:          self.new('EO',  :eo,  is_svg: true),
+      ep:          self.new('EP',  :ep,  is_svg: true),
+      eop:         self.new('EOP', :eop, is_svg: true),
+  }.freeze
 
-  STARS       = self.new('☆', :stars)
-  HL_POSITION = self.new('Position', :hl_position)
-  REMOVE_STAR = self.new('', :remove_star)
+  def self.[](name)
+    ALL[name]
+  end
 
-  COP = self.new('COP', :cop, is_svg: true )
-  EO  = self.new('EO',  :eo,  is_svg: true )
-  EP  = self.new('EP',  :ep,  is_svg: true )
-  EOP = self.new('EOP', :eop, is_svg: true )
+  def self.named(names)
+    names.each{|name| raise "Bad column name '#{name}'" unless self[name] }
+    names.map{|name| self[name]}
+  end
 
   def content(presenter)
     presenter.send(@method)

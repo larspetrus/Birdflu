@@ -28,10 +28,10 @@ class PositionsController < ApplicationController
 
     @stats = stats_for_view(@only_position)
 
-    @selected_icons, @icon_grids = {}, {}
+    @picked, @icon_grids = {}, {}
     PosFilters::ALL.each do |f|
       icons = Icons::Base.class_by(f)
-      @selected_icons[f] = icons.by_code(@filters[f])
+      @picked[f] = icons.by_code(@filters[f])
       @icon_grids[f] = icons::grid(subset: @position_set, cp: @filters[:cp])
     end
 
@@ -60,7 +60,7 @@ class PositionsController < ApplicationController
     @table_context = {stats: @stats.data, possible_pos_ids: @position_ids, login: @login, stars: @stars_by_alg}
 
     @text_size = cookies[:size] || 'm'
-    @list_classes = PositionsController.table_class(@algs_mode, @combo_mode, @text_size, @selected_icons, @login)
+    @list_classes = PositionsController.table_class(@algs_mode, @combo_mode, @text_size, @picked, @login)
 
     @rendered_svg_ids = Set.new
     @columns = @algs_mode ? make_alg_columns : make_pos_columns
@@ -76,22 +76,18 @@ class PositionsController < ApplicationController
   end
 
   def make_alg_columns
-    columns = [Column::SPEED, Column::LENGTH].rotate(@list_format.sortby == '_speed' ? 0 : 1)
-    columns << Column::NAME
-    columns << Column::POSITION unless @only_position
-    columns << Column::COP if @selected_icons[:cop].is_none
-    columns << Column::EO  if @selected_icons[:eo].is_none
-    columns << Column::EP  if @selected_icons[:ep].is_none
-    columns << Column::ALG << Column::SHOW << Column::NOTES
-    columns << Column::STARS
+    start = [:speed, :length].rotate(@list_format.sortby == '_speed' ? 0 : 1)
+    start << :name
+    start << :position unless @only_position
+    Column.named(start + icon_columns + [:alg, :show, :notes, :stars])
   end
 
   def make_pos_columns
-    columns = [Column::POSITION]
-    columns << Column::COP if @selected_icons[:cop].is_none
-    columns << Column::EO  if @selected_icons[:eo].is_none
-    columns << Column::EP  if @selected_icons[:ep].is_none
-    columns << Column::LENGTH_P << Column::ALG_P << Column::SHOW
+    Column.named([:position] + icon_columns + [:length_p, :alg_p, :show])
+  end
+
+  def icon_columns
+    [:cop, :eo, :ep].select{|col| @picked[col].is_none }
   end
 
   def stats_for_view(single_pos)

@@ -11,47 +11,48 @@ RSpec.describe Column, :type => :model do
   let(:context) { {stats: OpenStruct.new(shortest: 7, fastest: 5.55), possible_pos_ids: [pos1.id]} }
 
   it 'MOVES' do
-    expect(Column::LENGTH.content(raw1.presenter(context))).to eq('<td class="optimal">7</td>')
-    expect(Column::LENGTH.content(raw2.presenter(context))).to eq('<td>8</td>')
+    expect(Column[:length].content(raw1.presenter(context))).to eq('<td class="optimal">7</td>')
+    expect(Column[:length].content(raw2.presenter(context))).to eq('<td>8</td>')
   end
 
   it 'SPEED' do
-    expect(Column::SPEED.content(raw1.presenter(context))).to eq('<td>6.66</td>')
-    expect(Column::SPEED.content(raw2.presenter(context))).to eq('<td class="optimal">5.55</td>')
+    expect(Column[:speed].content(raw1.presenter(context))).to eq('<td>6.66</td>')
+    expect(Column[:speed].content(raw2.presenter(context))).to eq('<td class="optimal">5.55</td>')
   end
 
   it 'NAME' do
     allow(raw1).to receive(:name) { "Z99" }
     allow(raw2).to receive(:name) { "B52" }
 
-    expect(Column::NAME.content(raw1.presenter(context))).to eq('<td class="single">Z99</td>')
-    expect(Column::NAME.content(combo1.presenter(context))).to eq('<td class="combo"><span class="js-goto-post">Z99</span>+<span class="js-goto-post">B52</span></td>')
+    expect(Column[:name].content(raw1.presenter(context))).to eq('<td class="single">Z99</td>')
+    expect(Column[:name].content(combo1.presenter(context))).to eq('<td class="combo"><span class="js-goto-post">Z99</span>+<span class="js-goto-post">B52</span></td>')
   end
 
   it 'POSITION' do
-    expect(Column::POSITION.content(pos1.presenter(context))).to eq("<td><a href=\"/positions/a5a1b3c3\">Co4G</a></td>")
+    expect(Column[:position].content(pos1.presenter(context))).to eq("<td><a href=\"/positions/a5a1b3c3\">Co4G</a></td>")
   end
 
   it 'ALG' do
-    expect(Column::ALG.content(raw1.presenter(context))).to eq('<td class="js-alg">L&#39; B&#39; R B&#39; R&#39; B2 L</td>')
+    expect(Column[:alg].content(raw1.presenter(context))).to eq('<td class="js-alg">L&#39; B&#39; R B&#39; R&#39; B2 L</td>')
 
     allow(combo1).to receive(:merge_display_data) {[["L' U' B' U B "], ["L", :merged], ["+"], ["L", :merged], [" U F U' F' L'", :alg2]]}
-    expect(Column::ALG.content(combo1.presenter(context))).to eq('<td class="js-combo"><span>L&#39; U&#39; B&#39; U B </span><span class="merged">L</span><span>+</span><span class="merged">L</span><span class="alg2"> U F U&#39; F&#39; L&#39;</span></td>')
+    expect(Column[:alg].content(combo1.presenter(context))).to eq('<td class="js-combo"><span>L&#39; U&#39; B&#39; U B </span><span class="merged">L</span><span>+</span><span class="merged">L</span><span class="alg2"> U F U&#39; F&#39; L&#39;</span></td>')
   end
 
   it 'SHOW' do
-    expect(Column::SHOW.content(raw1.presenter(context))).to eq('<td data-uset="2"><a class="show-pig">show</a></td>')
+    expect(Column[:show].content(raw1.presenter(context))).to eq('<td data-uset="2"><a class="show-pig">show</a></td>')
   end
 
   it 'NOTES' do
     allow(raw1).to receive(:specialness) { "XYZ" }
-    expect(Column::NOTES.content(raw1.presenter(context))).to eq('<td>XYZ</td>')
+    expect(Column[:notes].content(raw1.presenter(context))).to eq('<td>XYZ</td>')
   end
 
   it 'icons' do
-    expect(Column::COP.content(raw1.presenter(context))[:icon].name).to eq(pos1.cop)
-    expect(Column::EO.content(raw1.presenter(context))[:icon].name).to eq(pos1.eo)
-    expect(Column::EP.content(raw1.presenter(context))[:icon].name).to eq(pos1.ep)
+    expect(Column[:cop].content(raw1.presenter(context))[:icon].name).to eq(pos1.cop)
+    expect(Column[:eop].content(raw1.presenter(context))[:icon].name).to eq(pos1.eop)
+    expect(Column[:eo].content(raw1.presenter(context))[:icon].name).to eq(pos1.eo)
+    expect(Column[:ep].content(raw1.presenter(context))[:icon].name).to eq(pos1.ep)
   end
 
 end

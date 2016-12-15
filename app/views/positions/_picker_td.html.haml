@@ -1,7 +1,7 @@
 - field = "##{prop}"
 - add_class ||= ""
 - message ||= nil
-- icon = @selected_icons[prop]
+- icon = @picked[prop]
 
 %td
   .selected-icon{data: {prop: prop}}
@@ -11,7 +11,7 @@
     %div{id: "#{prop}-picker", class: 'hidden-picker'}
       .picker_buttons
         %a{class: "random knapp knapp-enabled", data: {field: field, code: 'random'}} Random
-        %a{class: "unselect knapp" + (@selected_icons[prop].is_none ? "" : " knapp-enabled"), data: {field: field, code: ''}} Unselect
+        %a{class: "unselect knapp" + (@picked[prop].is_none ? "" : " knapp-enabled"), data: {field: field, code: ''}} Unselect
       %table{class: "icon-grid " + add_class}
         - @icon_grids[prop].each do |icon_row|
           %tr
