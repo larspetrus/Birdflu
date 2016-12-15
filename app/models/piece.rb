@@ -3,7 +3,7 @@
 class Piece
   attr_reader :name
 
-  ALL = %w[BL BR DB DBL DRB DF DLF DFR DL DR FL FR UB ULB UBR UF UFL URF UL UR] #TODO %i ? ALL_NAMES ?
+  NAMES = %i[BL BR DB DBL DRB DF DLF DFR DL DR FL FR UB ULB UBR UF UFL URF UL UR]
 
   CUBE_STATE_CODES = {
       'BL'  => 'ab'.split(''),
@@ -43,7 +43,8 @@ class Piece
   end
 
   def initialize(name)
-    raise "'#{name}' is not a valid piece name" unless ALL.include? name
+    name = name.to_s
+    raise "'#{name}' is not a valid piece name" unless NAMES.include? name.to_sym
 
     @name = name
     @stickers = name.chars.map { |char| char.to_sym}

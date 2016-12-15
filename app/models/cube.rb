@@ -3,7 +3,7 @@
 class Cube
   def initialize(state = nil)
     @pieces = { }
-    Piece::ALL.each { |piece| @pieces[piece.to_sym] = Piece.new(piece) }
+    Piece::NAMES.each { |piece| @pieces[piece] = Piece.new(piece) }
 
     if state
       is_ll_code = state.length == 8 && (not state.include? ' ')
@@ -17,15 +17,11 @@ class Cube
   end
 
   def state_string
-    rr = []
-    Piece::ALL.each { |piece| rr << piece_at(piece.to_sym).state_code_at(piece) }
-    rr.join('')
+    Piece::NAMES.map {|piece| piece_at(piece).state_code_at(piece) }.join('')
   end
 
   def f2l_state_string
-    rr = []
-    Piece::ALL.each { |pos| rr << piece_at(pos.to_sym).f2l_state_code_at(pos) }
-    rr.join('')
+    Piece::NAMES.map {|piece| piece_at(piece).f2l_state_code_at(piece) }.join('')
   end
 
   def apply_position(ll_code)
