@@ -34,7 +34,7 @@ class BigThought
   end
 
 
-  # Update Positions table after adding RawAlgs #TODO: make automatic
+  # Update Positions table after adding RawAlgs # Could maybe be automatic?
   def self.update_positions
     # Update stats?
   end

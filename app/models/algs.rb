@@ -150,7 +150,7 @@ module Algs
     alg.split(' ').length
   end
 
-  def self.variant(alg) # TODO works with slices?
+  def self.variant(alg) # Note that this can be tricky with slices and normalization. "B F ..." vs "F B ..."
     alg.gsub(/[ '2DU]/, '').first
   end
 

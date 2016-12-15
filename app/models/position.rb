@@ -13,7 +13,7 @@ class Position < ActiveRecord::Base
 
   scope :real, -> { where(pov_offset: 0) }
 
-  validates :ll_code, uniqueness: true # TODO Validate that it's the standard ll_code?
+  validates :ll_code, uniqueness: true
 
   after_create do
     self.set_filter_names

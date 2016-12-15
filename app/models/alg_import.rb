@@ -25,7 +25,7 @@ class AlgImport
         open(tr_file_name(length)) do |tr_file|
           tr_file.each_line do |tr_line|
             alg_d = Algs.from_tr(tr_line.chomp)
-            d_algs_d << alg_d # TODO: write directly to unsorted_file here, to save memory
+            d_algs_d << alg_d # We could write directly to unsorted_file here, to save memory
 
             if alg_d.end_with?("D", "D2", "D'")
               d_algs_d << alg_d.split(' ').rotate(-1).join(' ')
