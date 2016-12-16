@@ -22,4 +22,9 @@
   }
 
   .knapp { font-weight: 700; }
+  .pick-icon  {
+    &:hover {
+      background: transparent;
+    }
+  }
 }

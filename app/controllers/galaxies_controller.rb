@@ -7,7 +7,8 @@ class GalaxiesController < ApplicationController
     setup_leftbar
     @columns = Column.named([:hl_position, :name, :cop, :eop, :alg, :stars, :remove_star])
     @stars = Star.where(galaxies: {wca_user_id: @login&.db_id}).order(['galaxies.style', 'raw_algs.id']).includes(:raw_alg, :galaxy).to_a
-    @chunks = @stars.chunk{ |line| line.galaxy.style }.to_a
+    @per_style = @stars.chunk{ |line| line.galaxy.style }.to_a
+    @list_classes = "galaxy-list size-#{@text_size}-wc"
     @rendered_svg_ids = Set.new
   end
 

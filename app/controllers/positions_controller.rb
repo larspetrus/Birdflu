@@ -8,12 +8,11 @@ class PositionsController < ApplicationController
 
   # === Routed action ===
   def index
-    take_prefs_from_params = (params.keys.map(&:to_sym) & Fields::ALL_DEFAULTS.keys).present? || !params[:udf].nil?
-    if take_prefs_from_params
-      PositionsController.store_list_format(cookies, params)
-    end
+    get_prefs_from_params = (params.keys.map(&:to_sym) & Fields::ALL_DEFAULTS.keys).present? || !params[:udf].nil?
+    PositionsController.store_list_format(cookies, params) if get_prefs_from_params
 
     setup_leftbar
+
     @filters = PosFilters.new(params, @position_set)
     @bookmark_url = PositionsController.bookmark_url(@filters, request.query_parameters)
 
@@ -59,8 +58,7 @@ class PositionsController < ApplicationController
     end
     @table_context = {stats: @stats.data, possible_pos_ids: @position_ids, login: @login, stars: @stars_by_alg}
 
-    @text_size = cookies[:size] || 'm'
-    @list_classes = PositionsController.table_class(@algs_mode, @combo_mode, @text_size, @picked, @login)
+    @list_classes = table_class(@algs_mode, @combo_mode, @text_size, @picked, @login)
 
     @rendered_svg_ids = Set.new
     @columns = @algs_mode ? make_alg_columns : make_pos_columns
@@ -138,11 +136,11 @@ class PositionsController < ApplicationController
     "?pos=#{filters.pos_code}" + (tail.present? ? '&' + tail : '')
   end
 
-  def self.table_class(algs_mode, combo_mode, size, selected_icons, login)
+  def table_class(algs_mode, combo_mode, size, picked, login)
     base = algs_mode ? 'algs-list' : 'positions-list'
     base += ' combo-list' if combo_mode
     base += ' algs-loggedout' unless login || !algs_mode
-    has_icons = selected_icons[:cop].is_none || selected_icons[:eo].is_none || selected_icons[:ep].is_none
+    has_icons = picked[:cop].is_none || picked[:eo].is_none || picked[:ep].is_none
     with_icons = (has_icons ? '-wc' : '')
     "#{base} size-#{size}#{with_icons}"
   end
