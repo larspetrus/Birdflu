@@ -26,7 +26,12 @@ class RawAlg < ActiveRecord::Base
 
   def self.make_non_db(alg)
     packed = Algs.pack(alg)
-    fields = {_moves: packed, length: packed.length, u_setup: Algs.standard_u_setup(alg), specialness: NON_DB_TEXT}
+    fields = {
+        _moves: packed,
+        length: packed.length,
+        u_setup: Algs.standard_u_setup(alg),
+        specialness: [Algs.specialness(alg), NON_DB_TEXT].compact.join(' ')
+    }
     self.new(fields).tap{|newalg| newalg.set_speed}
   end
 
@@ -123,7 +128,7 @@ class RawAlg < ActiveRecord::Base
   end
 
   def non_db?
-    specialness == NON_DB_TEXT
+    specialness&.end_with? NON_DB_TEXT
   end
 
   def matches(search_term)

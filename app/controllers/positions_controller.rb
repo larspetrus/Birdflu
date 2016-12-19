@@ -36,7 +36,7 @@ class PositionsController < ApplicationController
 
     @list_items =
         if @algs_mode
-          alg_set = AlgSet.find_by_id(@list_format.algset.to_i)
+          alg_set = AlgSet.find_by_id(@list_format.algset.to_i) # works even when id doesn't exist
           @combo_mode = PREFS.use_combo_set && @only_position && alg_set && (@only_position.eo == '4' || alg_set.subset == 'all')
           if @combo_mode
             raw_algs = @only_position.algs_in_set(alg_set, sortby: @list_format.sortby, limit: @list_format.lines.to_i)

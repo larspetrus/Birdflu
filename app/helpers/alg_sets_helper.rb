@@ -4,19 +4,24 @@ module AlgSetsHelper
     '%.3f' % avg
   end
 
-  def fmt_coverage(algset)
+  def fmt_coverage_percent(algset)
     return '--' unless algset.coverage
-    algset.full_coverage ? '100%' :  "#{algset.coverage}/#{algset.subset_pos_ids.count}"
+    "#{100 * algset.coverage/algset.subset_pos_ids.count}%"
+  end
+
+  def fmt_coverage_fraction(algset)
+    return '' if !algset.coverage || algset.full_coverage?
+     "#{algset.coverage}/#{algset.subset_pos_ids.count}"
   end
 
   def fmt_avg_length(algset)
-    return 'n/a' unless algset.full_coverage
-    '%.3f' % algset.average_length
+    p1, p2 = (algset.full_coverage? ? ['', ''] : ['(', ')'])
+    p1 + ('%.3f' % algset.average_length) + p2
   end
 
   def fmt_avg_speed(algset)
-    return 'n/a' unless algset.full_coverage
-    '%.3f' % algset.average_speed
+    p1, p2 = (algset.full_coverage? ? ['', ''] : ['(', ')'])
+    p1 + ('%.3f' % algset.average_speed) + p2
   end
 
   def subset_options

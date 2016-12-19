@@ -44,6 +44,21 @@ describe AlgSet do
     expect(set.include?(double(alg1_id: 6, alg2_id: 7))).to eq(false)
     expect(set.include?(double(alg1_id: 6, alg2_id: 11))).to eq(true)
   end
+  
+  it 'coverage methods' do
+    as = AlgSet.make(algs: "fake", name: "fake")
+
+    allow(as).to receive(:subset_pos_ids) { [1,2,3,4] }
+    allow(as).to receive(:lengths) { ['-', 9,12,nil,9] }
+    allow(as).to receive(:speeds) { ['-', 7.77,11.11,nil,9.99] }
+
+    expect(as.coverage).to eq(3)
+    expect(as.uncovered_ids).to eq([3])
+    expect(as.full_coverage?).to eq(false)
+    expect(as.covered_weight).to eq(6)
+    expect(as.average_length).to eq(11.0)
+    expect(as.average_speed).to be_within(0.01).of(10.37)
+  end
 end
 
 def expect_validation(new_algset, field = nil, errors = nil)

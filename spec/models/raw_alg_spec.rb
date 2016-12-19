@@ -140,7 +140,7 @@ describe RawAlg do
     expect(alg.speed).to eq(4.8)
     expect(alg.u_setup).to eq(2)
     expect(alg.name).to eq('-')
-    expect(alg.specialness).to eq('Not in DB')
+    expect(alg.specialness).to eq('FU Not in DB')
 
     expect(alg.id).to eq(nil)
     expect(alg.non_db?).to eq(true)
@@ -148,5 +148,8 @@ describe RawAlg do
     expect(alg.single?).to eq(true)
 
     expect(alg.valid?).to eq(false) # Make sure it can't end up in DB!
+
+    not_special_alg = RawAlg.make_non_db("F' R U' B' U' B U' F U F' U R' U' B' U2 B F")
+    expect(not_special_alg.specialness).to eq('Not in DB')
   end
 end

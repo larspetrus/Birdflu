@@ -25,7 +25,7 @@
       %td
         =algset.id
       %td
-        =algset.menu_name
+        =algset.dropdown_name
       %td
         =algset.algs.split(' ').count
       %td
@@ -33,7 +33,9 @@
       %td
         =fmt_avg_speed(algset)
       %td
-        =fmt_coverage(algset)
+        =fmt_coverage_percent(algset)
+        %span{style: "font-size: 8px;"}
+          = fmt_coverage_fraction(algset)
       %td
         =owner(algset)
       %td

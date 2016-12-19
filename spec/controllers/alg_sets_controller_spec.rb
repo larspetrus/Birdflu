@@ -57,7 +57,7 @@ RSpec.describe AlgSetsController do
   describe 'computing_off' do
     before(:each) do
       allow(algset).to receive(:subset_pos_ids) { [0,1,2]}
-      allow(algset).to receive(:lengths) { [12, 14, 10000]}
+      allow(algset).to receive(:lengths) { [12, 14, nil]}
     end
 
     let (:algset) { AlgSet.new(name: "test", algs: "F1.F3", subset: "all") }
