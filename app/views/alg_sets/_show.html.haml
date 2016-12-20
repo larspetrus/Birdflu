@@ -21,7 +21,7 @@
   %tr
     %td Coverage
     %td
-      = fmt_coverage_percent(@algset) + ' (' + fmt_coverage_fraction(@algset) + ')'
+      = fmt_coverage_percent(@algset) + ' ' + fmt_coverage_fraction(@algset, :parens)
   %tr
     %td Owner
     %td

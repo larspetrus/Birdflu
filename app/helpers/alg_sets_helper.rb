@@ -9,9 +9,10 @@ module AlgSetsHelper
     "#{100 * algset.coverage/algset.subset_pos_ids.count}%"
   end
 
-  def fmt_coverage_fraction(algset)
+  def fmt_coverage_fraction(algset, parens = false)
     return '' if !algset.coverage || algset.full_coverage?
-     "#{algset.coverage}/#{algset.subset_pos_ids.count}"
+    p1, p2 = (parens ? ['(', ')'] : ['', ''])
+    p1 + "#{algset.coverage}/#{algset.subset_pos_ids.count}" + p2
   end
 
   def fmt_avg_length(algset)
