@@ -4,7 +4,8 @@
 
 module Algs
 
-  def self.to_ary(alg)
+  # formatting tolerant alg parser
+  def self.parse(alg)
     alg.scan(/[BRDFLU][2\']?/)
   end
 
@@ -88,7 +89,7 @@ module Algs
     packed_alg.to_s.chars.map{ |cc| Move[cc].name }.join(' ')
   end
 
-  def self.from_tr(tr_alg)
+  def self.from_tr(tr_alg) #Tom Rokicki's format
     turn_codes = {'+' => 1, '1' => 2, '-' => 3 }
     move_count = tr_alg.length/2
     moves = (0...move_count).map {|i| Move.name_from(tr_alg[2*i], turn_codes[tr_alg[2*i+1]]) }

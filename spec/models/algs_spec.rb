@@ -2,11 +2,11 @@ require 'rails_helper'
 
 RSpec.describe Algs do
 
-  it 'to_ary' do
+  it 'parse' do
     the_moves = ["B", "L'", "R", "F", "D2", "U", "F", "B'", "R"]
-    expect(Algs.to_ary("B L' R F D2 U F B' R")).to eq(the_moves)
-    expect(Algs.to_ary("BL'RFD2UFB'R")).to eq(the_moves)
-    expect(Algs.to_ary("B (L' R) blah F D2 U F B' R")).to eq(the_moves)
+    expect(Algs.parse("B L' R F D2 U F B' R")).to eq(the_moves)
+    expect(Algs.parse("BL'RFD2UFB'R")).to eq(the_moves)
+    expect(Algs.parse("B (L' R) blah F D2 U F B' R")).to eq(the_moves)
   end
   
   it 'mirror' do
@@ -59,7 +59,11 @@ RSpec.describe Algs do
   
   it 'equivalent_versions' do
     expect(Algs.equivalent_versions("F B' U").sort).to eq(["B' F U", "F B' U"])
-    expect(Algs.equivalent_versions("D L2 R F B'").sort).to eq([ "D L2 R B' F", "D L2 R F B'", "D R L2 B' F", "D R L2 F B'"])
+    expect(Algs.equivalent_versions("D L2 R F B'").sort).to eq(["D L2 R B' F", "D L2 R F B'", "D R L2 B' F", "D R L2 F B'"])
+  end
+
+  it 'swap_moves' do
+    expect(Algs.swap_moves("F B' U", 1)).to eq("F U B'")
   end
 
   it 'pack' do
