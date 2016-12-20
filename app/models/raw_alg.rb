@@ -75,6 +75,10 @@ class RawAlg < ActiveRecord::Base
     RawAlg.where(position_id: position_id, _speed: db_speed, length: db_alg.length, _moves: db_alg).first
   end
 
+  def self.find_by_name(name)
+    self.find(self.id(name))
+  end
+
   def combo_algs_in(alg_set)
     combo_algs.select{|ca| alg_set.include?(ca) }
   end
