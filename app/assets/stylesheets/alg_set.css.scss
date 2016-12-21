@@ -33,8 +33,7 @@ $algset-header: linear-gradient(to bottom, #eb8 5%, #b83 100%);
   th { background:$algset-header; }
   tr { border-bottom: solid 1px #ddd;}
 
-  th:nth-last-child(2), td:nth-last-child(2) { border-left: none; } // no line between buttons
-  th:nth-last-child(1), td:nth-last-child(1) { border-left: none; } // no line between buttons
+  th:nth-child(n+9), td:nth-child(n+9) { border-left: none; } // button area
 
   .knapp { font-weight: 700; }
 }
