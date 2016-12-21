@@ -100,6 +100,10 @@ class AlgSet < ActiveRecord::Base
     @ids ||= ('Nothing.-- ' + algs).split(' ').map { |ma_name| MirrorAlgs.combined(ma_name).ids }.flatten.sort.freeze
   end
 
+  def mirror_algs
+    algs.split(' ').map { |ma_name| MirrorAlgs.combined(ma_name) }
+  end
+
   def coverage
     cache(:coverage) do
       subset_pos_ids.count{|id| lengths[id].present? }

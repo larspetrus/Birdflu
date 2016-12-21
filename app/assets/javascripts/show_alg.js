@@ -39,6 +39,14 @@ $(document).on('click', '.algs-list .show-pig', function(event) {
   roofpig_dialog(title, alg, td.data("uset"), td.parent())
 });
 
+$(document).on('click', '.mirroralg-list .show-pig', function(event) {
+  var td = $(event.target).parent();
+  var alg = td.prev().text();
+  var title = td.prev().prev().prev().prev().text();
+
+  roofpig_dialog(title, alg, td.data("uset"), td.parent())
+});
+
 $(document).on('click', '.positions-list .show-pig', function(event) {
   var td = $(event.target).parent();
   var alg = td.prev().text();

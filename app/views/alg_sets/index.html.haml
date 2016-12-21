@@ -20,6 +20,8 @@
     %th
     %th
     %th
+    %th
+    %th
   - @all_sets.each do |algset|
     %tr
       %td
@@ -40,6 +42,8 @@
         =owner(algset)
       %td
         =link_to('Show', alg_set_path(algset), class: 'knapp knapp-enabled', remote: true)
+      %td
+        =link_to('Algs', alg_set_path(algset) + '/algs', class: 'knapp knapp-enabled')
       %td
         - if algset.editable_by_this_user
           =link_to('Edit', edit_alg_set_path(algset), class: 'knapp knapp-enabled')

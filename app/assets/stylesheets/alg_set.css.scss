@@ -28,27 +28,28 @@
   }
 }
 
-
+$algset-header: linear-gradient(to bottom, #eb8 5%, #b83 100%);
 .algset-list {
-  margin: 0 auto;
-  border-collapse: collapse;
-  border: 1px solid #ddd;
-  tr:hover { background: #eef; }
+  th { background:$algset-header; }
   tr { border-bottom: solid 1px #ddd;}
-  td {
-    border-left: 1px solid #ddd;
-    padding: 0 3px;
-  }
-  th { border-left: 1px solid #fff; padding: 1px 4px;}
 
   th:nth-last-child(2), td:nth-last-child(2) { border-left: none; } // no line between buttons
   th:nth-last-child(1), td:nth-last-child(1) { border-left: none; } // no line between buttons
 
-  th {
-    background:linear-gradient(to bottom, #eb8 5%, #b83 100%);
-  }
-
   .knapp { font-weight: 700; }
+}
+
+.mirroralg-list {
+  th { background:$algset-header; }
+  tr { border-bottom: solid 1px #ddd;}
+
+  td:nth-child(5n+5) { border-left: none; }
+  td:nth-child(5n+3) { border-left: none; }
+  th:nth-child(2), td:nth-child(6) { border-left: solid 1px black; }
+
+  .pick-icon  {
+    &:hover { background: transparent; }
+  }
 }
 
 .edit_algset {

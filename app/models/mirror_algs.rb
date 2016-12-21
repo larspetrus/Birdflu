@@ -1,12 +1,12 @@
 # A MirrorAlgs object contains a RawAlg and its mirror alg. A few algs are their own mirrors.
 
 class MirrorAlgs
-  attr_reader :name, :ids
+  attr_reader :name, :ids, :algs
 
   def initialize(alg, mirror_alg)
-    algs = [alg, mirror_alg].compact.uniq.sort
-    @name = algs[0].name + '.' + (algs[1]&.name || '--')
-    @ids = algs.map(&:id)
+    @algs = [alg, mirror_alg].compact.uniq.sort
+    @name = @algs[0].name + '.' + (@algs[1]&.name || '--')
+    @ids = @algs.map(&:id)
   end
 
   def to_s

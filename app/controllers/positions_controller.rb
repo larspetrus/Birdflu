@@ -137,7 +137,8 @@ class PositionsController < ApplicationController
   end
 
   def table_class(algs_mode, combo_mode, size, picked, login)
-    base = algs_mode ? 'algs-list' : 'positions-list'
+    base = 'bflist '
+    base += algs_mode ? 'algs-list' : 'positions-list'
     base += ' combo-list' if combo_mode
     base += ' algs-loggedout' unless login || !algs_mode
     has_icons = picked[:cop].is_none || picked[:eo].is_none || picked[:ep].is_none

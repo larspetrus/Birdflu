@@ -25,6 +25,7 @@ class Column
       length_p:    self.new('', :moves),
       speed:       self.new('Speed', :speed),
       name:        self.new('Name', :name),
+      name_link:   self.new('Name', :name_link),
       position:    self.new('Position', :position),
       alg:         self.new('Alg', :alg),
       alg_p:       self.new('Shortest Solution', :alg),
@@ -104,7 +105,7 @@ end
 class RawAlgColumns
   delegate :cop, :eo, :ep, :eop, :big, :position, :to => :pos_cols
 
-  def initialize(raw_alg, context, pos_cols = nil)
+  def initialize(raw_alg, context = {}, pos_cols = nil)
     @raw_alg = raw_alg
     @context = context
     @pos_cols = pos_cols
@@ -135,6 +136,10 @@ class RawAlgColumns
 
   def name
     tag(:td, @raw_alg.name, 'single')
+  end
+
+  def name_link
+    tag(:td, hlp.link_to(@raw_alg.name, "/?pos=#{@raw_alg.position.display_name}&hl_id=#{@raw_alg.id}"))
   end
 
   def show

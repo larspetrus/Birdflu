@@ -1,0 +1,24 @@
+= render 'leftbar', page: ApplicationController::ALGSETS_NAME
+
+.alg-set-form
+
+  %h4 #{@algset.dropdown_name} Algs
+
+%table{class: @list_classes}
+  %tr
+    %th{colspan: @columns.size}
+      Alg
+    %th{colspan: @columns.size}
+      Mirror Alg
+  -@mirror_algs.each do |ma|
+    %tr
+      -presenter = RawAlgColumns.new(ma.algs[0])
+      -@columns.each do |column|
+        =list_td(presenter, column)
+      -presenter = RawAlgColumns.new(ma.algs[1])
+      -@columns.each do |column|
+        =list_td(presenter, column)
+
+#show-alg{style: 'height:200px; width:200px;'}
+:javascript
+  var page_rotation = 0;
