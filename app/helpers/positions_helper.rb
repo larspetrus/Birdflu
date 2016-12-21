@@ -32,7 +32,6 @@ class Column
       show:        self.new('', :show),
       notes:       self.new('Notes', :notes),
       stars:       self.new('☆', :stars),
-      hl_position: self.new('Position', :hl_position),
       remove_star: self.new('', :remove_star),
       cop:         self.new('COP', :cop, is_svg: true),
       eo:          self.new('EO',  :eo,  is_svg: true),
@@ -165,13 +164,11 @@ class RawAlgColumns
     hlp.content_tag(:td, star_styles.map{|style| tag(:span, '', "star#{style}") }.join.html_safe, class: :stars_td, data: data)
   end
 
-  def hl_position
-    tag(:td, hlp.link_to(@raw_alg.position.display_name, "/?pos=#{@raw_alg.position.display_name}&hl_id=#{@raw_alg.id}"))
-  end
-
   def remove_star
     star = @context[:star]
-    tag(:td, hlp.link_to('Remove', "/galaxies/remove_star?galaxy_id=#{star.galaxy_id}&raw_alg_id=#{star.raw_alg_id}", class: 'knapp knapp-enabled'))
+    url = "/galaxies/remove_star?galaxy_id=#{star.galaxy_id}&raw_alg_id=#{star.raw_alg_id}"
+    button_text = tag(:span, 'Remove ')+tag(:span, '', "star#{star.galaxy.style}")
+    tag(:td, hlp.content_tag(:a, button_text, href: url, class: 'knapp knapp-enabled'))
   end
 end
 
