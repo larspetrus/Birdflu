@@ -36,13 +36,31 @@ class PositionsController < ApplicationController
 
     @list_items =
         if @algs_mode
-          alg_set = AlgSet.find_by_id(@list_format.algset.to_i) # works even when id doesn't exist
-          @combo_mode = PREFS.use_combo_set && @only_position && alg_set && (@only_position.eo == '4' || alg_set.subset == 'all')
-          if @combo_mode
-            raw_algs = @only_position.algs_in_set(alg_set, sortby: @list_format.sortby, limit: @list_format.lines.to_i)
-            raw_algs.map { |alg| [alg] + alg.combo_algs_in(alg_set) }.reduce(:+)
-          else
-            RawAlg.where(position_id: @positions.map(&:main_position_id)).includes(:position).order(@list_format.sortby).limit(@list_format.lines.to_i).to_a
+          alg_set = AlgSet.find_by_id(@list_format.algset.to_i) # works even when id not in DB
+
+          raw_algs = combo_raw_algs = []
+          combos_allowed = @only_position && alg_set.present? && (@only_position.eo == '4' || alg_set.subset == 'all')
+          if (@list_format.combos != 'none') && combos_allowed
+            combo_raw_algs = @only_position.algs_in_set(alg_set, sortby: @list_format.sortby, limit: @list_format.lines)
+          end
+          if @list_format.combos != 'only'
+            raw_algs = RawAlg.where(position_id: @positions.map(&:main_position_id))
+                           .includes(:position).order(@list_format.sortby).limit(@list_format.lines.to_i).to_a
+          end
+
+          case ((raw_algs.present? ? 1 : 0) + (combo_raw_algs.present? ? 2 : 0))
+            when 0 # make sure we have a list
+              []
+            when 1 #'none'
+              raw_algs
+            when 2 #'only'
+              combo_raw_algs.map { |alg| [alg] + alg.combo_algs_in(alg_set) }.flatten
+            when 3 #'merge'
+              raw_alg_ids = Set.new(raw_algs.map(&:id))
+              raw_algs += combo_raw_algs.reject{|cra| raw_alg_ids.include?(cra.id) }
+
+              has_combos = Set.new(combo_raw_algs.map(&:id))
+              raw_algs.map { |alg| [alg] + (has_combos.include?(alg.id) ? alg.combo_algs_in(alg_set) : []) }.flatten
           end
         else
           limit = 100
@@ -51,7 +69,6 @@ class PositionsController < ApplicationController
           end
           @positions.first(limit)
         end
-    @list_items ||= []
 
     if @login && @algs_mode && (not @combo_mode)
       @stars_by_alg = Galaxy.star_styles_by_alg(@login.db_id, @list_items.map(&:id))

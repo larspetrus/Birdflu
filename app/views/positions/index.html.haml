@@ -53,7 +53,7 @@
         Show as
         =Fields::LIST.as_tag(@list_format)
     - else
-      =hidden_field_tag(Fields::LIST.name, Fields::LIST.value(@list_format))
+      =Fields::LIST.as_hidden_field(@list_format)
 
   - if @algs_mode
     .center.algs-list-header
@@ -70,7 +70,7 @@
     %th= column.header
   - @list_items.each do |item|
     - line_presenter = item.presenter(@table_context)
-    %tr{class: item.matches(@hi_lite_id) ? 'hilite' : ''}
+    %tr{class: item.matches(@hi_lite_id) ? 'hilite' : line_presenter.css}
       - @columns.each do |column|
         =list_td(line_presenter, column)
   -if @clipped

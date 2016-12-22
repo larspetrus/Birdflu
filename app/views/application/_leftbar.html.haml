@@ -26,12 +26,13 @@
 
     - if page == ApplicationController::MAIN_NAME && PositionsController::PREFS.use_combo_set
       .leftitem
-        .combo-head
-          Combo Alg Set:
-        .setting
-          =link_to("\u2699", alg_sets_path)
-        %span.list-size.list-outline
-          =Fields::ALGSET.as_tag(@list_format, AlgSet.menu_options, class: 'list-size__select', form: 'main-form') # caching candidate
+        %span.list-size
+          =Fields::COMBOS.as_tag(@list_format, [], class: 'list-size__select', form: 'main-form')
+        - unless @list_format.combos == 'none'
+          %span.list-size.list-outline{style: "margin-top: 6px;"}
+            =Fields::ALGSET.as_tag(@list_format, AlgSet.menu_options, class: 'list-size__select', form: 'main-form') # caching candidate
+        - else
+          =Fields::ALGSET.as_hidden_field(@list_format)
 
     .leftitem.clickable#about-link About…
 

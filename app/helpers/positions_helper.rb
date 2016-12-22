@@ -98,6 +98,10 @@ class PositionColumns
   def eop
     { icon: Icons::Eop.for(@position), label: ''}
   end
+
+  def css
+    ''
+  end
 end
 
 
@@ -170,6 +174,10 @@ class RawAlgColumns
     button_text = tag(:span, 'Remove ')+tag(:span, '', "star#{star.galaxy.style}")
     tag(:td, hlp.content_tag(:a, button_text, href: url, class: 'knapp knapp-enabled'))
   end
+
+  def css
+    ''
+  end
 end
 
 
@@ -196,5 +204,9 @@ class ComboAlgColumns
 
   def stars
     td_tag('')
+  end
+
+  def css
+    'combo-line'
   end
 end

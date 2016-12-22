@@ -2,7 +2,7 @@
 
 module ApplicationHelper
   def spaced_number(count)
-    number_with_delimiter(count, delimiter: "\u2009") # unicode 2009 is "thin space"
+    number_with_delimiter(count, delimiter: "\u2009") # 2009 is "thin space"
   end
 
   def alg_sections(alg)

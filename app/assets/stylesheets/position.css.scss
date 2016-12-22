@@ -76,6 +76,9 @@ $stars-nthlast: 1;
     border-top: solid red 1px;
     border-bottom: solid red 1px;
   }
+  .combo-line {
+    td:nth-last-child(4) { background-color: #f9f2d6; }
+  }
 }
 .algs-loggedout {
   th:nth-last-child(#{$stars-nthlast}) { background: #ddd; }
@@ -191,18 +194,6 @@ $left-bgcolor: #f2f2f2;
     input[type="text"] {
       margin-top: 4px;
       font-size: 9px;
-    }
-
-    .combo-head {
-      margin-bottom: 4px;
-      font-size: 85%;
-      display:inline-block;
-    }
-
-    .setting {
-      color: black;
-      float: right;
-      font-size: 12px;
     }
   }
 

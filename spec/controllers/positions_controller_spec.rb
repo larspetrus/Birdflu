@@ -10,16 +10,20 @@ RSpec.describe PositionsController do
     expect(ApplicationController.read_list_format(invalid_cookie).to_h).to eq(Fields::ALL_DEFAULTS)
 
     fully_defined = {field_values: JSON.generate(list: "algs", lines: "100", sortby: "length", algset: "101")}
-    expect(ApplicationController.read_list_format(fully_defined).to_h).to eq(:list=>"algs", :lines=>"100", :sortby=>"length", :algset=>"101")
+    expect(ApplicationController.read_list_format(fully_defined).to_h)
+        .to eq(:list=>"algs", :lines=>"100", :sortby=>"length", :algset=>"101", combos: "none")
 
     partially_defined = {field_values: JSON.generate(algset: "101")}
-    expect(ApplicationController.read_list_format(partially_defined).to_h).to eq(:list=>"positions", :lines=>"25", :sortby=>"_speed", :algset=>"101")
+    expect(ApplicationController.read_list_format(partially_defined).to_h)
+        .to eq(:list=>"positions", :lines=>"25", :sortby=>"_speed", :algset=>"101", combos: "none")
 
-    obsolete_property = {field_values: JSON.generate(algset: "102", extra_key: 'Sparta!')}
-    expect(ApplicationController.read_list_format(obsolete_property).to_h).to eq(:list=>"positions", :lines=>"25", :sortby=>"_speed", :algset=>"102")
+    unknown_property = {field_values: JSON.generate(algset: "102", extra_key: 'Sparta!')}
+    expect(ApplicationController.read_list_format(unknown_property).to_h)
+        .to eq(:list=>"positions", :lines=>"25", :sortby=>"_speed", :algset=>"102", combos: "none")
 
     invalid_value = {field_values: JSON.generate(lines: "37")}
-    expect(ApplicationController.read_list_format(invalid_value).to_h).to eq(:list=>"positions", :lines=>"25", :sortby=>"_speed", :algset=>"0")
+    expect(ApplicationController.read_list_format(invalid_value).to_h)
+        .to eq(list: "positions", lines: "25", sortby: "_speed", algset: "0", combos: "none")
   end
 
   def mockies

@@ -24,16 +24,20 @@ RSpec.describe 'Fields' do
     it 'as_css_id()' do
       expect(size.as_css_id).to eq('#size')
     end
+
+    it 'as_hidden_field' do
+      expect(size.as_hidden_field({size: 'M'})).to eq('<input type="hidden" name="size" id="size" value="M" form="main-form" />')
+    end
   end
 
     it 'values' do
-      expect(Fields.values({})).to eq(OpenStruct.new(list: "positions", lines: "25", sortby: "_speed", algset: "0"))
+      expect(Fields.values({})).to eq(OpenStruct.new(list: "positions", lines: "25", sortby: "_speed", algset: "0", combos: "none"))
 
-      non_default_selections = {list: "algs", lines: "50", sortby: "length", algset: "101"}
-      expect(Fields.values(non_default_selections)).to eq(OpenStruct.new(list: "algs", lines: "50", sortby: "length", algset: "101"))
+      non_default_selections = {list: "algs", lines: "50", sortby: "length", algset: "101", combos: 'only'}
+      expect(Fields.values(non_default_selections)).to eq(OpenStruct.new(list: "algs", lines: "50", sortby: "length", algset: "101", combos: 'only'))
 
-      invalid_default_selections = {list: "invalid", lines: "invalid", sortby: "invalid", algset: "invalid"}
-      expect(Fields.values(invalid_default_selections)).to eq(OpenStruct.new(list: "positions", lines: "25", sortby: "_speed", algset: "invalid"))
+      invalid_default_selections = {list: "invalid", lines: "invalid", sortby: "invalid", algset: "invalid", combos: "invalid"}
+      expect(Fields.values(invalid_default_selections)).to eq(OpenStruct.new(list: "positions", lines: "25", sortby: "_speed", algset: "invalid", combos: "none"))
     end
 
   it '#defaults()' do
@@ -44,11 +48,11 @@ RSpec.describe 'Fields' do
   end
 
   it 'JS_DEFAULTS' do
-    expect(Fields::JS_DEFAULTS).to eq('{list: "positions", lines: "25", sortby: "_speed", algset: "0"}')
+    expect(Fields::JS_DEFAULTS).to eq('{list: "positions", lines: "25", sortby: "_speed", algset: "0", combos: "none"}')
   end
 
   it 'JQ_SELECTOR' do
-    expect(Fields::JQ_SELECTOR).to eq("#list, #lines, #sortby, #algset")
+    expect(Fields::JQ_SELECTOR).to eq("#list, #lines, #sortby, #algset, #combos")
   end
 
 end

@@ -19,7 +19,12 @@ class Fields
     end
 
     def as_tag(selections, extra_choices = [], html_options = {})
-      hlp.select_tag(@name, hlp.options_for_select(@choices + extra_choices, selected: value(selections)), html_options)
+      options = hlp.options_for_select(@choices + extra_choices, selected: value(selections))
+      hlp.select_tag(@name, options, html_options)
+    end
+
+    def as_hidden_field(selections)
+      hlp.hidden_field_tag(@name, value(selections), form: 'main-form')
     end
 
     def as_css_id
@@ -35,8 +40,9 @@ class Fields
   LINES  = Select.new(:lines, [25, 50, 100, 200, 500])
   SORTBY = Select.new(:sortby,[['speed', '_speed'], ['moves', 'length']])
   ALGSET = Select.new(:algset,[['None', 0]], true)
+  COMBOS = Select.new(:combos,[['No Combos', 'none'], ['Merge Combos', 'merge'], ['Only Combos', 'only']])
 
-  ALL = [LIST, LINES, SORTBY, ALGSET].freeze
+  ALL = [LIST, LINES, SORTBY, ALGSET, COMBOS].freeze
 
   COOKIE_NAME = :field_values
 
