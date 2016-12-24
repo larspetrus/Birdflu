@@ -1,0 +1,23 @@
+
+// The side colors. Same as Roofpig.
+$cube_red: red;
+$cube_orange: orange;
+$cube_green: #0d0;
+$cube_blue: #07f;
+$cube_yellow: yellow;
+$cube_white: #eee;
+
+
+// Common to all Birdflu list
+.base-list {
+  margin: 0 auto;
+  border-collapse: collapse;
+  border: 1px solid #ddd;
+  tr:hover { background: #eef; }
+  td {
+    border-left: 1px solid #ddd;
+    padding: 0 2px;
+  }
+  th { border-left: 1px solid #fff; padding: 1px 4px;}
+  a:visited { color: blue }
+}

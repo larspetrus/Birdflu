@@ -30,6 +30,8 @@
 
 $algset-header: linear-gradient(to bottom, #eb8 5%, #b83 100%);
 .algset-list {
+  @extend .base-list;
+
   th { background:$algset-header; }
   tr { border-bottom: solid 1px #ddd;}
 
@@ -39,6 +41,8 @@ $algset-header: linear-gradient(to bottom, #eb8 5%, #b83 100%);
 }
 
 .mirroralg-list {
+  @extend .base-list;
+
   th { background:$algset-header; }
   tr { border-bottom: solid 1px #ddd;}
 

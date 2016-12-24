@@ -14,13 +14,6 @@ a { text-decoration: none; }
 .right    { float: right; }
 .relative { position: relative; }
 
-// The side colors. Same as Roofpig.
-$f_color: red;
-$b_color: orange;
-$r_color: #0d0;
-$l_color: #07f;
-$u_color: yellow;
-$d_color: #eee;
 
 .center {
   margin: 0 auto;
@@ -34,21 +27,10 @@ h4, h5 {
 $optimal_color: #69f;
 .optimal { color: $optimal_color; }
 
-// Common to all Birdflu list
-.bflist {
-  margin: 0 auto;
-  border-collapse: collapse;
-  border: 1px solid #ddd;
-  tr:hover { background: #eef; }
-  td {
-    border-left: 1px solid #ddd;
-    padding: 0 2px;
-  }
-  th { border-left: 1px solid #fff; padding: 1px 4px;}
-  a:visited { color: blue }
-}
 
 .algs-list, .positions-list {
+  @extend .base-list;
+
   tr:nth-child(5n + 1) { border-bottom: solid 1px #ddd;}
   .single  { color: #073; }
   .combo   { color: #700; }
@@ -126,146 +108,6 @@ $show-nthlast: 1;
   width:200px;
   float:left;
   margin: 6px;
-}
-
-
-// ------------ Side bars
-
-.section {
-  position: absolute;
-  top:10px;
-  left:13px;
-
-  width: 148px;
-  height: 30px;
-
-  font-size: 12px;
-  font-weight: bold;
-
-  border: 1px solid #808;
-  border-radius: 3px;
-
-  h1 {
-    text-align: center;
-    position: relative;
-    margin: -8px 0 2px 0;
-    font-size: 10px;
-  }
-  h1 span{
-    background-color: white;
-    padding: 0 2px;
-  }
-
-  .middiv {
-    font-size: 14px;
-    font-weight: 700;
-
-    .list-size {
-      margin-left: 31px;
-      padding: 2px;
-    }
-  }
-}
-
-
-$left-color: #16A2D7;
-$left-bgcolor: #f2f2f2;
-
-.leftbar {
-  position: absolute;
-  top:40px;
-  left:8px;
-
-  display: flex;
-  flex-direction: column;
-
-  width: 150px;
-  padding: 5px;
-
-  .leftitem {
-    font-size: 14px;
-
-    margin-top: 3px;
-    padding: 5px 10px;
-
-    background-color: $left-bgcolor;
-    color: $left-color;
-    border: 1px solid #D7DBDD;
-
-    input[type="text"] {
-      margin-top: 4px;
-      font-size: 9px;
-    }
-  }
-
-  .clickable {
-    cursor: pointer;
-
-    a {color: $left-color; }
-    &:visited { color: red; }
-    &:hover { text-shadow: 2px 2px 5px #777; }
-    &:active {color: white; text-shadow: 0px 0px 5px #000, 0 0 8px #00F; }
-  }
-}
-
-.list-size__select{
-  font-size: inherit;
-  margin: 0;
-  background-color: inherit;
-  color: inherit;
-}
-@supports (pointer-events: none) and
-    ((-webkit-appearance: none) or (-moz-appearance: none) or (appearance: none)) {
-
-  .list-size {
-    position: relative;
-    display: inline-block;
-    vertical-align: middle;
-  }
-
-  .list-outline {
-    border: 1px solid #ddd;
-    padding-left: 1px;
-  }
-
-  .list-size__select {
-    padding-right: 2.5em; /* accommodate with the pseudo elements for the dropdown arrow */
-    border: 0;
-    border-radius: 3px;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-  }
-
-  .list-size::before,
-  .list-size::after {
-    content: "";
-    position: absolute;
-    pointer-events: none;
-  }
-
-  .list-size::after { /*  Custom dropdown arrow */
-    content: "\25BC";
-    height: 1em;
-    font-size: .625em;
-    line-height: 1;
-    right: 1.2em;
-    top: 50%;
-    margin-top: -.5em;
-    color: #37f;
-  }
-
-  .list-size::before { /*  Custom dropdown arrow cover */
-    width: 2em;
-    right: 0; top: 0; bottom: 0;
-    border-radius: 0 3px 3px 0;
-    background-color: darken($left-bgcolor, 7%);
-  }
-
-  /* FF only temp fix */
-  @-moz-document url-prefix() {
-    .list-size__select { padding-right: .9em }
-  }
 }
 
 
@@ -398,12 +240,12 @@ $left-bgcolor: #f2f2f2;
 svg {
   .u { height: 23.5; width: 23.5 }
 
-  .f-color { fill: $f_color; }
-  .b-color { fill: $b_color; }
-  .r-color { fill: $r_color; }
-  .l-color { fill: $l_color; }
-  .u-color { fill: $u_color; }
-  .d-color { fill: $d_color; }
+  .f-color { fill: $cube_red; }
+  .b-color { fill: $cube_orange; }
+  .r-color { fill: $cube_green; }
+  .l-color { fill: $cube_blue; }
+  .u-color { fill: $cube_yellow; }
+  .d-color { fill: $cube_white; }
 
   .oll { fill: deeppink; }
   .cop { fill: #fb0; }
@@ -446,7 +288,6 @@ table.grid-lines {
     text-align: center;
   }
 }
-// ------- Rotation UI
 
 $panel-width: 450px;
 .page-controls {
@@ -456,7 +297,6 @@ $panel-width: 450px;
   width: $panel-width;
   margin: auto;
 }
-
 
 .rotation-ui {
   position:absolute;
@@ -494,7 +334,7 @@ $panel-width: 450px;
   }
 }
 
-// ------------ Alg sections
+// ------------ Combo Alg sections
 .combo-name {
   font-weight: 700;
 }
@@ -606,6 +446,7 @@ $shadow: #ffffff;
   font-weight: normal;
   font-style: normal;
   color: #333;
+  &:visited { color: #333  !important; }
   padding: 3px;
   box-shadow: inset 0px 1px 0px 0px #{$shadow};
   background-color: #{$light};

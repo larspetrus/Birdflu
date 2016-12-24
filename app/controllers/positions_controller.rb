@@ -34,6 +34,7 @@ class PositionsController < ApplicationController
       @icon_grids[f] = icons::grid(subset: @position_set, cp: @filters[:cp])
     end
 
+    combos_in_list = false
     @list_items =
         if @algs_mode
           alg_set = AlgSet.find_by_id(@list_format.algset.to_i) # works even when id not in DB
@@ -48,6 +49,7 @@ class PositionsController < ApplicationController
                            .includes(:position).order(@list_format.sortby).limit(@list_format.lines.to_i).to_a
           end
 
+          combos_in_list = combo_raw_algs.present?
           case ((raw_algs.present? ? 1 : 0) + (combo_raw_algs.present? ? 2 : 0))
             when 0 # make sure we have a list
               []
@@ -70,14 +72,14 @@ class PositionsController < ApplicationController
           @positions.first(limit)
         end
 
-    if @login && @algs_mode && (not @combo_mode)
+    if @login && @algs_mode
       @stars_by_alg = {}
       @stars_by_alg['raw_alg'] = Galaxy.star_styles_by_alg(@login.db_id, @list_items.map(&:id), 'raw_alg')
       @stars_by_alg['combo_alg'] = Galaxy.star_styles_by_alg(@login.db_id, @list_items.map(&:id), 'combo_alg')
     end
     @table_context = OpenStruct.new(stats: @stats.data, possible_pos_ids: @position_ids, login: @login, stars: @stars_by_alg)
 
-    @list_classes = table_class(@algs_mode, @combo_mode, @text_size, @picked, @login)
+    @list_classes = table_class(@algs_mode, combos_in_list, @text_size, @picked, @login)
 
     @rendered_svg_ids = Set.new
     @columns = @algs_mode ? make_alg_columns : make_pos_columns
@@ -160,13 +162,13 @@ class PositionsController < ApplicationController
   end
 
   def table_class(algs_mode, combo_mode, size, picked, login)
-    base = 'bflist '
-    base += algs_mode ? 'algs-list' : 'positions-list'
-    base += ' combo-list' if combo_mode
-    base += ' algs-loggedout' unless login || !algs_mode
+    classes = [algs_mode ? 'algs-list' : 'positions-list']
+    classes << 'combo-list' if combo_mode
+    classes << 'algs-loggedout' unless login || !algs_mode
     has_icons = picked[:cop].is_none || picked[:eo].is_none || picked[:ep].is_none
     with_icons = (has_icons ? '-wc' : '')
-    "#{base} size-#{size}#{with_icons}"
+    classes << "size-#{size}#{with_icons}"
+    classes.join(' ')
   end
 
   def vc # access helpers

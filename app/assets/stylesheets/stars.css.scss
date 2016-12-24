@@ -8,15 +8,15 @@
   color: $col;
 }
 
-.star1 { @include star_n(red, "★") }
-.star2 { @include star_n(#0d0, "★") }
-.star3 { @include star_n(#07f, "★") }
-.star4 { @include star_n(orange, "★") }
+.star1 { @include star_n($cube_red, "★") }
+.star2 { @include star_n($cube_green, "★") }
+.star3 { @include star_n($cube_blue, "★") }
+.star4 { @include star_n($cube_orange, "★") }
 
-.cstar1 { @include star_n(red, "☆") }
-.cstar2 { @include star_n(#0d0, "☆") }
-.cstar3 { @include star_n(#07f, "☆") }
-.cstar4 { @include star_n(orange, "☆") }
+.cstar1 { @include star_n($cube_red, "☆") }
+.cstar2 { @include star_n($cube_green, "☆") }
+.cstar3 { @include star_n($cube_blue, "☆") }
+.cstar4 { @include star_n($cube_orange, "☆") }
 
 
 #star-picker {

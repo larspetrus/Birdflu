@@ -1,0 +1,135 @@
+.section {
+  position: absolute;
+  top:10px;
+  left:13px;
+
+  width: 148px;
+  height: 30px;
+
+  font-size: 12px;
+  font-weight: bold;
+
+  border: 1px solid #808;
+  border-radius: 3px;
+
+  h1 {
+    text-align: center;
+    position: relative;
+    margin: -8px 0 2px 0;
+    font-size: 10px;
+  }
+  h1 span{
+    background-color: white;
+    padding: 0 2px;
+  }
+
+  .middiv {
+    font-size: 14px;
+    font-weight: 700;
+
+    .list-size {
+      margin-left: 31px;
+      padding: 2px;
+    }
+  }
+}
+
+$left-color: #16A2D7;
+$left-bgcolor: #f2f2f2;
+
+.leftbar {
+  position: absolute;
+  top:40px;
+  left:8px;
+
+  display: flex;
+  flex-direction: column;
+
+  width: 150px;
+  padding: 5px;
+
+  .leftitem {
+    font-size: 14px;
+
+    margin-top: 3px;
+    padding: 5px 10px;
+
+    background-color: $left-bgcolor;
+    color: $left-color;
+    border: 1px solid #D7DBDD;
+
+    input[type="text"] {
+      margin-top: 4px;
+      font-size: 9px;
+    }
+  }
+
+  .clickable {
+    cursor: pointer;
+
+    a {color: $left-color; }
+    &:visited { color: red; }
+    &:hover { text-shadow: 2px 2px 5px #777; }
+    &:active {color: white; text-shadow: 0px 0px 5px #000, 0 0 8px #00F; }
+  }
+}
+
+.list-size__select{
+  font-size: inherit;
+  margin: 0;
+  background-color: inherit;
+  color: inherit;
+}
+@supports (pointer-events: none) and
+    ((-webkit-appearance: none) or (-moz-appearance: none) or (appearance: none)) {
+
+  .list-size {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .list-outline {
+    border: 1px solid #ddd;
+    padding-left: 1px;
+  }
+
+  .list-size__select {
+    padding-right: 2.5em; /* accommodate with the pseudo elements for the dropdown arrow */
+    border: 0;
+    border-radius: 3px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+
+  .list-size::before,
+  .list-size::after {
+    content: "";
+    position: absolute;
+    pointer-events: none;
+  }
+
+  .list-size::after { /*  Custom dropdown arrow */
+    content: "\25BC";
+    height: 1em;
+    font-size: .625em;
+    line-height: 1;
+    right: 1.2em;
+    top: 50%;
+    margin-top: -.5em;
+    color: #37f;
+  }
+
+  .list-size::before { /*  Custom dropdown arrow cover */
+    width: 2em;
+    right: 0; top: 0; bottom: 0;
+    border-radius: 0 3px 3px 0;
+    background-color: darken($left-bgcolor, 7%);
+  }
+
+  /* FF only temp fix */
+  @-moz-document url-prefix() {
+    .list-size__select { padding-right: .9em }
+  }
+}
