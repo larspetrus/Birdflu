@@ -12,7 +12,7 @@
       -@columns.each do |column|
         %th= column.header
     - style_and_algs.last.each do |star|
-      - alg_presenter = star.alg.presenter(login: @login, star: star)
+      - alg_presenter = star.alg.presenter(OpenStruct.new(login: @login, star: star))
       %tr
         -@columns.each do |column|
           =list_td(alg_presenter, column)

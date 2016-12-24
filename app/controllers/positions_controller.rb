@@ -75,7 +75,7 @@ class PositionsController < ApplicationController
       @stars_by_alg['raw_alg'] = Galaxy.star_styles_by_alg(@login.db_id, @list_items.map(&:id), 'raw_alg')
       @stars_by_alg['combo_alg'] = Galaxy.star_styles_by_alg(@login.db_id, @list_items.map(&:id), 'combo_alg')
     end
-    @table_context = {stats: @stats.data, possible_pos_ids: @position_ids, login: @login, stars: @stars_by_alg}
+    @table_context = OpenStruct.new(stats: @stats.data, possible_pos_ids: @position_ids, login: @login, stars: @stars_by_alg)
 
     @list_classes = table_class(@algs_mode, @combo_mode, @text_size, @picked, @login)
 

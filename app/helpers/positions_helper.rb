@@ -108,7 +108,7 @@ end
 class AlgColumns
 
   def remove_star
-    star = @context[:star]
+    star = @context.star
     url = "/galaxies/remove_star?galaxy_id=#{star.galaxy_id}&starred_id=#{star.starred_id}"
     button_text = tag(:span, 'Remove ')+tag(:span, '', star.galaxy.css_class)
     tag(:td, hlp.content_tag(:a, button_text, href: url, class: 'knapp knapp-enabled'))
@@ -116,10 +116,10 @@ class AlgColumns
 
   def star_td(context, alg, td_class, starred_type, cpfx)
     star_styles = []
-    if context[:stars]
-      star_styles = context[:stars][starred_type][alg.id]
-    elsif context[:login]
-      star_styles = alg.star_styles(context[:login].db_id)
+    if context.stars
+      star_styles = context.stars[starred_type][alg.id]
+    elsif context.login
+      star_styles = alg.star_styles(context.login.db_id)
     end
     data = {aid: alg.id}
     data[:deletable] = star_styles.join(' ') if star_styles.present?
@@ -147,7 +147,7 @@ class RawAlgColumns < AlgColumns
   def ui_pos
     @raw_alg.non_db? ?
         OpenStruct.new(pov_offset: 0, pov_adjust_u_setup: 0) :
-        @raw_alg.position.pov_variant_in(@context[:possible_pos_ids])
+        @raw_alg.position.pov_variant_in(@context.possible_pos_ids)
   end
 
 
@@ -156,11 +156,11 @@ class RawAlgColumns < AlgColumns
   end
 
   def speed
-    tag(:td, '%.2f' % @raw_alg.speed, @raw_alg.speed == @context[:stats]&.fastest ? 'optimal' : nil)
+    tag(:td, '%.2f' % @raw_alg.speed, @raw_alg.speed == @context.stats&.fastest ? 'optimal' : nil)
   end
 
   def moves
-    tag(:td, @raw_alg.length, @raw_alg.length == @context[:stats]&.shortest ? 'optimal' : nil)
+    tag(:td, @raw_alg.length, @raw_alg.length == @context.stats&.shortest ? 'optimal' : nil)
   end
 
   def name
