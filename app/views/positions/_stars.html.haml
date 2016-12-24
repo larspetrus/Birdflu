@@ -1,0 +1,80 @@
+
+#star-picker{style: 'display: none;'}
+  -if @login
+    .star1
+    .star2
+    .star3
+    .star4
+  -else
+    Log in to star algs.
+
+#cstar-picker{style: 'display: none;'}
+  -if @login
+    .cstar1
+    .cstar2
+    .cstar3
+    .cstar4
+  -else
+    Log in to star algs.
+
+=form_tag url_for(controller: 'galaxies', action: 'update_star'), method: 'post', id: 'star_form', remote: true do
+  =hidden_field_tag(:starred_id)
+  =hidden_field_tag(:star_class)
+
+
+:javascript
+  var star_alg = null;
+  var open_dialog = null;
+
+  $('.stars_td').on('click', function() {
+    show_star_dialog($(this), $('#star-picker'), 'star')
+  });
+  $('.cstars_td').on('click', function() {
+    show_star_dialog($(this), $('#cstar-picker'), 'cstar')
+  });
+
+  function show_star_dialog(td, dialog, prefix) {
+    star_alg = {id: td.data('aid'), prefix: prefix};
+    dialog.children().text('');
+
+    if (td.data('deletable')) {
+      var deletable_stars = String(td.data('deletable')).split(' ');
+      for (var i = 0; i < deletable_stars.length; i++) {
+        $(dialog.children().get(deletable_stars[i] - 1)).text('▘')
+      }
+    }
+    dialog.dialog({
+      position: { my: 'center top', at: 'center top', of: td },
+      width: 92,
+      height: 40,
+      modal: true,
+      closeOnEscape: true,
+      dialogClass: 'stars-dialog',
+    });
+    open_dialog = dialog;
+  }
+
+  $(document).on({
+    mouseleave: function(event) {
+      open_dialog.dialog('close');
+      open_dialog = null;
+    }
+  }, ".stars-dialog");
+
+  $('#star-picker div, #cstar-picker div').on('click', function() {
+    open_dialog.dialog('close');
+
+    $('#starred_id').val(star_alg.id);
+    $('#star_class').val(this.className);
+    $('#star_form').submit();
+  });
+  $('#star_form').on('ajax:success', function(e, data, status, xhr) {
+    var td = $("td[data-aid='"+star_alg.id+"']");
+
+    td.empty();
+    var active_stars = JSON.parse(xhr.responseText);
+    td.data('deletable', active_stars.join(' '));
+    for (var i = 0; i < active_stars.length; i++) {
+      td.append("<span class="+star_alg.prefix+active_stars[i]+"></span>")
+    }
+  });
