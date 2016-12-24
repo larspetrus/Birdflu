@@ -8,7 +8,7 @@ $cube_yellow: yellow;
 $cube_white: #eee;
 
 
-// Common to all Birdflu list
+// Common to all our list
 .base-list {
   margin: 0 auto;
   border-collapse: collapse;
@@ -20,4 +20,51 @@ $cube_white: #eee;
   }
   th { border-left: 1px solid #fff; padding: 1px 4px;}
   a:visited { color: blue }
+}
+
+@mixin list-size($text-size, $button-size, $icon-size) {
+  font-size: $text-size;
+  .show-pig { font-size: $button-size; }
+  .pick-icon { height: $icon-size; width: $icon-size; }
+}
+
+.size-l    { @include list-size(14px, 12px, 25px) }
+.size-l-wc { @include list-size(16px, 13px, 25px) }
+
+.size-m    { @include list-size(12px,  9px, 22px) }
+.size-m-wc { @include list-size(14px, 10px, 22px) }
+
+.size-s    { @include list-size(10px,  8px, 20px) }
+.size-s-wc { @include list-size(12px,  9px, 20px) }
+
+
+
+// ---- Site wide styles ----
+
+body {
+  font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}
+
+a { text-decoration: none; }
+
+.left     { float: left; }
+.right    { float: right; }
+.relative { position: relative; }
+
+
+.center {
+  margin: 0 auto;
+}
+
+h4, h5 {
+  text-align: center;
+  margin: 8px;
+}
+
+
+.rp-dialog {
+  height:245px;
+  width:200px;
+  float:left;
+  margin: 6px;
 }

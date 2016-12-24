@@ -57,7 +57,7 @@ class Fields
   end
 
   JS_DEFAULTS = Fields.defaults(Fields::ALL).to_s.gsub(':', '').gsub('=>', ': ').freeze
-  JQ_SELECTOR = Fields::ALL.map{|f| f.as_css_id}.join(', ').freeze
+  JQUERY_SELECTOR = Fields::ALL.map{|f| f.as_css_id}.join(', ').freeze
 
   ALL_DEFAULTS = Fields.defaults(Fields::ALL).freeze
 

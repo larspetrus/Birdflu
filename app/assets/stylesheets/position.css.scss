@@ -2,28 +2,6 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-// ---- Universal stuff ----
-
-body {
-  font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif;
-}
-
-a { text-decoration: none; }
-
-.left     { float: left; }
-.right    { float: right; }
-.relative { position: relative; }
-
-
-.center {
-  margin: 0 auto;
-}
-
-h4, h5 {
-  text-align: center;
-  margin: 8px;
-}
-
 $optimal_color: #69f;
 .optimal { color: $optimal_color; }
 
@@ -36,6 +14,7 @@ $optimal_color: #69f;
   .combo   { color: #700; }
 }
 
+$first-two-nth: -n+2;
 $sortby-nth: 1;
 $name-nth: 3;
 $show-nthlast: 3;
@@ -50,7 +29,7 @@ $stars-nthlast: 1;
     background:linear-gradient(to top, #16f 5%, #9bf 100%);
     color: #fff;
   }
-  td:nth-child(-n+2) { text-align: right; } // first two columns
+  td:nth-child(#{$first-two-nth}) { text-align: right; }
   td:nth-child(#{$name-nth}) { font-size: 90%; }
   th:nth-last-child(#{$show-nthlast}), td:nth-last-child(#{$show-nthlast}) { border-left: none; }
   td:nth-last-child(#{$notes-nthlast}) { font-size: 85%; }
@@ -85,30 +64,7 @@ $show-nthlast: 1;
   }
 }
 
-@mixin list-size($text-size, $button-size, $icon-size) {
-  font-size: $text-size;
-  .show-pig { font-size: $button-size; }
-  .pick-icon { height: $icon-size; width: $icon-size; }
-}
-
-.size-l    { @include list-size(14px, 12px, 25px) }
-.size-l-wc { @include list-size(16px, 13px, 25px) }
-
-.size-m    { @include list-size(12px,  9px, 22px) }
-.size-m-wc { @include list-size(14px, 10px, 22px) }
-
-.size-s    { @include list-size(10px,  8px, 20px) }
-.size-s-wc { @include list-size(12px,  9px, 20px) }
-
-
 .positions-stats { background-color: #f0f8f0; }
-
-.rp-dialog {
-  height:245px;
-  width:200px;
-  float:left;
-  margin: 6px;
-}
 
 
 .rightbar {
@@ -187,80 +143,13 @@ $show-nthlast: 1;
   }
   .link { color: #aaa; display: inline-block; }
   .spacer { height: 10px; }
-}
 
-.setupalg {
-  font-size: 77%;
-  span { display: inline-block; }
-  .odd { color: #094;}
-}
-
-// --- SVG ---
-.pick-icon, .locked-pick-icon {
-  width: 45px;
-  height: 59px;
-  font-size: 9.45px;
-  .name {
-    font-weight: bold;
-    text-align: center;
+  .setupalg {
+    font-size: 77%;
+    span { display: inline-block; }
+    .odd { color: #094;}
   }
 }
-.pick-icon  {
-  &:hover {
-    background:#bbb;
-    .name {
-      color:white;
-      background:black;
-    }
-  }
-}
-.locked-pick-icon {
-  .name {
-    background: #ccc;
-  }
-  background: #ddd;
-}
-.selected {
-  .name { background: radial-gradient(#cef 40%, #8af); }
-}
-.pretty-icon svg {
-  width:  192px;
-  height: 195px;
-  path.e_arrow {
-    fill-opacity: 0.7;
-  }
-  path.c_arrow {
-    fill: #aaa;
-    stroke: white;
-    stroke-opacity: 0.8;
-    fill-opacity: 0.8;
-  }
-}
-
-svg {
-  .u { height: 23.5; width: 23.5 }
-
-  .f-color { fill: $cube_red; }
-  .b-color { fill: $cube_orange; }
-  .r-color { fill: $cube_green; }
-  .l-color { fill: $cube_blue; }
-  .u-color { fill: $cube_yellow; }
-  .d-color { fill: $cube_white; }
-
-  .oll { fill: deeppink; }
-  .cop { fill: #fb0; }
-  .cp  { fill: white; }
-  .co  { fill: #6df; }
-  .eo  { fill: #0c0; }
-  .eop { fill: #cf5; }
-  .ep-across { fill: #adf; }
-  .ep-fixed { fill: #aaa; }
-
-  .ignore { fill: #d7d7d7; }
-
-  .white { fill: white; }
-}
-
 
 #pickers {
   td { padding: 0 2px; }
@@ -355,14 +244,12 @@ $panel-width: 450px;
 }
 
 
-// ------------ Page format header
 .page-format-header {
   font-size: 16px;
   width: 200px;
   margin: 8px auto;
 }
 
-// ------------ Alg list header
 .algs-list-header {
   font-size: 14px;
   width: $panel-width;

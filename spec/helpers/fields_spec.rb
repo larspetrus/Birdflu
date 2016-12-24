@@ -51,8 +51,8 @@ RSpec.describe 'Fields' do
     expect(Fields::JS_DEFAULTS).to eq('{list: "positions", lines: "25", sortby: "_speed", algset: "0", combos: "none"}')
   end
 
-  it 'JQ_SELECTOR' do
-    expect(Fields::JQ_SELECTOR).to eq("#list, #lines, #sortby, #algset, #combos")
+  it 'JQUERY_SELECTOR' do
+    expect(Fields::JQUERY_SELECTOR).to eq("#list, #lines, #sortby, #algset, #combos")
   end
 
 end
