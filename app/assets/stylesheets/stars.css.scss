@@ -1,4 +1,4 @@
-.stars_td {
+.stars_td, .cstars_td {
   cursor: pointer;
 }
 
@@ -9,13 +9,18 @@
 }
 
 .star1 { @include star_n(red, "★") }
-.star2 { @include star_n(red, "☆") }
-.star3 { @include star_n(blue, "★") }
-.star4 { @include star_n(blue, "☆") }
+.star2 { @include star_n(#0d0, "★") }
+.star3 { @include star_n(#07f, "★") }
+.star4 { @include star_n(orange, "★") }
+
+.cstar1 { @include star_n(red, "☆") }
+.cstar2 { @include star_n(#0d0, "☆") }
+.cstar3 { @include star_n(#07f, "☆") }
+.cstar4 { @include star_n(orange, "☆") }
 
 
 #star-picker {
-  .star1, .star2, .star3, .star4 {
+  div {
     margin: 0 -1px;
 
     border: 1px solid white;

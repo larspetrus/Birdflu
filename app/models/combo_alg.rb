@@ -4,6 +4,9 @@ class ComboAlg < ActiveRecord::Base
   belongs_to :alg1, class_name: RawAlg.name
   belongs_to :alg2, class_name: RawAlg.name
   belongs_to :combined_alg, class_name: RawAlg.name
+  belongs_to :position
+  has_many :stars, as: :starrable
+
 
   def self.construct(alg1, alg2, alg2_shift, combined_alg, cancel_count, merge_count)
     encoded_data = 100*alg2_shift + 10*cancel_count + merge_count
@@ -43,6 +46,10 @@ class ComboAlg < ActiveRecord::Base
     ComboAlg.select(:alg1_id).distinct.order(:alg1_id).pluck(:alg1_id)
   end
 
+  def star_styles(wca_user_id)
+    Galaxy.star_styles_for(wca_user_id, id, 'combo_alg')
+  end
+
   def alg2_shift
     encoded_data / 100
   end
@@ -67,8 +74,8 @@ class ComboAlg < ActiveRecord::Base
     0
   end
 
-  def matches(hi_lite)
-    false
+  def matches(search_term)
+    search_term == "c#{id}"
   end
 
   def merge_display_data

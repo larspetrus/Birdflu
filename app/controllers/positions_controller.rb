@@ -71,7 +71,9 @@ class PositionsController < ApplicationController
         end
 
     if @login && @algs_mode && (not @combo_mode)
-      @stars_by_alg = Galaxy.star_styles_by_alg(@login.db_id, @list_items.map(&:id))
+      @stars_by_alg = {}
+      @stars_by_alg['raw_alg'] = Galaxy.star_styles_by_alg(@login.db_id, @list_items.map(&:id), 'raw_alg')
+      @stars_by_alg['combo_alg'] = Galaxy.star_styles_by_alg(@login.db_id, @list_items.map(&:id), 'combo_alg')
     end
     @table_context = {stats: @stats.data, possible_pos_ids: @position_ids, login: @login, stars: @stars_by_alg}
 
@@ -85,8 +87,12 @@ class PositionsController < ApplicationController
       @list_items.insert(0, RawAlg.make_non_db(Algs.shift(Algs.unpack(params[:hl_alg]), -@page_rotation)))
     end
     if params[:hl_id]
-      @hi_lite_id = params[:hl_id].to_i
-      @list_items += [RawAlg.find(@hi_lite_id)] unless @list_items.map(&:id).include?(@hi_lite_id)
+      if params[:hl_id].start_with?('c')
+        @hi_lite_id = params[:hl_id]
+      else
+        @hi_lite_id = params[:hl_id].to_i
+        @list_items += [RawAlg.find(@hi_lite_id)] unless @list_items.map(&:id).include?(@hi_lite_id)
+      end
     end
   end
 

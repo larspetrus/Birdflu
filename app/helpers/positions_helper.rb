@@ -105,8 +105,34 @@ class PositionColumns
 end
 
 
-class RawAlgColumns
-  delegate :cop, :eo, :ep, :eop, :big, :position, :to => :pos_cols
+class AlgColumns
+
+  def remove_star
+    star = @context[:star]
+    url = "/galaxies/remove_star?galaxy_id=#{star.galaxy_id}&starred_id=#{star.starred_id}"
+    button_text = tag(:span, 'Remove ')+tag(:span, '', star.galaxy.css_class)
+    tag(:td, hlp.content_tag(:a, button_text, href: url, class: 'knapp knapp-enabled'))
+  end
+
+  def star_td(context, alg, td_class, starred_type, cpfx)
+    star_styles = []
+    if context[:stars]
+      star_styles = context[:stars][starred_type][alg.id]
+    elsif context[:login]
+      star_styles = alg.star_styles(context[:login].db_id)
+    end
+    data = {aid: alg.id}
+    data[:deletable] = star_styles.join(' ') if star_styles.present?
+
+    # NOTE that there is a parallell implementation of this in the JS AJAX handler
+    star_spans = star_styles.map { |style| tag(:span, '', "#{cpfx}#{style}") }.join.html_safe
+    hlp.content_tag(:td, star_spans, class: td_class, data: data)
+  end
+
+end
+
+class RawAlgColumns < AlgColumns
+  delegate :cop, :eo, :ep, :eop, :big, :position, to: :pos_cols
 
   def initialize(raw_alg, context = {}, pos_cols = nil)
     @raw_alg = raw_alg
@@ -154,25 +180,7 @@ class RawAlgColumns
   end
 
   def stars
-    if @context[:stars]
-      star_styles = @context[:stars][@raw_alg.id]
-    elsif @context[:login]
-      star_styles = @raw_alg.star_styles(@context[:login].db_id)
-    else
-      star_styles = []
-    end
-    data = {aid: @raw_alg.id}
-    data[:deletable] = star_styles.join(' ') if star_styles.present?
-
-    # NOTE that there is a duplicate implementation of this in the AJAX handler
-    hlp.content_tag(:td, star_styles.map{|style| tag(:span, '', "star#{style}") }.join.html_safe, class: :stars_td, data: data)
-  end
-
-  def remove_star
-    star = @context[:star]
-    url = "/galaxies/remove_star?galaxy_id=#{star.galaxy_id}&raw_alg_id=#{star.raw_alg_id}"
-    button_text = tag(:span, 'Remove ')+tag(:span, '', "star#{star.galaxy.style}")
-    tag(:td, hlp.content_tag(:a, button_text, href: url, class: 'knapp knapp-enabled'))
+    star_td(@context, @raw_alg, :stars_td, 'raw_alg', 'star')
   end
 
   def css
@@ -181,15 +189,19 @@ class RawAlgColumns
 end
 
 
-class ComboAlgColumns
-  attr_reader :speed, :moves, :show, :notes, :position, :cop, :eo, :ep
+class ComboAlgColumns < AlgColumns
+  attr_reader :speed, :moves, :show, :notes, :position
+  delegate :cop, :eo, :ep, :eop, :big, :position, to: :pos_cols
 
   def initialize(combo_alg, context)
     @combo_alg = combo_alg
     @context = context
 
     @speed = @moves = @show = @notes = @position = tag(:td, '')
-    @cop = @eo = @ep = nil
+  end
+
+  def pos_cols
+    @pos_cols ||= PositionColumns.new(@combo_alg.position, self)
   end
 
   def alg
@@ -202,8 +214,12 @@ class ComboAlgColumns
     tag(:td, tag(:span, @combo_alg.alg1.name, 'js-goto-post') + '+' + tag(:span, @combo_alg.alg2.name, 'js-goto-post'), 'combo')
   end
 
+  def name_link
+    tag(:td, hlp.link_to(@combo_alg.name, "/?pos=#{@combo_alg.position.display_name}&hl_id=#{@combo_alg.id}"))
+  end
+
   def stars
-    td_tag('')
+    star_td(@context, @combo_alg, :cstars_td, 'combo_alg', 'cstar')
   end
 
   def css

@@ -6,13 +6,13 @@
   %div{style: 'text-align: center; margin-top: 30px;'} To add favorites, use the ☆ column in an alg list.
 
 -@per_style.each do |style_and_algs|
-  %div{class: "star#{style_and_algs.first}", style: "font-size: 30px; width: 100%; text-align: center; margin-top: 10px;"}
+  %div{class: "#{style_and_algs.first}", style: "font-size: 30px; width: 100%; text-align: center; margin-top: 10px;"}
   %table{class: @list_classes}
     %tr
       -@columns.each do |column|
         %th= column.header
     - style_and_algs.last.each do |star|
-      - alg_presenter = RawAlgColumns.new(star.raw_alg, login: @login, star: star)
+      - alg_presenter = star.alg.presenter(login: @login, star: star)
       %tr
         -@columns.each do |column|
           =list_td(alg_presenter, column)

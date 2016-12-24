@@ -4,6 +4,7 @@ class RawAlg < ActiveRecord::Base
   belongs_to :position
   belongs_to :mirror, class_name: RawAlg.name
   has_many :combo_algs, foreign_key: :combined_alg_id
+  has_many :stars, as: :starrable
 
   NON_DB_TEXT = 'Not in DB'
 
@@ -49,7 +50,7 @@ class RawAlg < ActiveRecord::Base
   end
 
   def star_styles(wca_user_id)
-    Galaxy.star_styles_for(wca_user_id, id)
+    Galaxy.star_styles_for(wca_user_id, id, 'raw_alg')
   end
 
   # --- Finders ---

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161127020455) do
+ActiveRecord::Schema.define(version: 20161224004906) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,7 +41,8 @@ ActiveRecord::Schema.define(version: 20161127020455) do
 
   create_table "galaxies", force: :cascade do |t|
     t.integer "wca_user_id"
-    t.integer "style",       limit: 2
+    t.integer "style",        limit: 2
+    t.string  "starred_type"
   end
 
   add_index "galaxies", ["wca_user_id"], name: "index_galaxies_on_wca_user_id", using: :btree
@@ -93,11 +94,11 @@ ActiveRecord::Schema.define(version: 20161127020455) do
 
   create_table "stars", force: :cascade do |t|
     t.integer "galaxy_id"
-    t.integer "raw_alg_id"
+    t.integer "starred_id"
   end
 
   add_index "stars", ["galaxy_id"], name: "index_stars_on_galaxy_id", using: :btree
-  add_index "stars", ["raw_alg_id"], name: "index_stars_on_raw_alg_id", using: :btree
+  add_index "stars", ["starred_id"], name: "index_stars_on_starred_id", using: :btree
 
   create_table "wca_users", force: :cascade do |t|
     t.integer  "wca_db_id"

@@ -1,12 +1,12 @@
 require 'rails_helper'
 
 describe Galaxy do
-    let(:g1) { Galaxy.create(wca_user_id: 909, style: 9) }
+    let(:g1) { Galaxy.create(wca_user_id: 909, style: 9, starred_type: 'raw_alg') }
 
   before(:each) do
-    g1.stars.create(raw_alg_id: 5)
-    g1.stars.create(raw_alg_id: 25)
-    g1.stars.create(raw_alg_id: 625)
+    g1.stars.create(starred_id: 5)
+    g1.stars.create(starred_id: 25)
+    g1.stars.create(starred_id: 625)
   end
 
   describe 'construction' do
