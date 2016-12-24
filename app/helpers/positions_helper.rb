@@ -134,7 +134,7 @@ end
 class RawAlgColumns < AlgColumns
   delegate :cop, :eo, :ep, :eop, :big, :position, to: :pos_cols
 
-  def initialize(raw_alg, context = {}, pos_cols = nil)
+  def initialize(raw_alg, context = OpenStruct.new, pos_cols = nil)
     @raw_alg = raw_alg
     @context = context
     @pos_cols = pos_cols
