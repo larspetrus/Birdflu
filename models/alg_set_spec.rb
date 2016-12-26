@@ -44,6 +44,19 @@ describe AlgSet do
     expect(set.include?(double(alg1_id: 6, alg2_id: 7))).to eq(false)
     expect(set.include?(double(alg1_id: 6, alg2_id: 11))).to eq(true)
   end
+
+  it 'subset_for' do
+    all_set = AlgSet.make(algs: 'F1', name: "all", subset: "all")
+    eo_set = AlgSet.make(algs: 'F1', name: "eo", subset: "eo")
+
+    eo_pos = Position.find 1
+    non_eo_pos = Position.find 2
+
+    expect(all_set.subset_for(eo_pos)).to eq(true)
+    expect(all_set.subset_for(non_eo_pos)).to eq(true)
+    expect(eo_set.subset_for(eo_pos)).to eq(true)
+    expect(eo_set.subset_for(non_eo_pos)).to eq(false)
+  end
   
   it 'coverage methods' do
     as = AlgSet.make(algs: "fake", name: "fake")

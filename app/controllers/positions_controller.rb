@@ -40,11 +40,14 @@ class PositionsController < ApplicationController
           alg_set = AlgSet.find_by_id(@list_format.algset.to_i) # works even when id not in DB
 
           raw_algs = combo_raw_algs = []
-          combos_allowed = @only_position && alg_set.present? && (@only_position.eo == '4' || alg_set.subset == 'all')
+          combos_allowed = @only_position && alg_set.present? && alg_set.subset_for(@only_position)
+
           if (@list_format.combos != 'none') && combos_allowed
             combo_raw_algs = @only_position.algs_in_set(alg_set, sortby: @list_format.sortby, limit: @list_format.lines)
+            flash[:notification] = "No Combo algs found" if combo_raw_algs.empty?
           end
-          if @list_format.combos != 'only'
+
+          if @list_format.combos != 'only' || combo_raw_algs.empty?
             raw_algs = RawAlg.where(position_id: @positions.map(&:main_position_id))
                            .includes(:position).order(@list_format.sortby).limit(@list_format.lines.to_i).to_a
           end

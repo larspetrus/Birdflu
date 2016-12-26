@@ -52,6 +52,10 @@ class AlgSet < ActiveRecord::Base
     @@pos_ids[subset] ||= pos_subset.pluck(:id)
   end
 
+  def subset_for(position)
+    position.eo == '4' || subset == 'all'
+  end
+
   @@weights = {} # cache total weight per subset
   def subset_weight
     @@weights[subset] ||= pos_subset.sum(:weight)
