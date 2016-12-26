@@ -151,6 +151,16 @@ $show-nthlast: 1;
   }
 }
 
+#picker-section, table.icon-grid {
+  .pick-icon:hover {
+    background:#bbb;
+    .name {
+      color:white;
+      background:black;
+    }
+  }
+}
+
 #pickers {
   td { padding: 0 2px; }
 }

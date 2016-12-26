@@ -20,6 +20,16 @@ $cube_white: #eee;
   }
   th { border-left: 1px solid #fff; padding: 1px 4px;}
   a:visited { color: blue }
+
+  .pick-icon {
+    transition: all .2s ease-in-out;
+    transition-delay: 0.5s;
+
+    &:hover {
+      transform: scale(2.0);
+      background: rgba(255, 255, 255, 0.5);
+    }
+  }
 }
 
 @mixin list-size($text-size, $button-size, $icon-size) {

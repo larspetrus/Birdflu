@@ -49,10 +49,6 @@ $algset-header: linear-gradient(to bottom, #eb8 5%, #b83 100%);
   td:nth-child(5n+5) { border-left: none; }
   td:nth-child(5n+3) { border-left: none; }
   th:nth-child(2), td:nth-child(6) { border-left: solid 1px black; }
-
-  .pick-icon  {
-    &:hover { background: transparent; }
-  }
 }
 
 .edit_algset {
