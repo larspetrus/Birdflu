@@ -132,6 +132,12 @@ RSpec.describe Algs do
     expect(Algs.official_variant("B' F U R U' R' F' U' B")).to eq("B F' U L U' L' B' U' F")
   end
 
+  it 'variant_name' do
+    expect(Algs.variant_name("L' B2 R B R' B L")).to eq('L')
+    expect(Algs.variant_name("B F L")).to eq('B')
+    expect(Algs.variant_name("F B L")).to eq('F') # Does not normalize!
+  end
+
   it 'standard_u_setup' do
     expect(Algs.standard_u_setup("F' L' U' L U L2 D' L' D L' F2 U' F'")).to eq(0)
     expect(Algs.standard_u_setup("R B2 U' L' B2 R D B2 D' L B2 R' U R'")).to eq(1)

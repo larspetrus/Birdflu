@@ -94,4 +94,34 @@ module SanityCheck
     errors
   end
 
-end
+
+  def self.some_combo_algs(how_many = 100)
+    result = []
+    id_range = ComboAlg.minimum(:id)..ComboAlg.maximum(:id)
+    checked = 0
+
+    while checked < how_many do
+      alg = ComboAlg.find_by_id(rand(id_range))
+      if alg
+        one_combo_alg(alg, result)
+        checked += 1
+      end
+    end
+    result
+  end
+
+
+  def self.one_combo_alg(combo, result)
+    raw_moves = combo.combined_alg.moves
+
+    mdd = combo.merge_display_data
+    combo_start = mdd.first.first[0..-4]
+    combo_end = mdd.last.first[3..-1] || '' # Can be the Nothing alg
+
+    unless raw_moves.start_with?(combo_start) && raw_moves.end_with?(combo_end)
+      result << "combo id #{combo.id}: |#{combo_start}|…|#{combo_end}| vs #{raw_moves}"
+    end
+  end
+
+
+  end

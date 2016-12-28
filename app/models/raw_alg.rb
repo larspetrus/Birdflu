@@ -41,6 +41,17 @@ class RawAlg < ActiveRecord::Base
     [variant(:B), variant(:R), variant(:F), variant(:L)][u_shift]
   end
 
+  def variant(side)
+    @variants ||= {}.tap do |variants|
+      name = Algs.variant_name(moves)
+      4.times do |i|
+        variants[Algs.shift(name, i).to_sym] = Algs.shift(moves, i)
+      end
+    end
+
+    @variants[side.to_sym] || ''
+  end
+
   def speed
     _speed/100.0
   end
@@ -106,17 +117,6 @@ class RawAlg < ActiveRecord::Base
       alg.save
     end
     puts "Update #{description} done in #{'%.2f' % (Time.now - t1)}"
-  end
-
-  def variant(side)
-    @variants ||= {}.tap do |vs|
-      name = Algs.variant(moves)
-      4.times do |i|
-        vs[Algs.shift(name, i).to_sym] = Algs.shift(moves, i)
-      end
-    end
-
-    @variants[side.to_sym] || ''
   end
 
   # View API

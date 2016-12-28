@@ -151,7 +151,8 @@ module Algs
     alg.split(' ').length
   end
 
-  def self.variant(alg) # Note that this can be tricky with slices and normalization. "B F ..." vs "F B ..."
+  # The variant name is the first non D side moved
+  def self.variant_name(alg) # Be careful with slices and normalization! "B F ..." vs "F B ..."
     alg.gsub(/[ '2DU]/, '').first
   end
 

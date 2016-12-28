@@ -18,7 +18,9 @@ class ComboAlg < ActiveRecord::Base
     merge = Algs.merge_moves(Algs.official_variant(a1.moves), a2.algs(u_shift))
     return if merge[:moves].empty? # algs cancelled
 
-    self.align_moves(merge)
+    display_offset = Algs.display_offset(merge[:moves])
+    merge.keys.each { |key| merge[key] = Algs.shift(merge[key], display_offset) }
+
     total_alg = RawAlg.find_from_moves(merge[:moves]) || self.maybe_create_alg(merge[:moves])
     if total_alg
       ComboAlg.construct(a1, a2, u_shift, total_alg, Algs.length(merge[:cancel1]), Algs.length(merge[:merged]))
@@ -35,11 +37,6 @@ class ComboAlg < ActiveRecord::Base
 
   def self.make_4(a1, a2)
     0.upto(3) { |u_shift| make(a1, a2, u_shift) }
-  end
-
-  def self.align_moves(move_parms)
-    display_offset = Algs.display_offset(move_parms[:moves])
-    move_parms.keys.each { | key | move_parms[key] = Algs.shift(move_parms[key], display_offset) }
   end
 
   def self.combined_ids
@@ -83,14 +80,14 @@ class ComboAlg < ActiveRecord::Base
   end
 
   def self._merge_display_data(alg1, alg2, alg2_shift, cancel_count, merge_count)
+    # This can be sped up a lot when cancel_count == 0 && merge_count == 0, by simply splitting the combined_alg
     ua1 = UiAlg.new(Algs.official_variant(alg1.moves))
-    ua2 = UiAlg.new(Algs.shift(Algs.official_variant(alg2.moves), alg2_shift))
+    ua2 = UiAlg.new(RawAlg.make_non_db(alg2.moves).algs(alg2_shift))
     display_offset = Algs.display_offset(ua1 + ua2)
     ua1 = UiAlg.new(Algs.shift(ua1, display_offset))
     ua2 = UiAlg.new(Algs.shift(ua2, display_offset))
 
-    da1, da2 = ua1.db_alg, ua2.db_alg
-
+    da1, da2 = [ua1, ua2].map(&:db_alg)
     untouched1, cancel1 = da1.not_last(cancel_count), da1.last(cancel_count)
     cancel2, untouched2 = da2.first(cancel_count), da2.not_first(cancel_count)
 

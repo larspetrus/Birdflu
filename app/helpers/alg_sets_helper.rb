@@ -11,18 +11,15 @@ module AlgSetsHelper
 
   def fmt_coverage_fraction(algset, parens = false)
     return '' if !algset.coverage || algset.full_coverage?
-    p1, p2 = (parens ? ['(', ')'] : ['', ''])
-    p1 + "#{algset.coverage}/#{algset.subset_pos_ids.count}" + p2
+    parens_if("#{algset.coverage}/#{algset.subset_pos_ids.count}", parens)
   end
 
   def fmt_avg_length(algset)
-    p1, p2 = (algset.full_coverage? ? ['', ''] : ['(', ')'])
-    p1 + ('%.3f' % algset.average_length) + p2
+    parens_if('%.3f' % (algset.average_length || 0), ! algset.full_coverage?)
   end
 
   def fmt_avg_speed(algset)
-    p1, p2 = (algset.full_coverage? ? ['', ''] : ['(', ')'])
-    p1 + ('%.3f' % algset.average_speed) + p2
+    parens_if('%.3f' % (algset.average_speed || 0), ! algset.full_coverage?)
   end
 
   def subset_options
@@ -42,5 +39,10 @@ module AlgSetsHelper
 
   def owner(algset)
     algset.predefined ? 'system' : algset.wca_user&.full_name
+  end
+
+  def parens_if(value, yes)
+    p1, p2 = (yes ? ['(', ')'] : ['', ''])
+    p1 + value + p2
   end
 end
