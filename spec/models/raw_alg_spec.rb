@@ -145,7 +145,6 @@ describe RawAlg do
     expect(alg.id).to eq(nil)
     expect(alg.non_db?).to eq(true)
     expect(alg.matches(:anything)).to eq(true)
-    expect(alg.single?).to eq(true)
 
     expect(alg.valid?).to eq(false) # Make sure it can't end up in DB!
 

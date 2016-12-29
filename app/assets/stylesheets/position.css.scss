@@ -41,6 +41,13 @@ $stars-nthlast: 1;
   .combo-line {
     td:nth-last-child(4) { background-color: #f9f2d6; }
   }
+
+  .star_td, .cstar_td {
+    cursor: pointer;
+  }
+  .no_star_td {
+    cursor: not-allowed;
+  }
 }
 .algs-loggedout {
   th:nth-last-child(#{$stars-nthlast}) { background: #ddd; }

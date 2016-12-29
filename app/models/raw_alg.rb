@@ -128,16 +128,16 @@ class RawAlg < ActiveRecord::Base
     RawAlg.name_for(id)
   end
 
-  def single?
-    true
-  end
-
   def non_db?
     specialness&.end_with? NON_DB_TEXT
   end
 
   def matches(search_term)
     search_term == id || non_db?
+  end
+
+  def star_type
+    non_db? ? 'no_star' : 'star';
   end
 
   # Set up a "premove" so the Roofpig colors look like the Position illustration

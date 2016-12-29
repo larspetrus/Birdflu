@@ -75,6 +75,10 @@ class ComboAlg < ActiveRecord::Base
     search_term == "c#{id}"
   end
 
+  def star_type
+    'cstar';
+  end
+
   def merge_display_data
     ComboAlg._merge_display_data(alg1, alg2, alg2_shift, cancel_count, merge_count)
   end

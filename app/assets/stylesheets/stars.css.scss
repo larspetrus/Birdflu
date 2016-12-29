@@ -1,7 +1,3 @@
-.stars_td, .cstars_td {
-  cursor: pointer;
-}
-
 @mixin star_n($col, $char) {
   display: inline-block;
   &:before { content: $char; }

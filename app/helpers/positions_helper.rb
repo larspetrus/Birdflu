@@ -114,7 +114,7 @@ class AlgColumns
     tag(:td, hlp.content_tag(:a, button_text, href: url, class: 'knapp knapp-enabled'))
   end
 
-  def star_td(context, alg, td_class, starred_type, cpfx)
+  def star_td(context, alg, starred_type)
     star_styles = []
     if context.stars
       star_styles = context.stars[starred_type][alg.id]
@@ -125,8 +125,8 @@ class AlgColumns
     data[:deletable] = star_styles.join(' ') if star_styles.present?
 
     # NOTE that there is a parallell implementation of this in the JS AJAX handler
-    star_spans = star_styles.map { |style| tag(:span, '', "#{cpfx}#{style}") }.join.html_safe
-    hlp.content_tag(:td, star_spans, class: td_class, data: data)
+    star_spans = star_styles.map { |style| tag(:span, '', "#{alg.star_type}#{style}") }.join.html_safe
+    hlp.content_tag(:td, star_spans, class: "#{alg.star_type}_td", data: data)
   end
 
 end
@@ -180,7 +180,7 @@ class RawAlgColumns < AlgColumns
   end
 
   def stars
-    star_td(@context, @raw_alg, :stars_td, 'raw_alg', 'star')
+    star_td(@context, @raw_alg, 'raw_alg')
   end
 
   def css
@@ -224,7 +224,7 @@ class ComboAlgColumns < AlgColumns
   end
 
   def stars
-    star_td(@context, @combo_alg, :cstars_td, 'combo_alg', 'cstar')
+    star_td(@context, @combo_alg, 'combo_alg')
   end
 
   def css
