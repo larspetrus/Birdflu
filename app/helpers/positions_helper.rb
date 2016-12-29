@@ -204,9 +204,14 @@ class ComboAlgColumns < AlgColumns
     @pos_cols ||= PositionColumns.new(@combo_alg.position, self)
   end
 
+  def ui_pos
+    @combo_alg.position.pov_variant_in(@context.possible_pos_ids)
+  end
+
+
   def alg
     result = ''.html_safe
-    @combo_alg.merge_display_data.each { |part| result += tag(:span, part[0], part[1]) }
+    @combo_alg.merge_display_data.each { |part| result += tag(:span, Algs.shift(part[0], ui_pos.pov_offset), part[1]) }
     tag(:td, result, 'js-combo')
   end
 

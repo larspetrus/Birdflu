@@ -6,7 +6,7 @@ RSpec.describe Column, :type => :model do
   let(:raw1) {RawAlg.new(_moves: Algs.pack("L' B' R B' R' B2 L"), u_setup: 2, length: 7, _speed: 666, position_id: pos1.id)}
   let(:raw2) {RawAlg.new(_moves: Algs.pack("R' U' R B L U L' B'"), u_setup: 2, length: 8, _speed: 555, position_id: pos1.id)}
 
-  let(:combo1) {ComboAlg.new(alg1: raw1, alg2: raw2)}
+  let(:combo1) {ComboAlg.new(alg1: raw1, alg2: raw2, position_id: pos1.id)}
 
   let(:context) { OpenStruct.new(stats: double(shortest: 7, fastest: 5.55), possible_pos_ids: [pos1.id]) }
 
@@ -37,6 +37,8 @@ RSpec.describe Column, :type => :model do
 
     allow(combo1).to receive(:merge_display_data) {[["L' U' B' U B "], ["L", :merged], ["+"], ["L", :merged], [" U F U' F' L'", :alg2]]}
     expect(Column[:alg].content(combo1.presenter(context))).to eq('<td class="js-combo"><span>L&#39; U&#39; B&#39; U B </span><span class="merged">L</span><span>+</span><span class="merged">L</span><span class="alg2"> U F U&#39; F&#39; L&#39;</span></td>')
+
+
   end
 
   it 'SHOW' do

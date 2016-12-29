@@ -44,6 +44,10 @@ class Position < ActiveRecord::Base
     Position.by_ll_code(Cube.new(moves).standard_ll_code)
   end
 
+  def self.by_name(display_name)
+    Position.find_by(cop: display_name[0..1], eo: display_name[2], ep: display_name[3])
+  end
+
   def as_roofpig_tweaks
     result = []
     4.times do |i|

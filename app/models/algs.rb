@@ -25,7 +25,10 @@ module Algs
 
   # 'rotate' the alg around U. turns = 1 changes F to L, L to B, etc.
   def self.shift(alg, turns = 1)
-    rotated = (turns % 4 == 0) ? alg.to_s : alg.to_s.chars.map { |char| (place = 'RFLB'.index(char)) ? 'RFLB'[(place + turns) % 4] : char }.join
+    rotated =
+        (turns % 4 == 0) ?
+          alg.to_s : # special case for speed
+          alg.to_s.chars.map { |char| (place = 'RFLB'.index(char)) ? 'RFLB'[(place + turns) % 4] : char }.join
     normalize(rotated)
   end
 
