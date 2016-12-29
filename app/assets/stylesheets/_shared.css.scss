@@ -22,6 +22,8 @@ $cube_white: #eee;
   a:visited { color: blue }
 
   .pick-icon {
+    cursor: zoom-in;
+
     transition: all .2s ease-in-out;
     transition-delay: 0.5s;
 

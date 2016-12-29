@@ -11,7 +11,7 @@ class GalaxiesController < ApplicationController
                  .includes(:galaxy) # can't get :starrable to work here :(
                  .to_a
     @per_style = @stars.chunk{ |line| line.galaxy.css_class }.to_a
-    @list_classes = "galaxy-list size-#{@text_size}-wc"
+    @list_classes = "galaxy-list size-#{@text_size}"
     @rendered_svg_ids = Set.new
   end
 
