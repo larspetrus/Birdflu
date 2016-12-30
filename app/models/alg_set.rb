@@ -169,7 +169,8 @@ class AlgSet < ActiveRecord::Base
   end
 
   def dropdown_name
-    "#{name}·#{subset}"
+    dash = predefined ? '-' : '·'
+    subset + dash + name
   end
 
   def to_s
