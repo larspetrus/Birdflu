@@ -51,6 +51,7 @@ $stars-nthlast: 1;
 }
 .algs-loggedout {
   th:nth-last-child(#{$stars-nthlast}) { background: #ddd; }
+  td:nth-last-child(#{$stars-nthlast}) { background: rgba(0,0,0, 0.05); }
 }
 .combo-list {
   tr:nth-child(5n + 1) { border-bottom: none;}
