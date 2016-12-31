@@ -31,7 +31,7 @@ class ApplicationController < ActionController::Base
   def handle_wca_login
     if session[:wca_login]
       if Time.now.to_i > (session[:wca_login]['expires'] || 0)
-        flash[:notification] = 'WCA login expired'
+        flash.now[:notification] = 'WCA login expired'
         session.delete(:wca_login)
       else
         sn = session[:wca_login]
