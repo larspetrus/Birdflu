@@ -71,20 +71,20 @@ class RawAlg < ActiveRecord::Base
 
   def find_mirror
     db_alg = Algs.pack(Algs.display_variant(Algs.mirror(moves)))
-    RawAlg.where(position_id: position.mirror_id, _speed: _speed, length: length, _moves: db_alg).first
+    RawAlg.find_by(position_id: position.mirror_id, _speed: _speed, length: length, _moves: db_alg)
   end
 
   def find_reverse
     db_alg = Algs.pack(Algs.display_variant(Algs.reverse(moves)))
     reverse_speed = Algs.speed_score(Algs.reverse(moves), for_db: true)
-    RawAlg.where(position_id: position.inverse_id, _speed: reverse_speed, length: length, _moves: db_alg).first
+    RawAlg.find_by(position_id: position.inverse_id, _speed: reverse_speed, length: length, _moves: db_alg)
   end
 
   def self.find_from_moves(moves, position_id = nil)
     position_id ||= Position.by_ll_code(Cube.new(moves).standard_ll_code).id
     db_speed = Algs.speed_score(moves, for_db: true)
     db_alg = Algs.pack(Algs.display_variant(moves))
-    RawAlg.where(position_id: position_id, _speed: db_speed, length: db_alg.length, _moves: db_alg).first
+    RawAlg.find_by(position_id: position_id, _speed: db_speed, length: db_alg.length, _moves: db_alg)
   end
 
   def self.find_by_name(name)

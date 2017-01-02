@@ -176,7 +176,7 @@ class Position < ActiveRecord::Base
     puts "Computing Position.best_alg_id, Position.optimal_alg_length"
     BigThought.timed_transaction do
       Position.find_each do |pos|
-        optimal_alg = RawAlg.where(position_id: pos.main_position_id).order([:length, :speed, :id]).limit(1).first
+        optimal_alg = RawAlg.find_by(position_id: pos.main_position_id).order([:length, :speed, :id]).limit(1)
         pos.update(best_alg_id: optimal_alg.id, optimal_alg_length: optimal_alg.length)
       end
     end
