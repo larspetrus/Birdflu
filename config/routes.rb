@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   get 'status/index'
 
   get 'galaxies/index'
+  get 'galaxies/:id', to: 'galaxies#show'
   get 'galaxies/remove_star'
   post 'galaxies/update_star'
 

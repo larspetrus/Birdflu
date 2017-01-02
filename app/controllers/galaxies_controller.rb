@@ -15,6 +15,10 @@ class GalaxiesController < ApplicationController
     @rendered_svg_ids = Set.new
   end
 
+  def show
+    raise "BANANA"
+  end
+
   def update_star
     raise "Must be logged in to update stars" unless @login
 

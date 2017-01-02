@@ -85,6 +85,17 @@ module SanityCheck
     end
   end
 
+  def self.raw_alg_mirrors(condition)
+    errors = []
+    RawAlg.where(condition).find_each do |alg|
+      unless alg.find_mirror
+        errors << "Mirrorless: #{alg.to_s}"
+      end
+    end
+    puts errors
+    errors
+  end
+
   def self.combo_algs
     errors = []
 
