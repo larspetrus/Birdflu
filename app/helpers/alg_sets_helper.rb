@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module AlgSetsHelper
   def avg_format(avg)
     return '--' unless avg
