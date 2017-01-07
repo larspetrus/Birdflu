@@ -89,7 +89,7 @@ class ComboAlg < ActiveRecord::Base
     ua2 = UiAlg.new(RawAlg.make_non_db(alg2.moves).algs(alg2_shift))
     display_offset = Algs.display_offset(ua1 + ua2)
     ua1 = UiAlg.new(Algs.shift(ua1, display_offset))
-    ua2 = UiAlg.new(Algs.shift(ua2, display_offset))
+    ua2 = UiAlg.new(Algs.anti_normalize(Algs.shift(ua2, display_offset)))
 
     da1, da2 = [ua1, ua2].map(&:db_alg)
     untouched1, cancel1 = da1.not_last(cancel_count), da1.last(cancel_count)
@@ -105,7 +105,7 @@ class ComboAlg < ActiveRecord::Base
       result << [_nc_ + '+' + _nc_]
       result << [cancel2.first(net_cancel).ui_alg.to_s, :cancel2] if net_cancel > 0
       result << [_nc_ + cancel2.last(merge_count).ui_alg.to_s, :merged] if merge_count > 0
-      result << [nbsp + untouched2.ui_alg.to_s, :alg2]
+      result << [nbsp + Algs.normalize(untouched2.ui_alg.to_s), :alg2]
     end
   end
 
