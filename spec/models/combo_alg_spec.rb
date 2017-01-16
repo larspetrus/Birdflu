@@ -39,5 +39,9 @@ describe ComboAlg do
     alg1 = double(moves: "L' U R U' L U R'")
     alg2 = double(moves: "L' R U R' U' L U2 R U2 R'")
     expect(ComboAlg._merge_display_data(alg1, alg2, 0, 1, 0)).to eq([["L' U R U' L U "], ["R'", :cancel1],[" + "], ["R", :cancel2], [" L' U R' U' L U2 R U2 R'", :alg2]])
+
+    alg1 = double(moves: "L U L' U L U' L' U L U2 L'")
+    alg2 = double(moves: "B' F U F' U' B U2 F U2 F'")
+    expect(ComboAlg._merge_display_data(alg1, alg2, 0, 1, 1)).to eq( [["L U L' U L U' L' U L U2 "], ["L'", :merged], ["+"], ["L'", :merged], [" R U R' U' L U2 R U2 R'", :alg2]])
   end
 end
