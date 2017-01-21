@@ -35,6 +35,7 @@ class DbTransfer
     line = 0
     model_class = nil
     column_names = nil
+    next_log = 100
     CSV.foreach(filename) do |row|
       line += 1
 
@@ -55,17 +56,23 @@ class DbTransfer
         if column_names != model_class.columns.map(&:name)
           raise "Column names don't match. Expected: #{column_names}. Actual: #{model_class.columns.map(&:name)}"
         end
+
+        puts "#{filename} looks valid. Starting transfer."
       else
         values = row.map{|value| value == NULL_CODE ? 'NULL' : "'#{value}'"}
         sql = "INSERT INTO #{model_class.table_name} (#{column_names.join(",")}) VALUES (#{values.join(',')})"
         if for_real
           ActiveRecord::Base.connection.execute(sql)
+          if line == next_log+2
+            puts "Inserted #{next_log} records"
+            next_log *= 2
+          end
         else
           puts sql
         end
       end
     end
+    puts "Handled #{line} lines in #{filename}"
   end
-
 
 end
