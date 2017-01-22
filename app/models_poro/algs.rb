@@ -38,7 +38,7 @@ module Algs
   end
 
   def self.display_offset(alg)
-    -Cube.new(alg.to_s).standard_ll_code_offset % 4
+    -Cube.by_alg(alg.to_s).standard_ll_code_offset % 4
   end
 
   def self.normalize(alg)
@@ -80,7 +80,7 @@ module Algs
   end
 
   def self.standard_u_setup(alg)
-    cube = Cube.new(alg)
+    cube = Cube.by_alg(alg)
     ('BRFL'.index(cube.piece_at('UB').name[1]) - LL.edge_data(cube.standard_ll_code[1]).distance) % 4
   end
 

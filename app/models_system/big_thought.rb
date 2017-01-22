@@ -67,7 +67,7 @@ class BigThought
 
     corner_positioning_algs.each do |cp_alg|
       edge_positioning_algs.each do |ep_alg|
-        cube = Cube.new(cp_alg).apply_reverse_alg(ep_alg)
+        cube = Cube.by_alg(cp_alg).apply_reverse_alg(ep_alg)
         untwisted_ll_code = cube.ll_codes[0].bytes
 
         (0..2).each do |c1|
@@ -80,7 +80,7 @@ class BigThought
                     twists = [c1, e1, c2, e2, c3, e3, (-c1-c2-c3) % 3, (e1+e2+e3) % 2]
                     twisted_code = (0..7).inject(String.new('')) { |code, i| code.concat(untwisted_ll_code[i]+twists[i]) }
 
-                    found_positions[Cube.new(twisted_code).standard_ll_code] += 1
+                    found_positions[Cube.by_code(twisted_code).standard_ll_code] += 1
                   end
                 end
               end

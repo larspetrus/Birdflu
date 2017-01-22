@@ -60,7 +60,7 @@ class LlCode
   end
 
   def cube
-    @cube ||= Cube.new(@code)
+    @cube ||= Cube.by_code(@code)
   end
 
 

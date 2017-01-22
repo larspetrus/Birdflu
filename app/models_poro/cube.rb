@@ -1,19 +1,17 @@
 # frozen_string_literal: true
 
 class Cube
+  def self.by_alg(alg)
+    Cube.new.apply_reverse_alg(alg)
+  end
+
+  def self.by_code(ll_code)
+    Cube.new.apply_position(ll_code)
+  end
+
   def initialize(state = nil)
     @pieces = { }
     Piece::NAMES.each { |piece| @pieces[piece] = Piece.new(piece) }
-
-    if state
-      is_ll_code = state.length == 8 && (not state.include? ' ')
-
-      if is_ll_code
-        apply_position(state)
-      else
-        apply_reverse_alg(state)
-      end
-    end
   end
 
   def state_string

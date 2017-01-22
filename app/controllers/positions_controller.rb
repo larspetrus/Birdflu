@@ -209,7 +209,7 @@ class PositionsController < ApplicationController
 
     if user_input.include? ' ' # interpret as moves
       actual_moves = user_input
-      ll_code = Cube.new(actual_moves).standard_ll_code # raises exception unless alg is good
+      ll_code = Cube.by_alg(actual_moves).standard_ll_code # raises exception unless alg is good
 
       db_alg = RawAlg.find_from_moves(user_input, Position.find_by!(ll_code: ll_code))
     else # interpret as alg name
@@ -218,7 +218,7 @@ class PositionsController < ApplicationController
       actual_moves = db_alg.moves
     end
 
-    result = { ll_code: Cube.new(actual_moves).standard_ll_code, prot: Cube.new(actual_moves).standard_ll_code_offset}
+    result = { ll_code: Cube.by_alg(actual_moves).standard_ll_code, prot: Cube.by_alg(actual_moves).standard_ll_code_offset}
     if db_alg
       result[:alg_id] = db_alg.id
     else

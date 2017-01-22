@@ -32,7 +32,7 @@ class ComboAlg < ActiveRecord::Base
   end
 
   def self.maybe_create_alg(moves)
-    Cube.new(moves).standard_ll_code == 'a1a1a1a1' ? nil : RawAlg.make(moves, Algs.length(moves))
+    Cube.by_alg(moves).standard_ll_code == 'a1a1a1a1' ? nil : RawAlg.make(moves, Algs.length(moves))
   end
 
   def self.make_4(a1, a2)

@@ -81,7 +81,7 @@ class RawAlg < ActiveRecord::Base
   end
 
   def self.find_from_moves(moves, position_id = nil)
-    position_id ||= Position.by_ll_code(Cube.new(moves).standard_ll_code).id
+    position_id ||= Position.by_moves(moves).id
     db_speed = Algs.speed_score(moves, for_db: true)
     db_alg = Algs.pack(Algs.display_variant(moves))
     RawAlg.find_by(position_id: position_id, _speed: db_speed, length: db_alg.length, _moves: db_alg)
@@ -97,7 +97,7 @@ class RawAlg < ActiveRecord::Base
 
   # --- Populate DB columns ---
   def set_position
-    ll_code = Cube.new(moves).standard_ll_code # validates
+    ll_code = Cube.by_alg(moves).standard_ll_code # validates
     self.position = Position.by_ll_code(ll_code)
   end
 

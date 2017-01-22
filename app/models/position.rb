@@ -41,7 +41,7 @@ class Position < ActiveRecord::Base
   end
 
   def self.by_moves(moves)
-    Position.by_ll_code(Cube.new(moves).standard_ll_code)
+    Position.by_ll_code(Cube.by_alg(moves).standard_ll_code)
   end
 
   def self.by_name(display_name)
@@ -63,7 +63,7 @@ class Position < ActiveRecord::Base
   end
 
   def as_cube
-    @cube ||= Cube.new(ll_code)
+    @cube ||= Cube.by_code(ll_code)
   end
 
   def has_mirror
@@ -187,7 +187,7 @@ class Position < ActiveRecord::Base
     puts "Initializing Position: inverse_id"
     BigThought.timed_transaction do
       Position.find_each do |pos|
-        inverse_ll_code = Cube.new(Algs.reverse(pos.best_alg.moves)).standard_ll_code
+        inverse_ll_code = Cube.by_alg(Algs.reverse(pos.best_alg.moves)).standard_ll_code
         pos.update(inverse_id: Position.find_by_ll_code(inverse_ll_code).id)
       end
     end

@@ -256,7 +256,7 @@ class AlgDigger
       @solvedish_states = 4.times.map { |i| cube.do(Move::U); cube.state_string }
     end
 
-    @solvedish_states.include?(Cube.new(alg).state_string)
+    @solvedish_states.include?(Cube.by_alg(alg).state_string)
   end
 
   def dee_generate(alg)
