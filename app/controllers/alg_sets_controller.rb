@@ -75,7 +75,7 @@ class AlgSetsController < ApplicationController
     @mirror_algs = @algset.mirror_algs.sort_by{|ma| ma.algs[0].position.cop }
     @list_classes = "bflist mirroralg-list size-#{@text_size}-wc"
     @columns = Column.named([:name_link, :cop, :eop, :alg, :show])
-    @rendered_svg_ids = Set.new
+    use_svgs
   end
 
 

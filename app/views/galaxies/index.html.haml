@@ -5,14 +5,10 @@
 -unless @per_style.present?
   %div{style: 'text-align: center; margin-top: 30px;'} To add favorites, use the ☆ column in an alg list.
 
--@per_style.each do |style_and_stars|
-  %div{class: style_and_stars.first, style: "font-size: 30px; width: 100%; text-align: center; margin-top: 10px;"}
-  %table{class: @list_classes}
-    %tr
-      -@columns.each do |column|
-        %th= column.header
-    - style_and_stars.last.sort_by{|star| star.alg.position.display_name }.each do |star|
-      - alg_presenter = star.alg.presenter(OpenStruct.new(login: @login, star: star))
-      %tr
-        -@columns.each do |column|
-          =list_td(alg_presenter, column)
+-@per_style.each do |galaxy_and_stars|
+  -galaxy = galaxy_and_stars.first
+
+  .big-star{class: galaxy.css_class}
+  =render 'star_table', galaxy: galaxy, stars: galaxy_and_stars.last
+  .public-link
+    =link_to('Public link', galaxy_url(galaxy))

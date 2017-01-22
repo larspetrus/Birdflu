@@ -84,7 +84,6 @@ class PositionsController < ApplicationController
 
     @list_classes = table_class(@algs_mode, combos_in_list, @text_size, @picked, @login)
 
-    @rendered_svg_ids = Set.new
     @columns = @algs_mode ? make_alg_columns : make_pos_columns
     @page_rotation = (params[:prot] || 0).to_i
 
@@ -99,6 +98,7 @@ class PositionsController < ApplicationController
         @list_items += [RawAlg.find(@hi_lite_id)] unless @list_items.map(&:id).include?(@hi_lite_id)
       end
     end
+    use_svgs
   end
 
   def make_alg_columns

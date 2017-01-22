@@ -1,0 +1,9 @@
+= render 'leftbar', page: ApplicationController::FAV_NAME
+
+.galaxy-header
+  Algs by
+  #{@galaxy.wca_user.full_name}
+
+%div{style: 'height: 20px'}
+
+=render 'star_table', galaxy: @galaxy, stars: @stars

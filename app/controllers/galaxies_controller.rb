@@ -10,13 +10,16 @@ class GalaxiesController < ApplicationController
                  .order(['galaxies.starred_type DESC', 'galaxies.style'])
                  .includes(:galaxy) # can't get :starrable to work here :(
                  .to_a
-    @per_style = @stars.chunk{ |line| line.galaxy.css_class }.to_a
-    @list_classes = "galaxy-list size-#{@text_size}"
-    @rendered_svg_ids = Set.new
+    @per_style = @stars.chunk{ |line| line.galaxy }.to_a
+    use_svgs
   end
 
   def show
-    raise "BANANA"
+    setup_leftbar
+    @columns = Column.named([:name_link, :cop, :eop, :alg])
+    @galaxy = Galaxy.find(params[:id])
+    @stars = Star.where(galaxy_id: @galaxy.id).to_a
+    use_svgs
   end
 
   def update_star

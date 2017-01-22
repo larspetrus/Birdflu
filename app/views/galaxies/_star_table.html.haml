@@ -1,0 +1,9 @@
+%table{class: "galaxy-list size-#{@text_size}"}
+  %tr
+    -@columns.each do |column|
+      %th= column.header
+  - stars.sort_by{|star| star.alg.position.display_name }.each do |star|
+    - alg_presenter = star.alg.presenter(OpenStruct.new(login: @login, star: star))
+    %tr
+      -@columns.each do |column|
+        =list_td(alg_presenter, column)

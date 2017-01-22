@@ -8,9 +8,24 @@
 .galaxy-list {
   @extend .base-list;
 
+
   tr { border-bottom: solid 1px #ddd;}
   th {
     background:linear-gradient(to bottom, #fcc 5%, #f00 100%);
   }
   .knapp { font-weight: 700; }
 }
+
+  .big-star {
+    font-size: 30px;
+    text-align: center;
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .public-link {
+    text-align: center;
+    a {
+      font-size: 9px;
+      &:visited { color: blue; }    }
+  }

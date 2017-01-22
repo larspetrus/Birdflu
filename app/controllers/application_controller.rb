@@ -13,6 +13,8 @@ class ApplicationController < ActionController::Base
   ALGSETS_NAME = 'Combos'
   FMC_NAME = 'FMC'
 
+  private
+
   def setup_leftbar
     @text_size = cookies[:size] || 'm'
     @position_set = cookies[:zbll] ?  'eo' : 'all'
@@ -22,8 +24,9 @@ class ApplicationController < ActionController::Base
     @lb_disabled = @login ? '' : FAV_NAME
   end
 
-  # ==================== PRIVATE AREA ========
-  private
+  def use_svgs
+    @rendered_svg_ids = Set.new
+  end
 
   @@request_count = Hash.new(0)
   @@trouble_list = []

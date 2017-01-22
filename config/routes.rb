@@ -5,8 +5,7 @@ Rails.application.routes.draw do
   get 'fmc/index'
   get 'status/index'
 
-  get 'galaxies/index'
-  get 'galaxies/:id', to: 'galaxies#show'
+  resources :galaxies , only: [:index, :show]
   get 'galaxies/remove_star'
   post 'galaxies/update_star'
 

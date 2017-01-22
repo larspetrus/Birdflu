@@ -50,7 +50,7 @@
 
 
 :javascript
-  var SECTION_PATHS = {"#{ApplicationController::MAIN_NAME}": '/', "#{ApplicationController::FAV_NAME}": '/galaxies/index', "#{ApplicationController::ALGSETS_NAME}": '/alg_sets', "#{ApplicationController::FMC_NAME}": '/fmc?example=1'}
+  var SECTION_PATHS = {"#{ApplicationController::MAIN_NAME}": '/', "#{ApplicationController::FAV_NAME}": "#{galaxies_path}", "#{ApplicationController::ALGSETS_NAME}": "#{alg_sets_path}", "#{ApplicationController::FMC_NAME}": '/fmc?example=1'}
   $('#sectionator').change(function() {
     window.location.href = SECTION_PATHS[$(this).val()];
   });
