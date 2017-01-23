@@ -98,26 +98,22 @@ class ComboAlg < ActiveRecord::Base
     cancel_count.times do |i|
       index1, index2 = -1, 0
       unless remain2.first[0] == remain1.last[0] # same side?
-        if remain2.second[0] == remain1.last[0]
-          index2 = 1
-        else
-          index1 = -2
-        end
+        if remain2.second[0] == remain1.last[0] then index2 = 1 else index1 = -2 end
       end
       cancel1.insert(0, remain1.delete_at(index1))
       cancel2 << remain2.delete_at(index2)
     end
 
-    nbsp = "\u00A0"
-    _nc_ = net_cancel > 0 ? nbsp : ''
+    nb = "\u00A0" # non breaking space
+    nc = net_cancel > 0 ? nb : ''
     [].tap do |result|
-      result << [remain1.join(' ') + nbsp]
-      result << [cancel1.first(merge_count).join(' ') + _nc_, :merged] if merge_count > 0
+      result << [remain1.join(' ') + nb]
+      result << [cancel1.first(merge_count).join(' ') + nc, :merged] if merge_count > 0
       result << [cancel1.last(net_cancel).join(' '), :cancel1] if net_cancel > 0
-      result << [_nc_ + '+' + _nc_]
+      result << [nc+'+'+nc]
       result << [cancel2.first(net_cancel).join(' '), :cancel2] if net_cancel > 0
-      result << [_nc_ + cancel2.last(merge_count).join(' '), :merged] if merge_count > 0
-      result << [nbsp + remain2.join(' '), :alg2]
+      result << [nc + cancel2.last(merge_count).join(' '), :merged] if merge_count > 0
+      result << [nb + remain2.join(' '), :alg2]
     end
   end
 

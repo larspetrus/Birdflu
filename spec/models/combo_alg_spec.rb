@@ -20,7 +20,7 @@ describe ComboAlg do
   end
 
   it '_merge_display_data' do
-    n = ' ' # non breaking space
+    n = "\u00A0" # non breaking space
     
     alg1 = double(moves: "F R U' B U B' R' F'")
     alg2 = double(moves: "B L F' L F L2 B'")
