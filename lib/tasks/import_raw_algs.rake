@@ -36,8 +36,8 @@ task import_raw_algs: :environment do
   end
 
   # Optimal solutions for the only positions that need 16 moves
-  RawAlg.make("B L2 F' L' F U2 F' L F L2 U' B' U R' U2 R", 'X1', 16)
-  RawAlg.make("B' R2 F R F' U2 F R' F' R2 U B U' L U2 L'", 'X2', 16)
+  RawAlg.make("B L2 F' L' F U2 F' L F L2 U' B' U R' U2 R", 16)
+  RawAlg.make("B' R2 F R F' U2 F R' F' R2 U B U' L U2 L'", 16)
 
   puts "Done. #{alg_count} algs total. Took #{'%.2f' % (Time.now - t1)}"
 
