@@ -25,8 +25,21 @@ describe UiAlg do
     expect((a1+"B' D").to_s).to eq("L U F B' D")
   end
 
+  it 'shift' do
+    alg = UiAlg.new("L U F U' F' L'")
+
+    expect(alg.shift().to_s).to  eq("B U L U' L' B'")
+    expect(alg.shift(1).to_s).to eq("B U L U' L' B'")
+    expect(alg.shift(2).to_s).to eq("R U B U' B' R'")
+  end
+
+
   it 'db_alg' do
     expect(UiAlg.new("F U2 D'").db_alg.to_s).to eq("Fup")
+  end
+
+  it 'to_a' do
+    expect(UiAlg.new("F U2 R'").to_a).to eq(["F", "U2", "R'"])
   end
 
 end

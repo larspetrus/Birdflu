@@ -84,28 +84,40 @@ class ComboAlg < ActiveRecord::Base
   end
 
   def self._merge_display_data(alg1, alg2, alg2_shift, cancel_count, merge_count)
-    # This can be sped up a lot when cancel_count == 0 && merge_count == 0, by simply splitting the combined_alg
+    net_cancel = cancel_count - merge_count
+
     ua1 = UiAlg.new(Algs.official_variant(alg1.moves))
     ua2 = UiAlg.new(RawAlg.make_non_db(alg2.moves).algs(alg2_shift))
     display_offset = Algs.display_offset(ua1 + ua2)
-    ua1 = UiAlg.new(Algs.shift(ua1, display_offset))
-    ua2 = UiAlg.new(Algs.anti_normalize(Algs.shift(ua2, display_offset)))
 
-    da1, da2 = [ua1, ua2].map(&:db_alg)
-    untouched1, cancel1 = da1.not_last(cancel_count), da1.last(cancel_count)
-    cancel2, untouched2 = da2.first(cancel_count), da2.not_first(cancel_count)
+    remain1 = ua1.shift(display_offset).to_a
+    cancel1 = []
+    remain2 = ua2.shift(display_offset).to_a
+    cancel2 = []
 
-    net_cancel = cancel_count - merge_count
+    cancel_count.times do |i|
+      index1, index2 = -1, 0
+      unless remain2.first[0] == remain1.last[0] # same side?
+        if remain2.second[0] == remain1.last[0]
+          index2 = 1
+        else
+          index1 = -2
+        end
+      end
+      cancel1.insert(0, remain1.delete_at(index1))
+      cancel2 << remain2.delete_at(index2)
+    end
+
     nbsp = "\u00A0"
     _nc_ = net_cancel > 0 ? nbsp : ''
     [].tap do |result|
-      result << [untouched1.ui_alg.to_s + nbsp]
-      result << [cancel1.first(merge_count).ui_alg.to_s + _nc_, :merged] if merge_count > 0
-      result << [cancel1.last(net_cancel).ui_alg.to_s, :cancel1] if net_cancel > 0
+      result << [remain1.join(' ') + nbsp]
+      result << [cancel1.first(merge_count).join(' ') + _nc_, :merged] if merge_count > 0
+      result << [cancel1.last(net_cancel).join(' '), :cancel1] if net_cancel > 0
       result << [_nc_ + '+' + _nc_]
-      result << [cancel2.first(net_cancel).ui_alg.to_s, :cancel2] if net_cancel > 0
-      result << [_nc_ + cancel2.last(merge_count).ui_alg.to_s, :merged] if merge_count > 0
-      result << [nbsp + Algs.normalize(untouched2.ui_alg.to_s), :alg2]
+      result << [cancel2.first(net_cancel).join(' '), :cancel2] if net_cancel > 0
+      result << [_nc_ + cancel2.last(merge_count).join(' '), :merged] if merge_count > 0
+      result << [nbsp + remain2.join(' '), :alg2]
     end
   end
 

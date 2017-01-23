@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Handles alg strings in packed format (Sune = "FUEUFuE"). Counterpart to UiAlg.
+# Handles alg strings in packed format (Sune = "FUEUFuE"). Counterpart to UiAlg. Immutable.
 class DbAlg
   def initialize(alg)
     @alg = (alg || '').freeze
