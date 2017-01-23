@@ -3,6 +3,8 @@
 .alg-set-form
 
   %h4 #{@algset.dropdown_name} Algs
+  .side-button
+    =link_to('OK', alg_sets_path, class: 'knapp knapp-enabled')
 
 %table{class: @list_classes}
   %tr

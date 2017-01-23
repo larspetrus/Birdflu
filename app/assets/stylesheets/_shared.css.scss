@@ -8,7 +8,7 @@ $cube_yellow: yellow;
 $cube_white: #eee;
 
 
-// Common to all our list
+// Common to all our lists
 .base-list {
   margin: 0 auto;
   border-collapse: collapse;
@@ -79,4 +79,17 @@ h4, h5 {
   width:200px;
   float:left;
   margin: 6px;
+}
+
+
+.flash_msgs {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+
+  border-radius: 5px;
+
+  padding: 12px;
+  background-color: rgba(188, 255, 188, 0.7);
+  border: 2px solid #5b5;
 }

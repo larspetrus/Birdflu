@@ -75,14 +75,9 @@ $algset-header: linear-gradient(to bottom, #eb8 5%, #b83 100%);
   ul { margin: 0; }
 }
 
-.flash_msgs {
-  position: absolute;
-  top: 8px;
-  left: 50%;
-
-  border-radius: 5px;
-
-  padding: 12px;
-  background-color: rgba(188, 255, 188, 0.7);
-  border: 2px solid #5b5;
+.side-button {
+  position:absolute;
+  top:4px;
+  left:50%;
+  margin-left:111px; // Start this far right of center
 }
