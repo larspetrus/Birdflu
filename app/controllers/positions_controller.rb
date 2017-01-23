@@ -2,10 +2,6 @@
 
 class PositionsController < ApplicationController
 
-  PREFS = OpenStruct.new(
-      use_combo_set: Rails.env.development?,
-  )
-
   # === Routed action ===
   def index
     get_prefs_from_params = (params.keys.map(&:to_sym) & Fields::ALL_DEFAULTS.keys).present? || !params[:udf].nil?

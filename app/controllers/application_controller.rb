@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
-  before_action :handle_wca_login
+  before_action :handle_wca_login, :allow_combos
   around_action :keep_track
 
   MAIN_NAME = 'Main'
@@ -20,7 +20,7 @@ class ApplicationController < ActionController::Base
     @position_set = cookies[:zbll] ?  'eo' : 'all'
     @list_format = ApplicationController.read_list_format(cookies)
 
-    @lb_sections = [MAIN_NAME, FAV_NAME] + (PositionsController::PREFS.use_combo_set ? [ALGSETS_NAME]: []) + [FMC_NAME]
+    @lb_sections = [MAIN_NAME, FAV_NAME] + (@show_combos ? [ALGSETS_NAME]: []) + [FMC_NAME]
     @lb_disabled = @login ? '' : FAV_NAME
   end
 
@@ -38,9 +38,14 @@ class ApplicationController < ActionController::Base
         session.delete(:wca_login)
       else
         sn = session[:wca_login]
-        @login = OpenStruct.new(name: sn['name'], db_id: sn['db_id'])
+        @login = OpenStruct.new(name: sn['name'], db_id: sn['db_id'], wca_id: sn['wca_id'])
       end
     end
+  end
+
+  def allow_combos
+    allowed_people = %w(1982PETR01)
+    @show_combos = Rails.env.development? || allowed_people.include?(@login&.wca_id)
   end
 
   def keep_track
