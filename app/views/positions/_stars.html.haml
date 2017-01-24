@@ -6,7 +6,7 @@
     .star3
     .star4
   -else
-    Log in to star algs.
+    Log in to favorite.
 
 #cstar-picker{style: 'display: none;'}
   -if @login
@@ -15,7 +15,7 @@
     .cstar3
     .cstar4
   -else
-    Log in to star algs.
+    Log in to favorite.
 
 =form_tag url_for(controller: 'galaxies', action: 'update_star'), method: 'post', id: 'star_form', remote: true do
   =hidden_field_tag(:starred_id)
