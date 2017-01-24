@@ -28,16 +28,19 @@
     %p
       = f.label :algs
     %p{style: 'margin: 0;'}
-      -fmt_algs(@algset).each do |line|
-        .small
-          =line
+      .mirrored-algs
+        =fmt_algs(@algset.algs)
     %p
       = f.label 'Add algs'
       = text_field_tag :add_algs, params[:add_algs]
       = f.label 'Remove algs'
       = text_field_tag :remove_algs, params[:remove_algs]
 
-
     %p
       = f.submit "Save changes", class: "knapp knapp-enabled knapp16", style: "font-weight: 700;"
       = link_to "Cancel", alg_sets_path, class: "knapp knapp-enabled knapp16", style: "font-weight: 700;"
+
+.combinables
+  All algs up to 10 moves can be added. The #{@kplus_algs.count} longer mirror pairs below also can. Others can be added if needed.
+  .mirrored-algs
+    =fmt_algs(@kplus_algs.join(' '))

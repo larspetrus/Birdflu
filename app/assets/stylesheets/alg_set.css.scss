@@ -57,7 +57,7 @@ $algset-header: linear-gradient(to bottom, #eb8 5%, #b83 100%);
     font-weight: 700;
   }
   p { margin: 10px 0 4px 0; }
-  .small { font-size: 10px; margin: 0 0 0 20px;}
+  .mirrored-algs { margin: 0 0 0 20px; }
 }
 
 .alg-set-form {
@@ -73,6 +73,22 @@ $algset-header: linear-gradient(to bottom, #eb8 5%, #b83 100%);
   font-size: 14px;
   background-color: #fee;
   ul { margin: 0; }
+}
+
+
+.combinables {
+  font-size: 12px;
+  margin-top: 18px;
+
+  border: 1px solid #888;
+  background-color: #eee;
+  padding: 4px;
+  .mirrored-algs { margin-top: 10px; }
+}
+
+.mirrored-algs {
+  font-size: 10px;
+  line-height: 1.4;
 }
 
 .side-button {

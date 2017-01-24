@@ -15,7 +15,7 @@ Rails.application.routes.draw do
 
   resources :alg_sets
   get 'alg_sets/compute/:ids', to: "alg_sets#compute"
-  get 'alg_sets/:id/algs', to: "alg_sets#algs"
+  get 'alg_sets/:id/algs', to: "alg_sets#algs", as: "mirrored_list"
 
   get 'hemlig', to: 'status#index'
   get 'fmc', to: 'fmc#index'

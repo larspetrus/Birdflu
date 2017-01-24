@@ -33,10 +33,13 @@ module AlgSetsHelper
     @@long_names[algset.subset]
   end
 
-  def fmt_algs(algset)
-    return ['(no algs)'] if algset.algs.empty?
+  def fmt_algs(algset_algs)
+    return '(no algs)' if algset_algs.empty?
 
-    algset.algs.sub("G", "|G").sub("H", "|H").sub("I", "|I").sub("J", "|J").sub("K", "|K").split('|')
+    algset_algs
+        .sub("G", "|G").sub("H", "|H").sub("I", "|I").sub("J", "|J").sub("K", "|K").sub("L", "|L").split('|')
+        .select{|x| x.present?}
+        .join('●● ')
   end
 
   def owner(algset)

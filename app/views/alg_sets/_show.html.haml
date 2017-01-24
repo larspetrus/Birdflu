@@ -15,9 +15,8 @@
   %tr
     %td Algs
     %td
-      -fmt_algs(@algset).each do |line|
-        .small
-          =line
+      .mirrored-algs
+        =fmt_algs(@algset.algs)
   %tr
     %td Coverage
     %td
