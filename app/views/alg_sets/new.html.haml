@@ -27,9 +27,13 @@
 
     %p
       = f.label :algs
+    %div{style: "font-size: 9px;"}
+      One alg name (H4 or H26) will be expanded to a mirrored pair (H4.H26). H4.H26 also works. See below for allowed algs.
     %p
       = f.text_area :algs, size: "80x4", class: 'form-control'
 
     %p
       = f.submit "Create", class: "knapp knapp-enabled knapp16", style: "font-weight: 700;"
       = link_to "Cancel", alg_sets_path, class: "knapp knapp-enabled knapp16", style: "font-weight: 700;"
+
+=render('mirror_fragment', fields: '#alg_set_algs')

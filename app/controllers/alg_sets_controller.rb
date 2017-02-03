@@ -46,7 +46,6 @@ class AlgSetsController < ApplicationController
   def edit
     setup_leftbar
     @algset = AlgSet.find(params[:id])
-    @kplus_algs = MirrorAlgs.all_names.select{|malg| malg.first > "J" && malg != "Nothing.--" }
     raise "Not allowed to edit Algset #{@algset.id}" unless can_change(@algset)
   end
 

@@ -77,13 +77,18 @@ $algset-header: linear-gradient(to bottom, #eb8 5%, #b83 100%);
 
 
 .combinables {
-  font-size: 12px;
-  margin-top: 18px;
+  font-size: 15px;
+  margin: 18px auto 0 auto;
+  text-align: center;
 
-  border: 1px solid #888;
-  background-color: #eee;
+  width: 90%;
+  border: 1px solid #aaa;
+  background-color: #f4f4f4;
   padding: 4px;
-  .mirrored-algs { margin-top: 10px; }
+  .mirrored-algs {
+    margin: 10px;
+    text-align: justify;
+  }
 }
 
 .mirrored-algs {

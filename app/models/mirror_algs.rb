@@ -41,6 +41,10 @@ class MirrorAlgs
     @all_names ||= self.all_combined.map(&:name)
   end
 
+  def self.k_plus_names
+    @k_plus_names ||= self.all_names.select{|malg| malg.first > "J" && malg != "Nothing.--" }
+  end
+
   def self.combined_name_for(alg_or_pair)
     @name_map ||= self.all_names.map{|aa| [[aa, aa]] + aa.split('.').map{|a| [a, aa]}}.reduce(&:+).reject{|pair| pair.first == '--'}.to_h
     @name_map[alg_or_pair.to_s.upcase]

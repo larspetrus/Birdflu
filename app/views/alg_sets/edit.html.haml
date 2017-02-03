@@ -40,7 +40,4 @@
       = f.submit "Save changes", class: "knapp knapp-enabled knapp16", style: "font-weight: 700;"
       = link_to "Cancel", alg_sets_path, class: "knapp knapp-enabled knapp16", style: "font-weight: 700;"
 
-.combinables
-  All algs up to 10 moves can be added. The #{@kplus_algs.count} longer mirror pairs below also can. Others can be added if needed.
-  .mirrored-algs
-    =fmt_algs(@kplus_algs.join(' '))
+=render('mirror_fragment', fields: '#add_algs,#remove_algs')
