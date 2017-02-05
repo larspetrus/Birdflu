@@ -11,6 +11,12 @@ module AlgSetsHelper
     "#{100 * algset.coverage/algset.subset_pos_ids.count}%"
   end
 
+  def fmt_uncovered(algset)
+    to_show = 16
+    and_more = algset.uncovered_ids.count > to_show ? " + #{algset.uncovered_ids.count - to_show} more" : ""
+    algset.uncovered_ids.first(to_show).map{|pos_id| link_to Position.find(pos_id).display_name, "positions/#{pos_id}" }.join(' ').html_safe + and_more
+  end
+
   def fmt_coverage_fraction(algset, parens = false)
     return '' if !algset.coverage || algset.full_coverage?
     parens_if("#{algset.coverage}/#{algset.subset_pos_ids.count}", parens)

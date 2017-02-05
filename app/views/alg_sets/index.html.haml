@@ -10,7 +10,6 @@
 
 %table{class: @list_classes}
   %tr
-    %th id
     %th name
     %th algs
     %th avg length
@@ -23,8 +22,6 @@
     %th
   - @all_sets.each do |algset|
     %tr
-      %td
-        =algset.id
       %td
         =algset.dropdown_name
       %td

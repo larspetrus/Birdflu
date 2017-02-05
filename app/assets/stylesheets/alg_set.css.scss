@@ -102,3 +102,8 @@ $algset-header: linear-gradient(to bottom, #eb8 5%, #b83 100%);
   left:50%;
   margin-left:111px; // Start this far right of center
 }
+
+.uncovered {
+  font-size: 80%;
+  a { color: blue !important; }
+}

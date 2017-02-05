@@ -21,6 +21,11 @@
     %td Coverage
     %td
       = fmt_coverage_percent(@algset) + ' ' + fmt_coverage_fraction(@algset, :parens)
+  -unless @algset.full_coverage?
+    %tr
+      %td Uncovered
+      %td.uncovered
+        = fmt_uncovered(@algset)
   %tr
     %td Owner
     %td
