@@ -22,17 +22,29 @@ class AlgSet < ActiveRecord::Base
     self.algs = self.algs.split(' ').uniq.sort.join(' ') # sort names
   end
 
-  attr_accessor :editable_by_this_user
+  attr_accessor :editable_by_this_user # TODO
 
   def self.make(algs:, name:, subset: 'all')
     algs = algs.join(' ') if algs.respond_to? :join
     AlgSet.create(subset: subset, name: name, algs: algs)
   end
 
-  CACHE_KEYS = [:coverage, :lengths, :speeds, :average_length, :average_speed]
+  def stats
+    @stats ||= AlgSetStats.new(self)
+  end
+
+  def save_with_stats
+    average_length
+    average_speed
+    coverage
+    uncovered_ids
+
+    save
+  end
 
   def computing_off
     @computing_off = true
+    @stats = OpenStruct.new() # returns nil for everything
     self
   end
 
@@ -56,48 +68,12 @@ class AlgSet < ActiveRecord::Base
     position.eo == '4' || subset == 'all'
   end
 
-  @@weights = {} # cache total weight per subset
-  def subset_weight
-    @@weights[subset] ||= pos_subset.sum(:weight)
-  end
-
   def include?(combo_alg)
     ids.include?(combo_alg.alg1_id) && ids.include?(combo_alg.alg2_id)
   end
 
-  def cache(key)
-    raise "Unknown cache key #{key}" unless CACHE_KEYS.include? key
-
-    if @computing_off
-      computed_data[key]
-    else
-      computed_data[key] ||= yield
-    end
-  end
-
-  def recompute_cache(keys = CACHE_KEYS)
-    # this ignores dependencies, so recomputing :lengths but not :average_length is probably wrong!
-    keys.each { |key| @computed_data.delete(key)}
-    save_cache
-  end
-
-  def save_cache
-    [:length, :speed].each { |measure| average(measure) }
-    coverage
-
-    uncomputed_keys = CACHE_KEYS - @computed_data.keys
-    raise "Uncomputed keys: #{uncomputed_keys}" if (uncomputed_keys).present?
-
-    self._cached_data = YAML.dump(@computed_data)
-    save
-  end
-
-  def computed
-    _cached_data.present?
-  end
-
-  def computed_data
-    @computed_data ||= (_cached_data ? YAML.load(_cached_data) : {})
+  def has_stats
+    _avg_length.present? && _avg_speed.present? && _coverage.present? && !_uncovered_ids.nil?
   end
 
   def ids
@@ -108,23 +84,23 @@ class AlgSet < ActiveRecord::Base
     algs.split(' ').map { |ma_name| MirrorAlgs.combined(ma_name) }
   end
 
-  def coverage
-    cache(:coverage) do
-      subset_pos_ids.count{|id| lengths[id].present? }
-    end
-  end
-
   def full_coverage?
     return nil unless coverage
     coverage == subset_pos_ids.count
   end
 
-  def uncovered_ids
-    @unc ||= subset_pos_ids.select{|id| lengths[id].nil? }
-  end
+  TOO_MANY_UNCOVERED = "(too many)"
 
-  def covered_weight
-    @cw ||= pos_subset.reduce(0.0) { |sum, pos| sum + (lengths[pos.id].nil? ? 0 : pos.weight)}
+  def uncovered_ids
+    return TOO_MANY_UNCOVERED if _uncovered_ids == TOO_MANY_UNCOVERED
+    return self._uncovered_ids.split(' ') unless _uncovered_ids.nil?
+
+    @actual_uncovered_ids ||= subset_pos_ids.select { |id| lengths[id].nil? }.map(&:to_i)
+    if @actual_uncovered_ids.count > 50
+      return self._uncovered_ids = TOO_MANY_UNCOVERED
+    end
+    self._uncovered_ids ||= @actual_uncovered_ids.join(' ')
+    @actual_uncovered_ids
   end
 
   def average(by_measure)
@@ -139,33 +115,23 @@ class AlgSet < ActiveRecord::Base
   end
 
   def lengths
-    cache(:lengths) do
-      Array.new(Position::MAX_REAL_ID + 1).tap do |result|
-        pos_subset.find_each { |pos| result[pos.id] = pos.algs_in_set(self, sortby: 'length', limit: 1).first&.length }
-        result[RawAlg::NOTHING_ID] = 0
-      end
-    end
+    stats.lengths
   end
 
   def average_length
-    cache(:average_length) do
-      pos_subset.reduce(0.0) { |sum, pos| sum + (self.lengths[pos.id] || 0)*pos.weight }/covered_weight
-    end
+    self._avg_length ||= stats.average_length
   end
 
   def speeds
-    cache(:speeds) do
-      Array.new(Position::MAX_REAL_ID + 1).tap do |result|
-        pos_subset.find_each{|pos| result[pos.id] = pos.algs_in_set(self, sortby: '_speed', limit: 1).first&.speed }
-        result[RawAlg::NOTHING_ID] = 0.0
-      end
-    end
+    stats.speeds
   end
 
   def average_speed
-    cache(:average_speed) do
-      pos_subset.reduce(0.0) { |sum, pos| sum + (self.speeds[pos.id] || 0)*pos.weight }/covered_weight
-    end
+    self._avg_speed ||= stats.average_speed
+  end
+
+  def coverage
+    self._coverage ||= stats.coverage
   end
 
   def dropdown_name

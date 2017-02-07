@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161224004906) do
+ActiveRecord::Schema.define(version: 20170205030533) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -26,6 +26,10 @@ ActiveRecord::Schema.define(version: 20161224004906) do
     t.datetime "updated_at"
     t.boolean  "predefined"
     t.integer  "wca_user_id"
+    t.float    "_avg_length"
+    t.float    "_avg_speed"
+    t.integer  "_coverage"
+    t.string   "_uncovered_ids"
   end
 
   create_table "combo_algs", force: :cascade do |t|

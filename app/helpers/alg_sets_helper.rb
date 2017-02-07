@@ -12,6 +12,8 @@ module AlgSetsHelper
   end
 
   def fmt_uncovered(algset)
+    return AlgSet::TOO_MANY_UNCOVERED if algset.uncovered_ids == AlgSet::TOO_MANY_UNCOVERED
+
     to_show = 16
     and_more = algset.uncovered_ids.count > to_show ? " + #{algset.uncovered_ids.count - to_show} more" : ""
     algset.uncovered_ids.first(to_show).map{|pos_id| link_to Position.find(pos_id).display_name, "positions/#{pos_id}" }.join(' ').html_safe + and_more

@@ -6,7 +6,7 @@ class AlgSetsController < ApplicationController
     @list_classes = "algset-list size-#{@text_size}"
     @all_sets = AlgSet.all.map(&:computing_off).sort_by {|as| [as.predefined ? 0 : 1, as.subset, as.algs.length] }
     @all_sets.each { |as| as.editable_by_this_user = can_change(as) }
-    @to_compute = @all_sets.reject(&:computed).map(&:id).join(',')
+    @to_compute = @all_sets.reject(&:has_stats).map(&:id).join(',')
   end
 
   def new
@@ -89,7 +89,7 @@ class AlgSetsController < ApplicationController
   end
 
   def compute
-    params[:ids].split(',').each { |id| AlgSet.find(id).save_cache }
+    params[:ids].split(',').each { |id| AlgSet.find(id).save_with_stats }
     render json: { success: :true }
   rescue  Exception => e
     render json: { error: e.message }
