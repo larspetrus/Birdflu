@@ -15,14 +15,13 @@ class AlgSet < ActiveRecord::Base
       errors.add(:algs, "'#{mirror_alg_name}' is not a valid mirrored alg pair") unless ma
       errors.add(:algs, "'Nothing' is not a real alg") if ma&.ids == [RawAlg::NOTHING_ID]
     end
-
   end
 
   before_validation do
     self.algs = self.algs.split(' ').uniq.sort.join(' ') # sort names
   end
 
-  attr_accessor :editable_by_this_user # TODO
+  attr_accessor :editable_by_this_user # Set by controller
 
   def self.make(algs:, name:, subset: 'all')
     algs = algs.join(' ') if algs.respond_to? :join
@@ -43,19 +42,15 @@ class AlgSet < ActiveRecord::Base
   end
 
   def computing_off
-    @computing_off = true
     @stats = OpenStruct.new() # returns nil for everything
     self
   end
 
   def pos_subset
     case subset
-      when 'all'
-        Position.real
-      when 'eo'
-        Position.real.where(eo: '4')
-      else
-        raise "Invalid subset '#{subset}'"
+      when 'all' then Position.real
+      when 'eo'  then Position.real.where(eo: '4')
+      else raise "Invalid subset '#{subset}'"
     end
   end
 

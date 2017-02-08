@@ -118,7 +118,7 @@ class AlgSetsController < ApplicationController
     end
 
     if errors.empty?
-      summary = (add_malgs.present? ? "Added #{add_malgs.join(', ')}" : "") +(remove_malgs.present? ? " Removed #{remove_malgs.join(', ')}" : "")
+      summary = (add_malgs.present? ? "Added "+add_malgs.join(', ') : "") + (remove_malgs.present? ? " Removed "+remove_malgs.join(', ') : "")
       return { replacement_algs: (old_malgs + add_malgs - remove_malgs).sort.join(' '), summary: summary }
     else
       errors.each { |error| algset.errors.add(:base, error)}
