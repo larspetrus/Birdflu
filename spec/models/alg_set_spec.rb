@@ -31,6 +31,10 @@ describe AlgSet do
     expect(AlgSet.make(algs: "F1.F3 F1.F3", name: "X").algs).to eq("F1.F3")
   end
 
+  it 'update_algs' do
+
+  end
+
   it 'ids' do
     expect(AlgSet.make(algs: "F1.F3 G1.G6", name: "X").ids).to eq([1, 6, 11, 30, 48])
     expect(AlgSet.make(algs: "F1.F3 J18.--", name: "X").ids).to eq([1, 6, 11, 215])
@@ -57,8 +61,8 @@ describe AlgSet do
     expect(eo_set.subset_for(eo_pos)).to eq(true)
     expect(eo_set.subset_for(non_eo_pos)).to eq(false)
   end
-  
-  it 'coverage methods' do
+
+  it 'stats' do
     as = AlgSet.make(algs: "fake", name: "fake")
 
     allow(as).to receive(:subset_pos_ids) { [1,2,3,4] }

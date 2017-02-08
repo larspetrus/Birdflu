@@ -56,15 +56,14 @@ class AlgSetsController < ApplicationController
 
     algs_result = AlgSetsController::alter_algs(@algset, params[:add_algs], params[:remove_algs])
     unless algs_result[:errors].present?
-      more_params = (algs_result[:new_algs] ? {algs: algs_result[:new_algs], _cached_data: nil} : {})
+      more_params = (algs_result[:replacement_algs] ? {algs: algs_result[:replacement_algs], _avg_length: nil, _avg_speed: nil, _coverage: nil, _uncovered_ids: nil} : {})
       @algset.update_attributes(algset_params(more_params))
     end
 
     if @algset.errors.blank?
-      flash[:success] = algs_result[:summary] ||  "Algset updated"
+      flash[:success] = algs_result[:summary] || "Algset updated"
       redirect_to alg_sets_path
     else
-      params[:alg_set][:add_algs] = params[:add_algs]
       render 'edit'
     end
   end
@@ -120,7 +119,7 @@ class AlgSetsController < ApplicationController
 
     if errors.empty?
       summary = (add_malgs.present? ? "Added #{add_malgs.join(', ')}" : "") +(remove_malgs.present? ? " Removed #{remove_malgs.join(', ')}" : "")
-      return { new_algs: (old_malgs + add_malgs - remove_malgs).sort.join(' '), summary: summary }
+      return { replacement_algs: (old_malgs + add_malgs - remove_malgs).sort.join(' '), summary: summary }
     else
       errors.each { |error| algset.errors.add(:base, error)}
       return { errors: algset.errors.full_messages}

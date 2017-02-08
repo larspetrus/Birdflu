@@ -22,7 +22,7 @@ RSpec.describe AlgSetsController do
     end
 
     it 'Add algs' do
-      expect(AlgSetsController::alter_algs(algset, "F1.F3 H4.H26", "")[:new_algs]).to eq("F1.F3 G1.G6 H4.H26 J18.--")
+      expect(AlgSetsController::alter_algs(algset, "F1.F3 H4.H26", "")[:replacement_algs]).to eq("F1.F3 G1.G6 H4.H26 J18.--")
     end
 
     it 'Add invalid alg' do
@@ -30,7 +30,7 @@ RSpec.describe AlgSetsController do
     end
 
     it 'Remove alg' do
-      expect(AlgSetsController::alter_algs(algset, "", "J18.--")[:new_algs]).to eq("G1.G6")
+      expect(AlgSetsController::alter_algs(algset, "", "J18.--")[:replacement_algs]).to eq("G1.G6")
     end
 
     it 'Remove alg not in set' do
@@ -42,15 +42,15 @@ RSpec.describe AlgSetsController do
     end
 
     it 'Both add and remove algs' do
-      expect(AlgSetsController::alter_algs(algset, "F1.F3", "J18.--")[:new_algs]).to eq("F1.F3 G1.G6")
+      expect(AlgSetsController::alter_algs(algset, "F1.F3", "J18.--")[:replacement_algs]).to eq("F1.F3 G1.G6")
     end
 
     it 'converts lower case' do
-      expect(AlgSetsController::alter_algs(algset, "f1.f3", "j18.--")[:new_algs]).to eq("F1.F3 G1.G6")
+      expect(AlgSetsController::alter_algs(algset, "f1.f3", "j18.--")[:replacement_algs]).to eq("F1.F3 G1.G6")
     end
 
     it 'expands single alg names' do
-      expect(AlgSetsController::alter_algs(algset, "F3", "J18")[:new_algs]).to eq("F1.F3 G1.G6")
+      expect(AlgSetsController::alter_algs(algset, "F3", "J18")[:replacement_algs]).to eq("F1.F3 G1.G6")
     end
   end
 

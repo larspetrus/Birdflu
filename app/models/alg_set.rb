@@ -95,7 +95,7 @@ class AlgSet < ActiveRecord::Base
     return TOO_MANY_UNCOVERED if _uncovered_ids == TOO_MANY_UNCOVERED
     return self._uncovered_ids.split(' ') unless _uncovered_ids.nil?
 
-    @actual_uncovered_ids ||= subset_pos_ids.select { |id| lengths[id].nil? }.map(&:to_i)
+    @actual_uncovered_ids ||= subset_pos_ids.select { |id| stats.lengths[id].nil? }.map(&:to_i)
     if @actual_uncovered_ids.count > 50
       return self._uncovered_ids = TOO_MANY_UNCOVERED
     end
@@ -114,16 +114,8 @@ class AlgSet < ActiveRecord::Base
     end
   end
 
-  def lengths
-    stats.lengths
-  end
-
   def average_length
     self._avg_length ||= stats.average_length
-  end
-
-  def speeds
-    stats.speeds
   end
 
   def average_speed

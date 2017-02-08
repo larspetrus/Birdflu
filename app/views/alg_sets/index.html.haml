@@ -51,8 +51,8 @@
 
 -if @to_compute.present?
   :javascript
+    console.log("Recomputing stats: /alg_sets/compute/#{@to_compute}");
     $.get("/alg_sets/compute/#{@to_compute}", function(data) {
-      console.log("Recomputing stats: /alg_sets/compute/#{@to_compute}");
       if (data.success) {
         location.reload();
       } else {
