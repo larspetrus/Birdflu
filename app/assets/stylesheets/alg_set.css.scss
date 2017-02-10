@@ -107,3 +107,16 @@ $algset-header: linear-gradient(to bottom, #eb8 5%, #b83 100%);
   font-size: 80%;
   a { color: blue !important; }
 }
+
+.spintext {
+  display: inline-block;
+
+  animation-name: spin47;
+  animation-duration: 4000ms;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+@keyframes spin47 {
+  from { transform:rotate(0deg); }
+  to { transform:rotate(360deg); }
+}

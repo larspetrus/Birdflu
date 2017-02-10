@@ -7,7 +7,7 @@ module AlgSetsHelper
   end
 
   def fmt_coverage_percent(algset)
-    return '--' unless algset.fact.coverage
+    return spinner unless algset.fact.coverage
     "#{100 * algset.fact.coverage/algset.subset_pos_ids.count}%"
   end
 
@@ -25,12 +25,12 @@ module AlgSetsHelper
   end
 
   def fmt_avg_length(algset)
-    return '--' unless algset.fact.average_length
+    return spinner unless algset.fact.average_length
     parens_if('%.3f' % (algset.fact.average_length || 0), ! algset.full_coverage?)
   end
 
   def fmt_avg_speed(algset)
-    return '--' unless algset.fact.average_speed
+    return spinner unless algset.fact.average_speed
     parens_if('%.3f' % (algset.fact.average_speed || 0), ! algset.full_coverage?)
   end
 
@@ -59,5 +59,9 @@ module AlgSetsHelper
   def parens_if(value, yes)
     p1, p2 = (yes ? ['(', ')'] : ['', ''])
     p1 + value + p2
+  end
+
+  def spinner
+    content_tag(:span, '--', class: 'spintext')
   end
 end

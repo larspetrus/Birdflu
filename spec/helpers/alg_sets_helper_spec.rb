@@ -4,7 +4,7 @@ describe AlgSetsHelper do
   let(:uncalculated_as) {AlgSet.make(algs: '').data_only}
 
   it 'fmt_coverage_percent' do
-    expect(helper.fmt_coverage_percent(uncalculated_as)).to eq('--')
+    expect(helper.fmt_coverage_percent(uncalculated_as)).to eq("<span class=\"spintext\">--</span>")
     expect(helper.fmt_coverage_percent(double(fact: double(coverage: 22), subset_pos_ids: 1..50.to_i))).to eq('44%')
   end
 
