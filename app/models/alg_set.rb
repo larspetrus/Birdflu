@@ -4,7 +4,6 @@ class AlgSet < ActiveRecord::Base
   ARE_WE_ADMIN = Rails.env.development?
 
   belongs_to :wca_user
-  # belongs_to :fact, class_name: AlgSetFact.name, foreign_key: 'alg_set_fact_id', autosave: true
 
   validates :name, presence: true
   validates_inclusion_of :subset, :in => %w(all eo)
@@ -22,20 +21,23 @@ class AlgSet < ActiveRecord::Base
     self.algs = self.algs.split(' ').uniq.sort.join(' ') # sort names
   end
 
-  after_save do
-    fact.save!
-  end
-
 
   attr_accessor :editable_by_this_user # Set by controller
 
-  def self.make(algs:, name:, subset: 'all')
+  def self.make(algs:, name: '--', subset: 'all')
     algs = algs.join(' ') if algs.respond_to? :join
     AlgSet.create(subset: subset, name: name, algs: algs)
   end
 
+  after_save do
+    fact.save!
+  end
+
   def fact
-    @fact ||= AlgSetFact.find_or_create_empty(self)
+    @fact ||= AlgSetFact.find_or_create_by!(algs_code: set_code).tap do |fact|
+      fact.alg_set = self
+      self.alg_set_fact_id = fact.id
+    end
   end
 
   def replace_algs(new_algs)
@@ -46,7 +48,7 @@ class AlgSet < ActiveRecord::Base
   end
 
   def set_code
-    (algs+' ').gsub(/\.\D[0-9\-]* /, '') + subset.first
+    (algs+' ').gsub(/\.\D[0-9\-]* /, '').strip + subset.first
   end
 
   def data_only
@@ -88,8 +90,8 @@ class AlgSet < ActiveRecord::Base
   end
 
   def full_coverage?
-    return nil unless coverage
-    coverage == subset_pos_ids.count
+    return nil unless fact.coverage
+    fact.coverage == subset_pos_ids.count
   end
 
   def uncovered_ids
@@ -102,22 +104,10 @@ class AlgSet < ActiveRecord::Base
 
   def average(by_measure)
     case by_measure.to_sym
-      when :speed  then self.average_speed
-      when :length then self.average_length
+      when :speed  then fact.average_speed
+      when :length then fact.average_length
       else raise "Unknown measure '#{by_measure}'"
     end
-  end
-
-  def average_length
-    fact.average_length
-  end
-
-  def average_speed
-    fact.average_speed
-  end
-
-  def coverage
-    fact.coverage
   end
 
   def dropdown_name

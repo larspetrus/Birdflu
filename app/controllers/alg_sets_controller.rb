@@ -20,8 +20,7 @@ class AlgSetsController < ApplicationController
     raise "Not allowed to create Algset" unless can_create
 
     setup_leftbar
-    more_params = @login ? {wca_user_id: @login.db_id} : {predefined: true}
-    @algset = AlgSet.new(algset_params(more_params))
+    @algset = AlgSet.new(algset_params(@login ? {wca_user_id: @login.db_id} : {predefined: true}))
     if @algset.save
       flash[:success] = "Alg set created"
       redirect_to alg_sets_path
@@ -82,8 +81,8 @@ class AlgSetsController < ApplicationController
   end
 
   def can_change(algset)
-    owned_by_user = @login&.db_id && (@login.db_id == algset.wca_user_id)
-    owned_by_user || AlgSet::ARE_WE_ADMIN
+    is_owned_by_user = @login&.db_id && (@login.db_id == algset.wca_user_id)
+    is_owned_by_user || AlgSet::ARE_WE_ADMIN
   end
 
   def compute

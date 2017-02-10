@@ -15,7 +15,7 @@ RSpec.describe AlgSetsController do
       end
     end
 
-    let(:algset) { AlgSet.make(algs: 'G1.G6 J18.--', name: 'X') }
+    let(:algset) { AlgSet.make(algs: 'G1.G6 J18.--') }
 
     it 'No change' do
       expect(AlgSetsController::alter_algs(algset, "", "")).to eq({})
@@ -63,16 +63,16 @@ RSpec.describe AlgSetsController do
     let (:algset) { AlgSet.create(name: "test", algs: "F1.F3", subset: "all") }
 
     it 'computes by default, and returns already cached data when compute is off' do
-      expect(algset.coverage).to eq(2)
+      expect(algset.fact.coverage).to eq(2)
 
       algset.data_only
 
-      expect(algset.coverage).to eq(2)
+      expect(algset.fact.coverage).to eq(2)
     end
 
     it 'respects computing_off' do
       algset.data_only
-      expect(algset.coverage).to eq(nil)
+      expect(algset.fact.coverage).to eq(nil)
     end
   end
 

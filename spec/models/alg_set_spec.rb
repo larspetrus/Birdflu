@@ -26,13 +26,13 @@ describe AlgSet do
 
 
   it 'algs' do
-    expect(AlgSet.make(algs: "F1.F3 G1.G6", name: "X").algs).to eq("F1.F3 G1.G6")
-    expect(AlgSet.make(algs: "G1.G6 F1.F3", name: "X").algs).to eq("F1.F3 G1.G6")
-    expect(AlgSet.make(algs: "F1.F3 F1.F3", name: "X").algs).to eq("F1.F3")
+    expect(AlgSet.make(algs: "F1.F3 G1.G6").algs).to eq("F1.F3 G1.G6")
+    expect(AlgSet.make(algs: "G1.G6 F1.F3").algs).to eq("F1.F3 G1.G6")
+    expect(AlgSet.make(algs: "F1.F3 F1.F3").algs).to eq("F1.F3")
   end
 
   it 'alg_set_fact' do
-    alg_set = AlgSet.make(algs: "F1.F3 G1.G6", name: "X")
+    alg_set = AlgSet.make(algs: "F1.F3 G1.G6")
     expect(alg_set.fact.algs_code).to eq(alg_set.set_code)
   end
 
@@ -40,7 +40,7 @@ describe AlgSet do
     alg_set_count = AlgSet.count
     alg_set_fact_count = AlgSetFact.count
 
-    AlgSet.make(algs: "F1.F3 G1.G6", name: "X").save!
+    AlgSet.make(algs: "F1.F3 G1.G6").save!
 
     expect(AlgSet.count).to eq(alg_set_count + 1)
     expect(AlgSetFact.count).to eq(alg_set_fact_count + 1)
@@ -59,19 +59,19 @@ describe AlgSet do
   end
 
   it 'set_code' do
-    expect(AlgSet.make(algs: "F1.F3 G1.G6 K1.K2", name: "X", subset: 'all').set_code).to eq("F1G1K1a")
-    expect(AlgSet.make(algs: "J18.-- K1.K2", name: "X", subset: 'eo').set_code).to eq("J18K1e")
-
+    expect(AlgSet.make(algs: "F1.F3 G1.G6 K1.K2", subset: 'all').set_code).to eq("F1G1K1a")
+    expect(AlgSet.make(algs: "J18.-- K1.K2", subset: 'eo').set_code).to eq("J18K1e")
+    expect(AlgSet.make(algs: "", subset: 'all').set_code).to eq("a")
   end
 
   it 'ids' do
-    expect(AlgSet.make(algs: "F1.F3 G1.G6", name: "X").ids).to eq([1, 6, 11, 30, 48])
-    expect(AlgSet.make(algs: "F1.F3 J18.--", name: "X").ids).to eq([1, 6, 11, 215])
-    expect(AlgSet.make(algs: "F1.F3 F1.F3 ", name: "X").ids).to eq([1, 6, 11])
+    expect(AlgSet.make(algs: "F1.F3 G1.G6").ids).to eq([1, 6, 11, 30, 48])
+    expect(AlgSet.make(algs: "F1.F3 J18.--").ids).to eq([1, 6, 11, 215])
+    expect(AlgSet.make(algs: "F1.F3 F1.F3 ").ids).to eq([1, 6, 11])
   end
 
   it 'include?' do
-    set = AlgSet.make(algs: 'F1.F3', name: "X")
+    set = AlgSet.make(algs: 'F1.F3')
 
     expect(set.include?(double(alg1_id: 6, alg2_id: 6))).to eq(true)
     expect(set.include?(double(alg1_id: 6, alg2_id: 7))).to eq(false)
@@ -79,8 +79,8 @@ describe AlgSet do
   end
 
   it 'subset_for' do
-    all_set = AlgSet.make(algs: 'F1', name: "all", subset: "all")
-    eo_set = AlgSet.make(algs: 'F1', name: "eo", subset: "eo")
+    all_set = AlgSet.make(algs: 'F1', subset: "all")
+    eo_set = AlgSet.make(algs: 'F1',subset: "eo")
 
     eo_pos = Position.find 1
     non_eo_pos = Position.find 2

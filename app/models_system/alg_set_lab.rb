@@ -8,7 +8,7 @@ class AlgSetLab
 
   def self.coverage(selected_malgs)
     ids = MirrorAlgs.raw_alg_ids_from(selected_malgs)
-    AlgSet.new(algs: ids.join(' '), subset: SUBSET).coverage
+    AlgSet.new(algs: ids.join(' '), subset: SUBSET).fact.coverage
   end
 
   def self.new_alg_set(mirror_alg_names)
@@ -101,7 +101,7 @@ class AlgSetLab
 
     baseline = new_alg_set(start_set_names)
     puts "---- Optimizing for #{measure} ----"
-    puts "Baseline: #{baseline.ids.size}, #{start_set_names.count} algs. Avg speed: #{baseline.average_speed}. Avg length: #{baseline.average_length}"
+    puts "Baseline: #{baseline.ids.size}, #{start_set_names.count} algs. Avg speed: #{baseline.fact.average_speed}. Avg length: #{baseline.fact.average_length}"
     puts "Current algs: #{start_set_names}"
 
     scores = []
