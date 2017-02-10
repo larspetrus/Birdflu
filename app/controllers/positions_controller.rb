@@ -36,7 +36,7 @@ class PositionsController < ApplicationController
           alg_set = AlgSet.find_by_id(@list_format.algset.to_i) # works even when id not in DB
 
           raw_algs = combo_raw_algs = []
-          combos_allowed = @only_position && alg_set.present? && alg_set.subset_for(@only_position)
+          combos_allowed = @only_position && alg_set.present? && alg_set.applies_to(@only_position)
 
           if (@list_format.combos != 'none') && combos_allowed
             combo_raw_algs = @only_position.algs_in_set(alg_set, sortby: @list_format.sortby, limit: @list_format.lines)

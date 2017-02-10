@@ -4,6 +4,7 @@ class AlgSet < ActiveRecord::Base
   ARE_WE_ADMIN = Rails.env.development?
 
   belongs_to :wca_user
+  # belongs_to :fact, class_name: AlgSetFact.name, foreign_key: 'alg_set_fact_id', autosave: true
 
   validates :name, presence: true
   validates_inclusion_of :subset, :in => %w(all eo)
@@ -21,6 +22,11 @@ class AlgSet < ActiveRecord::Base
     self.algs = self.algs.split(' ').uniq.sort.join(' ') # sort names
   end
 
+  after_save do
+    fact.save!
+  end
+
+
   attr_accessor :editable_by_this_user # Set by controller
 
   def self.make(algs:, name:, subset: 'all')
@@ -28,21 +34,23 @@ class AlgSet < ActiveRecord::Base
     AlgSet.create(subset: subset, name: name, algs: algs)
   end
 
-  def stats
-    @stats ||= AlgSetStats.new(self)
+  def fact
+    @fact ||= AlgSetFact.find_or_create_empty(self)
   end
 
-  def save_with_stats
-    average_length
-    average_speed
-    coverage
-    uncovered_ids
-
-    save
+  def replace_algs(new_algs)
+    self.algs = new_algs
+    self.alg_set_fact_id = nil
+    @fact = nil
+    self
   end
 
-  def computing_off
-    @stats = OpenStruct.new() # returns nil for everything
+  def set_code
+    (algs+' ').gsub(/\.\D[0-9\-]* /, '') + subset.first
+  end
+
+  def data_only
+    fact.data_only
     self
   end
 
@@ -59,7 +67,7 @@ class AlgSet < ActiveRecord::Base
     @@pos_ids[subset] ||= pos_subset.pluck(:id)
   end
 
-  def subset_for(position)
+  def applies_to(position)
     position.eo == '4' || subset == 'all'
   end
 
@@ -67,8 +75,8 @@ class AlgSet < ActiveRecord::Base
     ids.include?(combo_alg.alg1_id) && ids.include?(combo_alg.alg2_id)
   end
 
-  def has_stats
-    _avg_length.present? && _avg_speed.present? && _coverage.present? && !_uncovered_ids.nil?
+  def has_facts
+    fact.fully_computed?
   end
 
   def ids
@@ -84,41 +92,32 @@ class AlgSet < ActiveRecord::Base
     coverage == subset_pos_ids.count
   end
 
-  TOO_MANY_UNCOVERED = "(too many)"
-
   def uncovered_ids
-    return TOO_MANY_UNCOVERED if _uncovered_ids == TOO_MANY_UNCOVERED
-    return self._uncovered_ids.split(' ') unless _uncovered_ids.nil?
+    fact.uncovered_ids
+  end
 
-    @actual_uncovered_ids ||= subset_pos_ids.select { |id| stats.lengths[id].nil? }.map(&:to_i)
-    if @actual_uncovered_ids.count > 50
-      return self._uncovered_ids = TOO_MANY_UNCOVERED
-    end
-    self._uncovered_ids ||= @actual_uncovered_ids.join(' ')
-    @actual_uncovered_ids
+  def uncovered_ids_arr
+    fact.uncovered_ids.split(' ')
   end
 
   def average(by_measure)
     case by_measure.to_sym
-      when :speed
-        self.average_speed
-      when :length
-        self.average_length
-      else
-        raise "Unknown measure '#{by_measure}'"
+      when :speed  then self.average_speed
+      when :length then self.average_length
+      else raise "Unknown measure '#{by_measure}'"
     end
   end
 
   def average_length
-    self._avg_length ||= stats.average_length
+    fact.average_length
   end
 
   def average_speed
-    self._avg_speed ||= stats.average_speed
+    fact.average_speed
   end
 
   def coverage
-    self._coverage ||= stats.coverage
+    fact.coverage
   end
 
   def dropdown_name

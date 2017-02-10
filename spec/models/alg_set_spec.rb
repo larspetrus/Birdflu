@@ -31,7 +31,36 @@ describe AlgSet do
     expect(AlgSet.make(algs: "F1.F3 F1.F3", name: "X").algs).to eq("F1.F3")
   end
 
-  it 'update_algs' do
+  it 'alg_set_fact' do
+    alg_set = AlgSet.make(algs: "F1.F3 G1.G6", name: "X")
+    expect(alg_set.fact.algs_code).to eq(alg_set.set_code)
+  end
+
+  it 'saves .fact automatically on save' do
+    alg_set_count = AlgSet.count
+    alg_set_fact_count = AlgSetFact.count
+
+    AlgSet.make(algs: "F1.F3 G1.G6", name: "X").save!
+
+    expect(AlgSet.count).to eq(alg_set_count + 1)
+    expect(AlgSetFact.count).to eq(alg_set_fact_count + 1)
+  end
+
+  it 'replace_algs' do
+    algset = AlgSet.make(algs: "F1.F3 G1.G6", name: "X")
+    asfid1 = algset.fact.id
+    expect(algset.fact.algs_code).to eq('F1G1a')
+
+    algset.replace_algs("K1.K2")
+
+    expect(algset.fact.algs_code).to eq('K1a')
+    expect(algset.fact.id).not_to eq(asfid1)
+    expect(algset.name).to eq("X")
+  end
+
+  it 'set_code' do
+    expect(AlgSet.make(algs: "F1.F3 G1.G6 K1.K2", name: "X", subset: 'all').set_code).to eq("F1G1K1a")
+    expect(AlgSet.make(algs: "J18.-- K1.K2", name: "X", subset: 'eo').set_code).to eq("J18K1e")
 
   end
 
@@ -42,7 +71,7 @@ describe AlgSet do
   end
 
   it 'include?' do
-    set = AlgSet.new(algs: 'F1.F3')
+    set = AlgSet.make(algs: 'F1.F3', name: "X")
 
     expect(set.include?(double(alg1_id: 6, alg2_id: 6))).to eq(true)
     expect(set.include?(double(alg1_id: 6, alg2_id: 7))).to eq(false)
@@ -56,25 +85,10 @@ describe AlgSet do
     eo_pos = Position.find 1
     non_eo_pos = Position.find 2
 
-    expect(all_set.subset_for(eo_pos)).to eq(true)
-    expect(all_set.subset_for(non_eo_pos)).to eq(true)
-    expect(eo_set.subset_for(eo_pos)).to eq(true)
-    expect(eo_set.subset_for(non_eo_pos)).to eq(false)
-  end
-
-  it 'stats' do
-    as = AlgSet.make(algs: "fake", name: "fake")
-
-    allow(as).to receive(:subset_pos_ids) { [1,2,3,4] }
-    allow(as.stats).to receive(:lengths) { ['-', 9,12,nil,9] }
-    allow(as.stats).to receive(:speeds) { ['-', 7.77,11.11,nil,9.99] }
-
-    expect(as.coverage).to eq(3)
-    expect(as.uncovered_ids).to eq([3])
-    expect(as.full_coverage?).to eq(false)
-    expect(as.stats.covered_weight).to eq(6)
-    expect(as.average_length).to eq(11.0)
-    expect(as.average_speed).to be_within(0.01).of(10.37)
+    expect(all_set.applies_to(eo_pos)).to eq(true)
+    expect(all_set.applies_to(non_eo_pos)).to eq(true)
+    expect(eo_set.applies_to(eo_pos)).to eq(true)
+    expect(eo_set.applies_to(non_eo_pos)).to eq(false)
   end
 end
 

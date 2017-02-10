@@ -12,11 +12,11 @@ module AlgSetsHelper
   end
 
   def fmt_uncovered(algset)
-    return AlgSet::TOO_MANY_UNCOVERED if algset.uncovered_ids == AlgSet::TOO_MANY_UNCOVERED
+    return AlgSetFact::TOO_MANY_UNCOVERED if algset.uncovered_ids == AlgSetFact::TOO_MANY_UNCOVERED
 
     to_show = 16
-    and_more = algset.uncovered_ids.count > to_show ? " + #{algset.uncovered_ids.count - to_show} more" : ""
-    algset.uncovered_ids.first(to_show).map{|pos_id| link_to Position.find(pos_id).display_name, "positions/#{pos_id}" }.join(' ').html_safe + and_more
+    and_more = algset.uncovered_ids_arr.count > to_show ? " + #{algset.uncovered_ids_arr.count - to_show} more" : ""
+    algset.uncovered_ids_arr.first(to_show).map{|pos_id| link_to Position.find(pos_id).display_name, "positions/#{pos_id}" }.join(' ').html_safe + and_more
   end
 
   def fmt_coverage_fraction(algset, parens = false)
@@ -25,10 +25,12 @@ module AlgSetsHelper
   end
 
   def fmt_avg_length(algset)
+    return '--' unless algset.average_length
     parens_if('%.3f' % (algset.average_length || 0), ! algset.full_coverage?)
   end
 
   def fmt_avg_speed(algset)
+    return '--' unless algset.average_speed
     parens_if('%.3f' % (algset.average_speed || 0), ! algset.full_coverage?)
   end
 

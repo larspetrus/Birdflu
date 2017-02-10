@@ -4,9 +4,9 @@ class AlgSetsController < ApplicationController
   def index
     setup_leftbar
     @list_classes = "algset-list size-#{@text_size}"
-    @all_sets = AlgSet.all.map(&:computing_off).sort_by {|as| [as.predefined ? 0 : 1, as.subset, as.algs.length] }
+    @all_sets = AlgSet.all.map(&:data_only).sort_by {|as| [as.predefined ? 0 : 1, as.subset, as.algs.length] }
     @all_sets.each { |as| as.editable_by_this_user = can_change(as) }
-    @to_compute = @all_sets.reject(&:has_stats).map(&:id).join(',')
+    @to_compute = @all_sets.reject(&:has_facts).map(&:id).join(',')
   end
 
   def new
@@ -23,7 +23,7 @@ class AlgSetsController < ApplicationController
     more_params = @login ? {wca_user_id: @login.db_id} : {predefined: true}
     @algset = AlgSet.new(algset_params(more_params))
     if @algset.save
-      flash[:success] = "Alg set created!"
+      flash[:success] = "Alg set created"
       redirect_to alg_sets_path
     else
       render new_alg_set_path
@@ -40,7 +40,7 @@ class AlgSetsController < ApplicationController
   end
 
   def show
-    @algset = AlgSet.find(params[:id]).computing_off
+    @algset = AlgSet.find(params[:id]).data_only
   end
 
   def edit
@@ -51,17 +51,16 @@ class AlgSetsController < ApplicationController
 
   def update
     setup_leftbar
-    @algset = AlgSet.find(params[:id]).computing_off
+    @algset = AlgSet.find(params[:id]).data_only
     raise "Not allowed to update Algset #{@algset.id}" unless can_change(@algset)
 
-    algs_result = AlgSetsController::alter_algs(@algset, params[:add_algs], params[:remove_algs])
-    unless algs_result[:errors].present?
-      more_params = (algs_result[:replacement_algs] ? {algs: algs_result[:replacement_algs], _avg_length: nil, _avg_speed: nil, _coverage: nil, _uncovered_ids: nil} : {})
-      @algset.update_attributes(algset_params(more_params))
+    alterations = AlgSetsController::alter_algs(@algset, params[:add_algs], params[:remove_algs])
+    if alterations[:replacement_algs]
+      @algset.replace_algs(alterations[:replacement_algs]).save!
     end
 
     if @algset.errors.blank?
-      flash[:success] = algs_result[:summary] || "Algset updated"
+      flash[:success] = alterations[:summary] || "Algset updated"
       redirect_to alg_sets_path
     else
       render 'edit'
@@ -88,7 +87,7 @@ class AlgSetsController < ApplicationController
   end
 
   def compute
-    params[:ids].split(',').each { |id| AlgSet.find(id).save_with_stats }
+    params[:ids].split(',').each { |id| AlgSet.find(id).fact.compute.save! }
     render json: { success: :true }
   rescue  Exception => e
     render json: { error: e.message }

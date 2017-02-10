@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe AlgSetsHelper do
-  let(:uncalculated_as) {AlgSet.make(algs: '', name: 'no').computing_off}
+  let(:uncalculated_as) {AlgSet.make(algs: '', name: 'no').data_only}
 
   it 'fmt_coverage_percent' do
     expect(helper.fmt_coverage_percent(uncalculated_as)).to eq('--')

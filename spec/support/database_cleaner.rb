@@ -20,4 +20,9 @@ RSpec.configure do |config|
     DatabaseCleaner.clean
   end
 
+  # Reset class level @-caches
+  config.after(:each) do
+    MirrorAlgs.instance_variable_set(:@combined_data, nil)
+  end
+
 end

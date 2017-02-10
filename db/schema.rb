@@ -11,25 +11,31 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170205030533) do
+ActiveRecord::Schema.define(version: 20170210054718) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "alg_set_facts", force: :cascade do |t|
+    t.string  "algs_code"
+    t.float   "_avg_length"
+    t.float   "_avg_speed"
+    t.integer "_coverage"
+    t.string  "_uncovered_ids"
+  end
+
+  add_index "alg_set_facts", ["algs_code"], name: "index_alg_set_facts_on_algs_code", using: :btree
+
   create_table "alg_sets", force: :cascade do |t|
     t.string   "name"
     t.string   "algs"
-    t.string   "_cached_data"
     t.string   "subset"
     t.string   "description"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "predefined"
     t.integer  "wca_user_id"
-    t.float    "_avg_length"
-    t.float    "_avg_speed"
-    t.integer  "_coverage"
-    t.string   "_uncovered_ids"
+    t.integer  "alg_set_fact_id"
   end
 
   create_table "combo_algs", force: :cascade do |t|
