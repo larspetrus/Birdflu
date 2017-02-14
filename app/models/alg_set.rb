@@ -18,18 +18,19 @@ class AlgSet < ActiveRecord::Base
   end
 
   before_validation do
+    self.algs ||= ''
     self.algs = self.algs.split(' ').uniq.sort.join(' ') # sort names
   end
 
 
   attr_accessor :editable_by_this_user # Set by controller
 
-  def self.make(algs:, name: '--', subset: 'all')
+  def self.make(algs: nil, name: '--', subset: 'all')
     algs = algs.join(' ') if algs.respond_to? :join
-    AlgSet.create(subset: subset, name: name, algs: algs)
+    AlgSet.create!(subset: subset, name: name, algs: algs)
   end
 
-  after_save do
+  before_save do
     fact.save!
   end
 

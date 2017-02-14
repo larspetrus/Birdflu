@@ -1,12 +1,12 @@
 require 'rails_helper'
 
 describe Galaxy do
-    let(:g1) { Galaxy.create(wca_user_id: 909, style: 9, starred_type: 'raw_alg') }
+  let(:g1) { Galaxy.create!(wca_user_id: 909, style: 9, starred_type: 'raw_alg') }
 
   before(:each) do
-    g1.stars.create(starred_id: 5)
-    g1.stars.create(starred_id: 25)
-    g1.stars.create(starred_id: 625)
+    g1.stars.create!(starred_id: 5)
+    g1.stars.create!(starred_id: 25)
+    g1.stars.create!(starred_id: 625)
   end
 
   describe 'construction' do
@@ -15,7 +15,7 @@ describe Galaxy do
       expect(g1.style).to eq(9)
       expect(g1.alg_ids).to eq([5, 25, 625])
 
-      g2 = Galaxy.create(wca_user_id: 909, style: 9)
+      g2 = Galaxy.create!(wca_user_id: 404, style: 4, starred_type: 'combo_alg')
       expect(g2.alg_ids).to eq([])
     end
 

@@ -11,7 +11,7 @@ class ComboAlg < ActiveRecord::Base
   def self.construct(alg1, alg2, alg2_shift, combined_alg, cancel_count, merge_count)
     encoded_data = 100*alg2_shift + 10*cancel_count + merge_count
 
-    ComboAlg.create(alg1: alg1, alg2: alg2, combined_alg: combined_alg, position_id: combined_alg.position_id, encoded_data: encoded_data)
+    ComboAlg.create!(alg1: alg1, alg2: alg2, combined_alg: combined_alg, position_id: combined_alg.position_id, encoded_data: encoded_data)
   end
 
   def self.make(a1, a2, u_shift)

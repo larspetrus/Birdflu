@@ -91,7 +91,7 @@ class BigThought
 
       end
     end
-    found_positions.each { |code, weight| Position.create(ll_code: code, weight: weight) }
+    found_positions.each { |code, weight| Position.create!(ll_code: code, weight: weight) }
 
     BigThought.create_pov_positions
     Position.update_each do |pos|
@@ -108,7 +108,7 @@ class BigThought
         ms = LlCode.filter_names(llc)
         missing_pos = !(ms[:cop] == LlCode::NON_STANDARD_COP || Position.exists?(cop: ms[:cop], eo: ms[:eo], ep: ms[:ep]))
         if missing_pos
-          Position.create(ll_code: llc, main_position_id: pos.id, pov_offset: 4-i)
+          Position.create!(ll_code: llc, main_position_id: pos.id, pov_offset: 4-i)
         end
       end
     end

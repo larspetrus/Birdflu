@@ -14,14 +14,14 @@ describe AlgSet do
   end
 
   it 'validation' do
-    expect_validation(AlgSet.make(algs: "F1.F3 G1.G6", name: "X"))
+    expect_validation(AlgSet.new(algs: "F1.F3 G1.G6", name: "X", subset: 'eo'))
 
-    expect_validation(AlgSet.make(algs: "F1.F3", name: ""), :name, ["can't be blank"])
+    expect_validation(AlgSet.new(algs: "F1.F3", name: "", subset: 'eo'), :name, ["can't be blank"])
 
-    expect_validation(AlgSet.make(algs: "F1.F3", name: "X", subset: "xyz"), :subset, ["is not included in the list"])
+    expect_validation(AlgSet.new(algs: "F1.F3", name: "X", subset: "xyz"), :subset, ["is not included in the list"])
 
-    expect_validation(AlgSet.make(algs: "K1.K2", name: "X"), :algs, ["'K1.K2' is not a valid mirrored alg pair"])
-    expect_validation(AlgSet.make(algs: "Nothing.--", name: "X"), :algs, ["'Nothing' is not a real alg"])
+    expect_validation(AlgSet.new(algs: "K1.K2", name: "X", subset: 'eo'), :algs, ["'K1.K2' is not a valid mirrored alg pair"])
+    expect_validation(AlgSet.new(algs: "Nothing.--", name: "X", subset: 'eo'), :algs, ["'Nothing' is not a real alg"])
   end
 
 
@@ -46,6 +46,20 @@ describe AlgSet do
     expect(AlgSetFact.count).to eq(alg_set_fact_count + 1)
   end
 
+  it "alg_set_fact_id is set and updated" do
+    as1 = AlgSet.create!(name: "test", algs: "F1.F3", subset: "all")
+    as2 = AlgSet.create!(name: "test", algs: "F1.F3 G1.G6", subset: "all")
+    as3 = AlgSet.create!(name: "test", algs: "F1.F3", subset: "all")
+
+    expect(as1.alg_set_fact_id).to eq(as1.fact.id)
+    expect(as2.reload.alg_set_fact_id).to eq(as2.fact.id)
+    expect(as3.alg_set_fact_id).to eq(as1.alg_set_fact_id)
+
+    as3.replace_algs("F1.F3 G1.G6").save!
+
+    expect(as3.alg_set_fact_id).to eq(as2.alg_set_fact_id)
+  end
+
   it 'replace_algs' do
     algset = AlgSet.make(algs: "F1.F3 G1.G6", name: "X")
     asfid1 = algset.fact.id
@@ -59,8 +73,8 @@ describe AlgSet do
   end
 
   it 'set_code' do
-    expect(AlgSet.make(algs: "F1.F3 G1.G6 K1.K2", subset: 'all').set_code).to eq("F1G1K1a")
-    expect(AlgSet.make(algs: "J18.-- K1.K2", subset: 'eo').set_code).to eq("J18K1e")
+    expect(AlgSet.make(algs: "F1.F3 G1.G6", subset: 'all').set_code).to eq("F1G1a")
+    expect(AlgSet.make(algs: "G1.G6 J18.--", subset: 'eo').set_code).to eq("G1J18e")
     expect(AlgSet.make(algs: "", subset: 'all').set_code).to eq("a")
   end
 
@@ -68,6 +82,8 @@ describe AlgSet do
     expect(AlgSet.make(algs: "F1.F3 G1.G6").ids).to eq([1, 6, 11, 30, 48])
     expect(AlgSet.make(algs: "F1.F3 J18.--").ids).to eq([1, 6, 11, 215])
     expect(AlgSet.make(algs: "F1.F3 F1.F3 ").ids).to eq([1, 6, 11])
+    expect(AlgSet.make(algs: "").ids).to eq([1])
+    expect(AlgSet.make().ids).to eq([1])
   end
 
   it 'include?' do
@@ -79,16 +95,38 @@ describe AlgSet do
   end
 
   it 'subset_for' do
-    all_set = AlgSet.make(algs: 'F1', subset: "all")
-    eo_set = AlgSet.make(algs: 'F1',subset: "eo")
+    all_set = AlgSet.make(subset: "all")
+    eo_set = AlgSet.make(subset: "eo")
 
-    eo_pos = Position.find 1
-    non_eo_pos = Position.find 2
+    eo_pos = Position.find(1)
+    non_eo_pos = Position.find(2)
 
     expect(all_set.applies_to(eo_pos)).to eq(true)
     expect(all_set.applies_to(non_eo_pos)).to eq(true)
     expect(eo_set.applies_to(eo_pos)).to eq(true)
     expect(eo_set.applies_to(non_eo_pos)).to eq(false)
+  end
+
+  describe 'data_only' do
+    before(:each) do
+      allow(algset).to receive(:subset_pos_ids) { [0,1,2]}
+      allow(algset.fact).to receive(:lengths) { [12, 14, nil]}
+    end
+
+    let (:algset) { AlgSet.create!(name: "test", algs: "F1.F3", subset: "all") }
+
+    it 'computes by default, and returns already cached data when compute is off' do
+      expect(algset.fact.coverage).to eq(2)
+
+      algset.data_only
+
+      expect(algset.fact.coverage).to eq(2)
+    end
+
+    it 'respects computing_off' do
+      algset.data_only
+      expect(algset.fact.coverage).to eq(nil)
+    end
   end
 end
 

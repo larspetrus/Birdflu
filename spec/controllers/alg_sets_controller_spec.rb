@@ -54,26 +54,4 @@ RSpec.describe AlgSetsController do
     end
   end
 
-  describe 'computing_off' do
-    before(:each) do
-      allow(algset).to receive(:subset_pos_ids) { [0,1,2]}
-      allow(algset.fact).to receive(:lengths) { [12, 14, nil]}
-    end
-
-    let (:algset) { AlgSet.create(name: "test", algs: "F1.F3", subset: "all") }
-
-    it 'computes by default, and returns already cached data when compute is off' do
-      expect(algset.fact.coverage).to eq(2)
-
-      algset.data_only
-
-      expect(algset.fact.coverage).to eq(2)
-    end
-
-    it 'respects computing_off' do
-      algset.data_only
-      expect(algset.fact.coverage).to eq(nil)
-    end
-  end
-
 end

@@ -4,7 +4,7 @@ class PositionStats < ActiveRecord::Base
   belongs_to :position
 
   def self.make(position_id, stats)
-    PositionStats.create(position_id: position_id, marshaled_stats: YAML.dump(stats))
+    PositionStats.create!(position_id: position_id, marshaled_stats: YAML.dump(stats))
   end
 
   def self.generate_all()

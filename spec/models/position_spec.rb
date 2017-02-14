@@ -12,7 +12,7 @@ RSpec.describe Position, :type => :model do
   end
 
   it "ll_code uniqueness" do
-    expect(Position.create(ll_code: Position.find(1).ll_code)).not_to be_valid
+    expect(Position.new(ll_code: Position.find(1).ll_code)).not_to be_valid
  end
 
   it "pov_variant_in" do
@@ -44,7 +44,7 @@ RSpec.describe Position, :type => :model do
   end
 
   it '#set_x_name' do
-    messy = Position.create(ll_code: 'a4c5c1c4', cop: 'none')
+    messy = Position.new(ll_code: 'a4c5c1c4', cop: 'none')
 
     messy.set_filter_names
     expect(messy.cop).to eq('Bo')
