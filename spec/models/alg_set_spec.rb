@@ -128,6 +128,24 @@ describe AlgSet do
       expect(algset.fact.coverage).to eq(nil)
     end
   end
+
+  it 'exports/imports YAML data' do
+    WcaUser.create!(id: 78, wca_db_id: 313, wca_id: '1982PETR01', full_name: "Lars Testrus")
+
+    as1 = AlgSet.create!(algs: "F1.F3 G1.G6",  name: "Olivia", subset: 'all', description: "I'm normal", predefined: true)
+    as2 = AlgSet.create!(algs: "F1.F3 J18.--", name: "Spooon", subset: 'eo',  description: "чат™½➢★閉討", predefined: false)
+
+    yas1 = AlgSet.from_yaml(as1.to_yaml)
+    expect(yas1.to_yaml).to eq(as1.to_yaml)
+
+    yas2 = AlgSet.from_yaml(as2.to_yaml)
+    expect(yas2.to_yaml).to eq(as2.to_yaml)
+
+    expect(as1.alg_set_fact_id).to eq(yas1.alg_set_fact_id)
+    expect(as2.alg_set_fact_id).to eq(yas2.alg_set_fact_id)
+
+    expect([as1, as2, yas1, yas2].map(&:wca_user_id)).to eq([nil, nil, nil, 78])
+  end
 end
 
 def expect_validation(new_algset, field = nil, errors = nil)

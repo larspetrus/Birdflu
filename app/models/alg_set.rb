@@ -116,6 +116,23 @@ class AlgSet < ActiveRecord::Base
     subset + dash + name
   end
 
+  # This is to move AlgSets between dev and prod
+  def to_yaml
+    excluded_columns = %w(id created_at updated_at wca_user_id alg_set_fact_id)
+    values = attributes.delete_if { |key, value| excluded_columns.include?(key) }
+
+    # AlgSets made here are either predefined or owned by Lars.
+    unless values['predefined']
+      values['wca_user_id'] = WcaUser.find_by!(wca_id: '1982PETR01').id
+    end
+
+    YAML.dump(values)
+  end
+
+  def self.from_yaml(yaml_string)
+    create!(YAML.load(yaml_string))
+  end
+
   def to_s
     "AlgSet #{id}: '#{name}' (#{subset})"
   end
