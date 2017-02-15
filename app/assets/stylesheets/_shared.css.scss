@@ -22,7 +22,7 @@ $cube_white: #eee;
   a:visited { color: blue }
 
   .pick-icon {
-    cursor: url('zoom.png') 14 12, zoom-in;
+    cursor: image-url('zoom.png') 14 12, zoom-in;
 
     transition: all .2s ease-in-out;
     transition-delay: 0.5s;
