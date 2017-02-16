@@ -166,8 +166,8 @@ class AlgSetLab
   end
 
   def self.duration_to_s(total_seconds)
-    hours = (total_seconds / 3600).round
-    minutes = (total_seconds.round % 3600)/60
+    hours = (total_seconds / 3600).floor
+    minutes = ((total_seconds % 3600)/60).floor
     seconds = total_seconds % 60
 
     decimals = total_seconds < 10 ? '%.4f' : '%.2f'
