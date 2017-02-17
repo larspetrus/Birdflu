@@ -20,6 +20,8 @@ class AlgSetsController < ApplicationController
     raise "Not allowed to create Algset" unless can_create
 
     setup_leftbar
+
+    params[:alg_set][:algs] = params[:alg_set][:algs].split(' ').map{|alg| MirrorAlgs.combined_name_for(alg) || alg}.join(' ')
     @algset = AlgSet.new(algset_params(@login ? {wca_user_id: @login.db_id} : {predefined: true}))
     if @algset.save
       flash[:success] = "Alg set created"

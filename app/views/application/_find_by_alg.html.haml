@@ -29,6 +29,10 @@
   });
 
   $('#alg').keyup(function(event) {
+     var start = this.selectionStart, end = this.selectionEnd;
+
     $(this).val( $(this).val().toUpperCase() );
+
+    this.setSelectionRange(start, end);
     event.stopPropagation(); // Stop Roofpig from stealing key events
   });
