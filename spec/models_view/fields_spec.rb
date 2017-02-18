@@ -55,4 +55,46 @@ RSpec.describe 'Fields' do
     expect(Fields::JQUERY_SELECTOR).to eq("#list, #lines, #sortby, #algset, #combos")
   end
 
+
+  describe 'Cookies' do
+    it 'read_user_prefs' do
+      missing_cookie = {}
+      expect(Fields.read_list_format(missing_cookie).to_h).to eq(Fields::ALL_DEFAULTS)
+
+      invalid_cookie = {field_values: ''}
+      expect(Fields.read_list_format(invalid_cookie).to_h).to eq(Fields::ALL_DEFAULTS)
+
+      fully_defined = {field_values: JSON.generate(list: "algs", lines: "100", sortby: "length", algset: "101")}
+      expect(Fields.read_list_format(fully_defined).to_h)
+          .to eq(:list=>"algs", :lines=>"100", :sortby=>"length", :algset=>"101", combos: "none")
+
+      partially_defined = {field_values: JSON.generate(algset: "101")}
+      expect(Fields.read_list_format(partially_defined).to_h)
+          .to eq(:list=>"positions", :lines=>"25", :sortby=>"_speed", :algset=>"101", combos: "none")
+
+      unknown_property = {field_values: JSON.generate(algset: "102", extra_key: 'Sparta!')}
+      expect(Fields.read_list_format(unknown_property).to_h)
+          .to eq(:list=>"positions", :lines=>"25", :sortby=>"_speed", :algset=>"102", combos: "none")
+
+      invalid_value = {field_values: JSON.generate(lines: "37")}
+      expect(Fields.read_list_format(invalid_value).to_h)
+          .to eq(list: "positions", lines: "25", sortby: "_speed", algset: "0", combos: "none")
+    end
+
+    def mockies
+      def (mock_cookies = {}).permanent; self end # add a "permanent" function to the hash
+      mock_cookies
+    end
+
+    it 'store_user_prefs' do
+      Fields.store_list_format(cookies = mockies, {lines: '50', algset: '101'}.with_indifferent_access)
+      expect(cookies[:field_values]).to eq(JSON.generate(lines: '50', algset: '101'))
+
+      Fields.store_list_format(cookies = mockies, {'lines' => '50', 'algset' => '101'}.with_indifferent_access)
+      expect(cookies[:field_values]).to eq(JSON.generate(lines: '50', algset: '101'))
+
+      Fields.store_list_format(cookies = mockies, {lines: '25', algset: '102', extra_key: 'Mango'}.with_indifferent_access)
+      expect(cookies[:field_values]).to eq(JSON.generate(lines: '25', algset: '102'))
+    end
+  end
 end

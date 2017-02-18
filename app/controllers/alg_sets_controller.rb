@@ -24,6 +24,7 @@ class AlgSetsController < ApplicationController
     params[:alg_set][:algs] = params[:alg_set][:algs].split(' ').map{|alg| MirrorAlgs.combined_name_for(alg) || alg}.join(' ')
     @algset = AlgSet.new(algset_params(@login ? {wca_user_id: @login.db_id} : {predefined: true}))
     if @algset.save
+      activate(@algset)
       flash[:success] = "Alg set created"
       redirect_to alg_sets_path
     else
@@ -61,6 +62,7 @@ class AlgSetsController < ApplicationController
     end
 
     if @algset.errors.blank?
+      activate(@algset)
       flash[:success] = alterations[:summary] || "Algset updated"
       redirect_to alg_sets_path
     else
@@ -92,6 +94,13 @@ class AlgSetsController < ApplicationController
     render json: { success: :true }
   rescue  Exception => e
     render json: { error: e.message }
+  end
+
+  def activate(alg_set)
+    @list_format.combos = 'merge' if @list_format.combos == 'none'
+    @list_format.algset = alg_set.id
+
+    Fields.store_list_format(cookies, @list_format.to_h)
   end
 
   def algset_params(more_params = {})

@@ -2,45 +2,6 @@ require 'rails_helper'
 
 RSpec.describe PositionsController do
 
-  it 'read_user_prefs' do
-    missing_cookie = {}
-    expect(ApplicationController.read_list_format(missing_cookie).to_h).to eq(Fields::ALL_DEFAULTS)
-
-    invalid_cookie = {field_values: ''}
-    expect(ApplicationController.read_list_format(invalid_cookie).to_h).to eq(Fields::ALL_DEFAULTS)
-
-    fully_defined = {field_values: JSON.generate(list: "algs", lines: "100", sortby: "length", algset: "101")}
-    expect(ApplicationController.read_list_format(fully_defined).to_h)
-        .to eq(:list=>"algs", :lines=>"100", :sortby=>"length", :algset=>"101", combos: "none")
-
-    partially_defined = {field_values: JSON.generate(algset: "101")}
-    expect(ApplicationController.read_list_format(partially_defined).to_h)
-        .to eq(:list=>"positions", :lines=>"25", :sortby=>"_speed", :algset=>"101", combos: "none")
-
-    unknown_property = {field_values: JSON.generate(algset: "102", extra_key: 'Sparta!')}
-    expect(ApplicationController.read_list_format(unknown_property).to_h)
-        .to eq(:list=>"positions", :lines=>"25", :sortby=>"_speed", :algset=>"102", combos: "none")
-
-    invalid_value = {field_values: JSON.generate(lines: "37")}
-    expect(ApplicationController.read_list_format(invalid_value).to_h)
-        .to eq(list: "positions", lines: "25", sortby: "_speed", algset: "0", combos: "none")
-  end
-
-  def mockies
-    def (mock_cookies = {}).permanent; self end
-    mock_cookies
-  end
-  it 'store_user_prefs' do
-    PositionsController.store_list_format(cookies = mockies, {lines: '50', algset: '101'}.with_indifferent_access)
-    expect(cookies[:field_values]).to eq(JSON.generate(lines: '50', algset: '101'))
-
-    PositionsController.store_list_format(cookies = mockies, {'lines' => '50', 'algset' => '101'}.with_indifferent_access)
-    expect(cookies[:field_values]).to eq(JSON.generate(lines: '50', algset: '101'))
-
-    PositionsController.store_list_format(cookies = mockies, {lines: '25', algset: '102', extra_key: 'Mango'}.with_indifferent_access)
-    expect(cookies[:field_values]).to eq(JSON.generate(lines: '25', algset: '102'))
-  end
-
   describe "POST find_by_alg" do
     it "computes the ll_code by alg" do
       alg = "R' F' L F' L D' L' D L' F2 R"

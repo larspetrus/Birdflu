@@ -24,7 +24,7 @@
       %span.list-size
         = select_tag(:'list-size', options_for_select([['Small Text', 's'], ['Medium Text', 'm'], ['Large Text', 'l']], @text_size), class: 'list-size__select')
 
-    - if page == ApplicationController::MAIN_NAME && @show_combos
+    - if (page == ApplicationController::MAIN_NAME || page == ApplicationController::ALGSETS_NAME) && @show_combos
       .leftitem
         %span.list-size
           =Fields::COMBOS.as_tag(@list_format, [], class: 'list-size__select', form: 'main-form')

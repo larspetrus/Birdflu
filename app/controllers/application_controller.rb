@@ -18,8 +18,7 @@ class ApplicationController < ActionController::Base
   def setup_leftbar
     @text_size = cookies[:size] || 'm'
     @position_set = cookies[:zbll] ?  'eo' : 'all'
-    @list_format = ApplicationController.read_list_format(cookies)
-
+    @list_format = Fields.read_list_format(cookies)
     @lb_sections = [MAIN_NAME, FAV_NAME] + (@show_combos ? [ALGSETS_NAME]: []) + [FMC_NAME]
     @lb_disabled = @login ? '' : FAV_NAME
   end
@@ -55,12 +54,4 @@ class ApplicationController < ActionController::Base
     @@trouble_list << "Exception at #{Time.now} --- #{e.message}"
     raise
   end
-
-  def self.read_list_format(the_cookies)
-    from_cookies = the_cookies[Fields::COOKIE_NAME] ? JSON.parse(the_cookies[:field_values], symbolize_names: true) : {}
-    OpenStruct.new(Fields.values(from_cookies))
-  rescue
-    OpenStruct.new(Fields::ALL_DEFAULTS)
-  end
-
 end

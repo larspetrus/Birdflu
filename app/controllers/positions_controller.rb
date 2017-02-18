@@ -5,7 +5,7 @@ class PositionsController < ApplicationController
   # === Routed action ===
   def index
     get_prefs_from_params = (params.keys.map(&:to_sym) & Fields::ALL_DEFAULTS.keys).present? || !params[:udf].nil?
-    PositionsController.store_list_format(cookies, params) if get_prefs_from_params
+    Fields.store_list_format(cookies, params) if get_prefs_from_params
 
     setup_leftbar
 
@@ -149,12 +149,6 @@ class PositionsController < ApplicationController
     vc.link_to(pos.display_name,  "positions/#{pos.id}")
   end
 
-  def self.store_list_format(the_cookies, new_prefs)
-    values = {}
-    Fields::ALL.each { |field| values[field.name] = field.value(new_prefs) if new_prefs.keys.map(&:to_sym).include?(field.name) }
-    the_cookies.permanent[Fields::COOKIE_NAME] = JSON.generate(values)
-  end
-
   def self.bookmark_url(filters, all_params)
     tail = all_params.except(:pos, :poschange).to_query
     "?pos=#{filters.pos_code}" + (tail.present? ? '&' + tail : '')
@@ -192,7 +186,7 @@ class PositionsController < ApplicationController
   end
 
   def non_default_fields
-    user_prefs = ApplicationController.read_list_format(params).to_h
+    user_prefs = Fields.read_list_format(params).to_h
     user_prefs.reject {|k,v| Fields::ALL_DEFAULTS[k] == v }
   end
 

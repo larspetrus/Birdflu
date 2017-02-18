@@ -61,4 +61,19 @@ class Fields
 
   ALL_DEFAULTS = Fields.defaults(Fields::ALL).freeze
 
+
+  def self.read_list_format(cookies)
+    from_cookies = cookies[COOKIE_NAME] ? JSON.parse(cookies[:field_values], symbolize_names: true) : {}
+    OpenStruct.new(Fields.values(from_cookies))
+  rescue
+    OpenStruct.new(ALL_DEFAULTS)
+  end
+
+  def self.store_list_format(cookies, new_prefs)
+    values = {}
+    Fields::ALL.each do |field|
+      values[field.name] = field.value(new_prefs) if new_prefs.keys.map(&:to_sym).include?(field.name)
+    end
+    cookies.permanent[COOKIE_NAME] = JSON.generate(values)
+  end
 end
