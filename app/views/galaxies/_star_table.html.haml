@@ -7,3 +7,8 @@
     %tr
       -@columns.each do |column|
         =list_td(alg_presenter, column)
+  -if galaxy.starred_type == 'raw_alg'
+    %tfoot
+      %tr
+        %td{colspan: 99}
+          = galaxy.alg_names.join(' ')

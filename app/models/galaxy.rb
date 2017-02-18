@@ -27,6 +27,10 @@ class Galaxy < ActiveRecord::Base
     stars.pluck(:starred_id)
   end
 
+  def alg_names
+    stars.map{|star| star.alg.name }.sort
+  end
+
   def toggle(alg_id)
     if include?(alg_id)
       remove(alg_id)

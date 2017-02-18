@@ -49,4 +49,12 @@ describe Galaxy do
     expect(g1.include?('25')).to eq(true)
   end
 
+  it 'alg_names' do
+    allow(RawAlg).to receive(:find).with(5)   { double(name: 'X5') }
+    allow(RawAlg).to receive(:find).with(25)  { double(name: 'X25') }
+    allow(RawAlg).to receive(:find).with(625) { double(name: 'X625') }
+
+    expect(g1.alg_names).to eq(['X25', 'X5', 'X625'])
+  end
+
 end
