@@ -40,6 +40,7 @@ class ApplicationController < ActionController::Base
         @login = OpenStruct.new(name: sn['name'], db_id: sn['db_id'], wca_id: sn['wca_id'])
       end
     end
+    @dev_marker_class = 'dev-marker' if Rails.env.development?
   end
 
   def allow_combos

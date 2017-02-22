@@ -11,7 +11,7 @@
       = content_tag :div, msg, class: "flash_msgs"
     = yield
 
-    .login
+    .login{class: @dev_marker_class}
       - if @login
         #{@login.name}
         .logout
