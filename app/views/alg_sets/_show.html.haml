@@ -30,7 +30,8 @@
     %td Owner
     %td
       = owner(@algset)
-  %tr
-    %td
-    %td
-      =link_to('Edit', edit_alg_set_path(@algset), class: 'knapp knapp-enabled knapp16')
+  - if @can_edit
+    %tr
+      %td
+      %td
+        =link_to('Edit', edit_alg_set_path(@algset), class: 'knapp knapp-enabled knapp16')

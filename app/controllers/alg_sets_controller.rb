@@ -43,6 +43,7 @@ class AlgSetsController < ApplicationController
 
   def show
     @algset = AlgSet.find(params[:id]).data_only
+    @can_edit = can_change(@algset)
   end
 
   def edit
