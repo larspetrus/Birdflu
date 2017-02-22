@@ -31,23 +31,6 @@ RSpec.describe PositionsController do
       expect(JSON.parse(response.body)).to eq("ll_code" => "a1i2c3j8", "prot" => 3, "alg_id"=>db_alg.id)
     end
 
-    it "is case independent" do
-      alg = "B2 r2 f r f' r b2 u' L U' L'"
-      post_find_by_alg(alg)
-      expect(JSON.parse(response.body)).to eq("ll_code" => "a5c6g8q3", "prot" => 0, "packed_alg"=> Algs.pack(alg.upcase))
-    end
-
-    it "handles 2' " do
-      alg = "B2 R2' F R F' R B2 U' L U' L'"
-      post_find_by_alg(alg)
-      expect(JSON.parse(response.body)).to eq("ll_code" => "a5c6g8q3", "prot" => 0, "packed_alg"=> Algs.pack("B2 R2 F R F' R B2 U' L U' L'"))
-    end
-
-    it "ignores ()+ responsibly" do
-      post_find_by_alg("B2 R2 F+R F' R B2 (U' L) U' L'")
-      expect(JSON.parse(response.body)).to eq("ll_code" => "a5c6g8q3", "prot" => 0, "packed_alg"=>Algs.pack("B2 R2 F R F' R B2 U' L U' L'"))
-    end
-
     it "removes needless U turns" do
       post_find_by_alg("B2 R2 F R F' R B2 U' L U' L' U2")
       expect(JSON.parse(response.body)).to eq("ll_code" => "a5c6g8q3", "prot" => 0, "packed_alg"=> Algs.pack("B2 R2 F R F' R B2 U' L U' L'"))
@@ -56,7 +39,7 @@ RSpec.describe PositionsController do
 
     it "Detects errors" do
       post_find_by_alg("F blah U")
-      expect(JSON.parse(response.body)).to eq("error" => 'Invalid move code: "BLAH"')
+      expect(JSON.parse(response.body)).to eq("error" => 'Invalid move code: "blah"')
 
       post_find_by_alg("F U R")
       expect(JSON.parse(response.body)).to eq("error" => 'Alg does not solve F2L')
@@ -68,7 +51,7 @@ RSpec.describe PositionsController do
     end
 
     def post_find_by_alg(user_input)
-      xhr :post, :find_by_alg, alg: user_input, format: :json
+      xhr :post, :find_by_alg, post_alg: user_input, format: :json
       expect(response.code).to eq("200")
     end
   end
