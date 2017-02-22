@@ -1,6 +1,9 @@
 =form_tag url_for(controller: 'positions', action: 'find_by_alg'), method: 'post', id: 'find_by_alg', remote: true, enforce_utf8: false do
   Find by Alg:
-  =text_field_tag "alg", nil, placeholder: 'BRDFLU or alg name', size: 24
+  =text_field_tag "input_alg", nil, placeholder: 'notation/alg name', size: 24
+  =text_field_tag "display_alg", nil, placeholder: 'BRDFLU translation', disabled: true, size: 24, style: "display:none;"
+  =hidden_field_tag "post_alg"
+  =submit_tag "", style: "display:none;", disabled: true
   #find_by_alg_msg{style: "padding: 10px; display:none;"}
 
 :javascript
@@ -8,8 +11,8 @@
     var result = JSON.parse(xhr.responseText);
     if (result.ll_code) {
       var new_url = '/positions/' + result.ll_code + '?prot=' + result.prot;
-      new_url += (result.packed_alg ? '&hl_alg=' + result.packed_alg : '')
-      new_url += (result.alg_id     ? '&hl_id='  + result.alg_id   : '')
+      new_url += (result.packed_alg ? '&hl_alg=' + result.packed_alg : '');
+      new_url += (result.alg_id     ? '&hl_id='  + result.alg_id     : '');
 
       window.location.href = new_url;
     } else {
@@ -22,17 +25,30 @@
     $('#find_by_alg_msg').dialog({
       width: '350px', title: 'Find by Alg problem', modal: true, closeOnEscape: true, dialogClass: 'lars-dialog'
     });
-  };
+  }
 
-  $('#alg').keydown(function(event) {
+  function sync_alg_fields() {
+    if ($('#input_alg').val().length > 0) {
+      $('#display_alg').show();
+      var alg_text = "-";
+      try {
+        var sanitized_input = $('#input_alg').val().replace(/[\(\)]/g, '');
+        alg_text = new Alg(sanitized_input).unhand();
+      }
+      catch(err) {}
+      $('#display_alg').val(alg_text)
+      $('#post_alg').val(alg_text)
+      $("#find_by_alg :submit").prop( "disabled", alg_text === '-' );
+    } else {
+      $('#display_alg').hide();
+    }
+  }
+
+  $('#input_alg').keydown(function(event) {
     event.stopPropagation(); // Stop Roofpig from stealing key events
   });
 
-  $('#alg').keyup(function(event) {
-     var start = this.selectionStart, end = this.selectionEnd;
-
-    $(this).val( $(this).val().toUpperCase() );
-
-    this.setSelectionRange(start, end);
+  $('#input_alg').on("keyup", function(event) { // TODO handle paste event
+    sync_alg_fields();
     event.stopPropagation(); // Stop Roofpig from stealing key events
   });

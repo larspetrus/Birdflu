@@ -192,7 +192,7 @@ class PositionsController < ApplicationController
 
   # === Routed action ===
   def find_by_alg
-    user_input = params[:alg].upcase.gsub(/[\+\(\)]/, ' ').gsub("2'", "2").strip
+    user_input = params[:post_alg].strip
     moves = user_input.split(' ')
     while moves.last[0] == 'U' do moves.pop end
     user_input = moves.join(' ')
