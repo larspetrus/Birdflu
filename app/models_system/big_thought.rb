@@ -23,10 +23,18 @@ class BigThought
     ComboAlg.make_4(new_alg, new_alg)
   end
 
+  def self.combine_mirrors_from_names(raw_alg_names)
+    algs = raw_alg_names.map{|name| ra = RawAlg.by_name(name); [ra, ra.find_mirror] }.flatten
+    combine_many(algs)
+  end
+
   def self.combine_many(raw_algs)
+    text = "Max combo_alg id: #{ComboAlg.maximum(:id)}. Max raw_alg id: #{RawAlg.maximum(:id)}. "
+    puts text
     timed_transaction do
       raw_algs.each{ |alg| combine(alg) }
     end
+    puts text
   end
 
   def self.empty_alg

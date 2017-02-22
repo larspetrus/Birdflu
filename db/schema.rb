@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170210054718) do
+ActiveRecord::Schema.define(version: 20170222194516) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -39,11 +39,11 @@ ActiveRecord::Schema.define(version: 20170210054718) do
   end
 
   create_table "combo_algs", force: :cascade do |t|
-    t.integer "alg1_id",         limit: 2
-    t.integer "alg2_id",         limit: 2
+    t.integer "alg1_id"
+    t.integer "alg2_id"
     t.integer "combined_alg_id"
     t.integer "encoded_data",    limit: 2
-    t.integer "position_id"
+    t.integer "position_id",     limit: 2
   end
 
   add_index "combo_algs", ["combined_alg_id"], name: "index_combo_algs_on_combined_alg_id", using: :btree
