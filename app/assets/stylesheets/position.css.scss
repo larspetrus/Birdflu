@@ -283,7 +283,7 @@ $panel-width: 450px;
 
 .stars-dialog {
   font-size: 80% !important;
-  .ui-dialog-titlebar {display: none}
+  .ui-dialog-titlebar { display: none }
 }
 
 .js-goto-post {
@@ -294,9 +294,8 @@ $panel-width: 450px;
 }
 
 .picker-dialog {
-  .ui-dialog-title {
-    font-size: 90% !important;
-  }
+  .ui-dialog-title { font-size: 90% !important; }
+  .ui-dialog-titlebar-close { display: none; }
 }
 
 .picker_buttons {
@@ -305,9 +304,7 @@ $panel-width: 450px;
   display: flex;
   align-items: center;
   justify-content: center;
-  .knapp {
-    margin: 0 3px;
-  }
+  .knapp { margin: 0 3px; }
 }
 // http://www.bestcssbuttongenerator.com/#/4
 
