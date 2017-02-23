@@ -1,7 +1,7 @@
 =form_tag url_for(controller: 'positions', action: 'find_by_alg'), method: 'post', id: 'find_by_alg', remote: true, enforce_utf8: false do
   Find by Alg:
-  =text_field_tag "input_alg", nil, placeholder: 'notation/alg name', size: 24
-  =text_field_tag "display_alg", nil, placeholder: 'BRDFLU translation', disabled: true, size: 24, style: "display:none;"
+  =text_field_tag "input_alg", nil, placeholder: 'notation/alg name'
+  =text_field_tag "display_alg", nil, placeholder: 'BRDFLU translation', disabled: true
   =hidden_field_tag "post_alg"
   =submit_tag "", style: "display:none;", disabled: true
   #find_by_alg_msg{style: "padding: 10px; display:none;"}
@@ -28,27 +28,29 @@
   }
 
   function sync_alg_fields() {
-    if ($('#input_alg').val().length > 0) {
-      $('#display_alg').show();
-      var alg_text = "-";
-      try {
-        var sanitized_input = $('#input_alg').val().replace(/[\(\)]/g, '');
-        alg_text = new Alg(sanitized_input).unhand();
-      }
-      catch(err) {}
-      $('#display_alg').val(alg_text)
-      $('#post_alg').val(alg_text)
-      $("#find_by_alg :submit").prop( "disabled", alg_text === '-' );
-    } else {
-      $('#display_alg').hide();
+    var display_alg_text = "-";
+    try {
+      var sanitized_input = $('#input_alg').val().replace(/[\(\)\t]/g, '');
+      display_alg_text = new Alg(sanitized_input).unhand();
     }
+    catch(err) {}
+    $('#display_alg').val(display_alg_text);
+    $('#post_alg').val(display_alg_text);
+
+    if ($('#input_alg').val().length > 25) {
+      $('#find_by_alg').addClass('wide');
+    }
+    $("#find_by_alg :submit").prop( "disabled", display_alg_text === '-' );
   }
 
-  $('#input_alg').keydown(function(event) {
-    event.stopPropagation(); // Stop Roofpig from stealing key events
+  $('#input_alg').on("blur", function(event) {
+    $('#find_by_alg').removeClass('focus');
   });
 
-  $('#input_alg').on("keyup", function(event) { // TODO handle paste event
+  $('#input_alg').on("focus", function(event) {
+    $('#find_by_alg').addClass('focus');
+  });
+
+  $('#input_alg').on("input", function(event) {
     sync_alg_fields();
-    event.stopPropagation(); // Stop Roofpig from stealing key events
   });

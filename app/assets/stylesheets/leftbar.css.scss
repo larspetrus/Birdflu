@@ -57,11 +57,6 @@ $left-bgcolor: #f2f2f2;
     background-color: $left-bgcolor;
     color: $left-color;
     border: 1px solid #D7DBDD;
-
-    input[type="text"] {
-      margin-top: 4px;
-      font-size: 9px;
-    }
   }
 
   .clickable {
@@ -70,8 +65,27 @@ $left-bgcolor: #f2f2f2;
     a {color: $left-color; }
     &:visited { color: red; }
     &:hover { text-shadow: 2px 2px 5px #777; }
-    &:active {color: white; text-shadow: 0px 0px 5px #000, 0 0 8px #00F; }
+    &:active {
+      color: white;
+      text-shadow: 0px 0px 5px #000, 0 0 8px #00F;
+    }
   }
+}
+
+#find_by_alg input[type="text"] {
+  width: 100%;
+  margin-top: 4px;
+  font-size: 9px;
+}
+#find_by_alg.focus.wide input[type="text"] {
+  width: 200%;
+}
+
+#find_by_alg #display_alg {
+  display: none;
+}
+#find_by_alg.focus #display_alg {
+  display: inherit;
 }
 
 .list-size__select{
@@ -123,13 +137,17 @@ $left-bgcolor: #f2f2f2;
 
   .list-size::before { /*  Custom dropdown arrow cover */
     width: 2em;
-    right: 0; top: 0; bottom: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
     border-radius: 0 3px 3px 0;
     background-color: darken($left-bgcolor, 7%);
   }
 
   /* FF only temp fix */
   @-moz-document url-prefix() {
-    .list-size__select { padding-right: .9em }
+    .list-size__select {
+      padding-right: .9em
+    }
   }
 }
