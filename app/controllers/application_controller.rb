@@ -44,7 +44,7 @@ class ApplicationController < ActionController::Base
   end
 
   def allow_combos
-    allowed_people = %w(1982PETR01 2005FLEI01)
+    allowed_people = %w(1982PETR01 2005FLEI01 2016LEWI04)
     @show_combos = Rails.env.development? || allowed_people.include?(@login&.wca_id)
   end
 
