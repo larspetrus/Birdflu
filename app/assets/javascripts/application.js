@@ -14,4 +14,5 @@
 //= require jquery_ujs
 //= require jquery-ui
 //= require js.cookie.js
+//= require roofpig_and_three.min.js
 //= require_tree .
