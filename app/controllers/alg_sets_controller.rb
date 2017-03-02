@@ -4,7 +4,7 @@ class AlgSetsController < ApplicationController
   def index
     setup_leftbar
     @list_classes = "algset-list size-#{@text_size}"
-    @all_sets = AlgSet.all.map(&:data_only).sort_by {|as| [as.predefined ? 0 : 1, as.subset, as.algs.length] }
+    @all_sets = AlgSet.for_user(@login&.wca_user_id).map(&:data_only).sort_by {|as| [as.predefined ? 0 : 1, as.subset, as.algs.length] }
     @all_sets.each { |as| as.editable_by_this_user = can_change(as) }
     @to_compute = @all_sets.reject(&:has_facts).map(&:id).join(',')
   end
