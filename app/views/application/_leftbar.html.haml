@@ -37,16 +37,21 @@
     .leftitem.clickable#about-link About…
 
 #about-box
-  %p Birdflu aims to contain all knowledge of algorithms and positions for the last layer of Rubik's Cube, and present it in simple and useful ways. That will take a while.
-  %p For now is has all algs up to 17 moves (43 million), and some basic features. More to come.
+  %p Birdflu aims to contain all knowledge of algorithms and positions for the last layer of Rubik's Cube, and present it in simple and useful ways. For now is has all algs up to 17 moves.
   %p
-  %p Hand crafted by Lars Petrus in Oakland 2015-16.
+  %p Hand crafted by Lars Petrus in Oakland 2015-17.
   %p
     Big thanks to
     = link_to("Tom Rokicki", "http://tomas.rokicki.com/")
     for generating the algs!
   %hr
+  %p To use the #{ApplicationController::FAV_NAME} and #{ApplicationController::ALGSETS_NAME} sections, log in using a WCA account (top right). The #{ApplicationController::FMC_NAME} section is just a beginning.
+  %hr
+  %p Combo Alg Sets implement the old idea of solving LL in one look with only a few dozen memorized algs by using a pair of algs for each. ZBLL can be solved with only 14 algs, and the full LL with 39.
+  %hr
   %p "Birdflu" is the shortest English word containing the basic moves BRDFLU.
+  %hr
+  %p Questions: birdflu@lar5.com
 
 
 :javascript
@@ -73,9 +78,9 @@
 
   $(document).on('click', '#about-link', function(event) {
     $('#about-box').dialog({
-      position: { my: 'center', at: 'center', of: 'body' },
-      width: '240px',
-      title: 'What is this?',
+      position: { my: 'center', at: 'top', of: 'body' },
+      width: '305px',
+      title: 'What is Birdflu?',
       modal: true,
       closeOnEscape: true,
       dialogClass: 'lars-dialog'
