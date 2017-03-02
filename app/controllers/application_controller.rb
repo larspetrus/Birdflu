@@ -5,11 +5,11 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
-  before_action :handle_wca_login, :allow_combos
+  before_action :handle_wca_login
   around_action :keep_track
 
-  MAIN_NAME = 'Main'
-  FAV_NAME = 'Favorites'
+  MAIN_NAME = 'Algs'
+  FAV_NAME = 'Stars'
   ALGSETS_NAME = 'Combos'
   FMC_NAME = 'FMC'
 
@@ -19,8 +19,8 @@ class ApplicationController < ActionController::Base
     @text_size = cookies[:size] || 'm'
     @position_set = cookies[:zbll] ?  'eo' : 'all'
     @list_format = Fields.read_list_format(cookies)
-    @lb_sections = [MAIN_NAME, FAV_NAME] + (@show_combos ? [ALGSETS_NAME]: []) + [FMC_NAME]
-    @lb_disabled = @login ? '' : FAV_NAME
+    @lb_sections = [MAIN_NAME, FAV_NAME, ALGSETS_NAME, FMC_NAME]
+    @lb_disabled = @login ? '' : [FAV_NAME, ALGSETS_NAME]
   end
 
   def use_svgs
@@ -41,11 +41,6 @@ class ApplicationController < ActionController::Base
       end
     end
     @dev_marker_class = 'dev-marker' if Rails.env.development?
-  end
-
-  def allow_combos
-    allowed_people = %w(1982PETR01 2005FLEI01 2016LEWI04)
-    @show_combos = Rails.env.development? || allowed_people.include?(@login&.wca_id)
   end
 
   def keep_track
