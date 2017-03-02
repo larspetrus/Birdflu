@@ -144,7 +144,7 @@ class AlgSet < ActiveRecord::Base
   # -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+- -+=+-
 
   def self.menu_options(login, eo_only)
-    sets = AlgSet.for_user(login&.wca_user_id).to_a.select{|as| !(eo_only && as.subset != 'eo')  }
+    sets = AlgSet.for_user(login&.db_id).to_a.select{|as| !(eo_only && as.subset != 'eo')  }
     sets.sort_by {|as| [as.predefined ? 0 : 1, as.subset, as.algs.length] }.map{|as| [as.dropdown_name, as.id] }
   end
 

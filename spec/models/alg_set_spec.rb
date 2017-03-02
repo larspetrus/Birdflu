@@ -139,8 +139,8 @@ describe AlgSet do
     expect(AlgSet.menu_options(nil, false)).to eq([["all-a5", a5.id], ["eo-a1", a1.id]])
     expect(AlgSet.menu_options(nil,  true)).to eq([["eo-a1", a1.id]])
 
-    expect(AlgSet.menu_options(double(wca_user_id: 313), false)).to eq([["all-a5", a5.id], ["eo-a1", a1.id], ["all·a4", a4.id], ["eo·a2", a2.id]])
-    expect(AlgSet.menu_options(double(wca_user_id: 313),  true)).to eq([["eo-a1", a1.id], ["eo·a2", a2.id]])
+    expect(AlgSet.menu_options(double(db_id: 313), false)).to eq([["all-a5", a5.id], ["eo-a1", a1.id], ["all·a4", a4.id], ["eo·a2", a2.id]])
+    expect(AlgSet.menu_options(double(db_id: 313),  true)).to eq([["eo-a1", a1.id], ["eo·a2", a2.id]])
   end
 
   it 'exports/imports YAML data' do
