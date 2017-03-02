@@ -1,22 +1,22 @@
 # frozen_string_literal: true
 
 class AlgSetsController < ApplicationController
-  def index
-    setup_leftbar
+  def index  # === Routed action ===
+  setup_leftbar
     @list_classes = "algset-list size-#{@text_size}"
     @all_sets = AlgSet.for_user(@login&.wca_user_id).map(&:data_only).sort_by {|as| [as.predefined ? 0 : 1, as.subset, as.algs.length] }
     @all_sets.each { |as| as.editable_by_this_user = can_change(as) }
     @to_compute = @all_sets.reject(&:has_facts).map(&:id).join(',')
   end
 
-  def new
+  def new  # === Routed action ===v
     raise "Not allowed to create Algset" unless can_create
 
     setup_leftbar
     @algset = AlgSet.new
   end
 
-  def create
+  def create  # === Routed action ===
     raise "Not allowed to create Algset" unless can_create
 
     setup_leftbar
@@ -32,7 +32,7 @@ class AlgSetsController < ApplicationController
     end
   end
 
-  def destroy
+  def destroy  # === Routed action ===
     algset = AlgSet.find(params[:id])
     raise "Not allowed to delete Algset #{algset.id}" unless can_change(algset)
 
@@ -41,18 +41,18 @@ class AlgSetsController < ApplicationController
     redirect_to alg_sets_url
   end
 
-  def show
+  def show  # === Routed action ===
     @algset = AlgSet.find(params[:id]).data_only
     @can_edit = can_change(@algset)
   end
 
-  def edit
+  def edit  # === Routed action ===
     setup_leftbar
     @algset = AlgSet.find(params[:id])
     raise "Not allowed to edit Algset #{@algset.id}" unless can_change(@algset)
   end
 
-  def update
+  def update  # === Routed action ===
     setup_leftbar
     @algset = AlgSet.find(params[:id]).data_only
     raise "Not allowed to update Algset #{@algset.id}" unless can_change(@algset)
@@ -71,13 +71,18 @@ class AlgSetsController < ApplicationController
     end
   end
 
-  def algs
+  def algs  # === Routed action ===
     setup_leftbar
     @algset = AlgSet.find(params[:id])
     @mirror_algs = @algset.mirror_algs.sort_by{|ma| ma.algs[0].position.cop }
     @list_classes = "bflist mirroralg-list size-#{@text_size}-wc"
     @columns = Column.named([:name_link, :cop, :eop, :alg, :show])
     use_svgs
+  end
+
+  def update_cookie  # === Routed action ===
+    Fields.update_list_def(cookies, params.symbolize_keys)
+    render json: { fresh_cookie: cookies[Fields::COOKIE_NAME] }
   end
 
 
@@ -90,7 +95,7 @@ class AlgSetsController < ApplicationController
     is_owned_by_user || AlgSet::ARE_WE_ADMIN
   end
 
-  def compute
+  def compute  # === Routed action ===
     params[:ids].split(',').each { |id| AlgSet.find(id).fact.compute.save! }
     render json: { success: :true }
   rescue  Exception => e
@@ -101,7 +106,7 @@ class AlgSetsController < ApplicationController
     @list_format.combos = 'merge' if @list_format.combos == 'none'
     @list_format.algset = alg_set.id
 
-    Fields.store_list_format(cookies, @list_format.to_h)
+    Fields.store_list_def(cookies, @list_format.to_h)
   end
 
   def algset_params(more_params = {})

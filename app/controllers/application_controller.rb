@@ -18,7 +18,7 @@ class ApplicationController < ActionController::Base
   def setup_leftbar
     @text_size = cookies[:size] || 'm'
     @position_set = cookies[:zbll] ?  'eo' : 'all'
-    @list_format = Fields.read_list_format(cookies)
+    @list_format = Fields.read_list_def(cookies)
     @lb_sections = [MAIN_NAME, FAV_NAME, ALGSETS_NAME, FMC_NAME]
     @lb_disabled = @login ? '' : [FAV_NAME, ALGSETS_NAME]
   end

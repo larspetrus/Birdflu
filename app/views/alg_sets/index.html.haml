@@ -59,3 +59,12 @@
         console.log("/alg_sets/compute/#{@to_compute} failed: ", data.error);
       }
     });
+
+:javascript
+  $('#{Fields::JQUERY_SELECTOR}').change(function(event) {
+    var id = event.target.id;
+    $.get("/alg_sets/update_cookie/?"+id+"="+$("#"+id).val(), function(response) {
+      Cookies.set('field_values', response.fresh_cookie, { expires: 3650 });
+      window.location.reload(true);
+    });
+  });

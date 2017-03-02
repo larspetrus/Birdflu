@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   get 'positions/:id', to: "positions#show"
   post 'positions/find_by_alg'
 
+  get 'alg_sets/update_cookie/', to: "alg_sets#update_cookie"
   resources :alg_sets
   get 'alg_sets/compute/:ids', to: "alg_sets#compute"
   get 'alg_sets/:id/algs', to: "alg_sets#algs", as: "mirrored_list"

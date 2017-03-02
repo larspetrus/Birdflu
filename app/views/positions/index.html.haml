@@ -103,11 +103,11 @@
     var field_defaults = #{Fields::JS_DEFAULTS};
 
     for (var prop in field_defaults) {
-      var elm = $('#'+prop);
-      if (elm.val() === field_defaults[prop]) {
-        elm.prop('disabled', true);
+      var input = $('#'+prop);
+      if (input.val() === field_defaults[prop]) {
+        input.prop('disabled', true);
       } else {
-        if (elm.val()) {
+        if (input.val()) {
           all_defaults = false
         }
       }

@@ -2,10 +2,9 @@
 
 class PositionsController < ApplicationController
 
-  # === Routed action ===
-  def index
+  def index  # === Routed action ===
     get_prefs_from_params = (params.keys.map(&:to_sym) & Fields::ALL_DEFAULTS.keys).present? || !params[:udf].nil?
-    Fields.store_list_format(cookies, params) if get_prefs_from_params
+    Fields.store_list_def(cookies, params) if get_prefs_from_params
 
     setup_leftbar
 
@@ -168,8 +167,7 @@ class PositionsController < ApplicationController
     view_context
   end
 
-  # === Routed action ===
-  def show
+  def show  # === Routed action ===
     pos = Position.find_by_id(params[:id]) || Position.by_ll_code(params[:id]) || RawAlg.by_name(params[:id]).position # Try DB id LL code, or alg name
 
     new_params = { pos: pos.display_name }
@@ -186,25 +184,23 @@ class PositionsController < ApplicationController
   end
 
   def non_default_fields
-    user_prefs = Fields.read_list_format(params).to_h
-    user_prefs.reject {|k,v| Fields::ALL_DEFAULTS[k] == v }
+    list_format_definition = Fields.read_list_def(params).to_h
+    list_format_definition.reject {|k,v| Fields::ALL_DEFAULTS[k] == v }
   end
 
-  # === Routed action ===
-  def find_by_alg
-    user_input = params[:post_alg].strip
-    moves = user_input.split(' ')
+  def find_by_alg  # === Routed action ===
+    moves = params[:post_alg].strip.split(' ')
     while moves.last[0] == 'U' do moves.pop end
-    user_input = moves.join(' ')
+    cleaned_input = moves.join(' ')
 
-    if user_input.include? ' ' # interpret as moves
-      actual_moves = user_input
+    if cleaned_input.include? ' ' # interpret as moves
+      actual_moves = cleaned_input
       ll_code = Cube.by_alg(actual_moves).standard_ll_code # raises exception unless alg is good
 
-      db_alg = RawAlg.find_from_moves(user_input, Position.find_by!(ll_code: ll_code))
+      db_alg = RawAlg.find_from_moves(cleaned_input, Position.find_by!(ll_code: ll_code))
     else # interpret as alg name
-      db_alg = RawAlg.by_name(user_input)
-      raise "There is no alg named '#{user_input}'" unless db_alg
+      db_alg = RawAlg.by_name(cleaned_input)
+      raise "There is no alg named '#{cleaned_input}'" unless db_alg
       actual_moves = db_alg.moves
     end
 
@@ -212,7 +208,7 @@ class PositionsController < ApplicationController
     if db_alg
       result[:alg_id] = db_alg.id
     else
-      result[:packed_alg] = Algs.pack(user_input)
+      result[:packed_alg] = Algs.pack(cleaned_input)
     end
     render json: result
   rescue Exception => e
