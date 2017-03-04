@@ -151,4 +151,14 @@ describe RawAlg do
     not_special_alg = RawAlg.make_non_db("F' R U' B' U' B U' F U F' U R' U' B' U2 B F")
     expect(not_special_alg.specialness).to eq('Not in DB')
   end
+  
+  it 'nick_name' do
+    expect(RawAlg.nick_names(8)).to eq("Sune")
+    expect(RawAlg.nick_names(14)).to eq("Sune")
+
+    expect(RawAlg.nick_names(1605)).to eq("Sune²")
+    expect(RawAlg.nick_names(2636)).to eq("Sune²")
+
+    expect(RawAlg.nick_names(123456)).to eq(nil)
+  end
 end

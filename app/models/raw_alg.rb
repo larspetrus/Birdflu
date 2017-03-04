@@ -183,9 +183,17 @@ class RawAlg < ActiveRecord::Base
     DbAlg.new(_moves)
   end
 
-  NICK_NAMES = {8=>"Sune", 14=>"Sune", 10=>"AntiSune", 15=>"AntiSune", 9=>"Niklas", 13=>"Niklas", 112=>"Bruno", 169=>"Bruno", 194=>"Allan", 197=>"Allan", 2636=>"Sune²", 1605=>"Sune²", 1874=>"AntiSune²", 2809=>"AntiSune²"}
+  NICK_NAME_DATA = [
+      [:Fatsune, 6, 11], [:AntiFatsune, 7, 12], [:Sune, 8, 14], [:AntiSune, 10, 15], [:Niklas, 9, 13], [:Bruno, 112, 169],
+      [:Allan, 194, 197], [:'Sune²', 1605, 2636], [:'AntiSune²', 1874, 2809]
+  ]
+  def self.nick_names(id)
+    @@nn ||= NICK_NAME_DATA.inject({}) {|result, data| result[data[1]] = result[data[2]] = data[0].to_s; result }
+    @@nn[id]
+  end
+
   def nick_name
-    NICK_NAMES[id]
+    RawAlg.nick_names(id)
   end
 
   def to_s
