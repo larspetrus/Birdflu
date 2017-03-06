@@ -1,40 +1,44 @@
-%nav.section
-  %h1
-    %span
-      section
-  .middiv
-    %span.list-size
-      = select_tag(:sectionator, options_for_select(@lb_sections, selected: section, disabled: @lb_disabled), class: 'list-size__select')
-
--if section != Section::FMC
-  %nav.leftbar
-    -if section == Section::ALGS
-      .leftitem.clickable= link_to 'Random Position', "positions/#{Position.random_id(@position_set)}"
-
-    .leftitem
-      =render 'find_by_alg'
-
-    -if section == Section::ALGS
-      .leftitem.clickable
-        %label
-          = check_box_tag(:zbll, 1, @position_set == 'eo')
-          Lock EO (ZBLL)
-
-    .leftitem
+.leftflex
+  %nav.section
+    %h1
+      %span
+        section
+    .middiv
       %span.list-size
-        = select_tag(:'list-size', options_for_select([['Small Text', 's'], ['Medium Text', 'm'], ['Large Text', 'l']], @text_size), class: 'list-size__select')
+        = select_tag(:sectionator, options_for_select(@lb_sections, selected: section, disabled: @lb_disabled), class: 'list-size__select')
+    -unless @login
+      .loginhint
+        Log in to use grey sections
 
-    - if (section == Section::ALGS || section == Section::ALGSETS)
+  -if section != Section::FMC
+    %nav.leftbar
+      -if section == Section::ALGS
+        .leftitem.clickable= link_to 'Random Position', "positions/#{Position.random_id(@position_set)}"
+
+      .leftitem
+        =render 'find_by_alg'
+
+      -if section == Section::ALGS
+        .leftitem.clickable
+          %label
+            = check_box_tag(:zbll, 1, @position_set == 'eo')
+            Lock EO (ZBLL)
+
       .leftitem
         %span.list-size
-          =Fields::COMBOS.as_tag(@list_format, [], class: 'list-size__select', form: 'main-form')
-        - unless @list_format.combos == 'none'
-          %span.list-size.list-outline{style: "margin-top: 6px;"}
-            =Fields::ALGSET.as_tag(@list_format, AlgSet.menu_options(@login, @position_set == 'eo'), class: 'list-size__select', form: 'main-form')
-        - else
-          =Fields::ALGSET.as_hidden_field(@list_format)
+          = select_tag(:'list-size', options_for_select([['Small Text', 's'], ['Medium Text', 'm'], ['Large Text', 'l']], @text_size), class: 'list-size__select')
 
-    .leftitem.clickable#about-link About…
+      - if (section == Section::ALGS || section == Section::ALGSETS)
+        .leftitem
+          %span.list-size
+            =Fields::COMBOS.as_tag(@list_format, [], class: 'list-size__select', form: 'main-form')
+          - unless @list_format.combos == 'none'
+            %span.list-size.list-outline{style: "margin-top: 6px;"}
+              =Fields::ALGSET.as_tag(@list_format, AlgSet.menu_options(@login, @position_set == 'eo'), class: 'list-size__select', form: 'main-form')
+          - else
+            =Fields::ALGSET.as_hidden_field(@list_format)
+
+      .leftitem.clickable#about-link About…
 
 #about-box
   %p Birdflu aims to contain all knowledge of algorithms and positions for the last layer of Rubik's Cube, and present it in simple and useful ways. For now is has all algs up to 17 moves.
