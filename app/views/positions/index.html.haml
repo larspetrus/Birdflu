@@ -1,7 +1,7 @@
 :javascript
   history.replaceState('', '', '#{@bookmark_url}');
 
-= render 'leftbar', page: ApplicationController::MAIN_NAME
+= render 'leftbar', section: Section::ALGS
 
 .rightbar
   -if @only_position

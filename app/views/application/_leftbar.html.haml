@@ -4,17 +4,17 @@
       section
   .middiv
     %span.list-size
-      = select_tag(:sectionator, options_for_select(@lb_sections, selected: page, disabled: @lb_disabled), class: 'list-size__select')
+      = select_tag(:sectionator, options_for_select(@lb_sections, selected: section, disabled: @lb_disabled), class: 'list-size__select')
 
--if page != ApplicationController::FMC_NAME
+-if section != Section::FMC
   %nav.leftbar
-    -if page == ApplicationController::MAIN_NAME
+    -if section == Section::ALGS
       .leftitem.clickable= link_to 'Random Position', "positions/#{Position.random_id(@position_set)}"
 
     .leftitem
       =render 'find_by_alg'
 
-    -if page == ApplicationController::MAIN_NAME
+    -if section == Section::ALGS
       .leftitem.clickable
         %label
           = check_box_tag(:zbll, 1, @position_set == 'eo')
@@ -24,7 +24,7 @@
       %span.list-size
         = select_tag(:'list-size', options_for_select([['Small Text', 's'], ['Medium Text', 'm'], ['Large Text', 'l']], @text_size), class: 'list-size__select')
 
-    - if (page == ApplicationController::MAIN_NAME || page == ApplicationController::ALGSETS_NAME)
+    - if (section == Section::ALGS || section == Section::ALGSETS)
       .leftitem
         %span.list-size
           =Fields::COMBOS.as_tag(@list_format, [], class: 'list-size__select', form: 'main-form')
@@ -45,7 +45,7 @@
     = link_to("Tom Rokicki", "http://tomas.rokicki.com/")
     for generating the algs!
   %hr
-  %p To use the #{ApplicationController::FAV_NAME} and #{ApplicationController::ALGSETS_NAME} sections, log in using a WCA account (top right). The #{ApplicationController::FMC_NAME} section is just a beginning.
+  %p To use the #{Section::FAVORITES} and #{Section::ALGSETS} sections, log in using a WCA account (top right). The #{Section::FMC} section is just a beginning.
   %hr
   %p Combo Alg Sets implement the old idea of solving LL in one look with only a few dozen memorized algs by using a pair of algs for each. ZBLL can be solved with only 14 algs, and the full LL with 39.
   %hr
@@ -55,7 +55,7 @@
 
 
 :javascript
-  var SECTION_PATHS = {"#{ApplicationController::MAIN_NAME}": '/', "#{ApplicationController::FAV_NAME}": "#{galaxies_path}", "#{ApplicationController::ALGSETS_NAME}": "#{alg_sets_path}", "#{ApplicationController::FMC_NAME}": '/fmc?example=1'}
+  var SECTION_PATHS = {"#{Section::ALGS}": '/', "#{Section::FAVORITES}": "#{galaxies_path}", "#{Section::ALGSETS}": "#{alg_sets_path}", "#{Section::FMC}": '/fmc?example=1'}
   $('#sectionator').change(function() {
     window.location.href = SECTION_PATHS[$(this).val()];
   });

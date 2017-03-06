@@ -8,19 +8,14 @@ class ApplicationController < ActionController::Base
   before_action :handle_wca_login
   around_action :keep_track
 
-  MAIN_NAME = 'Algs'
-  FAV_NAME = 'Stars'
-  ALGSETS_NAME = 'Combos'
-  FMC_NAME = 'FMC'
-
   private
 
   def setup_leftbar
     @text_size = cookies[:size] || 'm'
     @position_set = cookies[:zbll] ?  'eo' : 'all'
     @list_format = Fields.read_list_def(cookies)
-    @lb_sections = [MAIN_NAME, FAV_NAME, ALGSETS_NAME, FMC_NAME]
-    @lb_disabled = @login ? '' : [FAV_NAME, ALGSETS_NAME]
+    @lb_sections = [Section::ALGS, Section::FAVORITES, Section::ALGSETS, Section::FMC]
+    @lb_disabled = @login ? '' : [Section::FAVORITES, Section::ALGSETS]
   end
 
   def use_svgs
