@@ -94,7 +94,7 @@
     send_form(true);
   });
 
-  $('.js-goto-post').on('click', function(e) {
+  $('.js-goto-post').on('click', function(event) {
     window.location.href = '/positions/' + $(event.target).text() + '?hl_name=' + $(event.target).text();
   });
 
