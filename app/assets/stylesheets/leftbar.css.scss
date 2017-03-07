@@ -9,15 +9,17 @@
 }
 
 .loginhint {
-  font-size: 8px;
   color: #888;
   margin: 0px 12px;
-  display: none;
+
+  font-size: 0px;
+  transition: font-size 0.2s;
 }
 
 .section:hover {
   .loginhint {
-    display: inherit;
+    font-size: 8px;
+    transition: font-size 0.2s;
   }
 }
 
