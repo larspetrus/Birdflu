@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'net/http'
 
 class OauthController < ActionController::Base
   CLIENT_ID = '964462829fdba20e9da105d61499d8ce53d2f74dc31edbcd8d9c519fb98595bf'
