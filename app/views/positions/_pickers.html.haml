@@ -3,17 +3,16 @@
     - [:COP, :OLL, '', :CO, :CP, :EO, :EP].each do |header|
       %th= header
   %tr#pickers
-    = render 'picker_td', prop: :cop, add_class: 'grid-lines'
-    = render 'picker_td', prop: :oll, add_class: 'grid-lines', message: @position_set == 'eo' ? 'Locked to oriented edges.' : nil
+    = render 'picker_td', filter: :cop, add_class: 'grid-lines'
+    = render 'picker_td', filter: :oll, add_class: 'grid-lines', message: @position_set == 'eo' ? 'Locked to oriented edges.' : nil
     %td{style: 'border-right: solid 1px #bbb;'}
-    = render 'picker_td', prop: :co
-    = render 'picker_td', prop: :cp
-    = render 'picker_td', prop: :eo
-    = render 'picker_td', prop: :ep,  add_class: 'relative', message: 'Images assume the darker corner is placed correctly.'
+    = render 'picker_td', filter: :co
+    = render 'picker_td', filter: :cp
+    = render 'picker_td', filter: :eo
+    = render 'picker_td', filter: :ep,  add_class: 'relative', message: 'Images assume the darker corner is placed correctly.'
 :javascript
-  var mouse_is_inside_picker = '';
 
-  var picker_dialog_props = {
+  var picker_dialog_options = {
     cop: options({ width: '400px', title: 'Corner orientation & position (COP)'}),
     oll: options({ width: '404px', title: 'Corner and edge orientation (OLL)'}),
     co:  options({ width: '394px', title: 'Corner orientation (CO)'}),
@@ -22,31 +21,44 @@
     ep:  options({ width: '572px', title: 'Edge position (EP)'})
   };
   function options(specifics) {
-    var pos = { my: 'center top', at: 'center bottom', of: '#pickers' };
-    return $.extend(specifics, {resizable: false, modal: false, draggable: false, position: pos, dialogClass: "picker-dialog"});
+    var where = { my: 'center top', at: 'center bottom', of: '#pickers' };
+    return $.extend(specifics, {resizable: false, modal: false, draggable: false, position: where, dialogClass: "picker-dialog"});
+  }
+
+  var open_dialog_id = '';
+  var wanted_dialog_id = '';
+
+  function show_dialog(field) {
+    hide_unwanted_dialog();
+    open_dialog_id = field+'-picker';
+    $('#'+open_dialog_id).dialog(picker_dialog_options[field]);
+  }
+
+  function hide_unwanted_dialog() {
+    if (open_dialog_id !== wanted_dialog_id) {
+      $('#'+open_dialog_id).dialog('close');
+      open_dialog_id = '';
+    }
   }
 
   $(document).on({
     mouseenter: function(event) {
-      var field = $(event.currentTarget).attr('data-prop');
-      var picker = $('#'+field+'-picker').dialog(picker_dialog_props[field]);
-      picker.parent().attr('data-dialog-field', field)
+      var filter = $(event.currentTarget).attr('data-filter');
+      wanted_dialog_id = filter+'-picker';
+      show_dialog(filter);
     },
     mouseleave: function(event) {
-      var field = $(event.currentTarget).attr('data-prop');
-      setTimeout(function(){
-        if (mouse_is_inside_picker != field) { $('#'+field+'-picker').dialog('close'); }
-      }, 100);
+      wanted_dialog_id = '';
+      setTimeout(function(){ hide_unwanted_dialog(); }, 500);
     }
   }, ".selected-icon");
 
   $(document).on({
     mouseenter: function(event) {
-      mouse_is_inside_picker = $(event.currentTarget).attr('data-dialog-field')
+      wanted_dialog_id = $(event.currentTarget).children(".hidden-picker").attr("id");
     },
     mouseleave: function(event) {
-      var field = $(event.currentTarget).attr('data-dialog-field');
-      $('#'+field+'-picker').dialog('close');
-      mouse_is_inside_picker = ''
+      wanted_dialog_id = '';
+      setTimeout(function(){ hide_unwanted_dialog(); }, 500);
     }
   }, ".picker-dialog");

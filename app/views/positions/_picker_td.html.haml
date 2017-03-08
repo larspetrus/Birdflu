@@ -1,23 +1,23 @@
-- field = "##{prop}"
+- selector = "##{filter}"
 - add_class ||= ""
 - message ||= nil
-- icon = @picked[prop]
+- icon = @picked[filter]
 
 %td
-  .selected-icon{data: {prop: prop}}
-    = render 'cube_icon', icon: icon, selected_icon: @filters[prop], locked: @icon_grids[prop].blank?
+  .selected-icon{data: {filter: filter}}
+    = render 'cube_icon', icon: icon, selected_icon: @filters[filter], locked: @icon_grids[filter].blank?
 
-  - if @icon_grids[prop]
-    %div{id: "#{prop}-picker", class: 'hidden-picker'}
+  - if @icon_grids[filter]
+    %div{id: "#{filter}-picker", class: 'hidden-picker'}
       .picker_buttons
-        %a{class: "random knapp knapp-enabled", data: {field: field, code: 'random'}} Random
-        %a{class: "unselect knapp" + (@picked[prop].is_none ? "" : " knapp-enabled"), data: {field: field, code: ''}} Unselect
+        %a{class: "random knapp knapp-enabled", data: {field: selector, code: 'random'}} Random
+        %a{class: "unselect knapp" + (@picked[filter].is_none ? "" : " knapp-enabled"), data: {field: selector, code: ''}} Unselect
       %table{class: "icon-grid " + add_class}
-        - @icon_grids[prop].each do |icon_row|
+        - @icon_grids[filter].each do |icon_row|
           %tr
             - icon_row.each do |icon|
               %td
-                = render 'cube_icon', icon: icon, selected_icon: @filters[prop] if icon
+                = render 'cube_icon', icon: icon, selected_icon: @filters[filter] if icon
         - if message
           .message
             =message
