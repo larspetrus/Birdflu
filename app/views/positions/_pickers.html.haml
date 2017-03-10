@@ -35,7 +35,7 @@
   }
 
   function hide_unwanted_dialog() {
-    if (open_dialog_id !== wanted_dialog_id) {
+    if (open_dialog_id && open_dialog_id !== wanted_dialog_id) {
       $('#'+open_dialog_id).dialog('close');
       open_dialog_id = '';
     }
