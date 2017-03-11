@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.4'
 
-gem 'passenger'
+gem 'passenger', '5.0.21' # Weird things happened when upgrading this
 
 # Use Postgres as the database for Active Record
 gem 'pg'
