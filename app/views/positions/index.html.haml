@@ -79,8 +79,6 @@
         %td{colspan: 99}
           showing #{@clipped[:shown]} of #{@clipped[:total]} positions
 
-#show-alg{style: 'height:200px; width:200px;'}
-
 =render 'stars'
 
 :javascript
@@ -112,10 +110,8 @@
         }
       }
     }
-
     if (!(new_prefs && all_defaults)) {
       $('#udf').prop('disabled', true); // Posted (only) when the user has *chosen* all default values
     }
-
     $('form#main-form').submit();
   }

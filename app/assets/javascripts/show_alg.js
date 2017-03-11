@@ -14,7 +14,11 @@ function rp_setup(u_setup) {
 
 
 function roofpig_dialog(title, alg, u_setup, below_element) {
+  if ($('#show-alg').length === 0) {
+    $("body").append("<div id='show-alg' style='height:200px; width:200px;'></div>");
+  }
   CubeAnimation.create_in_dom('#show-alg', 'alg='+alg+'|base=AD|flags=showalg'+rp_setup(u_setup), "class='roofpig rp-dialog'");
+
   $('#show-alg').dialog({
     position: { my: 'center top', at: 'center bottom', of: below_element },
     width: '240px',
