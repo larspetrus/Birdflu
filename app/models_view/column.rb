@@ -157,7 +157,7 @@ class RawAlgColumns < AlgColumns
   end
 
   def name_link
-    tag(:td, hlp.link_to(@raw_alg.name, "/?pos=#{@raw_alg.position.display_name}&hl_id=#{@raw_alg.id}"))
+    tag(:td, hlp.link_to(@raw_alg.name, "/?pos=#{@raw_alg.position.display_name}&hl_id=#{@raw_alg.highlight_id}"))
   end
 
   def show
@@ -209,7 +209,7 @@ class ComboAlgColumns < AlgColumns
   end
 
   def name_link
-    tag(:td, hlp.link_to(@combo_alg.name, "/?pos=#{@combo_alg.position.display_name}&hl_id=#{@combo_alg.id}"))
+    tag(:td, hlp.link_to(@combo_alg.name, "/?pos=#{@combo_alg.position.display_name}&hl_id=#{@combo_alg.highlight_id}"))
   end
 
   def stars

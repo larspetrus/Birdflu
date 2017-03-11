@@ -140,6 +140,10 @@ class RawAlg < ActiveRecord::Base
     non_db? ? 'no_star' : 'star';
   end
 
+  def highlight_id
+    id
+  end
+
   # Set up a "premove" so the Roofpig colors look like the Position illustration
   def setup_moves(pov_adjustment = 0)
     net_setup = (u_setup + pov_adjustment) % 4

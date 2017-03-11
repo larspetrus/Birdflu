@@ -79,6 +79,10 @@ class ComboAlg < ActiveRecord::Base
     'cstar';
   end
 
+  def highlight_id
+    "c#{id}"
+  end
+
   def merge_display_data
     ComboAlg._merge_display_data(alg1, alg2, alg2_shift, cancel_count, merge_count)
   end

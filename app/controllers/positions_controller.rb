@@ -86,7 +86,7 @@ class PositionsController < ApplicationController
       @list_items.insert(0, RawAlg.make_non_db(Algs.shift(Algs.unpack(params[:hl_alg]), -@page_rotation)))
     end
     if params[:hl_id]
-      if params[:hl_id].start_with?('c')
+      if params[:hl_id].start_with?('c') # combo alg
         @hi_lite_id = params[:hl_id]
       else
         @hi_lite_id = params[:hl_id].to_i
