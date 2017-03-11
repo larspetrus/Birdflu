@@ -96,12 +96,14 @@ $algset-header: linear-gradient(to bottom, #eb8 5%, #b83 100%);
   line-height: 1.4;
 }
 
-.side-button {
-  position:absolute;
-  top:4px;
-  left:50%;
-  margin-left:111px; // Start this far right of center
+.algs-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .ok-button { margin-bottom: 10px; }
 }
+
 
 .uncovered {
   font-size: 80%;

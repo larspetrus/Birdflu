@@ -1,9 +1,10 @@
 = render 'leftbar', section: Section::ALGSETS
 
-.alg-set-form
+= render 'page_rotation'
 
+.algs-header
   %h4 #{@algset.dropdown_name} Algs
-  .side-button
+  .ok-button
     =link_to('OK', alg_sets_path, class: 'knapp knapp-enabled')
 
 %table{class: @list_classes}

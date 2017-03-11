@@ -44,7 +44,7 @@
     $('#headline_prot').text(['', '+U', '+U2', "+U'"][page_rotation]);
   }
 
-  var page_rotation = #{@page_rotation}; // Global state
+  var page_rotation = #{@page_rotation || 0}; // Global state
   if (page_rotation > 0) {
     adjust_pos_name();
     spin_svgs(0, 0);
