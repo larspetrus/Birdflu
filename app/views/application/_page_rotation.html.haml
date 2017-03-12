@@ -44,13 +44,6 @@
     $('#headline_prot').text(['', '+U', '+U2', "+U'"][page_rotation]);
   }
 
-  var page_rotation = #{@page_rotation || 0}; // Global state
-  if (page_rotation > 0) {
-    adjust_pos_name();
-    spin_svgs(0, 0);
-    rotate_all_algs(page_rotation);
-  }
-
   function adjust_url() {
     var old_url = window.location.search;
     var new_prot = 'prot=' + page_rotation;
@@ -82,8 +75,18 @@
           page_rotation = (page_rotation + diff + 4) % 4;
           adjust_url();
           adjust_pos_name();
-          $(ALG_TEXT_SELECT).removeAttr("style");
+          $(ALG_TEXT_SELECT).removeAttr("style"); // Remove grayness
         }
       }
     );
   }
+
+  var page_rotation = #{@page_rotation || 0}; // Page wide state
+
+  $(document).ready(function() {
+    if (page_rotation > 0) {
+      adjust_pos_name();
+      spin_svgs(0, 0);
+      rotate_all_algs(page_rotation);
+    }
+  });
