@@ -61,7 +61,9 @@ describe PosFilters do
       expect(pos_filters_new(poschange:'cp-r',pos:'Dr8E').all).to eq(
                                            {cop:'Dr',oll:'m42',co:'D',cp:'r',eo:'8',ep:''})
       expect(pos_filters_new(poschange:'cp-',pos:'B 0C').all).to eq(
-                                            {cop: '',  oll:'m3',co:'B',cp:'',eo:'0',ep:'C'})
+                                            {cop: '',oll:'m3', co:'B',cp:'',eo:'0',ep:'C'})
+
+      expect(pos_filters_new(pos:'Ao9l').all).to eq({cop: 'Ao', oll: 'm28', co: 'A', cp: 'o', eo: '9', ep:''})
     end
 
     it "misc" do
@@ -91,7 +93,7 @@ describe PosFilters do
 
   it 'two_set' do
     expect(pos_filters_new(pos:'Ao  ').count).to eq(2)
-    expect(pos_filters_new(pos:'Ao0k').count).to eq(4)
+    expect(pos_filters_new(pos:'Ao0K').count).to eq(4)
     expect(pos_filters_new(pos:'__0_').count).to eq(1)
     expect(pos_filters_new({}).count).to eq(0)
   end
@@ -99,5 +101,12 @@ describe PosFilters do
   it 'unpack_pos' do
     expect(PosFilters.unpack_pos('Fl4I')).to eq({co: 'F', cp: 'l', eo: '4', ep: 'I'})
     expect(PosFilters.unpack_pos('F_4_')).to eq({co: 'F', eo: '4'})
+  end
+
+  it 'unpack_pos tries to be nice' do
+    expect(PosFilters.unpack_pos('a')).to eq({co: 'A'})
+    expect(PosFilters.unpack_pos('b')).to eq({co: 'b'})
+
+    expect(PosFilters.unpack_pos('_O')).to eq({cp: 'o'})
   end
 end

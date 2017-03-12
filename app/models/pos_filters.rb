@@ -11,6 +11,7 @@ class PosFilters
 
   def initialize(params, position_set)
     filters = PosFilters.unpack_pos(params[:pos])
+    from_url = params[:poschange].nil? # From a URL, possibly manually typed
 
     changed, new_value = (params[:poschange] || ' - ').split('-')
 
@@ -38,7 +39,7 @@ class PosFilters
     end
 
     # Did EP become incompatible?
-    if changed == 'cp' && filters[:cp].present? && filters[:ep].present?
+    if (changed == 'cp' || from_url) && filters[:cp].present? && filters[:ep].present?
       ep_case = (('A'..'Z').include? filters[:ep]) ? :upper : :lower
       filters[:ep] = '' unless PosCodes.ep_type_by_cp(filters[:cp]) == ep_case
     end
@@ -53,12 +54,16 @@ class PosFilters
   end
 
   def self.unpack_pos(pos)
-    return {} unless pos
-    result = {}
-    BASE.each_with_index do |code, i|
-      result[code] = pos[i] if PosCodes.valid_for(code).include?(pos[i])
+    sanitized_pos = (pos || '').ljust(4, ' ')
+    sanitized_pos[0] = sanitized_pos[0].upcase unless sanitized_pos[0] == 'b'
+    sanitized_pos[1] = sanitized_pos[1].downcase
+
+    {}.tap do |result|
+      BASE.each_with_index do |filter, i|
+        code = sanitized_pos[i]
+        result[filter] = code if PosCodes.valid_for(filter).include?(code)
+      end
     end
-    result
   end
 
   def pos_code
