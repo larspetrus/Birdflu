@@ -88,11 +88,11 @@ RSpec.describe Algs do
   end
 
   it 'specialness' do
-    expect(Algs.specialness("F U F' U F U2 F'")).to eq('FU')
-    expect(Algs.specialness("B U2 B' U' B U' B'")).to eq('FU')
-    expect(Algs.specialness("F U' B' U F' U' B")).to eq('FUB')
-    expect(Algs.specialness("L U L D L' U' L D' L2")).to eq('UFD')
-    expect(Algs.specialness("R2 D' L D R D' L' D R")).to eq('FDB')
+    expect(Algs.specialness("F U F' U F U2 F'")).to eq('RU')
+    expect(Algs.specialness("B U2 B' U' B U' B'")).to eq('RU')
+    expect(Algs.specialness("F U' B' U F' U' B")).to eq('RUL')
+    expect(Algs.specialness("L U L D L' U' L D' L2")).to eq('URD')
+    expect(Algs.specialness("R2 D' L D R D' L' D R")).to eq('RDL')
     expect(Algs.specialness("L U F U' F' L'")).to eq('RFU')
     expect(Algs.specialness("F R2 D R D2 F D F2 R")).to eq('RFD')
     expect(Algs.specialness("L' B' R' U R U2 B U L")).to eq(nil)

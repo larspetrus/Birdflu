@@ -13,7 +13,7 @@ describe RawAlg do
       expect(alg.position.ll_code).to eq('a5c8c8c1')
       expect(alg.u_setup).to eq(2)
       expect(alg.moves).to eq("R' F2 L F L' F R")
-      expect(alg.specialness).to eq("LFR")
+      expect(alg.specialness).to eq("RFL")
       expect(alg.speed).to eq(6.3)
 
       expect(alg.non_db?).to eq(false)
@@ -140,7 +140,7 @@ describe RawAlg do
     expect(alg.speed).to eq(4.8)
     expect(alg.u_setup).to eq(2)
     expect(alg.name).to eq('-')
-    expect(alg.specialness).to eq('FU Not in DB')
+    expect(alg.specialness).to eq('RU Not in DB')
 
     expect(alg.id).to eq(nil)
     expect(alg.non_db?).to eq(true)
