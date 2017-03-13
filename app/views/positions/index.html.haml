@@ -40,7 +40,7 @@
 
 = render 'pickers'
 
-= render 'page_rotation'
+= render 'page_rotation', update_url: true
 
 =form_tag url_for(controller: "positions", action: "index"), method: 'get', id: 'main-form', enforce_utf8: false do
   =hidden_field_tag(:pos, @filters.pos_code)

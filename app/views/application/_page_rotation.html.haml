@@ -1,10 +1,12 @@
+- update_url ||= false
+
 .rotation-ui
   %h1
     %span rotate
   .buttons
+    %a{class: 'show-pig', onclick: "rotate_page(-1);"} U'
     %a{class: 'show-pig', onclick: "rotate_page(1);"} U
     %a{class: 'show-pig', onclick: "rotate_page(2);"} U2
-    %a{class: 'show-pig', onclick: "rotate_page(-1);"} U'
   .shortcuts
     shortcuts: , . /
 
@@ -45,13 +47,15 @@
   }
 
   function adjust_url() {
-    var old_url = window.location.search;
-    var new_prot = 'prot=' + page_rotation;
-    if (old_url.indexOf('prot') != -1) {
-      history.replaceState('', '', old_url.replace(/prot=./, new_prot));
-    } else {
-      var sep = old_url.indexOf('?') == -1 ? '?' : '&';
-      history.replaceState('', '', old_url + sep + new_prot);
+    if (#{update_url}) {
+      var old_url = window.location.search;
+      var new_prot = 'prot=' + page_rotation;
+      if (old_url.indexOf('prot') != -1) {
+        history.replaceState('', '', old_url.replace(/prot=./, new_prot));
+      } else {
+        var sep = old_url.indexOf('?') == -1 ? '?' : '&';
+        history.replaceState('', '', old_url + sep + new_prot);
+      }
     }
   }
 
