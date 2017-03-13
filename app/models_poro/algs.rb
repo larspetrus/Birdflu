@@ -103,11 +103,11 @@ module Algs
     used_sides = Algs.official_variant(alg).gsub(/[ '2]/,'').chars.uniq.sort.join # official_variant always includes B
     
     case used_sides
-      when 'BU'                then 'FU'
-      when 'BFU'               then 'FUB'
-      when 'BFR', 'BFL', 'BLR' then 'LFR'
-      when 'BDU'               then 'UFD'
-      when 'BDF'               then 'FDB'
+      when 'BU'                then 'RU'
+      when 'BFU'               then 'RUL'
+      when 'BFR', 'BFL', 'BLR' then 'RFL'
+      when 'BDU'               then 'URD'
+      when 'BDF'               then 'RDL'
       when 'BLU', 'BRU'        then 'RFU'
       when 'BDL', 'BDR'        then 'RFD'
       else
