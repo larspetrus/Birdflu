@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PosCodes
 
   def self.valid_for(field)

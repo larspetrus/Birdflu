@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # A MirrorAlgs object contains a RawAlg and its mirror alg. A few algs are their own mirrors.
 
 class MirrorAlgs

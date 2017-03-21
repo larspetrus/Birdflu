@@ -1,6 +1,6 @@
 # Birdflu
 
-#####An exhaustive Rubik's Cube Last Layer position and algorithm database
+##### An exhaustive Rubik's Cube Last Layer position and algorithm database
 
 Birdflu is a specialized tool for serious Rubik's Cube people, but is also useful for any cuber wanting to find 
 solutions to a last layer position. It's live at <http://birdflu.lar5.com>
