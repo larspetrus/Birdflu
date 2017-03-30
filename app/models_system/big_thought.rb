@@ -11,9 +11,10 @@ class BigThought
   end
 
   def self.combine(new_alg)
+    Rails.logger.info("Combining #{new_alg.to_s}")
     already_combined_ids = ComboAlg.combined_ids
-    raise "This alg is already combined: #{new_alg}" if already_combined_ids.include?(new_alg.id)
-    raise "Can't combine the empty alg (like this) " if new_alg.id == self.empty_alg&.id
+    Rails.logger.warn("This alg is already combined: #{new_alg}") and return if already_combined_ids.include?(new_alg.id)
+    Rails.logger.warn("Can't combine the empty alg (like this) ") and return if new_alg.id == self.empty_alg&.id
 
     ComboAlg.make(new_alg, self.empty_alg, 0) if self.empty_alg
     RawAlg.where(id: already_combined_ids).each do |old|
@@ -24,7 +25,7 @@ class BigThought
   end
 
   def self.combine_mirrors_from_names(raw_alg_names)
-    algs = raw_alg_names.map{|name| ra = RawAlg.by_name(name); [ra, ra.find_mirror] }.flatten
+    algs = raw_alg_names.map{|name| ra = RawAlg.by_name(name); [ra, ra.find_mirror] }.flatten.uniq
     combine_many(algs)
   end
 

@@ -19,6 +19,10 @@ class MirrorAlgs
     mirror_algs.reduce([]){|all, ma| all += ma.ids}.sort.uniq
   end
 
+  def self.reset
+    @combined_data = nil
+  end
+
   # Make MirrorAlgs of *all* RawAlgs that have been combined into ComboAlgs
   def self._combined_data
     @combined_data ||= begin

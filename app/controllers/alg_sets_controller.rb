@@ -122,7 +122,7 @@ class AlgSetsController < ApplicationController
     errors = []
 
     (add_malgs + remove_malgs).each do |user_ma|
-      errors << "Bad alg '#{user_ma}'" unless MirrorAlgs.combined_name_for(user_ma)
+      errors << "'#{user_ma}' is not alg sets ready yet" unless MirrorAlgs.combined_name_for(user_ma)
     end
 
     add_malgs = add_malgs.map{|ma| MirrorAlgs.combined_name_for(ma)}

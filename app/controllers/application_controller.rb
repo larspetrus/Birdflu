@@ -23,6 +23,7 @@ class ApplicationController < ActionController::Base
   end
 
   @@request_count = Hash.new(0)
+  @@user_agent_count = Hash.new(0)
   @@trouble_list = []
 
   def handle_wca_login
@@ -40,6 +41,8 @@ class ApplicationController < ActionController::Base
 
   def keep_track
     @@request_count["#{params[:controller]}::#{params[:action]}"] += 1
+    @@user_agent_count[request.env['HTTP_USER_AGENT']] += 1
+
     yield
   rescue Exception => e
     @@trouble_list << "Exception at #{Time.now} --- #{e.message}"
