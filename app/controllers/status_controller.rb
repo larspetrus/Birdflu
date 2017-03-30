@@ -10,6 +10,6 @@ class StatusController < ApplicationController
 
     @troubles = @@trouble_list
     @requests = @@request_count.keys.sort.map{|k| [k, @@request_count[k]] }
-    @user_agents = @@user_agent_count.keys.sort.map{|k| [k, @@user_agent_count[k]] }
+    @user_agents = @@user_agent_count.keys.map{|k| [k || "(nil)", @@user_agent_count[k]] }.sort_by{|name_count| -name_count.last }
   end
 end
