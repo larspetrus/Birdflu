@@ -21,6 +21,14 @@
             =req.first
           %td
             =req.last
+  .stat
+    %table
+      -@user_agents.each do |req|
+        %tr
+          %td
+            =req.first
+          %td
+            =req.last
 
   .stat
     -if @troubles.empty?

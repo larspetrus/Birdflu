@@ -10,5 +10,6 @@ class StatusController < ApplicationController
 
     @troubles = @@trouble_list
     @requests = @@request_count.keys.sort.map{|k| [k, @@request_count[k]] }
+    @user_agents = @@user_agent_count.keys.sort.map{|k| [k, @@user_agent_count[k]] }
   end
 end
