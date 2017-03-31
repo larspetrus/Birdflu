@@ -26,7 +26,7 @@ RSpec.describe AlgSetsController do
     end
 
     it 'Add invalid alg' do
-      expect(AlgSetsController::alter_algs(algset, "X14.X42", "")).to eq({errors: ["Bad alg 'X14.X42'"]})
+      expect(AlgSetsController::alter_algs(algset, "X14.X42", "")).to eq({errors: ["'X14.X42' is not alg sets ready yet"]})
     end
 
     it 'Remove alg' do
@@ -38,7 +38,7 @@ RSpec.describe AlgSetsController do
     end
 
     it 'Remove invalid alg' do
-      expect(AlgSetsController::alter_algs(algset, "", "X99.Z00")).to eq({errors: ["Bad alg 'X99.Z00'"]})
+      expect(AlgSetsController::alter_algs(algset, "", "X99.Z00")).to eq({errors: ["'X99.Z00' is not alg sets ready yet"]})
     end
 
     it 'Both add and remove algs' do

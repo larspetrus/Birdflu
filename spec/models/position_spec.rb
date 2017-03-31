@@ -43,6 +43,11 @@ RSpec.describe Position, :type => :model do
     expect(Position.find_by!(ll_code: 'a3e6f1k4').as_roofpig_tweaks()).to eq('ULB:ULB UR:UB URF:UBR LU:UR LUF:URF UF:UF BRU:UFL BU:UL')
   end
 
+  it '#is_symmetric' do
+    expect(Position.find_by!(ll_code: 'a1c3c3c5').is_symmetric()).to eq(false)
+    expect(Position.find_by!(ll_code: 'a2i5a2i5').is_symmetric()).to eq(true)
+  end
+
   it '#set_x_name' do
     messy = Position.new(ll_code: 'a4c5c1c4', cop: 'none')
 

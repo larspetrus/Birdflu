@@ -37,6 +37,20 @@ module Algs
     Algs.shift(alg, self.display_offset(alg))
   end
 
+  # The variant name is the first non D side moved
+  def self.variant_name(alg) # Be careful with slices and normalization! "B F ..." vs "F B ..."
+    alg.gsub(/[ '2DU]/, '').first
+  end
+
+  def self.all_variants(alg)
+    (0..3).map{|offset| Algs.shift(alg, offset) }
+  end
+
+  # The alphabetically first normalized variant. So first non D move is always on B.
+  def self.official_variant(alg)
+    Algs.all_variants(alg).sort.first
+  end
+
   def self.display_offset(alg)
     -Cube.by_alg(alg.to_s).standard_ll_code_offset % 4
   end
@@ -152,16 +166,6 @@ module Algs
 
   def self.length(alg)
     alg.split(' ').length
-  end
-
-  # The variant name is the first non D side moved
-  def self.variant_name(alg) # Be careful with slices and normalization! "B F ..." vs "F B ..."
-    alg.gsub(/[ '2DU]/, '').first
-  end
-
-  # The alphabetically first normalized variant. So first non D move is always on B.
-  def self.official_variant(alg)
-    (0..3).map {|i| Algs.shift(alg, i) }.sort.first
   end
 
   def self.merge_moves(alg1, alg2)

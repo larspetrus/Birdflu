@@ -80,11 +80,12 @@ class RawAlg < ActiveRecord::Base
     RawAlg.find_by(position_id: position.inverse_id, _speed: reverse_speed, length: length, _moves: db_alg)
   end
 
-  def self.find_from_moves(moves, position_id = nil)
-    position_id ||= Position.by_moves(moves).id
+  def self.find_from_moves(moves, position = nil)
+    position ||= Position.by_moves(moves)
     db_speed = Algs.speed_score(moves, for_db: true)
-    db_alg = Algs.pack(Algs.display_variant(moves))
-    RawAlg.find_by(position_id: position_id, _speed: db_speed, length: db_alg.length, _moves: db_alg)
+    algs = position.is_symmetric ? Algs.all_variants(moves) : [Algs.display_variant(moves)]
+    packed_algs = algs.map{|alg| Algs.pack(alg) }
+    RawAlg.find_by(position_id: position.id, _speed: db_speed, length: packed_algs.first.length, _moves: packed_algs)
   end
 
   def self.find_by_name(name)

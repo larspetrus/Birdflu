@@ -105,6 +105,10 @@ class Position < ActiveRecord::Base
     eo + ep
   end
 
+  def is_symmetric
+    ll_code.first(4) == ll_code.last(4)
+  end
+
   def set_mirror_id
     ll_code_obj = LlCode.new(ll_code)
     self.mirror_id = Position.find_by_ll_code(ll_code_obj.mirror).id

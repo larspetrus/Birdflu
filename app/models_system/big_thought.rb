@@ -11,7 +11,7 @@ class BigThought
   end
 
   def self.combine(new_alg)
-    Rails.logger.info("Combining #{new_alg.to_s}")
+    Rails.logger.info("Combining RawAlg #{new_alg.id}")
     already_combined_ids = ComboAlg.combined_ids
     Rails.logger.warn("This alg is already combined: #{new_alg}") and return if already_combined_ids.include?(new_alg.id)
     Rails.logger.warn("Can't combine the empty alg (like this) ") and return if new_alg.id == self.empty_alg&.id

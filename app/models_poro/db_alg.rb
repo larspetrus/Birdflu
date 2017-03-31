@@ -18,16 +18,8 @@ class DbAlg
     DbAlg.new(@alg.first(n))
   end
 
-  def not_first(n)
-    last(@alg.length - n)
-  end
-
   def last(n)
     DbAlg.new(@alg.last(n))
-  end
-
-  def not_last(n)
-    first(@alg.length - n)
   end
 
   def move_count
