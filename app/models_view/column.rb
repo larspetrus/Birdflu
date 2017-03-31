@@ -165,7 +165,8 @@ class RawAlgColumns < AlgColumns
   end
 
   def notes
-    tag(:td, [@raw_alg.specialness, @raw_alg.nick_name].compact.join(' '))
+    combo = @raw_alg.combo_ready ? tag(:span, 'c', ['combo-ready', 'right']) : ""
+    tag(:td, [@raw_alg.specialness, @raw_alg.nick_name, ].compact.join(' ').html_safe + combo)
   end
 
   def stars

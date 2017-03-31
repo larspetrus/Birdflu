@@ -47,7 +47,7 @@ module AlgSetsHelper
     return '(no algs)' if algset_algs.empty?
 
     algset_algs
-        .sub("G", "|G").sub("H", "|H").sub("I", "|I").sub("J", "|J").sub("K", "|K").sub("L", "|L").split('|')
+        .sub("G", "|G").sub("H", "|H").sub("I", "|I").sub("J", "|J").sub("K", "|K").sub("L", "|L").sub("M", "|M").sub("N", "|N").sub("O", "|O").split('|')
         .select{|x| x.present?}
         .join('●● ')
   end

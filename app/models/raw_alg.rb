@@ -201,6 +201,11 @@ class RawAlg < ActiveRecord::Base
     RawAlg.nick_names(id)
   end
 
+  def combo_ready
+    @@tmp_combos ||= ComboAlg.combined_ids
+    @@tmp_combos.include?(id)
+  end
+
   def to_s
     "#{name}: #{moves}  (id: #{id})"
   end

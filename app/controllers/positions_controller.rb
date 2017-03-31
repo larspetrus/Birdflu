@@ -197,16 +197,16 @@ class PositionsController < ApplicationController
       actual_moves = cleaned_input
       ll_code = Cube.by_alg(actual_moves).standard_ll_code # raises exception unless alg is good
 
-      db_alg = RawAlg.find_from_moves(cleaned_input, Position.find_by!(ll_code: ll_code))
+      found_alg = RawAlg.find_from_moves(cleaned_input, Position.find_by!(ll_code: ll_code))
     else # interpret as alg name
-      db_alg = RawAlg.by_name(cleaned_input)
-      raise "There is no alg named '#{cleaned_input}'" unless db_alg
-      actual_moves = db_alg.moves
+      found_alg = RawAlg.by_name(cleaned_input)
+      raise "There is no alg named '#{cleaned_input}'" unless found_alg
+      actual_moves = found_alg.moves
     end
 
     result = { ll_code: Cube.by_alg(actual_moves).standard_ll_code, prot: Cube.by_alg(actual_moves).standard_ll_code_offset}
-    if db_alg
-      result[:alg_id] = db_alg.id
+    if found_alg
+      result[:alg_id] = found_alg.id
     else
       result[:packed_alg] = Algs.pack(cleaned_input)
     end
