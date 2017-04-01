@@ -44,11 +44,11 @@ class AlgSetLab
       end
       break unless best_alg
 
-      puts "Adding #{best_alg}. New coverage #{best_coverage}. #{redundant_malgs.size} useless. Time #{duration_to_s(Time.now - t1)}"
+      puts "Adding #{best_alg}. New coverage #{best_coverage}. #{redundant_malgs.size} useless. Time #{Util.duration_to_s(t1)}"
       selected_malgs << best_alg
       coverage = best_coverage
     end
-    puts "[#{selected_malgs.map(&:name).join(',')}] - #{selected_malgs.count} algs. . Time #{duration_to_s(Time.now - t1)}"
+    puts "[#{selected_malgs.map(&:name).join(',')}] - #{selected_malgs.count} algs. . Time #{Util.duration_to_s(t1)}"
     puts "[#{MirrorAlgs.raw_alg_ids_from(selected_malgs)}]"
 
     trim_minimal_set(selected_malgs, coverage)
@@ -117,7 +117,7 @@ class AlgSetLab
     puts '-'*88
     puts scores.sort.first(20)
 
-    puts "That took #{self.duration_to_s(Time.now - t1)}"
+    puts "That took #{Util.duration_to_s(t1)}"
     ActiveRecord::Base.logger.level = 0
   end
 
@@ -135,7 +135,7 @@ class AlgSetLab
       removed.insert(0, worst.name)
       remaining_malg_names = malg_names - removed
     end
-    puts "[#{remaining_malg_names.join(',')}] - #{remaining_malg_names.count} algs. . Time #{self.duration_to_s(Time.now - t1)}"
+    puts "[#{remaining_malg_names.join(',')}] - #{remaining_malg_names.count} algs. . Time #{Util.duration_to_s(t1)}"
     puts "removed: #{removed}"
     puts "[#{new_alg_set(remaining_malg_names).ids}]"
     ActiveRecord::Base.logger.level = 0
@@ -161,18 +161,8 @@ class AlgSetLab
     results.sort!
     results.each { |r| puts "#{'%.4f' % r[0]} - #{r[1]}"}
 
-    puts "That took #{self.duration_to_s(Time.now - t1)}"
+    puts "That took #{Util.duration_to_s(t1)}"
     results.first.last
-  end
-
-  def self.duration_to_s(total_seconds)
-    hours = (total_seconds / 3600).floor
-    minutes = ((total_seconds % 3600)/60).floor
-    seconds = total_seconds % 60
-
-    decimals = total_seconds < 10 ? '%.4f' : '%.2f'
-
-    [hours > 0 ? "#{hours}h " : '', minutes > 0 ? "#{minutes}m " : '', decimals % seconds, 's'].join
   end
 end
 

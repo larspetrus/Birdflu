@@ -7,7 +7,7 @@
 - git_sha1 = `git rev-parse HEAD`
 .stat
   PID #{Process.pid} ·
-  Uptime: #{AlgSetLab.duration_to_s(Time.now - Birdflu::BOOTED_AT)} ·
+  Uptime: #{Util.duration_to_s(Birdflu::BOOTED_AT)} ·
   Git commit:
   = link_to(git_sha1.first(7), "https://github.com/larspetrus/Birdflu/commit/#{git_sha1}")
 

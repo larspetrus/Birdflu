@@ -70,22 +70,25 @@ class RawAlg < ActiveRecord::Base
   end
 
   def find_mirror
-    db_alg = Algs.pack(Algs.display_variant(Algs.mirror(moves)))
-    RawAlg.find_by(position_id: position.mirror_id, _speed: _speed, length: length, _moves: db_alg)
+    RawAlg.find_by(position_id: position.mirror_id, _speed: _speed, length: length, _moves: _query_variants(Algs.mirror(moves)))
   end
 
   def find_reverse
-    db_alg = Algs.pack(Algs.display_variant(Algs.reverse(moves)))
     reverse_speed = Algs.speed_score(Algs.reverse(moves), for_db: true)
-    RawAlg.find_by(position_id: position.inverse_id, _speed: reverse_speed, length: length, _moves: db_alg)
+    RawAlg.find_by(position_id: position.inverse_id, _speed: reverse_speed, length: length, _moves: _query_variants(Algs.reverse(moves)))
   end
 
   def self.find_from_moves(moves, position = nil)
     position ||= Position.by_moves(moves)
     db_speed = Algs.speed_score(moves, for_db: true)
-    algs = position.is_symmetric ? Algs.all_variants(moves) : [Algs.display_variant(moves)]
-    packed_algs = algs.map{|alg| Algs.pack(alg) }
+    packed_algs = _query_variants(moves)
     RawAlg.find_by(position_id: position.id, _speed: db_speed, length: packed_algs.first.length, _moves: packed_algs)
+  end
+
+  # We usually know which alg variant is in the DB, but sometimes we must try all
+  def _query_variants(moves)
+    algs = position.is_symmetric ? Algs.all_variants(moves) : [Algs.display_variant(moves)]
+    algs.map{|alg| Algs.pack(alg) }
   end
 
   def self.find_by_name(name)
