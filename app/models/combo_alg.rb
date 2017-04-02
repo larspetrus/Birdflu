@@ -21,7 +21,7 @@ class ComboAlg < ActiveRecord::Base
     display_offset = Algs.display_offset(merge[:moves])
     merge.keys.each { |key| merge[key] = Algs.shift(merge[key], display_offset) }
 
-    total_alg = RawAlg.find_from_moves(merge[:moves]) || self.maybe_create_alg(merge[:moves])
+    total_alg = RawAlg.with_moves(merge[:moves]) || self.maybe_create_alg(merge[:moves])
     if total_alg
       ComboAlg.construct(a1, a2, u_shift, total_alg, Algs.length(merge[:cancel1]), Algs.length(merge[:merged]))
     end
