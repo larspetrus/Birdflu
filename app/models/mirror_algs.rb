@@ -53,7 +53,10 @@ class MirrorAlgs
 
   def self.combined_name_for(alg_or_pair)
     @name_map ||= self.all_names.map{|aa| [[aa, aa]] + aa.split('.').map{|a| [a, aa]}}.reduce(&:+).reject{|pair| pair.first == '--'}.to_h
-    @name_map[alg_or_pair.to_s.upcase]
+
+    alg_or_pair = alg_or_pair.to_s.upcase
+    resulting_name = alg_or_pair.include?('.') ? alg_or_pair : RawAlg.resolve_name(alg_or_pair)
+    @name_map[resulting_name]
   end
 
   def self.combined(mirror_alg_name)

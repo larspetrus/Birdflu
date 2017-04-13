@@ -176,7 +176,7 @@ class PositionsController < ApplicationController
     new_params[:hl_id] ||= RawAlg.id(params[:hl_name]) if params[:hl_name]
     new_params[:hl_alg] = params[:hl_alg]              if params[:hl_alg]
 
-    new_params[:prot] = params[:prot] if ['1', '2', '3'].include?(params[:prot])
+    new_params[:prot] = params[:prot] if %w(1 2 3).include?(params[:prot])
 
     as_query = []
     new_params.merge!(non_default_fields).each{ |k,v| as_query << "#{k}=#{v}"}

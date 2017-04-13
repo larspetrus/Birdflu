@@ -65,8 +65,27 @@ class RawAlg < ActiveRecord::Base
   end
 
   # --- Finders ---
+
+  # H1: Alg named H1.
+  # H1': Reverse alg of H1 (H2).
+  # H1m/H1M: Mirror alg of H1 (H25).
+  # H1m': Reverse mirror of H1 (H27)
   def self.by_name(name)
-    self.find(self.id(name))
+    full_name = name.to_s
+    case full_name.last
+      when "'"
+        self.by_name(full_name.chop).find_reverse
+      when "M", "m"
+        self.by_name(full_name.chop).find_mirror
+      else
+        self.find(self.id(full_name))
+    end
+  end
+
+  def self.resolve_name(full_name)
+    (["'", "M", "m"].include?(full_name.last)) ? RawAlg.by_name(full_name).name : full_name
+  rescue
+    full_name
   end
 
   def find_mirror

@@ -30,8 +30,8 @@
   function sync_alg_fields() {
     var display_alg_text = "-";
     try {
-      var clean_input = $('#input_alg').val().replace(/[\(\)\t]/g, '');
-      display_alg_text = /^\D\d+$/.test(clean_input) ? clean_input.toUpperCase() : new Alg(clean_input).unhand();
+      var clean_input = $('#input_alg').val().replace(/[\(\)\t]/g, ''); // filter out tabs and braces
+      display_alg_text = /^\D\d+[mM']*$/.test(clean_input) ? clean_input.toUpperCase() : new Alg(clean_input).unhand();
     }
     catch(err) {}
     $('#display_alg').val(display_alg_text);
