@@ -129,18 +129,16 @@ describe AlgSet do
     end
   end
 
-  it 'menu_options shows only predefined + own set, and filters on EO lock' do
+  it 'menu_options shows only predefined + own set' do
     a1 = AlgSet.create(name: "a1", subset: 'eo', predefined: true)
     a2 = AlgSet.create(name: "a2", subset: 'eo', wca_user_id: 313)
     a3 = AlgSet.create(name: "a3", subset: 'all', wca_user_id: 5000)
     a4 = AlgSet.create(name: "a4", subset: 'all', wca_user_id: 313)
     a5 = AlgSet.create(name: "a5", subset: 'all', predefined: true)
 
-    expect(AlgSet.menu_options(nil, false)).to eq([["all-a5", a5.id], ["eo-a1", a1.id]])
-    expect(AlgSet.menu_options(nil,  true)).to eq([["eo-a1", a1.id]])
+    expect(AlgSet.menu_options(nil)).to eq([["all-a5", a5.id], ["eo-a1", a1.id]])
 
-    expect(AlgSet.menu_options(double(db_id: 313), false)).to eq([["all-a5", a5.id], ["eo-a1", a1.id], ["all·a4", a4.id], ["eo·a2", a2.id]])
-    expect(AlgSet.menu_options(double(db_id: 313),  true)).to eq([["eo-a1", a1.id], ["eo·a2", a2.id]])
+    expect(AlgSet.menu_options(double(db_id: 313))).to eq([["all-a5", a5.id], ["eo-a1", a1.id], ["all·a4", a4.id], ["eo·a2", a2.id]])
   end
 
   it 'exports/imports YAML data' do

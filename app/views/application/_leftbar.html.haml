@@ -34,7 +34,7 @@
             =Fields::COMBOS.as_tag(@list_format, [], class: 'list-size__select', form: 'main-form')
           - unless @list_format.combos == 'none'
             %span.list-size.list-outline{style: "margin-top: 6px;"}
-              =Fields::ALGSET.as_tag(@list_format, AlgSet.menu_options(@login, @position_set == 'eo'), class: 'list-size__select', form: 'main-form')
+              =Fields::ALGSET.as_tag(@list_format, AlgSet.menu_options(@login), class: 'list-size__select', form: 'main-form')
           - else
             =Fields::ALGSET.as_hidden_field(@list_format)
 
