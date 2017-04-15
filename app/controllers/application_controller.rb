@@ -41,7 +41,7 @@ class ApplicationController < ActionController::Base
     @dev_marker_class = 'dev-marker' if Rails.env.development?
   end
 
-  BOT_AGENTS = ['AhrefsBot', 'DotBot', 'Googlebot', 'HostTracker']
+  BOT_AGENTS = ['AhrefsBot', 'DotBot', 'Googlebot', 'HostTracker', 'MJ12bot', 'Baiduspider', 'bingbot', 'Yahoo! Slurp']
   def keep_track
     user_agent = request.env['HTTP_USER_AGENT']
     action = "#{params[:controller]}::#{params[:action]}"
