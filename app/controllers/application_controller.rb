@@ -24,6 +24,8 @@ class ApplicationController < ActionController::Base
 
   @@request_count = Hash.new(0)
   @@user_agent_count = Hash.new(0)
+  @@bot_request_count = Hash.new(0)
+  @@bot_user_agent_count = Hash.new(0)
   @@trouble_list = []
 
   def handle_wca_login
@@ -39,9 +41,19 @@ class ApplicationController < ActionController::Base
     @dev_marker_class = 'dev-marker' if Rails.env.development?
   end
 
+  BOT_AGENTS = ['AhrefsBot', 'DotBot', 'Googlebot', 'HostTracker']
   def keep_track
-    @@request_count["#{params[:controller]}::#{params[:action]}"] += 1
-    @@user_agent_count[request.env['HTTP_USER_AGENT']] += 1
+    user_agent = request.env['HTTP_USER_AGENT']
+    action = "#{params[:controller]}::#{params[:action]}"
+
+    unless BOT_AGENTS.any? {|t| user_agent&.include?(t) }
+      @@request_count[action] += 1
+      @@user_agent_count[user_agent] += 1
+    else
+      @@bot_request_count[action] += 1
+      @@bot_user_agent_count[user_agent] += 1
+    end
+
 
     yield
   rescue Exception => e

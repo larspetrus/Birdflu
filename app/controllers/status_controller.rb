@@ -11,5 +11,8 @@ class StatusController < ApplicationController
     @troubles = @@trouble_list
     @requests = @@request_count.keys.sort.map{|k| [k, @@request_count[k]] }
     @user_agents = @@user_agent_count.keys.map{|k| [k || "(nil)", @@user_agent_count[k]] }.sort_by{|name_count| -name_count.last }
+
+    @bot_requests = @@bot_request_count.keys.sort.map{|k| [k, @@bot_request_count[k]] }
+    @bot_user_agents = @@bot_user_agent_count.keys.map{|k| [k || "(nil)", @@bot_user_agent_count[k]] }.sort_by{|name_count| -name_count.last }
   end
 end

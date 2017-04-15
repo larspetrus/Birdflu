@@ -31,6 +31,24 @@
             =req.first
           %td
             =req.last
+  %hr
+    Bots...
+  .stat
+    %table
+      -@bot_requests.each do |req|
+        %tr
+          %td
+            =req.first
+          %td
+            =req.last
+  .stat
+    %table
+      -@bot_user_agents.each do |req|
+        %tr
+          %td
+            =req.first
+          %td
+            =req.last
 
   .stat
     -if @troubles.empty?
