@@ -3,39 +3,42 @@ require 'rails_helper'
 RSpec.describe PositionsController do
 
   describe "POST find_by_alg" do
-    it "computes the ll_code by alg" do
-      alg = "R' F' L F' L D' L' D L' F2 R"
-      post_find_by_alg(alg)
+    describe 'algs not in DB' do
+      it "computes the ll_code by alg" do
+        alg = "R2 R F' L F' L D' L' D L' F2 R"
+        post_find_by_alg(alg)
 
-      expect(JSON.parse(response.body)).to eq("ll_code" => "a7j7b8j8", "prot" => 0, "packed_alg"=> Algs.pack(alg))
+        expect(JSON.parse(response.body)).to eq("ll_code" => "a7j7b8j8", "prot" => 0, "packed_alg"=> Algs.pack(alg))
+      end
+
+      it "computes the page rotation" do
+        alg = "F2 F L' B L' B D' B' D B' L2 F"
+        post_find_by_alg(alg)
+        expect(JSON.parse(response.body)).to eq("ll_code" => "a7j7b8j8", "prot" => 1, "packed_alg"=> Algs.pack(alg))
+      end
+
+      it "removes needless U turns" do
+        alg = "B B R2 F R F' R B2 U' L U' L'"
+        post_find_by_alg(alg + " U2")
+        expect(JSON.parse(response.body)).to eq("ll_code" => "a5c6g8q3", "prot" => 0, "packed_alg"=> Algs.pack(alg))
+      end
+
+      it "returns rotation for alg NOT in DB" do
+        moves = "B2 B' D U' F U L F' D' B' U' L'"
+        post_find_by_alg(moves)
+        expect(JSON.parse(response.body)).to eq("ll_code" => "a1i2c3j8", "prot" => 3, "packed_alg"=>Algs.pack(moves))
+      end
     end
 
-    it "computes the page rotation" do
-      alg = "F' L' B L' B D' B' D B' L2 F"
-      post_find_by_alg(alg)
-      expect(JSON.parse(response.body)).to eq("ll_code" => "a7j7b8j8", "prot" => 1, "packed_alg"=> Algs.pack(alg))
-    end
-
-    it "finds the ll_code and position id by alg name" do
-      db_alg = RawAlg.make("R D U' L U B L' D' R' U' B'", 11)
-      allow(RawAlg).to receive(:by_name).with("K25") { db_alg }
-
+    it "returns correctly called by alg name" do
       post_find_by_alg("K25")
-      expect(JSON.parse(response.body)).to eq("ll_code" => "a1i2c3j8", "prot" => 0, "alg_id"=>db_alg.id)
+      expect(JSON.parse(response.body)).to eq("ll_code" => "a1i2c3j8", "prot" => 0, "alg_id"=> RawAlg.by_name("K25").id)
     end
 
-    it "finds the ll_code and position id by moves, if the alg is in the DB" do
-      db_alg = RawAlg.make("R D U' L U B L' D' R' U' B'", 11)
-
+    it "returns rotation for alg in DB" do
       post_find_by_alg("B D U' F U L F' D' B' U' L'")
-      expect(JSON.parse(response.body)).to eq("ll_code" => "a1i2c3j8", "prot" => 3, "alg_id"=>db_alg.id)
+      expect(JSON.parse(response.body)).to eq("ll_code" => "a1i2c3j8", "prot" => 3, "alg_id"=> RawAlg.by_name("K25").id)
     end
-
-    it "removes needless U turns" do
-      post_find_by_alg("B2 R2 F R F' R B2 U' L U' L' U2")
-      expect(JSON.parse(response.body)).to eq("ll_code" => "a5c6g8q3", "prot" => 0, "packed_alg"=> Algs.pack("B2 R2 F R F' R B2 U' L U' L'"))
-    end
-
 
     it "Detects errors" do
       post_find_by_alg("F blah U")

@@ -1,7 +1,7 @@
 RSpec.configure do |config|
 
   config.before(:suite) do
-    DatabaseCleaner.clean_with(:truncation, except: %w[positions])
+    DatabaseCleaner.clean_with(:truncation, except: [Position, RawAlg, ComboAlg].map(&:table_name))
   end
 
   config.before(:each) do

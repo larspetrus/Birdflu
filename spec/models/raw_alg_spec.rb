@@ -76,7 +76,7 @@ describe RawAlg do
     algs = [alg, alg_m, Algs.reverse(alg), Algs.reverse(alg_m)].map{|a| Algs.official_variant(a)}
 
     it 'mirror' do
-      a1, a2, a3, a4 = algs.map{ |alg| RawAlg.make(alg, 13) }
+      a1, a2, a3, a4 = algs.map{ |alg| RawAlg.with_moves(alg) }
 
       expect(a1.find_mirror).to eq(a2)
       expect(a2.find_mirror).to eq(a1)
@@ -85,7 +85,7 @@ describe RawAlg do
     end
 
     it 'reverse' do
-      a1, a2, a3, a4 = algs.map{ |alg| RawAlg.make(alg, 13) }
+      a1, a2, a3, a4 = algs.map{ |alg| RawAlg.with_moves(alg) }
 
       expect(a1.find_reverse).to eq(a3)
       expect(a3.find_reverse).to eq(a1)
@@ -95,7 +95,7 @@ describe RawAlg do
   end
 
 
-  it 'find_from_moves' do
+  it 'with_moves' do
     db_alg = RawAlg.make("F2 U L R' F2 L' R U F2", 9)
 
     expect(RawAlg.with_moves(db_alg.moves, db_alg.position).id).to eq(db_alg.id)
@@ -121,12 +121,10 @@ describe RawAlg do
     expect(RawAlg.id('G200', id_mins)).to eq(nil) # G7 is the highest G name
     expect(RawAlg.id('NotAnID', id_mins)).to eq(nil)
     # known problem: There is no check for non existent ID with max length, like H9999999 in this test case
-
-    expect(RawAlg.instance_variable_get('@id_ranges')).to eq(nil) # Avoid test contamination. May be overkill
   end
 
   it 'as alg objects' do
-    raw_alg = RawAlg.make("F2 U L R' F2 L' R U F2", 9)
+    raw_alg = RawAlg.by_name(:I141)
 
     expect(raw_alg.ui_alg.to_s).to eq(raw_alg.moves)
     expect(raw_alg.db_alg.to_s).to eq(raw_alg._moves)
@@ -160,5 +158,43 @@ describe RawAlg do
     expect(RawAlg.nick_names(2636)).to eq("Sune²")
 
     expect(RawAlg.nick_names(123456)).to eq(nil)
+  end
+
+  it 'by_name' do
+    expect(RawAlg.by_name("J42").name).to eq("J42")
+    expect(RawAlg.by_name("j42").name).to eq("J42")
+    expect(RawAlg.by_name(:j42).name).to eq("J42")
+
+    expect(RawAlg.by_name("J42'").name).to eq("J193")
+    expect(RawAlg.by_name("J42m").name).to eq("J41")
+    expect(RawAlg.by_name("J42M").name).to eq("J41")
+    expect(RawAlg.by_name("J42m'").name).to eq("J497")
+  end
+
+  it 'find_mirror' do
+    j99 = RawAlg.by_name('J99')
+    j421 = RawAlg.by_name('J421')
+
+    expect(Algs.official_variant(j99.moves)).to eq(Algs.official_variant(Algs.mirror(j421.moves)))
+    expect(j99.find_mirror).to eq(j421)
+    expect(j421.find_mirror).to eq(j99)
+  end
+
+  it 'find_reverse' do
+    j99 = RawAlg.by_name('J99')
+    j454 = RawAlg.by_name('J454')
+
+    expect(Algs.official_variant(j99.moves)).to eq(Algs.official_variant(Algs.reverse(j454.moves)))
+    expect(j99.find_reverse).to eq(j454)
+    expect(j454.find_reverse).to eq(j99)
+  end
+
+  it 'resolve_name' do
+    expect(RawAlg.resolve_name "J1").to eq("J1")
+    expect(RawAlg.resolve_name "J1'").to eq("J183")
+    expect(RawAlg.resolve_name "J1m").to eq("J315")
+    expect(RawAlg.resolve_name "J1M").to eq("J315")
+    expect(RawAlg.resolve_name "J1m'").to eq("J483")
+    expect(RawAlg.resolve_name "J1'm").to eq("J483")
   end
 end

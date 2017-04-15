@@ -2,12 +2,14 @@ require 'rails_helper'
 
 describe BigThought do
 
+  # These don't make much sense in a seeded DB, but could be useful if/when I touch this again
+
   describe 'combine' do
     let (:alg1) { RawAlg.make("B' R2 F R F' R B",  7) }
     let (:alg2) { RawAlg.make("B L U L' U' B'",    6) }
     let (:alg3) { RawAlg.make("B U' F' U B' U' F", 7) }
 
-    it "populates incrementally" do
+    xit "populates incrementally" do
       expect(counts(alg1.id)).to eq(alg1: 0, alg2: 0, total: 0)
 
       BigThought.combine(alg1)
@@ -23,7 +25,7 @@ describe BigThought do
       expect(counts(alg3.id)).to eq(alg1: 12, alg2: 12, total: 36)
     end
 
-    it 'removes cancellations' do
+    xit 'removes cancellations' do
       BigThought.combine(alg1)
       BigThought.combine(alg9 = RawAlg.make("B' R' F R' F' R2 B", 7))
       expect(counts(alg1.id)).to eq(alg1: 7, alg2: 7, total: 14)

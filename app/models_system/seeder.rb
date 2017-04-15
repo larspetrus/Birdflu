@@ -37,13 +37,22 @@ class Seeder
   end
 
   def self.load
+    t1 = Time.now
+    puts "Loading seed data"
+
     if Position.count == 0
       execute("COPY positions FROM '#{POSITIONS_FILE}'")
+      puts "- Positions loaded: #{Util.duration_to_s(t1)}"
     end
 
     execute("COPY raw_algs FROM '#{RAW_ALG_BULK_FILE}'")
     execute("COPY raw_algs FROM '#{RAW_ALG_EXTRA_FILE}'")
+    puts "- Raw algs loaded: #{Util.duration_to_s(t1)}"
+
     execute("COPY combo_algs FROM '#{COMBO_ALG_FILE}'")
+    puts "- Combo algs loaded: #{Util.duration_to_s(t1)}"
+
+    [Position, RawAlg, ComboAlg].each { |model_class| ActiveRecord::Base.connection.reset_pk_sequence!(model_class.table_name)}
   end
 
   def self.execute(sql)

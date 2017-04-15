@@ -18,13 +18,10 @@ RSpec.configure do |config|
 
     config.before(:suite) do
       # -- uncomment to regenerate --
-      # Position.delete_all
+      # [Position, RawAlg, ComboAlg].each(&:delete_all)
 
-      if Position.count == 0
-        ActiveRecord::Base.connection.reset_pk_sequence!('positions')
-        ActiveRecord::Base.transaction do
-          BigThought.generate_positions
-        end
+      if Position.count == 0 || RawAlg.count == 0 || ComboAlg.count == 0
+        Seeder.load
       end
     end
 
