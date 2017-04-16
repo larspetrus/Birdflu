@@ -31,11 +31,13 @@ class BigThought
 
   def self.combine_many(raw_algs)
     text = "Max combo_alg id: #{ComboAlg.maximum(:id)}. Max raw_alg id: #{RawAlg.maximum(:id)}. "
+    commands = "DbTransfer.write_new_data(ComboAlg, #{ComboAlg.maximum(:id)})\nDbTransfer.write_new_data(RawAlg, #{RawAlg.maximum(:id)})"
     puts text
     timed_transaction do
       raw_algs.each{ |alg| combine(alg) }
     end
     puts text
+    puts commands
   end
 
   def self.empty_alg

@@ -74,9 +74,4 @@ class DbTransfer
     puts "#{Util.duration_to_s(t1)}: Handled #{line} lines in #{filename}"
   end
 
-  # A lazy user could run this on the destination side
-  def self.ez_cmd(model_class)
-    "DbTransfer.write_new_data(#{model_class.name}, #{model_class.maximum(:id)})"
-  end
-
 end

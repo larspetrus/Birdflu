@@ -126,14 +126,15 @@ class PositionsController < ApplicationController
     end
 
     if single_pos
-      rot_count = single_pos.pov_rotations.count
-      rot_s = rot_count == 1 ? '' : 's'
-
       result.headline = "Position #{single_pos.display_name}"
+
+      rotation_links = single_pos.pov_rotations.map { |id| pos_link(Position.find(id)) }
+      s = (rotation_links.count == 1 ? '' : 's')
+
       result.link_section = [
           { label: 'Mirror',  links: single_pos.has_mirror  ? [pos_link(single_pos.mirror)]   : ['None'] },
           { label: 'Inverse', links: single_pos.has_inverse ? [pos_link(single_pos.inverse)]  : ['None'] },
-          rot_count > 0 ? { label: 'Rotation'+rot_s, links: single_pos.pov_rotations.map{|id| pos_link(Position.find(id)) } } : nil
+          rotation_links.present? ? { label: 'Rotation'+s, links: rotation_links} : nil
       ].compact
     else
       result.headline = "#{data.position_count} positions"
