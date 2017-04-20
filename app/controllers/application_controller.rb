@@ -41,12 +41,13 @@ class ApplicationController < ActionController::Base
     @dev_marker_class = 'dev-marker' if Rails.env.development?
   end
 
-  BOT_AGENTS = %w(AhrefsBot DotBot Googlebot HostTracker MJ12bot Baiduspider bingbot Slurp YandexBot Sogou BUbiNG)
+  BOT_AGENTS = %w(AhrefsBot DotBot Googlebot HostTracker MJ12bot Baiduspider bingbot Slurp YandexBot Sogou BUbiNG linguee)
   def keep_track
     user_agent = request.env['HTTP_USER_AGENT']
     action = "#{params[:controller]}::#{params[:action]}"
 
-    unless BOT_AGENTS.any? {|t| user_agent&.include?(t) }
+    known_bot = BOT_AGENTS.any? { |t| user_agent&.include?(t) }
+    unless known_bot
       @@request_count[action] += 1
       @@user_agent_count[user_agent] += 1
     else
@@ -57,7 +58,7 @@ class ApplicationController < ActionController::Base
 
     yield
   rescue Exception => e
-    @@trouble_list << "Exception at #{Time.now} --- #{e.message}"
+    @@trouble_list << "Exception at #{Time.now} --- #{e.message} #{known_bot ? '(BOT)' : ''}"
     raise
   end
 end
