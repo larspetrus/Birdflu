@@ -13,7 +13,7 @@
   -if section != Section::FMC
     %nav.leftbar
       -if section == Section::ALGS
-        .leftitem.clickable= link_to 'Random Position', "positions/#{Position.random_id(@position_set)}"
+        .leftitem.clickable= link_to 'Random Position', "/?pos=#{Position.random_name(@position_set)}&rnd=t"
 
       .leftitem
         =render 'find_by_alg'

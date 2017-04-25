@@ -175,6 +175,14 @@ class Position < ActiveRecord::Base
     @pos_ids[subset.to_sym].sample
   end
 
+  def self.random_name(subset = 'all')
+    @pos_names ||= {
+        all: Position.real.map(&:display_name),
+        eo:  Position.real.where(eo: '4').map(&:display_name)
+    }
+    @pos_names[subset.to_sym].sample
+  end
+
   # Update positions with optimal RawAlgs data. Expects algs to exist for all positions.
   def self.set_best_algs
     puts "Computing Position.best_alg_id, Position.optimal_alg_length"

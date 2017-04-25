@@ -4,10 +4,17 @@ class PositionsController < ApplicationController
 
   def index  # === Routed action ===
     get_prefs_from_params = (params.keys.map(&:to_sym) & Fields::ALL_DEFAULTS.keys).present? || !params[:udf].nil?
+
+    # Show a random concrete position, if you seem to be a newbie.
+    if cookies[Fields::COOKIE_NAME].blank? && params[:pos].blank? && !get_prefs_from_params
+      redirect_to "/?pos=#{Position.random_name}&rnd=t" and return
+    end
+
     Fields.store_list_def(cookies, params) if get_prefs_from_params
 
     setup_leftbar
 
+    flash.now[:notification] = "Random position" if params[:rnd]
     @filters = PosFilters.new(params, @position_set)
     @bookmark_url = PositionsController.bookmark_url(@filters, request.query_parameters)
 
@@ -146,11 +153,11 @@ class PositionsController < ApplicationController
   end
 
   def pos_link(pos)
-    vc.link_to(pos.display_name,  "positions/#{pos.id}")
+    vc.link_to(pos.display_name,  "/?pos=#{pos.display_name}")
   end
 
   def self.bookmark_url(filters, all_params)
-    tail = all_params.except(:pos, :poschange).to_query
+    tail = all_params.except(:pos, :poschange, :rnd).to_query
     "?pos=#{filters.pos_code}" + (tail.present? ? '&' + tail : '')
   end
 

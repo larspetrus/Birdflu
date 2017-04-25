@@ -53,6 +53,8 @@ $cube_white: #eee;
 
 // ---- Site wide styles ----
 
+$left-width: 150px;
+
 body {
   font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif;
 }
@@ -85,13 +87,15 @@ h4, h5 {
 .flash_msgs {
   position: absolute;
   top: 8px;
-  left: 50%;
+  left: $left-width + 20px;
 
-  border-radius: 5px;
-
+  border-radius: 3px;
   padding: 12px;
-  background-color: rgba(188, 255, 188, 0.7);
-  border: 2px solid #5b5;
+
+  font-size: 16px;
+
+  background-color: rgba(222, 255, 222, 0.8);
+  border: 1px solid #5b5;
 }
 
 .combo-ready {
