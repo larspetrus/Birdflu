@@ -46,7 +46,7 @@ class PositionsController < ApplicationController
 
           if (@list_format.combos != 'none') && combos_allowed
             combo_raw_algs = @only_position.algs_in_set(alg_set, sortby: @list_format.sortby, limit: @list_format.lines)
-            flash[:notification] = "No Combo algs found" if combo_raw_algs.empty?
+            flash.now[:notification] = "No Combo algs found" if combo_raw_algs.empty?
           end
 
           if @list_format.combos != 'only' || combo_raw_algs.empty?

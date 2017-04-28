@@ -16,16 +16,21 @@ class AlgSetsController < ApplicationController
     @algset = AlgSet.new
   end
 
+  def algset_params(operation, non_posted_params = {})
+    permitted = [:name, :description] + (operation == :create ? [:subset, :algs] : [])
+    params.require(:alg_set).permit(permitted).merge(non_posted_params)
+  end
+
   def create  # === Routed action ===
     raise "Not allowed to create Algset" unless can_create
 
     setup_leftbar
 
-    params[:alg_set][:algs] = params[:alg_set][:algs].split(' ').map{|alg| MirrorAlgs.combined_name_for(alg) || alg}.join(' ')
-    @algset = AlgSet.new(algset_params(@login ? {wca_user_id: @login.db_id} : {predefined: true}))
+    params[:alg_set][:algs] = params[:alg_set][:algs].split(' ').map{|alg| MirrorAlgs.combined_name_for(alg) || alg}.join(' ') # normalize in model?
+    @algset = AlgSet.new(algset_params(:create, @login ? {wca_user_id: @login.db_id} : {predefined: true}))
     if @algset.save
       activate(@algset)
-      flash[:success] = "Alg set created"
+      flash[:success] = "Alg set '#{@algset.name}' created"
       redirect_to alg_sets_path
     else
       render new_alg_set_path
@@ -57,17 +62,46 @@ class AlgSetsController < ApplicationController
     @algset = AlgSet.find(params[:id]).data_only
     raise "Not allowed to update Algset #{@algset.id}" unless can_change(@algset)
 
-    alterations = AlgSetsController::alter_algs(@algset, params[:add_algs], params[:remove_algs])
-    if alterations[:replacement_algs]
-      @algset.replace_algs(alterations[:replacement_algs]).save!
+    algs_change = alter_algs(@algset, params[:add_algs], params[:remove_algs])
+    if algs_change[:replacement_algs]
+      @algset.replace_algs(algs_change[:replacement_algs])
     end
 
-    if @algset.errors.blank?
+    if @algset.errors.empty? && @algset.update_attributes(algset_params(:update))
       activate(@algset)
-      flash[:success] = alterations[:summary] || "Algset updated"
+      flash[:success] = algs_change[:summary] || "Algset '#{@algset.name}' updated"
       redirect_to alg_sets_path
     else
       render 'edit'
+    end
+  end
+
+  # Figure out the new alg set from the preexisting set and the user entered add/removals. Set algset.errors if the input is bad.
+  def alter_algs(algset, adds, removes)
+    return {} if adds.blank? && removes.blank?
+
+    old_malgs = algset.algs.split(' ')
+    add_malgs = adds.upcase.split(' ')
+    remove_malgs = removes.upcase.split(' ')
+    errors = []
+
+    (add_malgs + remove_malgs).each do |user_ma|
+      errors << "'#{user_ma}' is not combinable (yet)" unless MirrorAlgs.combined_name_for(user_ma)
+    end
+
+    add_malgs = add_malgs.map{|ma| MirrorAlgs.combined_name_for(ma)}
+    remove_malgs = remove_malgs.map{|ma| MirrorAlgs.combined_name_for(ma)}
+
+    remove_malgs.each do |user_ma|
+      errors << "'#{user_ma}' is not in this algset" unless old_malgs.include?(user_ma) || user_ma.blank?
+    end
+
+    if errors.empty?
+      summary = (add_malgs.present? ? "Added "+add_malgs.join(', ') : "") + (remove_malgs.present? ? " Removed "+remove_malgs.join(', ') : "")
+      { replacement_algs: (old_malgs + add_malgs - remove_malgs).sort.join(' '), summary: summary }
+    else
+      errors.each { |error| algset.errors.add(:base, error)}
+      { errors: algset.errors.full_messages}
     end
   end
 
@@ -109,35 +143,4 @@ class AlgSetsController < ApplicationController
     Fields.store_list_def(cookies, @list_format.to_h)
   end
 
-  def algset_params(more_params = {})
-    params.require(:alg_set).permit(:name, :description, :subset, :algs).merge(more_params)
-  end
-
-  def self.alter_algs(algset, adds, removes)
-    return {} if adds.blank? && removes.blank?
-
-    old_malgs = algset.algs.split(' ')
-    add_malgs = adds.upcase.split(' ')
-    remove_malgs = removes.upcase.split(' ')
-    errors = []
-
-    (add_malgs + remove_malgs).each do |user_ma|
-      errors << "'#{user_ma}' is not combinable (yet)" unless MirrorAlgs.combined_name_for(user_ma)
-    end
-
-    add_malgs = add_malgs.map{|ma| MirrorAlgs.combined_name_for(ma)}
-    remove_malgs = remove_malgs.map{|ma| MirrorAlgs.combined_name_for(ma)}
-
-    remove_malgs.each do |user_ma|
-      errors << "'#{user_ma}' is not in this algset" unless old_malgs.include?(user_ma) || user_ma.blank?
-    end
-
-    if errors.empty?
-      summary = (add_malgs.present? ? "Added "+add_malgs.join(', ') : "") + (remove_malgs.present? ? " Removed "+remove_malgs.join(', ') : "")
-      return { replacement_algs: (old_malgs + add_malgs - remove_malgs).sort.join(' '), summary: summary }
-    else
-      errors.each { |error| algset.errors.add(:base, error)}
-      return { errors: algset.errors.full_messages}
-    end
-  end
 end

@@ -55,8 +55,6 @@ describe MirrorAlgs do
     expect(MirrorAlgs.combined_name_for("H26")).to eq("H4.H26")
     expect(MirrorAlgs.combined_name_for("h26")).to eq("H4.H26")
     expect(MirrorAlgs.combined_name_for(:h26)).to eq("H4.H26")
-    expect(MirrorAlgs.combined_name_for("J18.--")).to eq("J18.--")
-    expect(MirrorAlgs.combined_name_for("J18")).to eq("J18.--")
     expect(MirrorAlgs.combined_name_for("--")).to eq(nil)
   end
 end
