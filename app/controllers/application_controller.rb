@@ -41,7 +41,7 @@ class ApplicationController < ActionController::Base
     @dev_marker_class = 'dev-marker' if Rails.env.development?
   end
 
-  BOT_AGENTS = %w(AhrefsBot DotBot Googlebot HostTracker MJ12bot Baiduspider bingbot Slurp YandexBot Sogou BUbiNG linguee Optimizer)
+  BOT_AGENTS = %w(AhrefsBot DotBot Googlebot HostTracker MJ12bot Baiduspider bingbot Slurp YandexBot Sogou BUbiNG linguee Optimizer commoncrawl)
   def keep_track
     user_agent = request.env['HTTP_USER_AGENT']
     action = "#{params[:controller]}::#{params[:action]}"
