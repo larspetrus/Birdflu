@@ -30,7 +30,7 @@ $stars-nthlast: 1;
     color: #fff;
     font-weight: normal;
   }
-  td:nth-child(#{$first-two-nth}) { text-align: right; }
+  td:nth-child(-n+2) { text-align: right; } // TODO https://github.com/sass/sass/issues/2327
   td:nth-child(#{$name-nth}) { font-size: 90%; }
   th:nth-last-child(#{$show-nthlast}), td:nth-last-child(#{$show-nthlast}) { border-left: none; }
   td:nth-last-child(#{$notes-nthlast}) { font-size: 85%; }

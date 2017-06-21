@@ -10,7 +10,7 @@ RSpec.describe AlgSetsController do
 
       expect(algset.alg_set_fact_id).to eq(1)
 
-      post :update, id: algset.id, add_algs: 'H1', remove_algs: '', alg_set: {name: 'Ziggy', description: 'small'}
+      post :update, params: {id: algset.id, add_algs: 'H1', remove_algs: '', alg_set: {name: 'Ziggy', description: 'small'}}
       algset.reload
 
       expect(algset.subset).to eq('all')
@@ -23,7 +23,7 @@ RSpec.describe AlgSetsController do
     it 'ignores unpermitted fields' do
       allow(controller).to receive(:can_change) { true }
 
-      post :update, id: algset.id, add_algs: '', remove_algs: '', alg_set: {subset: 'eo'}
+      post :update, params:  {id: algset.id, add_algs: '', remove_algs: '', alg_set: {subset: 'eo'} }
       algset.reload
 
       expect(algset.subset).to eq('all')
@@ -32,7 +32,7 @@ RSpec.describe AlgSetsController do
     it 'handles invalid fields' do
       allow(controller).to receive(:can_change) { true }
 
-      post :update, id: algset.id, alg_set: {name: ''}, add_algs: '', remove_algs: ''
+      post :update, params: {id: algset.id, alg_set: {name: ''}, add_algs: '', remove_algs: ''}
 
       expect(response).to render_template(:edit)
     end
@@ -40,7 +40,7 @@ RSpec.describe AlgSetsController do
     it 'handles add/remove errors' do
       allow(controller).to receive(:can_change) { true }
 
-      post :update, id: algset.id, add_algs: 'BadName', remove_algs: '', alg_set: {}
+      post :update, params: {id: algset.id, add_algs: 'BadName', remove_algs: '', alg_set: {}}
 
       expect(response).to render_template(:edit)
     end
@@ -48,7 +48,7 @@ RSpec.describe AlgSetsController do
     it 'raises exception when not allowed to edit' do
       allow(controller).to receive(:can_change) { false}
 
-      expect {post :update, id: algset.id, add_algs: 'BadName', remove_algs: ''}.to raise_error(RuntimeError)
+      expect {post :update, params: {id: algset.id, add_algs: 'BadName', remove_algs: ''} }.to raise_error(RuntimeError)
     end
   end
 

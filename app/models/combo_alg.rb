@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
-class ComboAlg < ActiveRecord::Base
+class ComboAlg < ApplicationRecord
   belongs_to :alg1, class_name: RawAlg.name
   belongs_to :alg2, class_name: RawAlg.name
   belongs_to :combined_alg, class_name: RawAlg.name
   belongs_to :position
-  has_many :stars, as: :starrable
 
 
   def self.construct(alg1, alg2, alg2_shift, combined_alg, cancel_count, merge_count)

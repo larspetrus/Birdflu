@@ -12,11 +12,11 @@ describe Move do
     expect(r2.turns).to eq(2)
     expect(r2.name).to eq('R2')
 
-    expect {Move['M']}.to raise_error
+    expect {Move['M']}.to raise_error(RuntimeError, 'Invalid move code: "M"')
   end
 
   it "There can only be 18 moves" do
-    expect { Move.new(:M, 2) }.to raise_error
+    expect { Move.new(:M, 2) }.to raise_error(RuntimeError, "Attempt to create 19th move: Move.new(M, 2)")
   end
 
   it '#name_from' do

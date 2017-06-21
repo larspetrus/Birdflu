@@ -130,7 +130,7 @@ describe RawAlg do
     expect(raw_alg.db_alg.to_s).to eq(raw_alg._moves)
   end
 
-  it 'non_bd' do
+  it 'make_non_db' do
     alg = RawAlg.make_non_db("F U F' U F U2 F'")
 
     expect(alg.moves).to eq("F U F' U F U2 F'")

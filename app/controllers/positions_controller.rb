@@ -16,7 +16,7 @@ class PositionsController < ApplicationController
 
     flash.now[:notification] = "Random position" if params[:rnd]
     @filters = PosFilters.new(params, @position_set)
-    @bookmark_url = PositionsController.bookmark_url(@filters, request.query_parameters)
+    @bookmark_url = PositionsController.bookmark_url(@filters, request.query_parameters).html_safe
 
     @algs_mode = (@list_format.list == 'algs') || @filters.count == PosFilters::BASE.count
 

@@ -1,17 +1,16 @@
 # frozen_string_literal: true
 
-class RawAlg < ActiveRecord::Base
+class RawAlg < ApplicationRecord
   belongs_to :position
-  belongs_to :mirror, class_name: RawAlg.name
+  belongs_to :mirror, class_name: RawAlg.name, optional: true
   has_many :combo_algs, foreign_key: :combined_alg_id
-  has_many :stars, as: :starrable
 
   NON_DB_TEXT = 'Not in DB'
 
   validates :length, presence: true
   validate { errors.add(:specialness, "Save of non DB RawAlg averted") if non_db? }
 
-  before_create do
+  before_validation do
     set_position
     set_specialness
     set_speed
@@ -116,7 +115,7 @@ class RawAlg < ActiveRecord::Base
   end
 
   def set_specialness
-    self.specialness = Algs.specialness(moves)
+    self.specialness ||= Algs.specialness(moves)
   end
 
   def set_speed

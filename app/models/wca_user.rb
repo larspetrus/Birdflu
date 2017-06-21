@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class WcaUser < ActiveRecord::Base
+class WcaUser < ApplicationRecord
 
   def self.create_or_update(wca_db_id, wca_id, full_name)
     db_record = self.find_by(wca_db_id: wca_db_id)

@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-class AlgSet < ActiveRecord::Base
+class AlgSet < ApplicationRecord
   ARE_WE_ADMIN = Rails.env.development?
 
-  belongs_to :wca_user
+  belongs_to :wca_user, optional: true
 
   validates :name, presence: true
   validates_inclusion_of :subset, :in => %w(all eo)
@@ -27,7 +27,7 @@ class AlgSet < ActiveRecord::Base
 
   def self.make(algs: nil, name: '--', subset: 'all')
     algs = algs.join(' ') if algs.respond_to? :join
-    AlgSet.create!(subset: subset, name: name, algs: algs)
+    AlgSet.create!(subset: subset, name: name, algs: algs, wca_user_id: nil)
   end
 
   before_save do

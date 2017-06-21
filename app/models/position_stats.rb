@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class PositionStats < ActiveRecord::Base
+class PositionStats < ApplicationRecord
   belongs_to :position
 
   def self.make(position_id, stats)

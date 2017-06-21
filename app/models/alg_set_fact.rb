@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class AlgSetFact < ActiveRecord::Base
+class AlgSetFact < ApplicationRecord
   attr_accessor :alg_set
 
   def data_only

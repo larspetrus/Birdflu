@@ -4,6 +4,7 @@
 class Seeder
   SEED_DIR = Dir.pwd + '/seed_data'
 
+  WCA_USERS_FILE    = SEED_DIR+'/wca_users_sample.csv'
   POSITIONS_FILE    = SEED_DIR+'/positions.csv'
   RAW_ALG_BULK_FILE = SEED_DIR+'/raw_alg_bulk.csv'
   RAW_ALG_EXTRA_FILE= SEED_DIR+'/raw_alg_extra.csv'
@@ -40,19 +41,28 @@ class Seeder
     t1 = Time.now
     puts "Loading seed data"
 
+    if WcaUser.count == 0
+      execute("COPY wca_users FROM '#{WCA_USERS_FILE}'")
+      puts "- WcaUsers loaded: #{Util.duration_to_s(t1)}"
+    end
+
     if Position.count == 0
       execute("COPY positions FROM '#{POSITIONS_FILE}'")
       puts "- Positions loaded: #{Util.duration_to_s(t1)}"
     end
 
-    execute("COPY raw_algs FROM '#{RAW_ALG_BULK_FILE}'")
-    execute("COPY raw_algs FROM '#{RAW_ALG_EXTRA_FILE}'")
-    puts "- Raw algs loaded: #{Util.duration_to_s(t1)}"
+    if Position.count == 0
+      execute("COPY raw_algs FROM '#{RAW_ALG_BULK_FILE}'")
+      execute("COPY raw_algs FROM '#{RAW_ALG_EXTRA_FILE}'")
+      puts "- Raw algs loaded: #{Util.duration_to_s(t1)}"
+    end
 
-    execute("COPY combo_algs FROM '#{COMBO_ALG_FILE}'")
-    puts "- Combo algs loaded: #{Util.duration_to_s(t1)}"
+    if Position.count == 0
+      execute("COPY combo_algs FROM '#{COMBO_ALG_FILE}'")
+      puts "- Combo algs loaded: #{Util.duration_to_s(t1)}"
+    end
 
-    [Position, RawAlg, ComboAlg].each { |model_class| ActiveRecord::Base.connection.reset_pk_sequence!(model_class.table_name)}
+    [WcaUser, Position, RawAlg, ComboAlg].each { |model_class| ActiveRecord::Base.connection.reset_pk_sequence!(model_class.table_name)}
   end
 
   def self.execute(sql)

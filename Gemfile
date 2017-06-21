@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.2.4'
+gem 'rails', '>= 5.0.0.rc2', '< 5.1'
 
 gem 'passenger', '5.0.21' # Weird things happened when upgrading this
 
@@ -12,7 +12,7 @@ gem 'pg'
 gem "haml"
 
 # Use SCSS for stylesheets
-gem 'sass-rails', '~> 4.0.3'
+gem 'sass-rails', '~> 5.0.5'
 
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
@@ -37,8 +37,9 @@ gem 'sdoc', '~> 0.4.0',          group: :doc
 gem 'spring',        group: :development
 
 group :development, :test do
-  gem 'rspec-rails', '~> 3.0.0'
+  gem 'rspec-rails'
   gem 'quiet_assets'
+  gem 'rails-controller-testing'
 end
 
 group :test do

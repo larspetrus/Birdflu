@@ -6,7 +6,7 @@
 # While there are 4608 distinct positions in our co/cp/eo/ep model, there are really only 3916 distinct positions.
 # The other 692 are rotational variations. We handle this by appointing one of the variations the "main_position",
 # that the others refer to through main_position_id, with the rotation defined in pov_offset.
-class Position < ActiveRecord::Base
+class Position < ApplicationRecord
   belongs_to :best_alg, class_name: RawAlg.name
   belongs_to :main_position, class_name: Position.name
   has_one :stats, class_name: PositionStats.name

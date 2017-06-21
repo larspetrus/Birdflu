@@ -1,4 +1,4 @@
-require File.expand_path('../boot', __FILE__)
+require_relative 'boot'
 
 require 'rails/all'
 
@@ -14,9 +14,7 @@ module Birdflu
 
     config.cache_store = :memory_store
 
-    # config.quiet_assets = false
-
-    config.logger = Logger.new(config.paths['log'].first, 2, 10.megabytes)
+    config.logger = ActiveSupport::Logger.new(config.paths['log'].first, 2, 10.megabytes)
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers

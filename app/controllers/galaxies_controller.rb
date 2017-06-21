@@ -8,7 +8,7 @@ class GalaxiesController < ApplicationController
     @columns = Column.named([:name_link, :cop, :eop, :alg, :stars, :remove_star])
     @stars = Star.where(galaxies: {wca_user_id: @login&.db_id})
                  .order(['galaxies.starred_type DESC', 'galaxies.style'])
-                 .includes(:galaxy) # can't get :starrable to work here :(
+                 .includes(:galaxy)
                  .to_a
     @per_style = @stars.chunk{ |line| line.galaxy }.to_a
     use_svgs

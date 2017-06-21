@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
-class Star < ActiveRecord::Base
+class Star < ApplicationRecord
   belongs_to :galaxy
-  belongs_to :starrable, polymorphic: true
 
   validates :starred_id, numericality: { only_integer: true, greater_than: 0 }
 

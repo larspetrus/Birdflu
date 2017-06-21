@@ -56,8 +56,8 @@ class Fields
     {}.tap { |result| fields.each { |f| result[f.name] = f.default } }
   end
 
-  JS_DEFAULTS = Fields.defaults(Fields::ALL).to_s.gsub(':', '').gsub('=>', ': ').freeze
-  JQUERY_SELECTOR = Fields::ALL.map{|f| f.as_css_id}.join(', ').freeze
+  JS_DEFAULTS = Fields.defaults(Fields::ALL).to_s.gsub(':', '').gsub('=>', ': ').html_safe.freeze
+  JQUERY_SELECTOR = Fields::ALL.map{|f| f.as_css_id}.join(', ').html_safe.freeze
 
   ALL_DEFAULTS = Fields.defaults(Fields::ALL).freeze
 

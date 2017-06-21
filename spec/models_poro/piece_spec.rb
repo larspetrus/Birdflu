@@ -9,9 +9,9 @@ RSpec.describe Piece, :type => :model do
   end
 
   it 'only accepts the standard (clockwise) names' do
-    expect {Piece.new('ABC')}.to raise_error
-    expect {Piece.new('UFR')}.to raise_error
-    expect {Piece.new('FRU')}.to raise_error
+    expect {Piece.new('ABC')}.to raise_error(RuntimeError)
+    expect {Piece.new('UFR')}.to raise_error(RuntimeError)
+    expect {Piece.new('FRU')}.to raise_error(RuntimeError)
     expect {Piece.new('URF')}.not_to raise_error
   end
 
@@ -59,7 +59,7 @@ RSpec.describe Piece, :type => :model do
     ulb.rotate(1)
     expect(ulb.u_spin).to eq(0)
 
-    expect{ Piece.new('DB').u_spin}.to raise_error
+    expect{ Piece.new('DB').u_spin}.to raise_error(TypeError)
   end
 
   it 'tracks stickers during moves' do

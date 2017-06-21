@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Galaxy < ActiveRecord::Base
+class Galaxy < ApplicationRecord
   belongs_to :wca_user
   has_many :stars
 
@@ -44,7 +44,7 @@ class Galaxy < ActiveRecord::Base
   end
 
   def remove(alg_id)
-    Star.delete_all(galaxy_id: id, starred_id: alg_id)
+    Star.where(galaxy_id: id, starred_id: alg_id).delete_all
   end
 
   def include?(id)

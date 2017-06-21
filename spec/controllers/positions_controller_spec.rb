@@ -54,7 +54,7 @@ RSpec.describe PositionsController do
     end
 
     def post_find_by_alg(user_input)
-      xhr :post, :find_by_alg, post_alg: user_input, format: :json
+      post :find_by_alg, params: { post_alg: user_input, format: :json, xhr: true}
       expect(response.code).to eq("200")
     end
   end

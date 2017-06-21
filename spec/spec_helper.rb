@@ -18,9 +18,9 @@ RSpec.configure do |config|
 
     config.before(:suite) do
       # -- uncomment to regenerate --
-      # [Position, RawAlg, ComboAlg].each(&:delete_all)
+      # [WcaUser, Position, RawAlg, ComboAlg].each(&:delete_all)
 
-      if Position.count == 0 || RawAlg.count == 0 || ComboAlg.count == 0
+      if WcaUser.count == 0 || Position.count == 0 || RawAlg.count == 0 || ComboAlg.count == 0
         Seeder.load
       end
     end

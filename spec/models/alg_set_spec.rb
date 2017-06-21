@@ -142,8 +142,6 @@ describe AlgSet do
   end
 
   it 'exports/imports YAML data' do
-    WcaUser.create!(id: 78, wca_db_id: 313, wca_id: '1982PETR01', full_name: "Lars Testrus")
-
     as1 = AlgSet.create!(algs: "F1.F3 G1.G6",  name: "Olivia", subset: 'all', description: "I'm normal", predefined: true)
     as2 = AlgSet.create!(algs: "F1.F3 J18.--", name: "Spooon", subset: 'eo',  description: "чат™½➢★閉討", predefined: false)
 
@@ -156,7 +154,8 @@ describe AlgSet do
     expect(as1.alg_set_fact_id).to eq(yas1.alg_set_fact_id)
     expect(as2.alg_set_fact_id).to eq(yas2.alg_set_fact_id)
 
-    expect([as1, as2, yas1, yas2].map(&:wca_user_id)).to eq([nil, nil, nil, 78])
+    lars_petrus_user_id = 1
+    expect([as1, as2, yas1, yas2].map(&:wca_user_id)).to eq([nil, nil, nil, lars_petrus_user_id])
   end
 end
 
