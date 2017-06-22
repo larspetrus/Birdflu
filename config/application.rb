@@ -14,7 +14,9 @@ module Birdflu
 
     config.cache_store = :memory_store
 
+    # Monkey patched in config/initializers/birdflu_log_formatter.rb
     config.logger = ActiveSupport::Logger.new(config.paths['log'].first, 2, 10.megabytes)
+    config.log_level = :debug
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
