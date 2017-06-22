@@ -157,7 +157,7 @@ class PositionsController < ApplicationController
   end
 
   def self.bookmark_url(filters, all_params)
-    tail = all_params.except(:pos, :poschange, :rnd).to_query
+    tail = all_params.except(:pos, :poschange, :rnd).as_json.to_query
     "?pos=#{filters.pos_code}" + (tail.present? ? '&' + tail : '')
   end
 
