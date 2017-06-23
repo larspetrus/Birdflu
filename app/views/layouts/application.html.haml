@@ -28,8 +28,8 @@
           = link_to 'Logout', wca_logout_path
       - else
         - if true || Rails.application.secrets.wca_oauth_client_secret
-          %a{href: OauthController::WCA_LOGIN_URL}
-            WCA Login
+          -#%a{href: OauthController::WCA_LOGIN_URL}
+          (WCA Login temporarily broken)
         - else
           = link_to 'Fake Login', fake_wca_login_path
 
