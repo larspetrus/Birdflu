@@ -36,20 +36,20 @@ class OauthController < ActionController::Base
       Rails.logger.info "WCA Login failed."
     end
 
-    redirect_back(fallback_location: root_path)
+    redirect_back(fallback_location: '/')
   end
 
   def fake_wca_login
     store_user_data(909, '2016FRAU99', 'Fakey McFraud', 4.hours.from_now.to_i)
 
-    redirect_back(fallback_location: root_path)
+    redirect_back(fallback_location: '/')
   end
 
   def wca_logout
     Rails.logger.info "WCA Logged out '#{session[:wca_login]['name']}'."
     session.delete(:wca_login)
 
-    redirect_back(fallback_location: root_path)
+    redirect_back(fallback_location: '/')
   end
 
   def store_user_data(id, wca_id, name, expires)
