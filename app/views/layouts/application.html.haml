@@ -27,7 +27,7 @@
         .logout
           = link_to 'Logout', wca_logout_path
       - else
-        - if Rails.application.secrets.wca_oauth_client_secret
+        - if true || Rails.application.secrets.wca_oauth_client_secret
           %a{href: OauthController::WCA_LOGIN_URL}
             WCA Login
         - else
