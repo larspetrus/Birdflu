@@ -18,6 +18,9 @@ module Birdflu
     config.logger = ActiveSupport::Logger.new(config.paths['log'].first, 2, 10.megabytes)
     config.log_level = :debug
 
+    # From https://mattbrictson.com/dynamic-rails-error-pages
+    config.exceptions_app = self.routes
+
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.

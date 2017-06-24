@@ -27,4 +27,9 @@ Rails.application.routes.draw do
   get "wca_logout" => "oauth#wca_logout"
   get "fake_wca_login" => "oauth#fake_wca_login"
 
+
+  match "/404", to: "errors#not_found", via: :all
+  match "/500", to: "errors#internal_server_error", via: :all
+  match '*path', to: 'errors#not_found', via: :all
+
 end
