@@ -47,6 +47,8 @@ class AlgSetsController < ApplicationController
   end
 
   def show  # === Routed action ===
+    redirect_to alg_sets_url unless request.xhr?
+
     @algset = AlgSet.find(params[:id]).data_only
     @can_edit = can_change(@algset)
   end
