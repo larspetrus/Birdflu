@@ -29,7 +29,7 @@ class OauthController < ActionController::Base
       http.use_ssl = true
       me_data = JSON.parse(http.request(me_request).body)["me"]
 
-      store_user_data(me_data['id'], me_data['wca_id'], me_data['name'], 7.days.from_now.to_i)
+      store_login(me_data['id'], me_data['wca_id'], me_data['name'], 7.days.from_now.to_i)
 
       Rails.logger.info "WCA Logged in as '#{me_data['name']}'."
     else
@@ -40,19 +40,23 @@ class OauthController < ActionController::Base
   end
 
   def fake_wca_login
-    store_user_data(909, '2016FRAU99', 'Fakey McFraud', 4.hours.from_now.to_i)
+    store_login(909, '2016FRAU99', 'Fakey McFraud', 4.hours.from_now.to_i)
 
     redirect_back(fallback_location: '/')
   end
 
   def wca_logout
-    Rails.logger.info "WCA Logged out '#{session[:wca_login]['name']}'."
-    session.delete(:wca_login)
+    if session[:wca_login]
+      Rails.logger.info "WCA Logged out '#{session[:wca_login]['name']}'."
+      session.delete(:wca_login)
+    else
+      Rails.logger.warn "WCA Log out attempted with no one logged in."
+    end
 
     redirect_back(fallback_location: '/')
   end
 
-  def store_user_data(id, wca_id, name, expires)
+  def store_login(id, wca_id, name, expires)
     local_db_id = WcaUser.create_or_update(id, wca_id, name)
     session[:wca_login] = { db_id: local_db_id, wca_db_id: id, wca_id: wca_id, name: name, expires: expires }
   end
