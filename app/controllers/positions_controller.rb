@@ -10,7 +10,7 @@ class PositionsController < ApplicationController
       redirect_to "/?pos=#{Position.random_name}&rnd=t" and return
     end
 
-    Fields.store_list_def(cookies, params) if get_prefs_from_params
+    Fields.store_list_format(cookies, params) if get_prefs_from_params
 
     setup_leftbar
 
@@ -192,7 +192,7 @@ class PositionsController < ApplicationController
   end
 
   def non_default_fields
-    list_format_definition = Fields.read_list_def(params).to_h
+    list_format_definition = Fields.read_list_format(params).to_h
     list_format_definition.reject {|k,v| Fields::ALL_DEFAULTS[k] == v }
   end
 

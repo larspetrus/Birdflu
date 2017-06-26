@@ -117,7 +117,7 @@ class AlgSetsController < ApplicationController
   end
 
   def update_cookie  # === Routed action ===
-    Fields.update_list_def(cookies, params.symbolize_keys)
+    Fields.update_list_format(cookies, params.permit!.to_h.symbolize_keys)
     render json: { fresh_cookie: cookies[Fields::COOKIE_NAME] }
   end
 
@@ -142,7 +142,7 @@ class AlgSetsController < ApplicationController
     @list_format.combos = 'merge' if @list_format.combos == 'none'
     @list_format.algset = alg_set.id
 
-    Fields.store_list_def(cookies, @list_format.to_h)
+    Fields.store_list_format(cookies, @list_format.to_h)
   end
 
 end

@@ -57,27 +57,27 @@ RSpec.describe 'Fields' do
 
 
   describe 'Cookies' do
-    it 'read_list_def' do
+    it 'read_list_format' do
       missing_cookie = {}
-      expect(Fields.read_list_def(missing_cookie).to_h).to eq(Fields::ALL_DEFAULTS)
+      expect(Fields.read_list_format(missing_cookie).to_h).to eq(Fields::ALL_DEFAULTS)
 
       invalid_cookie = {field_values: ''}
-      expect(Fields.read_list_def(invalid_cookie).to_h).to eq(Fields::ALL_DEFAULTS)
+      expect(Fields.read_list_format(invalid_cookie).to_h).to eq(Fields::ALL_DEFAULTS)
 
       fully_defined = {field_values: JSON.generate(list: "algs", lines: "100", sortby: "length", algset: "101")}
-      expect(Fields.read_list_def(fully_defined).to_h)
+      expect(Fields.read_list_format(fully_defined).to_h)
           .to eq(:list=>"algs", :lines=>"100", :sortby=>"length", :algset=>"101", combos: "none")
 
       partially_defined = {field_values: JSON.generate(algset: "101")}
-      expect(Fields.read_list_def(partially_defined).to_h)
+      expect(Fields.read_list_format(partially_defined).to_h)
           .to eq(:list=>"positions", :lines=>"25", :sortby=>"_speed", :algset=>"101", combos: "none")
 
       unknown_property = {field_values: JSON.generate(algset: "102", extra_key: 'Sparta!')}
-      expect(Fields.read_list_def(unknown_property).to_h)
+      expect(Fields.read_list_format(unknown_property).to_h)
           .to eq(:list=>"positions", :lines=>"25", :sortby=>"_speed", :algset=>"102", combos: "none")
 
       invalid_value = {field_values: JSON.generate(lines: "37")}
-      expect(Fields.read_list_def(invalid_value).to_h)
+      expect(Fields.read_list_format(invalid_value).to_h)
           .to eq(list: "positions", lines: "25", sortby: "_speed", algset: "0", combos: "none")
     end
 
@@ -86,28 +86,28 @@ RSpec.describe 'Fields' do
       mock_cookies
     end
 
-    it 'store_list_def' do
-      Fields.store_list_def(cookies = mockies, {lines: '50', algset: '101'}.with_indifferent_access)
+    it 'store_list_format' do
+      Fields.store_list_format(cookies = mockies, {lines: '50', algset: '101'}.with_indifferent_access)
       expect(cookies[:field_values]).to eq(JSON.generate(lines: '50', algset: '101'))
 
-      Fields.store_list_def(cookies = mockies, {'lines' => '50', 'algset' => '101'}.with_indifferent_access)
+      Fields.store_list_format(cookies = mockies, {'lines' => '50', 'algset' => '101'}.with_indifferent_access)
       expect(cookies[:field_values]).to eq(JSON.generate(lines: '50', algset: '101'))
 
-      Fields.store_list_def(cookies = mockies, {lines: '25', algset: '102', extra_key: 'Mango'}.with_indifferent_access)
+      Fields.store_list_format(cookies = mockies, {lines: '25', algset: '102', extra_key: 'Mango'}.with_indifferent_access)
       expect(cookies[:field_values]).to eq(JSON.generate(lines: '25', algset: '102'))
     end
 
-    it 'update_list_pref' do
+    it 'update_list_format' do
       non_default_selections = {list: "algs", lines: "50", sortby: "length", algset: "101", combos: 'only'}.with_indifferent_access
-      Fields.store_list_def(cookies = mockies, non_default_selections)
+      Fields.store_list_format(cookies = mockies, non_default_selections)
 
-      Fields.update_list_def(cookies, { algset: "1729" })
+      Fields.update_list_format(cookies, {algset: "1729" })
       expect(cookies[:field_values]).to eq(JSON.generate(list: "algs", lines: "50", sortby: "length", algset: "1729", combos: 'only'))
 
-      Fields.update_list_def(cookies, { combos: "merge", hacker_prop: ";DELETE * FROM raw_algs;" })
+      Fields.update_list_format(cookies, {combos: "merge", hacker_prop: ";DELETE * FROM raw_algs;" })
       expect(cookies[:field_values]).to eq(JSON.generate(list: "algs", lines: "50", sortby: "length", algset: "1729", combos: 'merge'))
 
-      Fields.update_list_def(cookies, { lines: "347"})
+      Fields.update_list_format(cookies, {lines: "347"})
       expect(cookies[:field_values]).to eq(JSON.generate(list: "algs", lines: "25", sortby: "length", algset: "1729", combos: 'merge'))
     end
   end
