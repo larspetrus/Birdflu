@@ -98,9 +98,9 @@ describe RawAlg do
   it 'with_moves' do
     db_alg = RawAlg.make("F2 U L R' F2 L' R U F2", 9)
 
-    expect(RawAlg.with_moves(db_alg.moves, db_alg.position).id).to eq(db_alg.id)
-    expect(RawAlg.with_moves(Algs.shift(db_alg.moves, 2), db_alg.position).id).to eq(db_alg.id)
-    expect(RawAlg.with_moves(Algs.anti_normalize(db_alg.moves), db_alg.position).id).to eq(db_alg.id)
+    expect(RawAlg.with_moves(db_alg.moves, db_alg.position).moves).to eq(db_alg.moves)
+    expect(RawAlg.with_moves(Algs.shift(db_alg.moves, 2), db_alg.position).moves).to eq(db_alg.moves)
+    expect(RawAlg.with_moves(Algs.anti_normalize(db_alg.moves), db_alg.position).moves).to eq(db_alg.moves)
     expect(RawAlg.with_moves("B D U' F U L F' D' B' U' L'", db_alg.position)).to eq(nil)
   end
 

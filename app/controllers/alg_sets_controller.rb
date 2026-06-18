@@ -69,7 +69,7 @@ class AlgSetsController < ApplicationController
       @algset.replace_algs(algs_change[:replacement_algs])
     end
 
-    if @algset.errors.empty? && @algset.update_attributes(algset_params(:update))
+    if @algset.errors.empty? && @algset.update(algset_params(:update))
       activate(@algset)
       flash[:success] = algs_change[:summary] || "Algset '#{@algset.name}' updated"
       redirect_to alg_sets_path

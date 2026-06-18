@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe 'Environment' do
   it 'Uses correct Ruby version' do
-    project_ruby_version = File.open(".ruby-version", "rb").read
+    project_ruby_version = File.read(".ruby-version").strip
     expect(RUBY_VERSION).to eq(project_ruby_version)
   end
 

@@ -81,8 +81,6 @@ GEM
     concurrent-ruby (1.3.7)
     connection_pool (3.0.2)
     crass (1.0.6)
-    database_cleaner (2.1.0)
-      database_cleaner-active_record (>= 2, < 3)
     database_cleaner-active_record (2.2.2)
       activerecord (>= 5.a)
       database_cleaner-core (~> 2.0)
@@ -148,7 +146,7 @@ GEM
     net-smtp (0.5.1)
       net-protocol
     nio4r (2.7.5)
-    nokogiri (1.19.3-aarch64-linux-gnu)
+    nokogiri (1.19.4-aarch64-linux-gnu)
       racc (~> 1.4)
     pg (1.6.3-aarch64-linux)
     pp (0.6.3)
@@ -268,7 +266,7 @@ PLATFORMS
   aarch64-linux
 
 DEPENDENCIES
-  database_cleaner
+  database_cleaner-active_record
   haml-rails
   jbuilder
   jquery-rails

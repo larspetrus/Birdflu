@@ -26,7 +26,7 @@ RSpec.describe 'Fields' do
     end
 
     it 'as_hidden_field' do
-      expect(size.as_hidden_field({size: 'M'})).to eq('<input type="hidden" name="size" id="size" value="M" form="main-form" />')
+      expect(size.as_hidden_field({size: 'M'})).to eq('<input type="hidden" name="size" id="size" value="M" form="main-form" autocomplete="off" />')
     end
   end
 

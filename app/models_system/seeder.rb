@@ -42,23 +42,23 @@ class Seeder
     puts "Loading seed data"
 
     if WcaUser.count == 0
-      execute("COPY wca_users FROM '#{WCA_USERS_FILE}'")
+      execute("COPY wca_users (id, wca_db_id, wca_id, full_name, created_at, updated_at) FROM '#{WCA_USERS_FILE}'")
       puts "- WcaUsers loaded: #{Util.duration_to_s(t1)}"
     end
 
     if Position.count == 0
-      execute("COPY positions FROM '#{POSITIONS_FILE}'")
+      execute("COPY positions (id, ll_code, weight, best_alg_id, cop, oll, eo, ep, optimal_alg_length, co, cp, mirror_id, inverse_id, main_position_id, pov_offset) FROM '#{POSITIONS_FILE}'")
       puts "- Positions loaded: #{Util.duration_to_s(t1)}"
     end
 
-    if Position.count == 0
-      execute("COPY raw_algs FROM '#{RAW_ALG_BULK_FILE}'")
-      execute("COPY raw_algs FROM '#{RAW_ALG_EXTRA_FILE}'")
+    if RawAlg.count == 0
+      execute("COPY raw_algs (id, length, position_id, u_setup, specialness, _speed, _moves) FROM '#{RAW_ALG_BULK_FILE}'")
+      execute("COPY raw_algs (id, length, position_id, u_setup, specialness, _speed, _moves) FROM '#{RAW_ALG_EXTRA_FILE}'")
       puts "- Raw algs loaded: #{Util.duration_to_s(t1)}"
     end
 
-    if Position.count == 0
-      execute("COPY combo_algs FROM '#{COMBO_ALG_FILE}'")
+    if ComboAlg.count == 0
+      execute("COPY combo_algs (id, alg1_id, alg2_id, combined_alg_id, encoded_data, position_id) FROM '#{COMBO_ALG_FILE}'")
       puts "- Combo algs loaded: #{Util.duration_to_s(t1)}"
     end
 
