@@ -55,10 +55,10 @@
 
   $(document).on({
     mouseenter: function(event) {
-      wanted_dialog_id = $(event.currentTarget).children(".hidden-picker").attr("id");
+      wanted_dialog_id = open_dialog_id;
     },
     mouseleave: function(event) {
       wanted_dialog_id = '';
       setTimeout(function(){ hide_unwanted_dialog(); }, 500);
     }
-  }, ".picker-dialog");
+  }, ".ui-dialog");

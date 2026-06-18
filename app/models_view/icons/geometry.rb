@@ -123,6 +123,25 @@ class Icons::Geometry
     {viewBox: "#{start} #{start} #{width} #{width}"}
   end
 
+  COLOR_FILLS = {
+    'f-color'  => 'red',
+    'b-color'  => 'orange',
+    'r-color'  => '#0d0',
+    'l-color'  => '#07f',
+    'u-color'  => 'yellow',
+    'd-color'  => '#eee',
+    'oll'      => 'deeppink',
+    'cop'      => '#fb0',
+    'cp'       => 'white',
+    'co'       => '#6df',
+    'eo'       => '#0c0',
+    'eop'      => '#cf5',
+    'ep-across'=> '#adf',
+    'ep-fixed' => '#aaa',
+    'ignore'   => '#d7d7d7',
+    'white'    => 'white',
+  }.freeze
+
   def self.tags_for(icon)
     result = (icon.is_illustration? ? SHADED_SIDES : []) + [CUBE_RECT]
 
@@ -131,7 +150,8 @@ class Icons::Geometry
       color = icon.color_at(sticker)
       color ||= 'white' if sticker[-1] == 'U'
       if color
-        result << {class: color}.merge!(stickers[sticker])
+        tag = {class: color, fill: COLOR_FILLS[color]}.merge!(stickers[sticker])
+        result << tag
       end
     end
 
