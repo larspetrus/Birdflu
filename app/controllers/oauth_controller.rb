@@ -15,7 +15,7 @@ class OauthController < ActionController::Base
         grant_type: 'authorization_code',
         redirect_uri: 'https://birdflu.lar5.com/wca_callback',
         client_id: CLIENT_ID,
-        client_secret: Rails.application.secrets.wca_oauth_client_secret,
+        client_secret: ENV['WCA_OAUTH_CLIENT_SECRET'],
     }
     token_response = Net::HTTP.post_form(TOKEN_URI, token_params)
 

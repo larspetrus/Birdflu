@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'ostruct'
+
 # The dropdown fields of the #main-form
 class Fields
 
