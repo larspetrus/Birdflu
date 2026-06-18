@@ -14,3 +14,6 @@
 # ActiveSupport::Inflector.inflections(:en) do |inflect|
 #   inflect.acronym 'RESTful'
 # end
+
+# Zeitwerk: ll.rb defines module LL (not Ll)
+Rails.autoloaders.main.inflector.inflect("ll" => "LL")

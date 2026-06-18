@@ -14,6 +14,12 @@ module Birdflu
 
     config.cache_store = :memory_store
 
+    # Zeitwerk: collapse non-conventional model directories so files define
+    # top-level constants (e.g. app/models_poro/algs.rb defines Algs, not ModelsPoro::Algs)
+    config.autoload_paths.each do |path|
+      Rails.autoloaders.main.collapse(path) if path.match?(%r{/app/models_})
+    end
+
     # Monkey patched in config/initializers/birdflu_log_formatter.rb
     config.logger = ActiveSupport::Logger.new(config.paths['log'].first, 2, 10.megabytes)
     config.log_level = :debug
