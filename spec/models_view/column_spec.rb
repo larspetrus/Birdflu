@@ -5,8 +5,10 @@ RSpec.describe Column, :type => :model do
 
   let(:raw1) {RawAlg.new(_moves: Algs.pack("L' B' R B' R' B2 L"), u_setup: 2, length: 7, _speed: 666, position_id: pos1.id)}
   let(:raw2) {RawAlg.new(_moves: Algs.pack("R' U' R B L U L' B'"), u_setup: 2, length: 8, _speed: 555, position_id: pos1.id)}
+  let(:raw_nothing) {RawAlg.new(_moves: Algs.pack(""), u_setup: 0, length: 0, _speed: 0, position_id: 1)}
 
   let(:combo1) {ComboAlg.new(alg1: raw1, alg2: raw2, position_id: pos1.id)}
+  let(:combo_with_nothing) {ComboAlg.new(alg1: raw1, alg2: raw_nothing, position_id: pos1.id)}
 
   let(:context) { OpenStruct.new(stats: double(shortest: 7, fastest: 5.55), possible_pos_ids: [pos1.id]) }
 
@@ -26,6 +28,7 @@ RSpec.describe Column, :type => :model do
 
     expect(Column[:name].content(raw1.presenter(context))).to eq('<td class="single">Z99</td>')
     expect(Column[:name].content(combo1.presenter(context))).to eq('<td class="combo"><span class="js-goto-post">Z99</span>+<span class="js-goto-post">B52</span></td>')
+    expect(Column[:name].content(combo_with_nothing.presenter(context))).to eq('<td class="single">Z99</td>')
   end
 
   it 'POSITION' do

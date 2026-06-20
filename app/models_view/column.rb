@@ -206,7 +206,11 @@ class ComboAlgColumns < AlgColumns
   end
 
   def name
-    tag(:td, tag(:span, @combo_alg.alg1.name, 'js-goto-post') + '+' + tag(:span, @combo_alg.alg2.name, 'js-goto-post'), 'combo')
+    if @combo_alg.alg2.length > 0
+      tag(:td, tag(:span, @combo_alg.alg1.name, 'js-goto-post') + '+' + tag(:span, @combo_alg.alg2.name, 'js-goto-post'), 'combo')
+    else
+      tag(:td, @combo_alg.alg1.name,'single')
+    end
   end
 
   def name_link
