@@ -1,0 +1,31 @@
+# fly.toml app configuration file generated for birdflu-lively-dawn-8472 on 2026-06-20T17:08:37-07:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'birdflu-lively-dawn-8472'
+primary_region = 'ord'
+console_command = '/app/bin/rails console'
+
+[deploy]
+  release_command = 'bin/rails db:migrate'
+
+[env]
+  RAILS_ENV = "production"
+  RAILS_SERVE_STATIC_FILES = "true"
+
+[build]
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1
+  memory_mb = 1024

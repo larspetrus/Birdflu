@@ -21,7 +21,11 @@ module Birdflu
     end
 
     # Monkey patched in config/initializers/birdflu_log_formatter.rb
-    config.logger = ActiveSupport::Logger.new(config.paths['log'].first, 2, 10.megabytes)
+    if ENV['RAILS_LOG_TO_STDOUT'].present?
+      config.logger = ActiveSupport::Logger.new($stdout)
+    else
+      config.logger = ActiveSupport::Logger.new(config.paths['log'].first, 2, 10.megabytes)
+    end
     config.log_level = :debug
 
     # From https://mattbrictson.com/dynamic-rails-error-pages

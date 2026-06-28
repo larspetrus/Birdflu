@@ -19,7 +19,7 @@ class PositionStats < ApplicationRecord
     unique_stats = positions.reduce({}){|hash, pos| hash[pos.main_position_id] = pos.stats; hash }.values
 
     count_sums = Hash.new(0)
-    unique_stats.each {|stat| stat.raw_counts.each{|moves, count| count_sums[moves] += count } }
+    unique_stats.compact.each {|stat| stat.raw_counts.each{|moves, count| count_sums[moves] += count } }
     OpenStruct.new(
       position_count: positions.count,
       shortest: unique_stats.map(&:shortest).min || 99,

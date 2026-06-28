@@ -42,23 +42,23 @@ class Seeder
     puts "Loading seed data"
 
     if WcaUser.count == 0
-      execute("COPY wca_users (id, wca_db_id, wca_id, full_name, created_at, updated_at) FROM '#{WCA_USERS_FILE}'")
+      copy_from_stdin("COPY wca_users (id, wca_db_id, wca_id, full_name, created_at, updated_at) FROM STDIN", WCA_USERS_FILE)
       puts "- WcaUsers loaded: #{Util.duration_to_s(t1)}"
     end
 
     if Position.count == 0
-      execute("COPY positions (id, ll_code, weight, best_alg_id, cop, oll, eo, ep, optimal_alg_length, co, cp, mirror_id, inverse_id, main_position_id, pov_offset) FROM '#{POSITIONS_FILE}'")
+      copy_from_stdin("COPY positions (id, ll_code, weight, best_alg_id, cop, oll, eo, ep, optimal_alg_length, co, cp, mirror_id, inverse_id, main_position_id, pov_offset) FROM STDIN", POSITIONS_FILE)
       puts "- Positions loaded: #{Util.duration_to_s(t1)}"
     end
 
     if RawAlg.count == 0
-      execute("COPY raw_algs (id, length, position_id, u_setup, specialness, _speed, _moves) FROM '#{RAW_ALG_BULK_FILE}'")
-      execute("COPY raw_algs (id, length, position_id, u_setup, specialness, _speed, _moves) FROM '#{RAW_ALG_EXTRA_FILE}'")
+      copy_from_stdin("COPY raw_algs (id, length, position_id, u_setup, specialness, _speed, _moves) FROM STDIN", RAW_ALG_BULK_FILE)
+      copy_from_stdin("COPY raw_algs (id, length, position_id, u_setup, specialness, _speed, _moves) FROM STDIN", RAW_ALG_EXTRA_FILE)
       puts "- Raw algs loaded: #{Util.duration_to_s(t1)}"
     end
 
     if ComboAlg.count == 0
-      execute("COPY combo_algs (id, alg1_id, alg2_id, combined_alg_id, encoded_data, position_id) FROM '#{COMBO_ALG_FILE}'")
+      copy_from_stdin("COPY combo_algs (id, alg1_id, alg2_id, combined_alg_id, encoded_data, position_id) FROM STDIN", COMBO_ALG_FILE)
       puts "- Combo algs loaded: #{Util.duration_to_s(t1)}"
     end
 
@@ -67,5 +67,16 @@ class Seeder
 
   def self.execute(sql)
     ActiveRecord::Base.connection.execute(sql)
+  end
+
+  def self.copy_from_stdin(sql, file_path)
+    conn = ActiveRecord::Base.connection.raw_connection
+    conn.copy_data(sql) do
+      File.open(file_path, 'r') do |f|
+        while chunk = f.read(65536)
+          conn.put_copy_data(chunk)
+        end
+      end
+    end
   end
 end
