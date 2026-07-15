@@ -1,15 +1,4 @@
 .leftflex
-  %nav.section
-    %h1
-      %span
-        section
-    .middiv
-      %span.list-size
-        = select_tag(:sectionator, options_for_select(@lb_sections, selected: section, disabled: @lb_disabled), class: 'list-size__select')
-    -unless @login
-      .loginhint
-        Log in to use grey sections
-
   -if section != Section::FMC
     %nav.leftbar
       -if section == Section::ALGS
@@ -62,11 +51,6 @@
 
 
 :javascript
-  var SECTION_PATHS = {"#{Section::ALGS}": '/', "#{Section::FAVORITES}": "#{galaxies_path}", "#{Section::ALGSETS}": "#{alg_sets_path}", "#{Section::FMC}": '/fmc?example=1'}
-  $('#sectionator').change(function() {
-    window.location.href = SECTION_PATHS[$(this).val()];
-  });
-
   $('#zbll').on('click', function() {
     var addon = '';
     if ($(this).is(":checked")) {

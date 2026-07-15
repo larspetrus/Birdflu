@@ -14,8 +14,6 @@ class ApplicationController < ActionController::Base
     @text_size = cookies[:size] || 'm'
     @position_set = cookies[:zbll] ?  'eo' : 'all'
     @list_format = Fields.read_list_format(cookies)
-    @lb_sections = [Section::ALGS, Section::FAVORITES, Section::ALGSETS, Section::FMC]
-    @lb_disabled = @login ? '' : [Section::FAVORITES]
   end
 
   def use_svgs

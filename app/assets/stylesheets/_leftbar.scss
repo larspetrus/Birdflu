@@ -8,56 +8,6 @@
   width: $left-width;
 }
 
-.loginhint {
-  color: #888;
-  margin: 0px 12px;
-
-  font-size: 0px;
-  transition: font-size 0.2s;
-}
-
-.section:hover {
-  .loginhint {
-    font-size: 8px;
-    transition: font-size 0.2s;
-  }
-}
-
-.section {
-  padding-bottom: 3px;
-  margin-bottom: 3px;
-
-  width: 100%;
-  box-sizing: border-box;
-
-  font-size: 12px;
-  font-weight: bold;
-
-  border: 1px solid #808;
-  border-radius: 3px;
-
-  h1 {
-    text-align: center;
-    position: relative;
-    margin: -8px 0 2px 0;
-    font-size: 10px;
-  }
-  h1 span{
-    background-color: white;
-    padding: 0 2px;
-  }
-
-  .middiv {
-    font-size: 14px;
-    font-weight: 700;
-
-    .list-size {
-      margin-left: 31px;
-      padding: 2px;
-    }
-  }
-}
-
 $left-color: #16A2D7;
 $left-bgcolor: #f2f2f2;
 
