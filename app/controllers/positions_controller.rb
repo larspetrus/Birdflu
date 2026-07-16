@@ -5,11 +5,6 @@ class PositionsController < ApplicationController
   def index  # === Routed action ===
     get_prefs_from_params = (params.keys.map(&:to_sym) & Fields::ALL_DEFAULTS.keys).present? || !params[:udf].nil?
 
-    # Show a random concrete position, if you seem to be a newbie.
-    if cookies[Fields::COOKIE_NAME].blank? && params[:pos].blank? && !get_prefs_from_params
-      redirect_to "/?pos=#{Position.random_name}&rnd=t" and return
-    end
-
     Fields.store_list_format(cookies, params) if get_prefs_from_params
 
     setup_leftbar
