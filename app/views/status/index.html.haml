@@ -4,12 +4,16 @@
 
 .stat Cache #{number_to_human_size Rails.cache.instance_variable_get('@cache_size')}
 
-- git_sha1 = `git rev-parse HEAD`
+- git_sha1 = (`git rev-parse HEAD 2>/dev/null`.strip rescue nil)
+- git_sha1 = nil if git_sha1.blank?
 .stat
   PID #{Process.pid} ·
   Uptime: #{Util.duration_to_s(Birdflu::BOOTED_AT)} ·
-  Git commit:
-  = link_to(git_sha1.first(7), "https://github.com/larspetrus/Birdflu/commit/#{git_sha1}")
+  - if git_sha1
+    Git commit:
+    = link_to(git_sha1.first(7), "https://github.com/larspetrus/Birdflu/commit/#{git_sha1}")
+  - else
+    Git commit: unknown
 
 .stat #{spaced_number(@raw_alg_count)} algs, #{spaced_number(@combo_alg_count)} combos
 .stat #{WcaUser.count} users, #{Star.count} stars, #{AlgSet.count} (#{AlgSetFact.count}) Alg sets
