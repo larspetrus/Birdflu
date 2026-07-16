@@ -13,6 +13,7 @@ console_command = '/app/bin/rails console'
 [env]
   RAILS_ENV = "production"
   RAILS_SERVE_STATIC_FILES = "true"
+  APP_HOSTNAME = "birdflu.lar5.com"
 
 [build]
 
