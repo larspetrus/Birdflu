@@ -17,3 +17,6 @@
 
 # IDE
 .idea/
+
+# Local secrets
+/.env
