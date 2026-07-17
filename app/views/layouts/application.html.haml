@@ -1,6 +1,14 @@
 !!!
 %html
   %head
+    - if Rails.env.production?
+      %script{async: true, src: "https://www.googletagmanager.com/gtag/js?id=G-TT680FBWPT"}
+      :javascript
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-TT680FBWPT');
     %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
     %title Birdflu 1.0 β-ish
     = stylesheet_link_tag    'vendor', media: 'all'
@@ -8,15 +16,6 @@
     = javascript_include_tag 'application'
     = csrf_meta_tags
     = favicon_link_tag 'favicon.ico'
-    - if Rails.env.production?
-      :javascript
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-        ga('create', 'UA-1030049-2', 'auto');
-        ga('send', 'pageview');
   %body
     - flash.each do |name, msg|
       = content_tag :div, msg, class: "flash_msgs"
