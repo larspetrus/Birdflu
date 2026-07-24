@@ -2,12 +2,12 @@ class ErrorsController < ApplicationController
   def not_found
     @request_url = request&.original_url
     logger.warn("Showing 404 page for '#{@request_url}'")
-    render(:status => 404)
+    render(status: 404, formats: [:html])
   end
 
   def internal_server_error
     @request_url = request&.original_url
     logger.warn("Showing 500 page for '#{@request_url}'")
-    render(:status => 500)
+    render(status: 500, formats: [:html])
   end
 end
