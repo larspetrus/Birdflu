@@ -85,6 +85,14 @@ $show-nthlast: 1;
 
   width: 190px;
   padding: 5px;
+
+  .arrows-caption {
+    text-align: center;
+    font-size: 10px;
+    color: #888;
+    margin-top: -14px;
+    margin-bottom: 14px;
+  }
 }
 
 .login {

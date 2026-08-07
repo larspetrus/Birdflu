@@ -6,6 +6,7 @@
 .rightbar
   -if @only_position
     = render 'cube_icon', icon: Icons::Big.new(@only_position), pad: true, label: ''
+    .arrows-caption Arrows show solution
   .stats-box{class: @only_position ? '' : 'positions-stats'}
     %span#headline= @stats.headline
     - if @only_position
