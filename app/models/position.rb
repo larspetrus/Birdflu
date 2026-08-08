@@ -151,9 +151,31 @@ class Position < ApplicationRecord
     false
   end
 
-  NICK_NAMES = {491=>'H Perm',59=>'Ub Perm',275=>'Ua Perm',549=>'Z Perm',663=>'Aa Perm',2607=>'Ab Perm',3255=>'E Perm',3039=>'F Perm',2391=>'Ga Perm',1527=>'Gb Perm',1095=>'Gc Perm',1959=>'Gd Perm',1743=>'Ja Perm',2175=>'Jb Perm',3859=>'Na Perm',3801=>'Nb Perm',1311=>'Ra Perm',879=>'Rb Perm',2823=>'T Perm',3369=>'V Perm',3585=>'Y Perm'}
+  POS_NICK_NAMES = {  # Some positions have well known names
+    491=>'H Perm',
+    59=>'Ub Perm',
+    275=>'Ua Perm',
+    549=>'Z Perm',
+    663=>'Aa Perm',
+    2607=>'Ab Perm',
+    3255=>'E Perm',
+    3039=>'F Perm',
+    2391=>'Ga Perm',
+    1527=>'Gb Perm',
+    1095=>'Gc Perm',
+    1959=>'Gd Perm',
+    1743=>'Ja Perm',
+    2175=>'Jb Perm',
+    3859=>'Na Perm',
+    3801=>'Nb Perm',
+    1311=>'Ra Perm',
+    879=>'Rb Perm',
+    2823=>'T Perm',
+    3369=>'V Perm',
+    3585=>'Y Perm'
+  }
   def nick_name
-    NICK_NAMES[main_position_id]
+    POS_NICK_NAMES[main_position_id]
   end
 
   def to_s

@@ -110,14 +110,14 @@ $show-nthlast: 1;
 .login, .stats-box {
   a {
     color: black;
-    text-shadow: 2px 2px 5px orange;
+    text-shadow: 0 0 3px orange;
     text-decoration: none;
     display: block;
   }
   a:link {  }
   a:visited { }
-  a:hover { text-shadow: 2px 2px 5px red; }
-  a:active {color: white; text-shadow: 0px 0px 5px #000, 0 0 8px #00F; }
+  a:hover { text-shadow: 0 0 3px red; }
+  a:active {color: white; text-shadow: 0 0 5px #000, 0 0 8px #00F; }
 }
 
 #about-link {
@@ -136,9 +136,11 @@ $show-nthlast: 1;
   margin: 4px;
 
   .nickname {
-    font-size: 9px;
+    font-size: 13px;
     font-weight: 700;
-    margin: -4px 0 4px;
+    color: rgb(135, 206, 235);
+    -webkit-text-stroke: 0.5px rgb(95, 125, 225);   /* thin solid outline */
+    margin: 1px 0 4px;
   }
 
   #headline, #headline_prot {
