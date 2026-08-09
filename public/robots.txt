@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /hemlig
+Disallow: /wca_callback
+Disallow: /wca_logout
+Disallow: /fake_wca_login
+Disallow: /500
+Disallow: /404
