@@ -14,6 +14,9 @@ module Birdflu
 
     config.cache_store = :memory_store
 
+    # Active Storage isn't used (no attachments), so no variant processor is needed.
+    config.active_storage.variant_processor = :disabled
+
     # Zeitwerk: collapse non-conventional model directories so files define
     # top-level constants (e.g. app/models_poro/algs.rb defines Algs, not ModelsPoro::Algs)
     config.autoload_paths.each do |path|

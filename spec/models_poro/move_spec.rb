@@ -59,3 +59,86 @@ describe Move do
   end
 
 end
+
+
+describe SideTracker do
+  it "knows_sides" do
+    tracker = SideTracker.new
+
+    expect(tracker.side_at('R')).to eq('R')
+    expect(tracker.side_at('D')).to eq('D')
+    expect(tracker.side_at('J')).to be_nil
+  end
+
+  it "tracks_sides" do
+    tracker = SideTracker.new
+    tracker.track('R')
+    expect(tracker.side_at('R')).to eq('R')
+    expect(tracker.side_at('D')).to eq('D')
+    expect(tracker.side_at('J')).to be_nil
+
+    tracker = SideTracker.new
+    tracker.track('x')
+    expect(tracker.side_at('R')).to eq('R')
+    expect(tracker.side_at('D')).to eq('F')
+    expect(tracker.side_at('F')).to eq('U')
+
+    tracker = SideTracker.new
+    tracker.track('x2')
+    expect(tracker.side_at('R')).to eq('R')
+    expect(tracker.side_at('D')).to eq('U')
+    expect(tracker.side_at('F')).to eq('B')
+  end
+
+  it 'can track an alg' do
+    expect(SideTracker.new.to_classic("R U R' x U R U' x'")).to eq("R U R' F R F'")
+  end
+
+  it ".normalize" do
+    expect(SideTracker.normalize("L R L2")).to eq("L' R")
+    expect(SideTracker.normalize("L L L' R")).to eq("L R")
+    expect(SideTracker.normalize("R L L L R")).to eq("L' R2")
+
+    expect(SideTracker.normalize("L R L2 U D U F2 B' F2")).to eq("L' R D U2 B'")
+
+    expect(SideTracker.normalize("R L L L D D' L R")).to eq("R2")
+  end
+end
+
+
+describe NotationDoctor do
+  it "converts correctly" do
+    # Classic format algs are unchanged
+    expect(NotationDoctor.to_classic_notation("F U F' U F U2 F'")).to eq("F U F' U F U2 F'")
+    expect(NotationDoctor.to_classic_notation(%w(F U F' U F U2 F'))).to eq("F U F' U F U2 F'")
+
+
+    # Handles "advanced" moves:
+    expect(NotationDoctor.to_classic_notation(DuAlg.new("f R U R' U' f'"))).to eq("B U L U' L' B'")
+    expect(NotationDoctor.to_classic_notation("f R U R' U' f'")).to eq("B U L U' L' B'")  # OLL 45 setup
+    expect(NotationDoctor.to_classic_notation("M' R' U' R U' R' U2 R U' M")).to eq("L R2 F' R F' R' F2 R F' L' R")
+
+    expect(NotationDoctor.to_classic_notation(%w(f R U R' U' f'))).to eq("B U L U' L' B'")  # A list argument also works
+
+    expect(NotationDoctor.to_classic_notation("B z R U R' U' B' z'")).to eq("B U L U' L' B'")
+    expect(NotationDoctor.to_classic_notation("f R U R' U' f'")).to eq("B U L U' L' B'")
+
+    expect(NotationDoctor.to_classic_notation("L F2 R' F' R F' L'")).to eq("L F2 R' F' R F' L'")
+    expect(NotationDoctor.to_classic_notation("r U2 R' U' R U' r'")).to eq("L F2 R' F' R F' L'")
+
+    expect(NotationDoctor.to_classic_notation("M U M'")).to eq("L' R B L R'")
+    expect(NotationDoctor.to_classic_notation("R U R' x U R U' x'")).to eq("R U R' F R F'")
+    expect(NotationDoctor.to_classic_notation("E' R E x U R U' x'")).to eq("D U' B D' U F R F'")
+  end
+
+  it "handles move interactions/cancellations" do
+    expect(NotationDoctor.to_classic_notation("R L")).to eq("L R")
+    expect(NotationDoctor.to_classic_notation("L y B")).to eq("L2")
+    expect(NotationDoctor.to_classic_notation("L R L")).to eq("L2 R")
+  end
+
+  it "_to_classic_plus_xyz" do
+    expect(NotationDoctor._to_classic_plus_xyz(DuAlg.new("f R U R' U' f'"))).to eq("B z R U R' U' B' z'")
+    expect(NotationDoctor._to_classic_plus_xyz("M' R' U' R U' R' U2 R U' M")).to eq("L R' x R' U' R U' R' U2 R U' L' R x'")
+  end
+end

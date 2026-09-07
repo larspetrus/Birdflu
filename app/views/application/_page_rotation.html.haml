@@ -50,10 +50,10 @@
     if (#{update_url}) {
       var old_url = window.location.search;
       var new_prot = 'prot=' + page_rotation;
-      if (old_url.indexOf('prot') != -1) {
+      if (old_url.indexOf('prot') !== -1) {
         history.replaceState('', '', old_url.replace(/prot=./, new_prot));
       } else {
-        var sep = old_url.indexOf('?') == -1 ? '?' : '&';
+        var sep = old_url.indexOf('?') === -1 ? '?' : '&';
         history.replaceState('', '', old_url + sep + new_prot);
       }
     }
@@ -85,7 +85,7 @@
     );
   }
 
-  var page_rotation = #{@page_rotation || 0}; // Page wide state
+  var page_rotation = #{@page_rotation || 0} // Page wide state
 
   $(document).ready(function() {
     if (page_rotation > 0) {

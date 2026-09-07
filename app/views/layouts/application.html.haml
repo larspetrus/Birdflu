@@ -10,7 +10,10 @@
 
         gtag('config', 'G-TT680FBWPT');
     %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
-    %title Birdflu 1.0 β-ish
+    - if Rails.env.development?
+      %title Birdflu (local dev)
+    - else
+      %title Birdflu 1.0 β-ish
     = stylesheet_link_tag    'vendor', media: 'all'
     = stylesheet_link_tag    'application', media: 'all'
     = javascript_include_tag 'application'

@@ -2,7 +2,7 @@
 
 class AlgMiner
   # Currently set to store data in memory.
-  # To use a file instead uncomment the %%% lines and comment the @@@ lines. (Not tested. I might have missed something)
+  # To use a file instead, uncomment the %%% lines and comment the @@@ lines. (Not tested. I might have missed something)
 
   ALL_MOVES = %w[F F2 F' B B2 B' R R2 R' L L2 L' U U2 U' D D2 D'].map{|x| Move[x]}
 

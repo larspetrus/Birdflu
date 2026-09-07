@@ -17,7 +17,7 @@ module Algs
   def self.reverse(alg)
     reversed = []
     alg.split(' ').reverse.each do |move|
-      turns_code = {"2" => "2", "'" => ""}[move[1]] || "'"
+      turns_code = {nil => "'", "'" => "", "2" => "2"}[move[1]]
       reversed << move[0]+turns_code
     end
     normalize(reversed.join(' '))
@@ -64,7 +64,7 @@ module Algs
   end
 
   def self._normalize(alg, pair_order)
-    # Sort pairs of L & R, D & U, B & F alphabetically
+    # Sort pairs of L & R, D & U, B & F moves alphabetically
     moves = alg.split(' ')
     (moves.length-1).times do |i|
       if pair_order.include? moves[i][0]+moves[i+1][0]

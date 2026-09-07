@@ -16,7 +16,7 @@ class Column
       name:        self.new('Alg ID', :name),
       name_link:   self.new('Name', :name_link),
       position:    self.new('Position', :position),
-      alg:         self.new('Turns', :alg),
+      alg:         self.new('Solution', :alg),
       alg_p:       self.new('Shortest Solution', :alg),
       show:        self.new('', :show),
       notes:       self.new('Notes', :notes),
