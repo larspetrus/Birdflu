@@ -134,7 +134,7 @@ class AlgSetsController < ApplicationController
   def compute  # === Routed action ===
     params[:ids].split(',').each { |id| AlgSet.find(id).fact.compute.save! }
     render json: { success: :true }
-  rescue  Exception => e
+  rescue StandardError => e
     render json: { error: e.message }
   end
 

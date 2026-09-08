@@ -214,7 +214,7 @@ class PositionsController < ApplicationController
       result[:packed_alg] = Algs.pack(cleaned_input)
     end
     render json: result
-  rescue Exception => e
+  rescue StandardError => e
     render json: { error: e.message }
   end
 end

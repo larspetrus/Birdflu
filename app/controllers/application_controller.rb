@@ -55,7 +55,7 @@ class ApplicationController < ActionController::Base
 
 
     yield
-  rescue Exception => e
+  rescue StandardError => e
     @@trouble_list << "Exception at #{Time.now} --- #{e.message} #{known_bot ? '(BOT)' : ''}"
     raise
   end
