@@ -171,7 +171,8 @@ class PositionsController < ApplicationController
   end
 
   def show  # === Routed action ===
-    pos = Position.find_by_id(params[:id]) || Position.by_ll_code(params[:id]) || RawAlg.by_name(params[:id]).position # Try DB id LL code, or alg name
+    pos = Position.find_by_id(params[:id]) || Position.by_ll_code(params[:id]) || RawAlg.by_name(params[:id])&.position # Try DB id LL code, or alg name
+    raise ActionController::RoutingError, 'Not Found' unless pos
 
     new_params = { pos: pos.display_name }
 
@@ -192,8 +193,10 @@ class PositionsController < ApplicationController
   end
 
   def find_by_alg  # === Routed action ===
-    moves = params[:post_alg].strip.split(' ')
-    while moves.last[0] == 'U' do moves.pop end
+    moves = params[:post_alg].to_s.strip.split(' ')
+    raise "No moves or alg name given" if moves.empty?
+
+    while moves.any? && moves.last[0] == 'U' do moves.pop end
     cleaned_input = moves.join(' ')
 
     if cleaned_input.include? ' ' # interpret as moves

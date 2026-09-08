@@ -47,7 +47,7 @@ class AlgSetsController < ApplicationController
   end
 
   def show  # === Routed action ===
-    redirect_to alg_sets_url unless request.xhr?
+    redirect_to(alg_sets_url) and return unless request.xhr?
 
     @algset = AlgSet.find(params[:id]).data_only
     @can_edit = can_change(@algset)
@@ -83,8 +83,8 @@ class AlgSetsController < ApplicationController
     return {} if adds.blank? && removes.blank?
 
     old_malgs = algset.algs.split(' ')
-    add_malgs = adds.upcase.split(' ')
-    remove_malgs = removes.upcase.split(' ')
+    add_malgs = adds.to_s.upcase.split(' ')
+    remove_malgs = removes.to_s.upcase.split(' ')
     errors = []
 
     (add_malgs + remove_malgs).each do |user_ma|
