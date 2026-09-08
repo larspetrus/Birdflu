@@ -1,4 +1,4 @@
-var ROOFPIG_CONF_AD = "solved=U-| hover=3 | speed=600";
+var ROOFPIG_CONF_AD = "solved=U-| hover=3 | speed=600";  // RoofPig pick this config up!
 
 var rp_setups = {
   0: "",
@@ -15,7 +15,7 @@ function rp_setup(u_setup) {
 
 function roofpig_dialog(title, alg, u_setup, below_element) {
   if ($('#show-alg').length === 0) {
-    $("body").append("<div id='show-alg' style='height:200px; width:200px;'></div>");
+    $("body").append("<div id='show-alg' style='height:200px; width:200px; background: radial-gradient(circle at  50% 40%, #999 0%, #fff 70%);'></div>");
   }
   CubeAnimation.create_in_dom('#show-alg', 'alg='+alg+'|base=AD|flags=showalg'+rp_setup(u_setup), "class='roofpig rp-dialog'");
 
