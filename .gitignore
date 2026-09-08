@@ -20,3 +20,6 @@
 
 # Local secrets
 /.env
+
+# Personal notes, never committed
+/_mina_docs/
