@@ -13,27 +13,37 @@ function rp_setup(u_setup) {
 }
 
 
-function roofpig_dialog(title, alg, u_setup, below_element) {
-  if ($('#show-alg').length === 0) {
-    $("body").append("<div id='show-alg' style='height:200px; width:200px; background: radial-gradient(circle at  50% 40%, #999 0%, #fff 70%);'></div>");
-  }
-  CubeAnimation.create_in_dom('#show-alg', 'alg='+alg+'|base=AD|flags=showalg'+rp_setup(u_setup), "class='roofpig rp-dialog'");
+var rp_dialog_count = 0;
 
-  $('#show-alg').dialog({
+function roofpig_dialog(title, alg, u_setup, below_element) {
+  var dialog_id = 'show-alg-' + (rp_dialog_count++);
+  var $dialog = $("<div id='" + dialog_id + "' style='height:225px; width:225px; background: radial-gradient(circle at  50% 40%, #999 0%, #fff 70%);'></div>");
+  $("body").append($dialog);
+
+  CubeAnimation.create_in_dom('#' + dialog_id, 'alg='+alg+'|base=AD|flags=showalg'+rp_setup(u_setup), "class='roofpig rp-dialog'");
+
+  $dialog.dialog({
     position: { my: 'center top', at: 'center bottom', of: below_element },
-    width: '240px',
+    width: '265px',
     title: title,
-    modal: true,
-    closeOnEscape: true,
+    modal: false,
+    closeOnEscape: false, // handled globally below, so Escape closes every open animation at once
     dialogClass: 'lars-dialog',
     close: function( event, ui ) {
-      var cube_id = $('#show-alg').children().attr('data-cube-id');
+      var cube_id = $dialog.children().attr('data-cube-id');
       if (cube_id) {
         CubeAnimation.by_id[cube_id].remove();
       }
+      $dialog.dialog('destroy').remove();
     }
   });
 }
+
+$(document).on('keydown', function(event) {
+  if (event.key === 'Escape') {
+    $('[id^="show-alg-"]').each(function() { $(this).dialog('close'); });
+  }
+});
 
 $(document).on('click', '.algs-list .show-pig', function(event) {
   var td = $(event.target).parent();
