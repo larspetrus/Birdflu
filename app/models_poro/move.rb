@@ -87,7 +87,7 @@ class SideTracker
     move_side = move[0]
     if (sc = CIRCLES[move_side]) # Is this a cube rotation move?
       new_sides = [@side_at[sc[0]], @side_at[sc[1]], @side_at[sc[2]], @side_at[sc[3]]].rotate(Move.turns(move))
-      sc.zip(new_sides).each { |key, value| @side_at[key] = value }
+      sc.chars.zip(new_sides).each { |key, value| @side_at[key] = value }
 
       nil # No real BRDFLU move happened
     else
